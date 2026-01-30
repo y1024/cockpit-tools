@@ -1447,6 +1447,8 @@ export function WakeupTasksPage({ onNavigate }: WakeupPageProps) {
           autoRefreshMinutes: minMinutes,
           codexAutoRefreshMinutes: config.codex_auto_refresh_minutes ?? 10,
           closeBehavior: config.close_behavior || 'ask',
+          opencodeAppPath: config.opencode_app_path ?? '',
+          opencodeSyncOnSwitch: config.opencode_sync_on_switch ?? true,
         });
         
         // 触发配置更新事件（让 useAutoRefresh 重新设置定时器）

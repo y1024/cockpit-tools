@@ -61,15 +61,22 @@
       "minutes": "分",
       "refreshIntervalLimited": "配額重置喚醒已啟用，刷新間隔最小值為 2 分鐘",
       "storageTitle": "Directories & Storage",
-      "dataDir": "Data Directory",
-      "dataDirDesc": "Storage location for accounts and configuration files.",
+      "dataDir": "資料目錄",
+      "dataDirDesc": "帳號與設定檔的儲存位置。",
       "fpDir": "Antigravity 儲存目錄",
       "fpDirDesc": "Antigravity 資料檔案的儲存位置。",
       "closeBehavior": "視窗關閉行為",
       "closeBehaviorDesc": "選擇關閉視窗時的預設行為",
       "closeBehaviorAsk": "每次詢問",
       "closeBehaviorMinimize": "最小化到系統列",
-      "closeBehaviorQuit": "退出應用程式"
+      "closeBehaviorQuit": "退出應用程式",
+      "opencodeAppPathDesc": "留空則使用預設路徑",
+      "opencodeTitle": "OpenCode 連動",
+      "opencodeRestart": "切換 Codex 時自動重新啟動 OpenCode",
+      "opencodeRestartDesc": "同步切換 OpenCode 裡的 Codex 帳號資訊",
+      "opencodeAppPath": "OpenCode 啟動路徑",
+      "opencodeAppPathPlaceholder": "預設路徑",
+      "opencodePathReset": "重設預設值"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "匯入失敗，請檢查 refresh_token"
     },
     "confirmDeleteTag": "確認刪除標籤 \"{{tag}}\" 嗎？該標籤將從 {{count}} 個帳號中移除。",
-    "defaultGroup": "預設分組"
+    "defaultGroup": "預設分組",
+    "filterTags": "標籤篩選",
+    "filterTagsCount": "標籤",
+    "noAvailableTags": "目前沒有可用標籤",
+    "clearFilter": "清除篩選",
+    "editTags": "編輯標籤",
+    "groupByTag": "依標籤分組",
+    "untagged": "未標記"
   },
   "overview": {
     "title": "帳號總覽",
@@ -611,7 +625,8 @@
       "label": "匯入",
       "importing": "正在匯入本地帳號...",
       "successMsg": "匯入成功: {{email}}",
-      "failedMsg": "匯入失敗: {{error}}"
+      "failedMsg": "匯入失敗: {{error}}",
+      "localDesc": "從本機已登入的會話匯入 Codex 帳號。"
     },
     "quota": {
       "hourly": "5 小時配額",
@@ -676,7 +691,15 @@
       "hourly": "5小時配額",
       "weekly": "週配額",
       "actions": "操作"
-    }
+    },
+    "opencodeSwitch": "OpenCode 切換開關",
+    "opencodeSwitchDesc": "同步切換 OpenCode 裡的 Codex 帳號資訊",
+    "opencodeSwitchFailed": "更新 OpenCode 開關失敗：{{error}}",
+    "filterTags": "標籤篩選",
+    "filterTagsCount": "標籤",
+    "noAvailableTags": "目前沒有可用標籤",
+    "clearFilter": "清除篩選",
+    "editTags": "編輯標籤"
   },
   "dashboard": {
     "title": "帳號儀表板",

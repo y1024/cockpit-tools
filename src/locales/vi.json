@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "Chọn hành động khi đóng cửa sổ",
       "closeBehaviorAsk": "Hỏi mỗi lần",
       "closeBehaviorMinimize": "Thu nhỏ xuống khay",
-      "closeBehaviorQuit": "Thoát ứng dụng"
+      "closeBehaviorQuit": "Thoát ứng dụng",
+      "opencodeAppPathDesc": "Để trống để dùng đường dẫn mặc định",
+      "opencodeTitle": "Tích hợp OpenCode",
+      "opencodeRestart": "Khởi động lại OpenCode khi chuyển Codex",
+      "opencodeRestartDesc": "Đồng bộ thông tin tài khoản Codex trong OpenCode",
+      "opencodeAppPath": "Đường dẫn khởi chạy OpenCode",
+      "opencodeAppPathPlaceholder": "Đường dẫn mặc định",
+      "opencodePathReset": "Đặt lại mặc định"
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -209,7 +216,14 @@
       "importFailed": "Nhập thất bại, vui lòng kiểm tra refresh_token"
     },
     "confirmDeleteTag": "Xóa thẻ \"{{tag}}\"? Thẻ này sẽ bị xóa khỏi {{count}} tài khoản.",
-    "defaultGroup": "Nhóm mặc định"
+    "defaultGroup": "Nhóm mặc định",
+    "filterTags": "Lọc thẻ",
+    "filterTagsCount": "Thẻ",
+    "noAvailableTags": "Không có thẻ nào",
+    "clearFilter": "Xóa bộ lọc",
+    "editTags": "Chỉnh sửa thẻ",
+    "groupByTag": "Nhóm theo thẻ",
+    "untagged": "Chưa gắn thẻ"
   },
   "overview": {
     "title": "Tổng quan tài khoản",
@@ -611,7 +625,8 @@
       "label": "Nhập",
       "importing": "Đang nhập tài khoản cục bộ...",
       "successMsg": "Nhập thành công: {{email}}",
-      "failedMsg": "Nhập thất bại: {{error}}"
+      "failedMsg": "Nhập thất bại: {{error}}",
+      "localDesc": "Nhập tài khoản Codex từ các phiên đăng nhập cục bộ."
     },
     "quota": {
       "hourly": "Hạn mức 5 giờ",
@@ -675,7 +690,15 @@
       "hourly": "Hạn mức 5h",
       "weekly": "Hạn mức tuần",
       "actions": "Hành động"
-    }
+    },
+    "opencodeSwitch": "Công tắc OpenCode",
+    "opencodeSwitchDesc": "Đồng bộ chuyển đổi tài khoản Codex trong OpenCode",
+    "opencodeSwitchFailed": "Không thể cập nhật công tắc OpenCode: {{error}}",
+    "filterTags": "Lọc thẻ",
+    "filterTagsCount": "Thẻ",
+    "noAvailableTags": "Không có thẻ nào",
+    "clearFilter": "Xóa bộ lọc",
+    "editTags": "Chỉnh sửa thẻ"
   },
   "dashboard": {
     "title": "Bảng điều khiển tài khoản",

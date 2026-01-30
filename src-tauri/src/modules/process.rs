@@ -6,6 +6,15 @@ use sysinfo::System;
 
 const OPENCODE_APP_NAME: &str = "OpenCode";
 
+fn normalize_custom_path(value: Option<&str>) -> Option<String> {
+    let trimmed = value.unwrap_or("").trim();
+    if trimmed.is_empty() {
+        None
+    } else {
+        Some(trimmed.to_string())
+    }
+}
+
 /// 检查 Antigravity 是否在运行
 pub fn is_antigravity_running() -> bool {
     let mut system = System::new();
@@ -520,35 +529,89 @@ pub fn close_opencode(timeout_secs: u64) -> Result<(), String> {
 }
 
 /// 启动 OpenCode（桌面端）
-pub fn start_opencode() -> Result<(), String> {
+pub fn start_opencode_with_path(custom_path: Option<&str>) -> Result<(), String> {
     crate::modules::logger::log_info("正在启动 OpenCode...");
 
     #[cfg(target_os = "macos")]
     {
+        let target = normalize_custom_path(custom_path).unwrap_or_else(|| OPENCODE_APP_NAME.to_string());
+
         let output = Command::new("open")
-            .args(["-a", OPENCODE_APP_NAME])
+            .args(["-a", &target])
             .output()
             .map_err(|e| format!("启动 OpenCode 失败: {}", e))?;
 
         if !output.status.success() {
             let stderr = String::from_utf8_lossy(&output.stderr);
             if stderr.contains("Unable to find application") {
-                return Err("未找到 OpenCode 应用，请确保已安装 OpenCode Desktop".to_string());
+                return Err("未找到 OpenCode 应用，请在设置中配置启动路径".to_string());
             }
             return Err(format!("启动 OpenCode 失败: {}", stderr));
         }
-        crate::modules::logger::log_info("OpenCode 启动命令已发送");
+        crate::modules::logger::log_info(&format!("OpenCode 启动命令已发送: {}", target));
         return Ok(());
     }
 
     #[cfg(target_os = "windows")]
     {
-        return Err("Windows 暂未实现 OpenCode 自动启动，请手动启动".to_string());
+        use std::os::windows::process::CommandExt;
+        let mut candidates = Vec::new();
+        if let Some(custom) = normalize_custom_path(custom_path) {
+            candidates.push(custom);
+        }
+
+        let default_path = get_default_opencode_app_path();
+        if !default_path.is_empty() {
+            candidates.push(default_path);
+        }
+
+        if let Ok(program_files) = std::env::var("PROGRAMFILES") {
+            candidates.push(format!("{}/OpenCode/OpenCode.exe", program_files));
+        }
+
+        for candidate in candidates {
+            if candidate.contains('/') || candidate.contains('\\') {
+                if !std::path::Path::new(&candidate).exists() {
+                    continue;
+                }
+            }
+            if Command::new(&candidate)
+                .creation_flags(0x08000000)
+                .spawn()
+                .is_ok()
+            {
+                crate::modules::logger::log_info(&format!("OpenCode 已启动: {}", candidate));
+                return Ok(());
+            }
+        }
+
+        return Err("未找到 OpenCode 可执行文件，请在设置中配置启动路径".to_string());
     }
 
     #[cfg(target_os = "linux")]
     {
-        return Err("Linux 暂未实现 OpenCode 自动启动，请手动启动".to_string());
+        let mut candidates = Vec::new();
+        if let Some(custom) = normalize_custom_path(custom_path) {
+            candidates.push(custom);
+        }
+
+        candidates.push("/usr/bin/opencode".to_string());
+        candidates.push("/opt/opencode/opencode".to_string());
+        candidates.push("opencode".to_string());
+
+        for candidate in candidates {
+            if candidate.contains('/') {
+                if !std::path::Path::new(&candidate).exists() {
+                    continue;
+                }
+            }
+            if Command::new(&candidate).spawn().is_ok() {
+                crate::modules::logger::log_info(&format!("OpenCode 已启动: {}", candidate));
+                return Ok(());
+            }
+        }
+
+        return Err("未找到 OpenCode 可执行文件，请在设置中配置启动路径".to_string());
     }
 
     #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]

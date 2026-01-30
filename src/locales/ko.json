@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "창을 닫을 때의 동작 선택",
       "closeBehaviorAsk": "항상 묻기",
       "closeBehaviorMinimize": "트레이로 최소화",
-      "closeBehaviorQuit": "애플리케이션 종료"
+      "closeBehaviorQuit": "애플리케이션 종료",
+      "opencodeAppPathDesc": "비워 두면 기본 경로 사용",
+      "opencodeTitle": "OpenCode 연동",
+      "opencodeRestart": "Codex 전환 시 OpenCode 재시작",
+      "opencodeRestartDesc": "OpenCode에서 Codex 계정 정보를 동기화하여 전환",
+      "opencodeAppPath": "OpenCode 실행 경로",
+      "opencodeAppPathPlaceholder": "기본 경로",
+      "opencodePathReset": "기본값으로 재설정"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "가져오기 실패, refresh_token을 확인하세요"
     },
     "confirmDeleteTag": "\"{{tag}}\" 태그를 삭제하시겠습니까? 이 태그는 {{count}}개의 계정에서 제거됩니다.",
-    "defaultGroup": "기본 그룹"
+    "defaultGroup": "기본 그룹",
+    "filterTags": "태그 필터",
+    "filterTagsCount": "태그",
+    "noAvailableTags": "사용 가능한 태그가 없습니다",
+    "clearFilter": "필터 지우기",
+    "editTags": "태그 편집",
+    "groupByTag": "태그별 그룹",
+    "untagged": "태그 없음"
   },
   "overview": {
     "title": "계정 개요",
@@ -611,7 +625,8 @@
       "label": "가져오기",
       "importing": "로컬 계정 가져오는 중...",
       "successMsg": "가져오기 성공: {{email}}",
-      "failedMsg": "가져오기 실패: {{error}}"
+      "failedMsg": "가져오기 실패: {{error}}",
+      "localDesc": "로컬에 로그인된 세션에서 Codex 계정을 가져오기."
     },
     "quota": {
       "hourly": "5시간 쿼터",
@@ -676,7 +691,15 @@
       "hourly": "5시간 쿼터",
       "weekly": "주간 쿼터",
       "actions": "작업"
-    }
+    },
+    "opencodeSwitch": "OpenCode 전환 스위치",
+    "opencodeSwitchDesc": "OpenCode에서 Codex 계정 정보를 동기화하여 전환",
+    "opencodeSwitchFailed": "OpenCode 스위치 업데이트 실패: {{error}}",
+    "filterTags": "태그 필터",
+    "filterTagsCount": "태그",
+    "noAvailableTags": "사용 가능한 태그가 없습니다",
+    "clearFilter": "필터 지우기",
+    "editTags": "태그 편집"
   },
   "dashboard": {
     "title": "계정 대시보드",

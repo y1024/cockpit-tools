@@ -9,6 +9,8 @@ interface GeneralConfig {
   auto_refresh_minutes: number;
   codex_auto_refresh_minutes: number;
   close_behavior: string;
+  opencode_app_path?: string;
+  opencode_sync_on_switch?: boolean;
 }
 
 export function useAutoRefresh() {
@@ -41,6 +43,8 @@ export function useAutoRefresh() {
                 autoRefreshMinutes: 2,
                 codexAutoRefreshMinutes: config.codex_auto_refresh_minutes,
                 closeBehavior: config.close_behavior || 'ask',
+                opencodeAppPath: config.opencode_app_path ?? '',
+                opencodeSyncOnSwitch: config.opencode_sync_on_switch ?? true,
               });
               config.auto_refresh_minutes = 2;
             }

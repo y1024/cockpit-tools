@@ -38,6 +38,16 @@ import { save } from '@tauri-apps/plugin-dialog';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { invoke } from '@tauri-apps/api/core';
 
+interface GeneralConfig {
+  language: string;
+  theme: string;
+  auto_refresh_minutes: number;
+  codex_auto_refresh_minutes: number;
+  close_behavior: string;
+  opencode_app_path: string;
+  opencode_sync_on_switch: boolean;
+}
+
 export function CodexAccountsPage() {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || 'zh-CN';
@@ -85,11 +95,14 @@ export function CodexAccountsPage() {
   const [deleting, setDeleting] = useState(false);
   const [tagDeleteConfirm, setTagDeleteConfirm] = useState<{ tag: string; count: number } | null>(null);
   const [deletingTag, setDeletingTag] = useState(false);
+  const [opencodeSyncOnSwitch, setOpencodeSyncOnSwitch] = useState(true);
+  const [opencodeSwitchSaving, setOpencodeSwitchSaving] = useState(false);
 
   const showAddModalRef = useRef(showAddModal);
   const addTabRef = useRef(addTab);
   const addStatusRef = useRef(addStatus);
   const oauthActiveRef = useRef(false);
+  const oauthHandledCodeRef = useRef<string | null>(null);
   const tagFilterRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -116,6 +129,44 @@ export function CodexAccountsPage() {
   }, [fetchAccounts, fetchCurrentAccount]);
 
   useEffect(() => {
+    let active = true;
+    invoke<GeneralConfig>('get_general_config')
+      .then((config) => {
+        if (!active) return;
+        setOpencodeSyncOnSwitch(config.opencode_sync_on_switch ?? true);
+      })
+      .catch((err) => {
+        console.error('[Codex] 加载 OpenCode 开关失败:', err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleOpencodeSwitchToggle = async (checked: boolean) => {
+    setOpencodeSwitchSaving(true);
+    setOpencodeSyncOnSwitch(checked);
+    try {
+      const config = await invoke<GeneralConfig>('get_general_config');
+      await invoke('save_general_config', {
+        language: config.language,
+        theme: config.theme,
+        autoRefreshMinutes: config.auto_refresh_minutes,
+        codexAutoRefreshMinutes: config.codex_auto_refresh_minutes ?? 10,
+        closeBehavior: config.close_behavior || 'ask',
+        opencodeAppPath: config.opencode_app_path ?? '',
+        opencodeSyncOnSwitch: checked,
+      });
+      window.dispatchEvent(new Event('config-updated'));
+    } catch (err) {
+      setOpencodeSyncOnSwitch(!checked);
+      setMessage({ text: t('codex.opencodeSwitchFailed', { error: String(err) }), tone: 'error' });
+    } finally {
+      setOpencodeSwitchSaving(false);
+    }
+  };
+
+  useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     listen<string>('codex-oauth-callback-received', async (event) => {
@@ -125,6 +176,8 @@ export function CodexAccountsPage() {
 
       const code = event.payload;
       if (!code) return;
+      if (oauthHandledCodeRef.current === code) return;
+      oauthHandledCodeRef.current = code;
 
       setAddStatus('loading');
       setAddMessage(t('codex.oauth.exchanging', '正在交换令牌...'));
@@ -254,6 +307,7 @@ export function CodexAccountsPage() {
     setOauthUrlCopied(false);
     setOauthPrepareError(null);
     setOauthPortInUse(null);
+    oauthHandledCodeRef.current = null;
   };
 
   const openAddModal = (tab: 'oauth' | 'token' | 'import') => {
@@ -845,6 +899,26 @@ export function CodexAccountsPage() {
     <div className="codex-accounts-page">
       <div className="page-header">
         <h1>{t('codex.title', 'Codex 账号管理')}</h1>
+        <div className="page-header-actions">
+          <div className="opencode-switch">
+            <div className="opencode-switch-text">
+              <div className="opencode-switch-title">{t('codex.opencodeSwitch', 'OpenCode切换开关')}</div>
+              <div className="opencode-switch-desc">
+                {t('codex.opencodeSwitchDesc', '仅控制自动重启，auth.json 会同步')}
+              </div>
+            </div>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={opencodeSyncOnSwitch}
+                onChange={(e) => handleOpencodeSwitchToggle(e.target.checked)}
+                disabled={opencodeSwitchSaving}
+                aria-label={t('codex.opencodeSwitch', 'OpenCode切换开关')}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
 
       {message && (

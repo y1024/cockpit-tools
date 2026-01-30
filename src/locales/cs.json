@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "Vyberte akci při zavření okna",
       "closeBehaviorAsk": "Vždy se zeptat",
       "closeBehaviorMinimize": "Minimalizovat do lišty",
-      "closeBehaviorQuit": "Ukončit aplikaci"
+      "closeBehaviorQuit": "Ukončit aplikaci",
+      "opencodeAppPathDesc": "Ponechte prázdné pro použití výchozí cesty",
+      "opencodeTitle": "Integrace OpenCode",
+      "opencodeRestart": "Restartovat OpenCode při přepnutí Codex",
+      "opencodeRestartDesc": "Synchronizovat informace o účtu Codex v OpenCode",
+      "opencodeAppPath": "Cesta spuštění OpenCode",
+      "opencodeAppPathPlaceholder": "Výchozí cesta",
+      "opencodePathReset": "Obnovit výchozí"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "Import selhal, zkontrolujte refresh_token"
     },
     "confirmDeleteTag": "Smazat štítek \"{{tag}}\"? Tento štítek bude odebrán z {{count}} účtů.",
-    "defaultGroup": "Výchozí skupina"
+    "defaultGroup": "Výchozí skupina",
+    "filterTags": "Filtrovat štítky",
+    "filterTagsCount": "Štítky",
+    "noAvailableTags": "Žádné dostupné štítky",
+    "clearFilter": "Vymazat filtr",
+    "editTags": "Upravit štítky",
+    "groupByTag": "Seskupit podle štítku",
+    "untagged": "Bez štítku"
   },
   "overview": {
     "title": "Přehled účtů",
@@ -611,7 +625,8 @@
       "label": "Importovat",
       "importing": "Import lokálního účtu...",
       "successMsg": "Import proběhl úspěšně: {{email}}",
-      "failedMsg": "Import se nezdařil: {{error}}"
+      "failedMsg": "Import se nezdařil: {{error}}",
+      "localDesc": "Importovat účty Codex z místně přihlášených relací."
     },
     "quota": {
       "hourly": "Kvóta 5 hodin",
@@ -676,7 +691,15 @@
       "hourly": "Kvóta 5h",
       "weekly": "Kvóta týdn.",
       "actions": "Akce"
-    }
+    },
+    "opencodeSwitch": "Přepínač OpenCode",
+    "opencodeSwitchDesc": "Synchronizovat přepnutí účtu Codex v OpenCode",
+    "opencodeSwitchFailed": "Nepodařilo se aktualizovat přepínač OpenCode: {{error}}",
+    "filterTags": "Filtrovat štítky",
+    "filterTagsCount": "Štítky",
+    "noAvailableTags": "Žádné dostupné štítky",
+    "clearFilter": "Vymazat filtr",
+    "editTags": "Upravit štítky"
   },
   "dashboard": {
     "title": "Přehled účtů",

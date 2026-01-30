@@ -54,6 +54,26 @@ pub fn decode_jwt_payload(token: &str) -> Result<CodexJwtPayload, String> {
     Ok(payload)
 }
 
+fn decode_jwt_payload_value(token: &str) -> Option<serde_json::Value> {
+    let parts: Vec<&str> = token.split('.').collect();
+    if parts.len() != 3 {
+        return None;
+    }
+
+    let payload_bytes = URL_SAFE_NO_PAD.decode(parts[1]).ok()?;
+    let payload_str = String::from_utf8(payload_bytes).ok()?;
+    serde_json::from_str(&payload_str).ok()
+}
+
+pub fn extract_chatgpt_account_id_from_access_token(access_token: &str) -> Option<String> {
+    let payload = decode_jwt_payload_value(access_token)?;
+    let auth_data = payload.get("https://api.openai.com/auth")?;
+    auth_data
+        .get("chatgpt_account_id")
+        .and_then(|v| v.as_str())
+        .map(|value| value.to_string())
+}
+
 /// 从 id_token 提取用户信息
 pub fn extract_user_info(
     id_token: &str,
@@ -69,10 +89,7 @@ pub fn extract_user_info(
         .auth_data
         .as_ref()
         .and_then(|d| d.chatgpt_plan_type.clone());
-    let account_id = payload
-        .auth_data
-        .as_ref()
-        .and_then(|d| d.account_id.clone());
+    let account_id = None;
 
     Ok((email, user_id, plan_type, account_id))
 }
@@ -141,7 +158,8 @@ pub fn list_accounts() -> Vec<CodexAccount> {
 
 /// 添加或更新账号
 pub fn upsert_account(tokens: CodexTokens) -> Result<CodexAccount, String> {
-    let (email, user_id, plan_type, account_id) = extract_user_info(&tokens.id_token)?;
+    let (email, user_id, plan_type, _) = extract_user_info(&tokens.id_token)?;
+    let account_id = extract_chatgpt_account_id_from_access_token(&tokens.access_token);
 
     // 使用 email 的 hash 作为 ID
     let id = format!("codex_{:x}", md5::compute(email.as_bytes()));

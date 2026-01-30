@@ -7,6 +7,20 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.4.8] - 2026-01-30
+
+### Added
+- **OpenCode sync toggle**: Add a switch in Codex account management to control OpenCode sync/restart.
+
+### Changed
+- **OpenCode auth sync**: Sync OpenCode auth.json on account switch with full OAuth fields and platform-aware path.
+- **OpenCode restart**: Start OpenCode when not running; restart when running.
+- **AccountId alignment**: Align account_id extraction with the official extension (access_token only).
+- **UI copy**: Settings OpenCode path hint now generic without a hardcoded default path.
+
+### Fixed
+- **i18n**: Filled missing translations and ensured locale keys are consistent across languages.
+
 ## [0.4.7] - 2026-01-30
 
 ### Added

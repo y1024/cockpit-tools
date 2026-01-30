@@ -58,6 +58,12 @@ pub struct UserConfig {
     /// 窗口关闭行为
     #[serde(default = "default_close_behavior")]
     pub close_behavior: CloseWindowBehavior,
+    /// OpenCode 启动路径（为空则使用默认路径）
+    #[serde(default = "default_opencode_app_path")]
+    pub opencode_app_path: String,
+    /// 切换 Codex 时是否自动重启 OpenCode
+    #[serde(default = "default_opencode_sync_on_switch")]
+    pub opencode_sync_on_switch: bool,
 }
 
 /// 窗口关闭行为
@@ -85,6 +91,8 @@ fn default_theme() -> String { "system".to_string() }
 fn default_auto_refresh() -> i32 { 10 } // 默认 10 分钟
 fn default_codex_auto_refresh() -> i32 { 10 } // 默认 10 分钟
 fn default_close_behavior() -> CloseWindowBehavior { CloseWindowBehavior::Ask }
+fn default_opencode_app_path() -> String { String::new() }
+fn default_opencode_sync_on_switch() -> bool { true }
 
 impl Default for UserConfig {
     fn default() -> Self {
@@ -96,6 +104,8 @@ impl Default for UserConfig {
             auto_refresh_minutes: default_auto_refresh(),
             codex_auto_refresh_minutes: default_codex_auto_refresh(),
             close_behavior: default_close_behavior(),
+            opencode_app_path: default_opencode_app_path(),
+            opencode_sync_on_switch: default_opencode_sync_on_switch(),
         }
     }
 }

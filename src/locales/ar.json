@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "اختر الإجراء عند إغلاق النافذة",
       "closeBehaviorAsk": "اسأل في كل مرة",
       "closeBehaviorMinimize": "تصغير إلى الدرج",
-      "closeBehaviorQuit": "إنهاء التطبيق"
+      "closeBehaviorQuit": "إنهاء التطبيق",
+      "opencodeAppPathDesc": "اتركه فارغًا لاستخدام المسار الافتراضي",
+      "opencodeTitle": "تكامل OpenCode",
+      "opencodeRestart": "إعادة تشغيل OpenCode عند تبديل Codex",
+      "opencodeRestartDesc": "مزامنة معلومات حساب Codex في OpenCode",
+      "opencodeAppPath": "مسار تشغيل OpenCode",
+      "opencodeAppPathPlaceholder": "المسار الافتراضي",
+      "opencodePathReset": "إعادة التعيين إلى الافتراضي"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "فشل الاستيراد، يرجى التحقق من refresh_token"
     },
     "confirmDeleteTag": "هل تريد حذف العلامة \"{{tag}}\"؟ ستتم إزالة هذه العلامة من {{count}} حسابات.",
-    "defaultGroup": "مجموعة افتراضية"
+    "defaultGroup": "مجموعة افتراضية",
+    "filterTags": "تصفية العلامات",
+    "filterTagsCount": "العلامات",
+    "noAvailableTags": "لا توجد علامات متاحة",
+    "clearFilter": "مسح التصفية",
+    "editTags": "تحرير العلامات",
+    "groupByTag": "تجميع حسب العلامة",
+    "untagged": "غير موسوم"
   },
   "overview": {
     "title": "نظرة عامة على الحسابات",
@@ -611,7 +625,8 @@
       "label": "استيراد",
       "importing": "جارٍ استيراد الحساب المحلي...",
       "successMsg": "تم الاستيراد بنجاح: {{email}}",
-      "failedMsg": "فشل الاستيراد: {{error}}"
+      "failedMsg": "فشل الاستيراد: {{error}}",
+      "localDesc": "استيراد حسابات Codex من الجلسات المسجلة محليًا."
     },
     "quota": {
       "hourly": "حصة 5 ساعات",
@@ -676,7 +691,15 @@
       "hourly": "حصة 5 ساعات",
       "weekly": "حصة أسبوعية",
       "actions": "إجراءات"
-    }
+    },
+    "opencodeSwitch": "مفتاح تبديل OpenCode",
+    "opencodeSwitchDesc": "مزامنة تبديل معلومات حساب Codex في OpenCode",
+    "opencodeSwitchFailed": "فشل تحديث مفتاح OpenCode: {{error}}",
+    "filterTags": "تصفية العلامات",
+    "filterTagsCount": "العلامات",
+    "noAvailableTags": "لا توجد علامات متاحة",
+    "clearFilter": "مسح التصفية",
+    "editTags": "تحرير العلامات"
   },
   "dashboard": {
     "title": "لوحة حسابات",

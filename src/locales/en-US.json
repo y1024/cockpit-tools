@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "Choose action when closing window",
       "closeBehaviorAsk": "Ask every time",
       "closeBehaviorMinimize": "Minimize to tray",
-      "closeBehaviorQuit": "Quit application"
+      "closeBehaviorQuit": "Quit application",
+      "opencodeAppPathDesc": "Leave blank to use the default path",
+      "opencodeTitle": "OpenCode Integration",
+      "opencodeRestart": "Restart OpenCode when switching Codex",
+      "opencodeRestartDesc": "Sync Codex account info in OpenCode",
+      "opencodeAppPath": "OpenCode launch path",
+      "opencodeAppPathPlaceholder": "Default path",
+      "opencodePathReset": "Reset default"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "Import failed, please check refresh_token"
     },
     "confirmDeleteTag": "Delete tag \"{{tag}}\"? This tag will be removed from {{count}} accounts.",
-    "defaultGroup": "Default Group"
+    "defaultGroup": "Default Group",
+    "filterTags": "Filter Tags",
+    "filterTagsCount": "Tags",
+    "noAvailableTags": "No available tags",
+    "clearFilter": "Clear filter",
+    "editTags": "Edit tags",
+    "groupByTag": "Group by tag",
+    "untagged": "Untagged"
   },
   "overview": {
     "title": "Account Overview",
@@ -611,7 +625,8 @@
       "label": "Import",
       "importing": "Importing local account...",
       "successMsg": "Import successful: {{email}}",
-      "failedMsg": "Import failed: {{error}}"
+      "failedMsg": "Import failed: {{error}}",
+      "localDesc": "Import Codex accounts from locally signed-in sessions."
     },
     "quota": {
       "hourly": "5-hour quota",
@@ -676,7 +691,15 @@
       "hourly": "5-hour quota",
       "weekly": "Weekly quota",
       "actions": "Actions"
-    }
+    },
+    "opencodeSwitch": "OpenCode switch toggle",
+    "opencodeSwitchDesc": "Sync Codex account info in OpenCode",
+    "opencodeSwitchFailed": "Failed to update OpenCode toggle: {{error}}",
+    "filterTags": "Filter Tags",
+    "filterTagsCount": "Tags",
+    "noAvailableTags": "No available tags",
+    "clearFilter": "Clear filter",
+    "editTags": "Edit tags"
   },
   "dashboard": {
     "title": "Account Dashboard",

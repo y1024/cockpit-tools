@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "Wybierz akcję przy zamykaniu okna",
       "closeBehaviorAsk": "Zawsze pytaj",
       "closeBehaviorMinimize": "Minimalizuj do zasobnika",
-      "closeBehaviorQuit": "Zamknij aplikację"
+      "closeBehaviorQuit": "Zamknij aplikację",
+      "opencodeAppPathDesc": "Pozostaw puste, aby użyć domyślnej ścieżki",
+      "opencodeTitle": "Integracja OpenCode",
+      "opencodeRestart": "Uruchom ponownie OpenCode przy przełączaniu Codex",
+      "opencodeRestartDesc": "Synchronizuj informacje o koncie Codex w OpenCode",
+      "opencodeAppPath": "Ścieżka uruchamiania OpenCode",
+      "opencodeAppPathPlaceholder": "Domyślna ścieżka",
+      "opencodePathReset": "Przywróć domyślne"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "Import nie powiódł się, sprawdź refresh_token"
     },
     "confirmDeleteTag": "Usunąć tag \"{{tag}}\"? Ten tag zostanie usunięty z {{count}} kont.",
-    "defaultGroup": "Grupa domyślna"
+    "defaultGroup": "Grupa domyślna",
+    "filterTags": "Filtruj tagi",
+    "filterTagsCount": "Tagi",
+    "noAvailableTags": "Brak dostępnych tagów",
+    "clearFilter": "Wyczyść filtr",
+    "editTags": "Edytuj tagi",
+    "groupByTag": "Grupuj według taga",
+    "untagged": "Bez taga"
   },
   "overview": {
     "title": "Przegląd kont",
@@ -611,7 +625,8 @@
       "label": "Import",
       "importing": "Importowanie lokalnego konta...",
       "successMsg": "Import zakończony sukcesem: {{email}}",
-      "failedMsg": "Import nieudany: {{error}}"
+      "failedMsg": "Import nieudany: {{error}}",
+      "localDesc": "Importuj konta Codex z lokalnie zalogowanych sesji."
     },
     "quota": {
       "hourly": "Limit 5 godzin",
@@ -676,7 +691,15 @@
       "hourly": "Limit 5h",
       "weekly": "Limit tyg.",
       "actions": "Akcje"
-    }
+    },
+    "opencodeSwitch": "Przełącznik OpenCode",
+    "opencodeSwitchDesc": "Synchronizuj przełączenie konta Codex w OpenCode",
+    "opencodeSwitchFailed": "Nie udało się zaktualizować przełącznika OpenCode: {{error}}",
+    "filterTags": "Filtruj tagi",
+    "filterTagsCount": "Tagi",
+    "noAvailableTags": "Brak dostępnych tagów",
+    "clearFilter": "Wyczyść filtr",
+    "editTags": "Edytuj tagi"
   },
   "dashboard": {
     "title": "Panel kont",

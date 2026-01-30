@@ -69,7 +69,14 @@
       "dataDir": "Data Directory",
       "dataDirDesc": "Storage location for accounts and configuration files.",
       "fpDir": "Antigravity Storage",
-      "fpDirDesc": "Storage location for Antigravity data files."
+      "fpDirDesc": "Storage location for Antigravity data files.",
+      "opencodeTitle": "OpenCode Integration",
+      "opencodeRestart": "Restart OpenCode when switching Codex",
+      "opencodeRestartDesc": "Sync Codex account info in OpenCode",
+      "opencodeAppPath": "OpenCode launch path",
+      "opencodeAppPathDesc": "Leave blank to use the default path",
+      "opencodeAppPathPlaceholder": "Default path",
+      "opencodePathReset": "Reset to default"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -616,6 +623,7 @@
     },
     "import": {
       "label": "Import",
+      "localDesc": "Import Codex accounts from locally signed-in sessions.",
       "importing": "Importing local account...",
       "successMsg": "Import successful: {{email}}",
       "failedMsg": "Import failed: {{error}}"
@@ -671,6 +679,9 @@
       "toggleDirection": "Toggle sort direction",
       "createdAt": "Created time"
     },
+    "opencodeSwitch": "OpenCode switch toggle",
+    "opencodeSwitchDesc": "Sync Codex account info in OpenCode",
+    "opencodeSwitchFailed": "Failed to update OpenCode toggle: {{error}}",
     "export": "Export",
     "noMatch": {
       "title": "No matching accounts",

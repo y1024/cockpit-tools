@@ -42,12 +42,6 @@ struct UsageResponse {
     code_review_rate_limit: Option<RateLimitInfo>,
 }
 
-/// 从 id_token 中提取 account_id
-fn extract_account_id_from_token(id_token: &str) -> Option<String> {
-    let payload = codex_account::decode_jwt_payload(id_token).ok()?;
-    payload.auth_data.and_then(|d| d.account_id)
-}
-
 /// 查询单个账号的配额
 pub async fn fetch_quota(account: &CodexAccount) -> Result<CodexQuota, String> {
     let client = reqwest::Client::new();
@@ -61,8 +55,10 @@ pub async fn fetch_quota(account: &CodexAccount) -> Result<CodexQuota, String> {
     headers.insert(ACCEPT, HeaderValue::from_static("application/json"));
     
     // 添加 ChatGPT-Account-Id 头（关键！）
-    let account_id = account.account_id.clone()
-        .or_else(|| extract_account_id_from_token(&account.tokens.id_token));
+    let account_id = account
+        .account_id
+        .clone()
+        .or_else(|| codex_account::extract_chatgpt_account_id_from_access_token(&account.tokens.access_token));
     
     if let Some(ref acc_id) = account_id {
         if !acc_id.is_empty() {

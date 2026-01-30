@@ -61,15 +61,22 @@
       "minutes": "min",
       "refreshIntervalLimited": "El despertar al restablecer la cuota está habilitado, por lo que el intervalo mínimo de actualización es de 2 minutos.",
       "storageTitle": "Directories & Storage",
-      "dataDir": "Data Directory",
-      "dataDirDesc": "Storage location for accounts and configuration files.",
+      "dataDir": "Directorio de datos",
+      "dataDirDesc": "Ubicación de almacenamiento para cuentas y archivos de configuración.",
       "fpDir": "Almacenamiento de Antigravity",
       "fpDirDesc": "Ubicación de los archivos de datos de Antigravity.",
       "closeBehavior": "Comportamiento al cerrar",
       "closeBehaviorDesc": "Elegir acción al cerrar la ventana",
       "closeBehaviorAsk": "Preguntar siempre",
       "closeBehaviorMinimize": "Minimizar a la bandeja",
-      "closeBehaviorQuit": "Salir de la aplicación"
+      "closeBehaviorQuit": "Salir de la aplicación",
+      "opencodeAppPathDesc": "Deja en blanco para usar la ruta predeterminada",
+      "opencodeTitle": "Integración de OpenCode",
+      "opencodeRestart": "Reiniciar OpenCode al cambiar Codex",
+      "opencodeRestartDesc": "Sincronizar la información de la cuenta de Codex en OpenCode",
+      "opencodeAppPath": "Ruta de inicio de OpenCode",
+      "opencodeAppPathPlaceholder": "Ruta predeterminada",
+      "opencodePathReset": "Restablecer predeterminado"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "Error al importar, revisa el refresh_token"
     },
     "confirmDeleteTag": "¿Eliminar etiqueta \"{{tag}}\"? Esta etiqueta se eliminará de {{count}} cuentas.",
-    "defaultGroup": "Grupo predeterminado"
+    "defaultGroup": "Grupo predeterminado",
+    "filterTags": "Filtrar etiquetas",
+    "filterTagsCount": "Etiquetas",
+    "noAvailableTags": "No hay etiquetas disponibles",
+    "clearFilter": "Limpiar filtro",
+    "editTags": "Editar etiquetas",
+    "groupByTag": "Agrupar por etiqueta",
+    "untagged": "Sin etiqueta"
   },
   "overview": {
     "title": "Resumen de Cuentas",
@@ -611,7 +625,8 @@
       "label": "Importar",
       "importing": "Importando cuenta local...",
       "successMsg": "Importación exitosa: {{email}}",
-      "failedMsg": "Error al importar: {{error}}"
+      "failedMsg": "Error al importar: {{error}}",
+      "localDesc": "Importar cuentas de Codex desde sesiones iniciadas localmente."
     },
     "quota": {
       "hourly": "Cuota de 5 horas",
@@ -676,7 +691,15 @@
       "hourly": "Cuota 5h",
       "weekly": "Cuota sem",
       "actions": "Acciones"
-    }
+    },
+    "opencodeSwitch": "Interruptor de OpenCode",
+    "opencodeSwitchDesc": "Sincronizar el cambio de cuenta de Codex en OpenCode",
+    "opencodeSwitchFailed": "Error al actualizar el interruptor de OpenCode: {{error}}",
+    "filterTags": "Filtrar etiquetas",
+    "filterTagsCount": "Etiquetas",
+    "noAvailableTags": "No hay etiquetas disponibles",
+    "clearFilter": "Limpiar filtro",
+    "editTags": "Editar etiquetas"
   },
   "dashboard": {
     "title": "Panel de cuentas",

@@ -61,15 +61,22 @@
       "minutes": "dk",
       "refreshIntervalLimited": "Kota sıfırlama uyandırma özelliği etkin olduğundan, minimum yenileme aralığı 2 dakikadır.",
       "storageTitle": "Directories & Storage",
-      "dataDir": "Data Directory",
-      "dataDirDesc": "Storage location for accounts and configuration files.",
+      "dataDir": "Veri dizini",
+      "dataDirDesc": "Hesaplar ve yapılandırma dosyaları için depolama konumu.",
       "fpDir": "Antigravity Depolama",
       "fpDirDesc": "Antigravity veri dosyalarının depolandığı konum.",
       "closeBehavior": "Kapanış Davranışı",
       "closeBehaviorDesc": "Pencere kapatıldığında yapılacak işlem",
       "closeBehaviorAsk": "Her seferinde sor",
       "closeBehaviorMinimize": "Tepsisine küçült",
-      "closeBehaviorQuit": "Uygulamadan Çık"
+      "closeBehaviorQuit": "Uygulamadan Çık",
+      "opencodeAppPathDesc": "Varsayılan yolu kullanmak için boş bırakın",
+      "opencodeTitle": "OpenCode Entegrasyonu",
+      "opencodeRestart": "Codex değiştirildiğinde OpenCode'u yeniden başlat",
+      "opencodeRestartDesc": "OpenCode içinde Codex hesap bilgisini senkronize et",
+      "opencodeAppPath": "OpenCode başlatma yolu",
+      "opencodeAppPathPlaceholder": "Varsayılan yol",
+      "opencodePathReset": "Varsayılanı sıfırla"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "İçe aktarma başarısız, lütfen refresh_token'ı kontrol edin"
     },
     "confirmDeleteTag": "\"{{tag}}\" etiketi silinsin mi? Bu etiket {{count}} hesaptan kaldırılacak.",
-    "defaultGroup": "Varsayılan Grup"
+    "defaultGroup": "Varsayılan Grup",
+    "filterTags": "Etiketleri filtrele",
+    "filterTagsCount": "Etiketler",
+    "noAvailableTags": "Kullanılabilir etiket yok",
+    "clearFilter": "Filtreyi temizle",
+    "editTags": "Etiketleri düzenle",
+    "groupByTag": "Etikete göre grupla",
+    "untagged": "Etiketsiz"
   },
   "overview": {
     "title": "Hesap Genel Bakışı",
@@ -611,7 +625,8 @@
       "label": "İçe aktar",
       "importing": "Yerel hesap içe aktarılıyor...",
       "successMsg": "İçe aktarma başarılı: {{email}}",
-      "failedMsg": "İçe aktarma başarısız: {{error}}"
+      "failedMsg": "İçe aktarma başarısız: {{error}}",
+      "localDesc": "Yerelde oturum açılmış oturumlardan Codex hesaplarını içe aktar."
     },
     "quota": {
       "hourly": "5 saatlik kota",
@@ -676,7 +691,15 @@
       "hourly": "5 saatlik kota",
       "weekly": "Haftalık kota",
       "actions": "İşlemler"
-    }
+    },
+    "opencodeSwitch": "OpenCode geçiş anahtarı",
+    "opencodeSwitchDesc": "OpenCode içinde Codex hesap geçişini senkronize et",
+    "opencodeSwitchFailed": "OpenCode anahtarı güncellenemedi: {{error}}",
+    "filterTags": "Etiketleri filtrele",
+    "filterTagsCount": "Etiketler",
+    "noAvailableTags": "Kullanılabilir etiket yok",
+    "clearFilter": "Filtreyi temizle",
+    "editTags": "Etiketleri düzenle"
   },
   "dashboard": {
     "title": "Hesap Gösterge Paneli",

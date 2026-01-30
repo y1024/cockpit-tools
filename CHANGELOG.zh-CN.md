@@ -7,6 +7,20 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.4.8] - 2026-01-30
+
+### 新增
+- **OpenCode 同步开关**：在 Codex 账号管理中加入开关，用于控制 OpenCode 同步/重启。
+
+### 变更
+- **OpenCode 认证同步**：切换账号时同步 auth.json，补齐 OAuth 字段并使用跨平台路径。
+- **OpenCode 启动逻辑**：未运行则直接启动，运行中则重启。
+- **AccountId 对齐**：账号 ID 提取逻辑对齐官方扩展（仅 access_token）。
+- **界面文案**：OpenCode 启动路径提示去掉固定默认路径文案。
+
+### 修复
+- **i18n**：补齐缺失翻译并确保各语言键一致。
+
 ## [0.4.7] - 2026-01-30
 
 ### 新增

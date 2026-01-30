@@ -69,7 +69,14 @@
       "dataDir": "数据目录",
       "dataDirDesc": "账号与配置文件的存储位置。",
       "fpDir": "Antigravity存储目录",
-      "fpDirDesc": "Antigravity数据文件的存储位置。"
+      "fpDirDesc": "Antigravity数据文件的存储位置。",
+      "opencodeTitle": "OpenCode 联动",
+      "opencodeRestart": "切换 Codex 时自动重启 OpenCode",
+      "opencodeRestartDesc": "同步切换OpenCode里codex账户信息",
+      "opencodeAppPath": "OpenCode 启动路径",
+      "opencodeAppPathDesc": "留空则使用默认路径",
+      "opencodeAppPathPlaceholder": "默认路径",
+      "opencodePathReset": "重置默认"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -616,6 +623,7 @@
     },
     "import": {
       "label": "导入",
+      "localDesc": "从本地已登录的会话中导入 Codex 账号。",
       "importing": "正在导入本地账号...",
       "successMsg": "导入成功: {{email}}",
       "failedMsg": "导入失败: {{error}}"
@@ -671,6 +679,9 @@
       "toggleDirection": "切换排序方向",
       "createdAt": "按创建时间"
     },
+    "opencodeSwitch": "OpenCode切换开关",
+    "opencodeSwitchDesc": "同步切换OpenCode里codex账户信息",
+    "opencodeSwitchFailed": "更新 OpenCode 开关失败: {{error}}",
     "export": "导出",
     "noMatch": {
       "title": "没有匹配的账号",

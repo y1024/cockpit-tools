@@ -69,7 +69,14 @@
       "closeBehaviorDesc": "Действие при закрытии окна",
       "closeBehaviorAsk": "Спрашивать каждый раз",
       "closeBehaviorMinimize": "Свернуть в трей",
-      "closeBehaviorQuit": "Закрыть приложение"
+      "closeBehaviorQuit": "Закрыть приложение",
+      "opencodeAppPathDesc": "Оставьте пустым, чтобы использовать путь по умолчанию",
+      "opencodeTitle": "Интеграция OpenCode",
+      "opencodeRestart": "Перезапускать OpenCode при переключении Codex",
+      "opencodeRestartDesc": "Синхронизировать данные аккаунта Codex в OpenCode",
+      "opencodeAppPath": "Путь запуска OpenCode",
+      "opencodeAppPathPlaceholder": "Путь по умолчанию",
+      "opencodePathReset": "Сбросить по умолчанию"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "Импорт не удался, проверьте refresh_token"
     },
     "confirmDeleteTag": "Удалить тег \"{{tag}}\"? Этот тег будет удален из {{count}} аккаунтов.",
-    "defaultGroup": "Группа по умолчанию"
+    "defaultGroup": "Группа по умолчанию",
+    "filterTags": "Фильтр по тегам",
+    "filterTagsCount": "Теги",
+    "noAvailableTags": "Нет доступных тегов",
+    "clearFilter": "Очистить фильтр",
+    "editTags": "Редактировать теги",
+    "groupByTag": "Группировать по тегу",
+    "untagged": "Без тега"
   },
   "overview": {
     "title": "Обзор аккаунтов",
@@ -611,7 +625,8 @@
       "label": "Импорт",
       "importing": "Импорт локального аккаунта...",
       "successMsg": "Импорт успешен: {{email}}",
-      "failedMsg": "Ошибка импорта: {{error}}"
+      "failedMsg": "Ошибка импорта: {{error}}",
+      "localDesc": "Импортировать аккаунты Codex из локальных вошедших сессий."
     },
     "quota": {
       "hourly": "Квота 5 часов",
@@ -676,7 +691,15 @@
       "hourly": "Квота 5ч",
       "weekly": "Квота нед",
       "actions": "Действия"
-    }
+    },
+    "opencodeSwitch": "Переключатель OpenCode",
+    "opencodeSwitchDesc": "Синхронизировать переключение аккаунта Codex в OpenCode",
+    "opencodeSwitchFailed": "Не удалось обновить переключатель OpenCode: {{error}}",
+    "filterTags": "Фильтр по тегам",
+    "filterTagsCount": "Теги",
+    "noAvailableTags": "Нет доступных тегов",
+    "clearFilter": "Очистить фильтр",
+    "editTags": "Редактировать теги"
   },
   "dashboard": {
     "title": "Панель аккаунтов",

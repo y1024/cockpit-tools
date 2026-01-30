@@ -31,6 +31,10 @@ pub struct GeneralConfig {
     pub codex_auto_refresh_minutes: i32,
     /// 窗口关闭行为: "ask", "minimize", "quit"
     pub close_behavior: String,
+    /// OpenCode 启动路径（为空则使用默认路径）
+    pub opencode_app_path: String,
+    /// 切换 Codex 时是否自动重启 OpenCode
+    pub opencode_sync_on_switch: bool,
 }
 
 #[tauri::command]
@@ -99,6 +103,8 @@ pub fn save_network_config(ws_enabled: bool, ws_port: u16) -> Result<bool, Strin
         auto_refresh_minutes: current.auto_refresh_minutes,
         codex_auto_refresh_minutes: current.codex_auto_refresh_minutes,
         close_behavior: current.close_behavior,
+        opencode_app_path: current.opencode_app_path,
+        opencode_sync_on_switch: current.opencode_sync_on_switch,
     };
     
     config::save_user_config(&new_config)?;
@@ -123,6 +129,8 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
         auto_refresh_minutes: user_config.auto_refresh_minutes,
         codex_auto_refresh_minutes: user_config.codex_auto_refresh_minutes,
         close_behavior: close_behavior_str.to_string(),
+        opencode_app_path: user_config.opencode_app_path,
+        opencode_sync_on_switch: user_config.opencode_sync_on_switch,
     })
 }
 
@@ -134,8 +142,11 @@ pub fn save_general_config(
     auto_refresh_minutes: i32,
     codex_auto_refresh_minutes: i32,
     close_behavior: String,
+    opencode_app_path: String,
+    opencode_sync_on_switch: bool,
 ) -> Result<(), String> {
     let current = config::get_user_config();
+    let normalized_opencode_path = opencode_app_path.trim().to_string();
     // 标准化语言代码为小写，确保与插件端格式一致
     let normalized_language = language.to_lowercase();
     let language_changed = current.language != normalized_language;
@@ -158,6 +169,8 @@ pub fn save_general_config(
         auto_refresh_minutes,
         codex_auto_refresh_minutes,
         close_behavior: close_behavior_enum,
+        opencode_app_path: normalized_opencode_path,
+        opencode_sync_on_switch,
     };
     
     config::save_user_config(&new_config)?;

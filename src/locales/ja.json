@@ -61,15 +61,22 @@
       "minutes": "分",
       "refreshIntervalLimited": "クォータリセット時の起動が有効になっているため、リフレッシュ間隔の最小値は2分です。",
       "storageTitle": "Directories & Storage",
-      "dataDir": "Data Directory",
-      "dataDirDesc": "Storage location for accounts and configuration files.",
+      "dataDir": "データディレクトリ",
+      "dataDirDesc": "アカウントと設定ファイルの保存場所。",
       "fpDir": "Antigravityストレージ",
       "fpDirDesc": "Antigravityデータファイルの保存場所。",
       "closeBehavior": "閉じる時の動作",
       "closeBehaviorDesc": "ウィンドウを閉じる時の動作を選択",
       "closeBehaviorAsk": "毎回確認する",
       "closeBehaviorMinimize": "トレイに最小化",
-      "closeBehaviorQuit": "アプリを終了"
+      "closeBehaviorQuit": "アプリを終了",
+      "opencodeAppPathDesc": "空欄の場合は既定のパスを使用",
+      "opencodeTitle": "OpenCode 連携",
+      "opencodeRestart": "Codex 切替時に OpenCode を自動再起動",
+      "opencodeRestartDesc": "OpenCode 内の Codex アカウント情報を同期して切り替え",
+      "opencodeAppPath": "OpenCode 起動パス",
+      "opencodeAppPathPlaceholder": "既定のパス",
+      "opencodePathReset": "既定に戻す"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -209,7 +216,14 @@
       "importFailed": "インポートに失敗しました。refresh_token を確認してください"
     },
     "confirmDeleteTag": "タグ「{{tag}}」を削除しますか？このタグは {{count}} 個のアカウントから削除されます。",
-    "defaultGroup": "デフォルトグループ"
+    "defaultGroup": "デフォルトグループ",
+    "filterTags": "タグで絞り込み",
+    "filterTagsCount": "タグ",
+    "noAvailableTags": "利用可能なタグはありません",
+    "clearFilter": "フィルターをクリア",
+    "editTags": "タグを編集",
+    "groupByTag": "タグでグループ化",
+    "untagged": "タグなし"
   },
   "overview": {
     "title": "アカウント概要",
@@ -611,7 +625,8 @@
       "label": "インポート",
       "importing": "ローカルアカウントをインポート中...",
       "successMsg": "インポート成功: {{email}}",
-      "failedMsg": "インポート失敗: {{error}}"
+      "failedMsg": "インポート失敗: {{error}}",
+      "localDesc": "ローカルでログイン済みのセッションから Codex アカウントをインポート。"
     },
     "quota": {
       "hourly": "5 時間クォータ",
@@ -676,7 +691,15 @@
       "hourly": "5時間クォータ",
       "weekly": "週間クォータ",
       "actions": "操作"
-    }
+    },
+    "opencodeSwitch": "OpenCode 切り替えスイッチ",
+    "opencodeSwitchDesc": "OpenCode 内の Codex アカウント情報を同期して切り替え",
+    "opencodeSwitchFailed": "OpenCode のスイッチ更新に失敗しました: {{error}}",
+    "filterTags": "タグで絞り込み",
+    "filterTagsCount": "タグ",
+    "noAvailableTags": "利用可能なタグはありません",
+    "clearFilter": "フィルターをクリア",
+    "editTags": "タグを編集"
   },
   "dashboard": {
     "title": "アカウントダッシュボード",

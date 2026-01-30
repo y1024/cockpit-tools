@@ -28,6 +28,8 @@ interface GeneralConfig {
   auto_refresh_minutes: number;
   codex_auto_refresh_minutes: number;
   close_behavior: 'ask' | 'minimize' | 'quit';
+  opencode_app_path: string;
+  opencode_sync_on_switch: boolean;
 }
 
 export function SettingsPage() {
@@ -59,6 +61,8 @@ export function SettingsPage() {
   const [autoRefresh, setAutoRefresh] = useState('5');
   const [codexAutoRefresh, setCodexAutoRefresh] = useState('10');
   const [closeBehavior, setCloseBehavior] = useState<'ask' | 'minimize' | 'quit'>('ask');
+  const [opencodeAppPath, setOpencodeAppPath] = useState('');
+  const [opencodeSyncOnSwitch, setOpencodeSyncOnSwitch] = useState(true);
   const [generalLoaded, setGeneralLoaded] = useState(false);
   const generalSaveTimerRef = useRef<number | null>(null);
   const suppressGeneralSaveRef = useRef(false);
@@ -123,6 +127,8 @@ export function SettingsPage() {
           autoRefreshMinutes: autoRefreshNum,
           codexAutoRefreshMinutes: codexAutoRefreshNum,
           closeBehavior,
+          opencodeAppPath,
+          opencodeSyncOnSwitch,
         });
         window.dispatchEvent(new Event('config-updated'));
       } catch (err) {
@@ -136,7 +142,17 @@ export function SettingsPage() {
         window.clearTimeout(generalSaveTimerRef.current);
       }
     };
-  }, [autoRefresh, codexAutoRefresh, closeBehavior, generalLoaded, language, theme, t]);
+  }, [
+    autoRefresh,
+    codexAutoRefresh,
+    closeBehavior,
+    generalLoaded,
+    language,
+    theme,
+    opencodeAppPath,
+    opencodeSyncOnSwitch,
+    t,
+  ]);
 
   useEffect(() => {
     const handleLanguageUpdated = (event: Event) => {
@@ -248,6 +264,8 @@ export function SettingsPage() {
       setAutoRefresh(String(config.auto_refresh_minutes));
       setCodexAutoRefresh(String(config.codex_auto_refresh_minutes ?? 10));
       setCloseBehavior(config.close_behavior || 'ask');
+      setOpencodeAppPath(config.opencode_app_path || '');
+      setOpencodeSyncOnSwitch(config.opencode_sync_on_switch ?? true);
       // 同步语言
       changeLanguage(config.language);
       applyTheme(config.theme);
@@ -531,6 +549,53 @@ export function SettingsPage() {
                   <button className="btn btn-secondary" onClick={() => accountService.openDeviceFolder()}>
                     <FolderOpen size={16} />{t('common.open')}
                   </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="group-title">{t('settings.general.opencodeTitle')}</div>
+            <div className="settings-group">
+              <div className="settings-row">
+                <div className="row-label">
+                  <div className="row-title">{t('settings.general.opencodeRestart')}</div>
+                  <div className="row-desc">{t('settings.general.opencodeRestartDesc')}</div>
+                </div>
+                <div className="row-control">
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={opencodeSyncOnSwitch}
+                      onChange={(e) => setOpencodeSyncOnSwitch(e.target.checked)}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="settings-row">
+                <div className="row-label">
+                  <div className="row-title">{t('settings.general.opencodeAppPath')}</div>
+                  <div className="row-desc">
+                    {t('settings.general.opencodeAppPathDesc')}
+                  </div>
+                </div>
+                <div className="row-control">
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      className="settings-input"
+                      value={opencodeAppPath}
+                      placeholder={t('settings.general.opencodeAppPathPlaceholder')}
+                      onChange={(e) => setOpencodeAppPath(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setOpencodeAppPath('')}
+                    >
+                      <RefreshCw size={16} />
+                      {t('settings.general.opencodePathReset')}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
