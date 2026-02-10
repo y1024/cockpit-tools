@@ -16,12 +16,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Quota/switch diagnostics**: Added richer runtime logs and metadata outputs for refresh/switch troubleshooting.
 - **Codex multi-team identity support**: Added account matching based on `account_id`/`organization_id` to support multi-team scenarios.
 - **macOS distribution postflight hook**: Added Cask postflight logic to auto-remove quarantine attributes.
+- **Release process templates/scripts**: Added release checklist/docs and helper scripts for preflight validation and checksum generation.
 
 ### Changed
 - **Unified switch flow (overview -> default instance)**: Antigravity/Codex/GitHub Copilot overview switching now follows default-instance startup logic (PID-targeted close -> inject -> start).
 - **GitHub Copilot flow alignment**: Overview switching and multi-instance startup now share the same injection/start semantics.
 - **Instance lifecycle alignment**: Unified start/stop/close behavior across Antigravity/Codex/VS Code with managed-directory matching and PID tracking.
 - **Windows VS Code launch strategy**: Switched to `cmd /C code` for `.cmd` wrapper compatibility.
+- **PID resolution semantics alignment**: VS Code PID resolving/focus now uses `Option<&str>` semantics (`None` => default instance), matching Antigravity behavior and reducing default-instance mismatch edge cases.
 - **Docs and settings guidance**: Updated README/security/settings guidance for new switching and path behaviors.
 - **Localization synchronization**: Updated locale keys across all supported languages for Copilot switching, open-window action, privacy mode, and related error messages.
 
