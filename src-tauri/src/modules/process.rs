@@ -2502,7 +2502,7 @@ pub fn close_antigravity_instances(user_data_dirs: &[String], timeout_secs: u64)
         ));
     }
 
-    let remaining_entries: Vec<(u32, Option<String>)> = collect_antigravity_process_entries()
+    let mut remaining_entries: Vec<(u32, Option<String>)> = collect_antigravity_process_entries()
         .into_iter()
         .filter(|(_, dir)| {
             let resolved_dir = dir
@@ -2517,11 +2517,61 @@ pub fn close_antigravity_instances(user_data_dirs: &[String], timeout_secs: u64)
         })
         .collect();
     if !remaining_entries.is_empty() {
+        let mut remaining_pids: Vec<u32> = remaining_entries.iter().map(|(pid, _)| *pid).collect();
+        remaining_pids.sort();
+        remaining_pids.dedup();
+        crate::modules::logger::log_warn(&format!(
+            "[AG Close] first remaining pids after close={:?}",
+            remaining_pids
+        ));
+        #[cfg(target_os = "windows")]
+        {
+            log_antigravity_process_details_for_pids(&remaining_pids);
+        }
+
+        if !remaining_pids.is_empty() {
+            crate::modules::logger::log_warn(&format!(
+                "[AG Close] retry force close for remaining pids={:?}",
+                remaining_pids
+            ));
+            if let Err(err) = close_pids(&remaining_pids, 6) {
+                crate::modules::logger::log_warn(&format!(
+                    "[AG Close] retry close_pids returned error: {}",
+                    err
+                ));
+            }
+            remaining_entries = collect_antigravity_process_entries()
+                .into_iter()
+                .filter(|(_, dir)| {
+                    let resolved_dir = dir
+                        .as_ref()
+                        .map(|value| normalize_path_for_compare(value))
+                        .filter(|value| !value.is_empty())
+                        .or_else(|| default_dir.clone());
+                    resolved_dir
+                        .as_ref()
+                        .map(|value| target_dirs.contains(value))
+                        .unwrap_or(false)
+                })
+                .collect();
+        }
+    }
+    if !remaining_entries.is_empty() {
+        let mut remaining_pids: Vec<u32> = remaining_entries.iter().map(|(pid, _)| *pid).collect();
+        remaining_pids.sort();
+        remaining_pids.dedup();
+        #[cfg(target_os = "windows")]
+        {
+            log_antigravity_process_details_for_pids(&remaining_pids);
+        }
         crate::modules::logger::log_error(&format!(
             "[AG Close] still_running_entries={:?}",
             remaining_entries
         ));
-        return Err("无法关闭受管 Antigravity 实例进程，请手动关闭后重试".to_string());
+        return Err(format!(
+            "无法关闭受管 Antigravity 实例进程，请手动关闭后重试 (remaining_pids={:?})",
+            remaining_pids
+        ));
     }
 
     Ok(())
@@ -2615,6 +2665,49 @@ fn send_close_signal(pid: u32) {
     #[cfg(any(target_os = "macos", target_os = "linux"))]
     {
         let _ = Command::new("kill").args(["-15", &pid.to_string()]).output();
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn log_antigravity_process_details_for_pids(pids: &[u32]) {
+    if pids.is_empty() {
+        return;
+    }
+    let mut unique = pids.to_vec();
+    unique.sort();
+    unique.dedup();
+    let pid_list = unique
+        .iter()
+        .map(|pid| pid.to_string())
+        .collect::<Vec<String>>()
+        .join(",");
+    let script = format!(
+        "$ids=@({}); Get-CimInstance Win32_Process -Filter \"Name='Antigravity.exe'\" | Where-Object {{$ids -contains $_.ProcessId}} | ForEach-Object {{ \"$($_.ProcessId)|$($_.ParentProcessId)|$($_.CommandLine)\" }}",
+        pid_list
+    );
+    match powershell_output(&["-Command", &script]) {
+        Ok(output) => {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            if stdout.trim().is_empty() {
+                crate::modules::logger::log_warn(&format!(
+                    "[AG Close] remaining pid details not found for {:?}",
+                    unique
+                ));
+            } else {
+                for line in stdout.lines().filter(|line| !line.trim().is_empty()) {
+                    crate::modules::logger::log_warn(&format!(
+                        "[AG Close] remaining_pid_detail {}",
+                        line.trim()
+                    ));
+                }
+            }
+        }
+        Err(err) => {
+            crate::modules::logger::log_warn(&format!(
+                "[AG Close] read remaining pid details failed: {}",
+                err
+            ));
+        }
     }
 }
 
