@@ -23,7 +23,7 @@ interface GeneralConfig {
   auto_switch_threshold: number;
 }
 
-export type QuickSettingsType = 'antigravity' | 'codex' | 'github_copilot';
+export type QuickSettingsType = 'antigravity' | 'codex' | 'github_copilot' | 'windsurf';
 
 interface QuickSettingsPopoverProps {
   type: QuickSettingsType;
@@ -90,6 +90,7 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
       case 'antigravity': return 'auto_refresh_minutes';
       case 'codex': return 'codex_auto_refresh_minutes';
       case 'github_copilot': return 'ghcp_auto_refresh_minutes';
+      case 'windsurf': return 'ghcp_auto_refresh_minutes';
     }
   };
 
@@ -168,6 +169,8 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
         return t('quickSettings.codex.title', 'Codex 设置');
       case 'github_copilot':
         return t('quickSettings.githubCopilot.title', 'GitHub Copilot 设置');
+      case 'windsurf':
+        return t('quickSettings.windsurf.title', 'Windsurf 设置');
     }
   };
 
@@ -183,6 +186,8 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
         return t('quickSettings.codexRefreshInterval', '配额自动刷新');
       case 'github_copilot':
         return t('quickSettings.ghcpRefreshInterval', '配额自动刷新');
+      case 'windsurf':
+        return t('quickSettings.windsurfRefreshInterval', '配额自动刷新');
     }
   };
 
@@ -195,6 +200,8 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
         return config.codex_app_path;
       case 'github_copilot':
         return config.vscode_app_path;
+      case 'windsurf':
+        return config.vscode_app_path;
     }
   };
 
@@ -206,6 +213,8 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
         return t('quickSettings.codex.appPath', '启动路径');
       case 'github_copilot':
         return t('quickSettings.githubCopilot.appPath', 'VS Code 路径');
+      case 'windsurf':
+        return t('quickSettings.windsurf.appPath', 'VS Code 路径');
     }
   };
 
@@ -216,6 +225,8 @@ export function QuickSettingsPopover({ type }: QuickSettingsPopoverProps) {
       case 'codex':
         return 'codex';
       case 'github_copilot':
+        return 'vscode';
+      case 'windsurf':
         return 'vscode';
     }
   };

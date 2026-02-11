@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useRef, useCallback } from 'react';
 import { Page } from '../../types/navigation';
 import { RobotIcon } from '../icons/RobotIcon';
+import { WindsurfIcon } from '../icons/WindsurfIcon';
 
 interface FlyingRocket {
   id: number;
@@ -126,6 +127,15 @@ export function SideNav({ page, setPage }: SideNavProps) {
         >
           <Github size={20} />
           <span className="tooltip">{t('nav.githubCopilot', 'GitHub Copilot')}</span>
+        </button>
+
+        <button
+          className={`nav-item ${page === 'windsurf' ? 'active' : ''}`}
+          onClick={() => setPage('windsurf')}
+          title={t('nav.windsurf', 'Windsurf')}
+        >
+          <WindsurfIcon />
+          <span className="tooltip">{t('nav.windsurf', 'Windsurf')}</span>
         </button>
 
         <button 

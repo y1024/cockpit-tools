@@ -240,6 +240,33 @@ pub fn run() {
             commands::github_copilot_instance::github_copilot_open_instance_window,
             commands::github_copilot_instance::github_copilot_close_all_instances,
 
+            // Windsurf Commands
+            commands::windsurf::list_windsurf_accounts,
+            commands::windsurf::delete_windsurf_account,
+            commands::windsurf::delete_windsurf_accounts,
+            commands::windsurf::import_windsurf_from_json,
+            commands::windsurf::export_windsurf_accounts,
+            commands::windsurf::refresh_windsurf_token,
+            commands::windsurf::refresh_all_windsurf_tokens,
+            commands::windsurf::windsurf_oauth_login_start,
+            commands::windsurf::windsurf_oauth_login_complete,
+            commands::windsurf::windsurf_oauth_login_cancel,
+            commands::windsurf::add_windsurf_account_with_token,
+            commands::windsurf::update_windsurf_account_tags,
+            commands::windsurf::get_windsurf_accounts_index_path,
+            commands::windsurf::inject_windsurf_to_vscode,
+
+            // Windsurf Instance Commands
+            commands::windsurf_instance::windsurf_get_instance_defaults,
+            commands::windsurf_instance::windsurf_list_instances,
+            commands::windsurf_instance::windsurf_create_instance,
+            commands::windsurf_instance::windsurf_update_instance,
+            commands::windsurf_instance::windsurf_delete_instance,
+            commands::windsurf_instance::windsurf_start_instance,
+            commands::windsurf_instance::windsurf_stop_instance,
+            commands::windsurf_instance::windsurf_open_instance_window,
+            commands::windsurf_instance::windsurf_close_all_instances,
+
             // Codex Instance Commands
             commands::codex_instance::codex_get_instance_defaults,
             commands::codex_instance::codex_list_instances,

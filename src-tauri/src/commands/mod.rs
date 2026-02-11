@@ -11,3 +11,5 @@ pub mod instance;
 pub mod codex_instance;
 pub mod github_copilot;
 pub mod github_copilot_instance;
+pub mod windsurf;
+pub mod windsurf_instance;

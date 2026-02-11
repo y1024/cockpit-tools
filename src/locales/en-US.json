@@ -30,6 +30,7 @@
     "settings": "Settings",
     "codex": "Codex Accounts",
     "githubCopilot": "GitHub Copilot",
+    "windsurf": "Windsurf",
     "dashboard": "Dashboard",
     "instances": "Multi-Instance"
   },
@@ -1172,6 +1173,139 @@
     "customInput": "Custom",
     "apply": "Apply",
     "inputMinutes": "Enter minutes",
-    "inputPercent": "Enter percentage"
+    "inputPercent": "Enter percentage",
+    "windsurf": {
+      "title": "Windsurf Settings",
+      "appPath": "VS Code Path"
+    },
+    "windsurfRefreshInterval": "Quota Auto Refresh"
+  },
+  "windsurf": {
+    "title": "Windsurf Account Management",
+    "subtitle": "Monitor quota status for all accounts in real time.",
+    "overview": {
+      "title": "Account Overview"
+    },
+    "instances": {
+      "title": "Multi-Instance",
+      "subtitle": "Independent configs per instance for parallel multi-account runs.",
+      "unsupported": {
+        "title": "Unsupported on this system",
+        "desc": "Windsurf multi-instance is available only on macOS."
+      },
+      "quota": {
+        "inline": "Inline Suggestions",
+        "chat": "Chat messages"
+      }
+    },
+    "addAccount": "Add Account",
+    "refreshAll": "Refresh All",
+    "refreshQuota": "Refresh Quota",
+    "empty": {
+      "title": "No Accounts",
+      "description": "Click \"Add Account\" to start managing your Windsurf accounts"
+    },
+    "noMatch": {
+      "title": "No matching accounts",
+      "desc": "Try adjusting your search or filters"
+    },
+    "addModal": {
+      "title": "Add Windsurf Account",
+      "oauth": "OAuth",
+      "token": "Token / JSON",
+      "import": "Local Import"
+    },
+    "oauth": {
+      "desc": "Click the button below and complete Windsurf authorization in your browser.",
+      "preparing": "Preparing authorization info...",
+      "openBrowser": "Open in Browser",
+      "hint": "Once authorized, this window will update automatically",
+      "success": "Authorization successful",
+      "failed": "Authorization failed",
+      "retry": "Regenerate authorization info",
+      "timeoutRetry": "Refresh authorization link",
+      "waiting": "Waiting for authorization...",
+      "meta": "Expires in: {{expires}}s; Poll interval: {{interval}}s"
+    },
+    "token": {
+      "desc": "Paste your Windsurf access token or exported JSON data.",
+      "placeholder": "Paste token or JSON...",
+      "import": "Import",
+      "importing": "Importing...",
+      "importSuccessMsg": "Imported {{count}} account(s) successfully",
+      "importFailedMsg": "Import failed: {{error}}",
+      "empty": "Please enter a token or JSON"
+    },
+    "import": {
+      "label": "Import",
+      "localDesc": "Import Windsurf account data from a JSON file.",
+      "importing": "Importing...",
+      "failedMsg": "Import failed: {{error}}",
+      "pickFile": "Select JSON file to import"
+    },
+    "quota": {
+      "hourly": "Inline Suggestions",
+      "weekly": "Chat messages",
+      "noData": "No quota data",
+      "resetDone": "Reset"
+    },
+    "usage": {
+      "resetUnknown": "Allowance resets -",
+      "resetLine": "Allowance resets {{dateText}}."
+    },
+    "time": {
+      "relativeDays": "{{days}}d",
+      "relativeDaysHours": "{{days}}d {{hours}}h",
+      "relativeHours": "{{hours}}h",
+      "relativeHoursMinutes": "{{hours}}h {{minutes}}m",
+      "relativeMinutes": "{{minutes}}m",
+      "lessThanMinute": "<1m",
+      "relativeWithAbsolute": "{{relative}} ({{absolute}})"
+    },
+    "search": "Search accounts...",
+    "view": {
+      "list": "List view",
+      "grid": "Card view"
+    },
+    "filter": {
+      "all": "All ({{count}})",
+      "free": "FREE ({{count}})",
+      "individual": "INDIVIDUAL ({{count}})",
+      "pro": "PRO ({{count}})",
+      "business": "BUSINESS ({{count}})",
+      "enterprise": "ENTERPRISE ({{count}})"
+    },
+    "filterLabel": "Filter",
+    "sortLabel": "Sort",
+    "sort": {
+      "createdAt": "Created time",
+      "weekly": "By Chat messages usage",
+      "hourly": "By Inline Suggestions usage",
+      "weeklyReset": "By Chat messages reset time",
+      "hourlyReset": "By Inline Suggestions reset time",
+      "descTooltip": "Current: Descending. Click to switch to ascending",
+      "ascTooltip": "Current: Ascending. Click to switch to descending",
+      "toggleDirection": "Toggle sort direction"
+    },
+    "columns": {
+      "email": "Account",
+      "plan": "Plan",
+      "hourly": "Inline Suggestions",
+      "weekly": "Chat messages",
+      "actions": "Actions"
+    },
+    "export": "Export",
+    "injectToVSCode": "Switch to VS Code",
+    "injecting": "Injecting...",
+    "injectSuccess": "Token injected to VS Code successfully. VS Code is launching.",
+    "injectRequireClose": "Please close VS Code before injecting.",
+    "flowNotice": {
+      "title": "Windsurf account guide (click to expand/collapse)",
+      "desc": "Switching accounts requires reading VS Code local auth storage and using the system credential service for decrypt/write-back. Data is processed locally only.",
+      "inject": "One-click switching: This tool reads local VS Code encryption material (DPAPI/Keychain/Secret Service), decrypts the auth session in state.vscdb, replaces the Windsurf token, and re-encrypts it — all locally on your machine.",
+      "alternative": "Multi-instance isolation: use different --user-data-dir profiles and log in once per instance to switch account environments quickly.",
+      "reason": "Permission scope: read VS Code auth database (state.vscdb) and call system credential capability (Windows DPAPI / macOS Keychain / Linux Secret Service) for decrypt/write-back.",
+      "storage": "Data scope: only Windsurf auth-session related entries are read/updated; system secrets are not modified and no key/token is uploaded."
+    }
   }
 }

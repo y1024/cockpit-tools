@@ -31,6 +31,7 @@
     "settings": "设置",
     "codex": "Codex 账号",
     "githubCopilot": "GitHub Copilot",
+    "windsurf": "Windsurf",
     "instances": "多开实例"
   },
   "privacy": {
@@ -1172,6 +1173,139 @@
     "customInput": "自定义",
     "apply": "确定",
     "inputMinutes": "输入分钟数",
-    "inputPercent": "输入百分比"
+    "inputPercent": "输入百分比",
+    "windsurf": {
+      "title": "Windsurf 设置",
+      "appPath": "VS Code 路径"
+    },
+    "windsurfRefreshInterval": "配额自动刷新"
+  },
+  "windsurf": {
+    "title": "Windsurf 账号管理",
+    "subtitle": "实时监控所有账号的配额状态。",
+    "overview": {
+      "title": "账号总览"
+    },
+    "instances": {
+      "title": "多开实例",
+      "subtitle": "多实例独立配置，多账号并行运行。",
+      "unsupported": {
+        "title": "暂不支持当前系统",
+        "desc": "Windsurf 多开实例仅支持 macOS。"
+      },
+      "quota": {
+        "inline": "Inline Suggestions",
+        "chat": "Chat messages"
+      }
+    },
+    "addAccount": "添加账号",
+    "refreshAll": "刷新全部",
+    "refreshQuota": "刷新配额",
+    "empty": {
+      "title": "暂无账号",
+      "description": "点击\"添加账号\"开始管理您的 Windsurf 账号"
+    },
+    "noMatch": {
+      "title": "没有匹配的账号",
+      "desc": "请尝试调整搜索或筛选条件"
+    },
+    "addModal": {
+      "title": "添加 Windsurf 账号",
+      "oauth": "OAuth",
+      "token": "Token / JSON",
+      "import": "本地导入"
+    },
+    "oauth": {
+      "desc": "点击下方按钮，在浏览器中完成 Windsurf 授权登录。",
+      "preparing": "正在准备授权信息...",
+      "openBrowser": "在浏览器中打开",
+      "hint": "完成授权后，此窗口将自动更新",
+      "success": "授权成功",
+      "failed": "授权失败",
+      "retry": "重新生成授权信息",
+      "timeoutRetry": "刷新授权链接",
+      "waiting": "等待授权完成...",
+      "meta": "授权有效期：{{expires}}s；轮询间隔：{{interval}}s"
+    },
+    "token": {
+      "desc": "粘贴您的 Windsurf Access Token 或导出的 JSON 数据。",
+      "placeholder": "粘贴 Token 或 JSON...",
+      "import": "导入",
+      "importing": "正在导入...",
+      "importSuccessMsg": "成功导入 {{count}} 个账号",
+      "importFailedMsg": "导入失败: {{error}}",
+      "empty": "请输入 Token 或 JSON"
+    },
+    "import": {
+      "label": "导入",
+      "localDesc": "从 JSON 文件导入 Windsurf 账号数据。",
+      "importing": "正在导入...",
+      "failedMsg": "导入失败: {{error}}",
+      "pickFile": "选择 JSON 文件导入"
+    },
+    "quota": {
+      "hourly": "Inline Suggestions",
+      "weekly": "Chat messages",
+      "noData": "暂无配额数据",
+      "resetDone": "已重置"
+    },
+    "usage": {
+      "resetUnknown": "Allowance resets -",
+      "resetLine": "Allowance resets {{dateText}}."
+    },
+    "time": {
+      "relativeDays": "{{days}}天",
+      "relativeDaysHours": "{{days}}天 {{hours}}小时",
+      "relativeHours": "{{hours}}小时",
+      "relativeHoursMinutes": "{{hours}}小时 {{minutes}}分钟",
+      "relativeMinutes": "{{minutes}}分钟",
+      "lessThanMinute": "<1分钟",
+      "relativeWithAbsolute": "{{relative}} ({{absolute}})"
+    },
+    "search": "搜索账号...",
+    "view": {
+      "list": "列表视图",
+      "grid": "卡片视图"
+    },
+    "filter": {
+      "all": "全部 ({{count}})",
+      "free": "FREE ({{count}})",
+      "individual": "INDIVIDUAL ({{count}})",
+      "pro": "PRO ({{count}})",
+      "business": "BUSINESS ({{count}})",
+      "enterprise": "ENTERPRISE ({{count}})"
+    },
+    "filterLabel": "筛选",
+    "sortLabel": "排序",
+    "sort": {
+      "createdAt": "按创建时间",
+      "weekly": "按 Chat messages 使用量",
+      "hourly": "按 Inline Suggestions 使用量",
+      "weeklyReset": "按 Chat messages 重置时间",
+      "hourlyReset": "按 Inline Suggestions 重置时间",
+      "descTooltip": "当前：降序，点击切换为升序",
+      "ascTooltip": "当前：升序，点击切换为降序",
+      "toggleDirection": "切换排序方向"
+    },
+    "columns": {
+      "email": "账号",
+      "plan": "订阅",
+      "hourly": "Inline Suggestions",
+      "weekly": "Chat messages",
+      "actions": "操作"
+    },
+    "export": "导出",
+    "flowNotice": {
+      "title": "Windsurf 账号管理说明（点击展开/收起）",
+      "desc": "切换账号时需要读取 VS Code 本地认证存储，并调用系统凭据服务完成解密与回写；数据仅在本机处理。",
+      "alternative": "多开实例隔离：使用不同 --user-data-dir 做账号隔离；每个实例登录一次，后续按实例启动即可快速切换到对应账号环境。",
+      "inject": "一键切号：本工具读取本地 VS Code 加密材料（DPAPI/Keychain/Secret Service），解密 state.vscdb 中的认证会话，替换 Windsurf 令牌并重新加密 —— 全部在本机完成。",
+      "reason": "权限需求：读取 VS Code 认证数据库（state.vscdb），并调用系统加密能力（Windows DPAPI / macOS Keychain / Linux Secret Service）进行解密与写回。",
+      "storage": "读取范围：仅处理 Windsurf 登录会话相关数据，不会修改系统秘钥本身，也不会上传秘钥或令牌。"
+    },
+    "injectToVSCode": "切换到 VS Code",
+    "injecting": "注入中...",
+    "injectSuccess": "已成功将令牌注入 VS Code，VS Code 正在启动。",
+    "injectRequireClose": "请先关闭 VS Code 再进行注入。"
   }
 }

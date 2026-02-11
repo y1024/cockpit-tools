@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import { AccountsPage } from './pages/AccountsPage';
 import { CodexAccountsPage } from './pages/CodexAccountsPage';
 import { GitHubCopilotAccountsPage } from './pages/GitHubCopilotAccountsPage';
+import { WindsurfAccountsPage } from './pages/WindsurfAccountsPage';
 
 import { FingerprintsPage } from './pages/FingerprintsPage';
 import { WakeupTasksPage } from './pages/WakeupTasksPage';
@@ -506,6 +507,7 @@ function App() {
         {page === 'overview' && <AccountsPage onNavigate={setPage} />}
         {page === 'codex' && <CodexAccountsPage />}
         {page === 'github-copilot' && <GitHubCopilotAccountsPage />}
+        {page === 'windsurf' && <WindsurfAccountsPage />}
         {page === 'instances' && <InstancesPage onNavigate={setPage} />}
         {page === 'fingerprints' && <FingerprintsPage onNavigate={setPage} />}
         {page === 'wakeup' && <WakeupTasksPage onNavigate={setPage} />}

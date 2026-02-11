@@ -3,6 +3,7 @@ export type Page =
   | 'overview'
   | 'codex'
   | 'github-copilot'
+  | 'windsurf'
   | 'codex-instances'
   | 'instances'
   | 'accounts'
