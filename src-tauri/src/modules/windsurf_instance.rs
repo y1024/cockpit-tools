@@ -1295,6 +1295,15 @@ fn detect_windsurf_exec_path() -> Option<PathBuf> {
                 return Some(candidate);
             }
         }
+        if let Some(path) = modules::process::detect_windows_exec_path_by_signatures(
+            "windsurf",
+            &["Windsurf.exe", "Electron.exe"],
+            &["windsurf"],
+            &["windsurf", "codeium"],
+            &["windsurf", "codeium"],
+        ) {
+            return Some(path);
+        }
     }
 
     #[cfg(target_os = "linux")]

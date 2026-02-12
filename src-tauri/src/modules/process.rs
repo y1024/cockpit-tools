@@ -65,6 +65,287 @@ fn powershell_output(args: &[&str]) -> std::io::Result<std::process::Output> {
         .output()
 }
 
+#[cfg(target_os = "windows")]
+fn powershell_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "''"))
+}
+
+#[cfg(target_os = "windows")]
+fn powershell_array_literal(values: &[&str]) -> String {
+    values
+        .iter()
+        .map(|value| powershell_quote(value))
+        .collect::<Vec<String>>()
+        .join(",")
+}
+
+#[cfg(target_os = "windows")]
+fn normalize_windows_candidate_path(raw: &str) -> Option<std::path::PathBuf> {
+    let text = raw.trim();
+    if text.is_empty() {
+        return None;
+    }
+
+    let mut normalized = text.trim_matches('"').trim_matches('\'').trim().to_string();
+    let lowered = normalized.to_lowercase();
+    if let Some(index) = lowered.find(".exe") {
+        normalized.truncate(index + 4);
+    }
+    let normalized = normalized
+        .trim()
+        .trim_matches('"')
+        .trim_matches('\'')
+        .trim_end_matches(',')
+        .trim()
+        .to_string();
+    if normalized.is_empty() {
+        return None;
+    }
+
+    let path = std::path::PathBuf::from(normalized);
+    if path.exists() && path.is_file() {
+        Some(path)
+    } else {
+        None
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn score_windows_candidate(
+    path: &std::path::Path,
+    exe_names_lower: &HashSet<String>,
+    keywords_lower: &[String],
+) -> Option<i32> {
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    if file_name.is_empty() {
+        return None;
+    }
+
+    let path_lower = path.to_string_lossy().to_lowercase();
+    let has_keyword = keywords_lower
+        .iter()
+        .any(|keyword| !keyword.is_empty() && path_lower.contains(keyword));
+
+    if exe_names_lower.contains(&file_name) {
+        if file_name == "electron.exe" && !has_keyword {
+            return None;
+        }
+        let mut score = if file_name == "electron.exe" { 60 } else { 100 };
+        if has_keyword {
+            score += 5;
+        }
+        return Some(score);
+    }
+
+    let is_exe = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| value.eq_ignore_ascii_case("exe"))
+        .unwrap_or(false);
+    if is_exe && has_keyword {
+        return Some(50);
+    }
+    None
+}
+
+#[cfg(target_os = "windows")]
+pub fn detect_windows_exec_path_by_signatures(
+    app_label: &str,
+    exe_names: &[&str],
+    command_names: &[&str],
+    protocol_names: &[&str],
+    display_keywords: &[&str],
+) -> Option<std::path::PathBuf> {
+    if exe_names.is_empty() {
+        return None;
+    }
+
+    let exe_array = powershell_array_literal(exe_names);
+    let command_array = powershell_array_literal(command_names);
+    let protocol_array = powershell_array_literal(protocol_names);
+    let keyword_array = powershell_array_literal(display_keywords);
+
+    let script = format!(
+        r#"$ErrorActionPreference='SilentlyContinue'
+$exeNames=@({exe_array})
+$commandNames=@({command_array})
+$protocolNames=@({protocol_array})
+$keywords=@({keyword_array})
+
+function Normalize-Candidate([string]$raw) {{
+  if ([string]::IsNullOrWhiteSpace($raw)) {{ return $null }}
+  $text = $raw.Trim()
+  if ($text -match '(?i)(?<p>[A-Za-z]:\\.+?\.exe)') {{
+    $text = $matches['p']
+  }}
+  $text = $text.Trim().Trim('"').Trim("'")
+  if ([string]::IsNullOrWhiteSpace($text)) {{ return $null }}
+  return $text
+}}
+
+function Emit-Candidate([string]$raw) {{
+  $candidate = Normalize-Candidate $raw
+  if ([string]::IsNullOrWhiteSpace($candidate)) {{ return }}
+  if (Test-Path -LiteralPath $candidate) {{ Write-Output $candidate }}
+}}
+
+$appPathRoots=@(
+  'HKCU:\Software\Microsoft\Windows\CurrentVersion\App Paths',
+  'HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths',
+  'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths'
+)
+foreach ($root in $appPathRoots) {{
+  foreach ($exe in $exeNames) {{
+    $keyPath = Join-Path $root $exe
+    $entry = Get-ItemProperty -Path $keyPath -ErrorAction SilentlyContinue
+    if ($entry) {{
+      Emit-Candidate $entry.'(default)'
+      if ($entry.Path) {{
+        Emit-Candidate (Join-Path $entry.Path $exe)
+      }}
+    }}
+  }}
+}}
+
+$uninstallRoots=@(
+  'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+  'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+  'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'
+)
+foreach ($root in $uninstallRoots) {{
+  Get-ItemProperty -Path $root -ErrorAction SilentlyContinue | ForEach-Object {{
+    $display = [string]$_.DisplayName
+    $displayLower = $display.ToLowerInvariant()
+    $hit = $false
+    foreach ($kw in $keywords) {{
+      if ([string]::IsNullOrWhiteSpace($kw)) {{ continue }}
+      if ($displayLower.Contains($kw.ToLowerInvariant())) {{
+        $hit = $true
+        break
+      }}
+    }}
+    if (-not $hit) {{ return }}
+    Emit-Candidate $_.DisplayIcon
+    Emit-Candidate $_.UninstallString
+    $install = [string]$_.InstallLocation
+    if (-not [string]::IsNullOrWhiteSpace($install)) {{
+      foreach ($exe in $exeNames) {{
+        Emit-Candidate (Join-Path $install $exe)
+      }}
+    }}
+  }}
+}}
+
+$classRoots=@('HKCU:\Software\Classes','HKLM:\Software\Classes')
+foreach ($protocol in $protocolNames) {{
+  if ([string]::IsNullOrWhiteSpace($protocol)) {{ continue }}
+  foreach ($classRoot in $classRoots) {{
+    $commandPath = Join-Path (Join-Path $classRoot $protocol) 'shell\open\command'
+    Emit-Candidate ((Get-ItemProperty -Path $commandPath -ErrorAction SilentlyContinue).'(default)')
+  }}
+}}
+
+$shortcutRoots=@(
+  "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
+  "$env:APPDATA\Microsoft\Windows\Start Menu\Programs",
+  "$env:USERPROFILE\Desktop",
+  "$env:PUBLIC\Desktop"
+)
+$shell = $null
+try {{ $shell = New-Object -ComObject WScript.Shell }} catch {{}}
+if ($shell) {{
+  foreach ($root in $shortcutRoots) {{
+    if (-not (Test-Path -LiteralPath $root)) {{ continue }}
+    Get-ChildItem -Path $root -Filter *.lnk -Recurse -ErrorAction SilentlyContinue | ForEach-Object {{
+      try {{
+        $shortcut = $shell.CreateShortcut($_.FullName)
+        Emit-Candidate $shortcut.TargetPath
+      }} catch {{}}
+    }}
+  }}
+}}
+
+foreach ($commandName in $commandNames) {{
+  if ([string]::IsNullOrWhiteSpace($commandName)) {{ continue }}
+  $command = Get-Command $commandName -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($command) {{
+    Emit-Candidate $command.Source
+    Emit-Candidate $command.Definition
+  }}
+}}
+"#
+    );
+
+    let output = match powershell_output(&["-Command", &script]) {
+        Ok(value) => value,
+        Err(err) => {
+            crate::modules::logger::log_warn(&format!(
+                "[Path Detect] {} PowerShell 探测失败: {}",
+                app_label, err
+            ));
+            return None;
+        }
+    };
+    if !output.status.success() {
+        return None;
+    }
+
+    let exe_names_lower: HashSet<String> =
+        exe_names.iter().map(|value| value.to_lowercase()).collect();
+    let keywords_lower: Vec<String> = display_keywords
+        .iter()
+        .map(|value| value.trim().to_lowercase())
+        .filter(|value| !value.is_empty())
+        .collect();
+
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut best: Option<(std::path::PathBuf, i32)> = None;
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    for line in stdout.lines() {
+        let Some(path) = normalize_windows_candidate_path(line) else {
+            continue;
+        };
+        let dedupe_key = path.to_string_lossy().to_lowercase();
+        if !seen.insert(dedupe_key) {
+            continue;
+        }
+        let Some(score) = score_windows_candidate(&path, &exe_names_lower, &keywords_lower) else {
+            continue;
+        };
+        match best.as_ref() {
+            Some((_, current_score)) if *current_score >= score => {}
+            _ => best = Some((path, score)),
+        }
+    }
+
+    if let Some((path, score)) = best {
+        crate::modules::logger::log_info(&format!(
+            "[Path Detect] {} 自动探测命中: {}, score={}",
+            app_label,
+            path.to_string_lossy(),
+            score
+        ));
+        return Some(path);
+    }
+    None
+}
+
+#[cfg(not(target_os = "windows"))]
+#[allow(dead_code)]
+pub fn detect_windows_exec_path_by_signatures(
+    _app_label: &str,
+    _exe_names: &[&str],
+    _command_names: &[&str],
+    _protocol_names: &[&str],
+    _display_keywords: &[&str],
+) -> Option<std::path::PathBuf> {
+    None
+}
+
 fn should_detach_child() -> bool {
     if let Ok(value) = std::env::var("COCKPIT_CHILD_LOGS") {
         let lowered = value.trim().to_lowercase();
@@ -114,6 +395,14 @@ const APP_PATH_NOT_FOUND_PREFIX: &str = "APP_PATH_NOT_FOUND:";
 
 fn app_path_missing_error(app: &str) -> String {
     format!("{}{}", APP_PATH_NOT_FOUND_PREFIX, app)
+}
+
+fn configured_path_exists(value: &str) -> bool {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return false;
+    }
+    Path::new(trimmed).exists()
 }
 
 #[cfg(target_os = "macos")]
@@ -436,6 +725,15 @@ fn detect_antigravity_exec_path() -> Option<std::path::PathBuf> {
                 return Some(candidate);
             }
         }
+        if let Some(path) = detect_windows_exec_path_by_signatures(
+            "antigravity",
+            &["Antigravity.exe", "Electron.exe"],
+            &["antigravity"],
+            &["antigravity"],
+            &["antigravity"],
+        ) {
+            return Some(path);
+        }
     }
 
     #[cfg(target_os = "linux")]
@@ -511,6 +809,15 @@ fn detect_vscode_exec_path() -> Option<std::path::PathBuf> {
                 return Some(candidate);
             }
         }
+        if let Some(path) = detect_windows_exec_path_by_signatures(
+            "vscode",
+            &["Code.exe", "Code - Insiders.exe"],
+            &["code", "code-insiders"],
+            &["vscode", "vscode-insiders"],
+            &["visual studio code", "vs code", "vscode"],
+        ) {
+            return Some(path);
+        }
     }
 
     #[cfg(target_os = "linux")]
@@ -550,6 +857,19 @@ fn detect_codex_exec_path() -> Option<std::path::PathBuf> {
         }
     }
 
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(path) = detect_windows_exec_path_by_signatures(
+            "codex",
+            &["Codex.exe", "codex.exe"],
+            &["codex"],
+            &["codex"],
+            &["codex"],
+        ) {
+            return Some(path);
+        }
+    }
+
     None
 }
 
@@ -584,6 +904,15 @@ fn detect_opencode_exec_path() -> Option<std::path::PathBuf> {
             if candidate.exists() {
                 return Some(candidate);
             }
+        }
+        if let Some(path) = detect_windows_exec_path_by_signatures(
+            "opencode",
+            &["OpenCode.exe", "opencode.exe"],
+            &["opencode"],
+            &["opencode"],
+            &["opencode", "open code"],
+        ) {
+            return Some(path);
         }
     }
 
@@ -662,7 +991,7 @@ pub fn detect_and_save_app_path(app: &str) -> Option<String> {
     let current = config::get_user_config();
     match app {
         "antigravity" => {
-            if !current.antigravity_app_path.trim().is_empty() {
+            if configured_path_exists(&current.antigravity_app_path) {
                 return Some(current.antigravity_app_path);
             }
             if let Some(detected) = detect_antigravity_exec_path() {
@@ -671,7 +1000,7 @@ pub fn detect_and_save_app_path(app: &str) -> Option<String> {
             }
         }
         "codex" => {
-            if !current.codex_app_path.trim().is_empty() {
+            if configured_path_exists(&current.codex_app_path) {
                 return Some(current.codex_app_path);
             }
             if let Some(detected) = detect_codex_exec_path() {
@@ -680,7 +1009,7 @@ pub fn detect_and_save_app_path(app: &str) -> Option<String> {
             }
         }
         "vscode" => {
-            if !current.vscode_app_path.trim().is_empty() {
+            if configured_path_exists(&current.vscode_app_path) {
                 return Some(current.vscode_app_path);
             }
             if let Some(detected) = detect_vscode_exec_path() {
@@ -689,7 +1018,7 @@ pub fn detect_and_save_app_path(app: &str) -> Option<String> {
             }
         }
         "opencode" => {
-            if !current.opencode_app_path.trim().is_empty() {
+            if configured_path_exists(&current.opencode_app_path) {
                 return Some(current.opencode_app_path);
             }
             if let Some(detected) = detect_opencode_exec_path() {
