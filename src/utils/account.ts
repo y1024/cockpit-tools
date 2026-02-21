@@ -1,11 +1,11 @@
 import { QuotaData } from '../types/account';
 
-// 显示顺序与分组管理一致：Claude 4.5, G3-Pro, G3-Flash, G3-Image
+// 显示顺序与分组管理一致：Claude 4.5, Gemini Pro, Gemini Flash, Gemini Image
 export const DISPLAY_MODEL_ORDER = [
   { ids: ['claude-sonnet-4-5-thinking', 'claude-sonnet-4-5', 'claude-opus-4-6-thinking', 'claude-opus-4-5-thinking'], label: 'Claude 4.5' },
-  { ids: ['gemini-3-pro-high', 'gemini-3-pro-low'], label: 'G3-Pro' },
-  { ids: ['gemini-3-flash'], label: 'G3-Flash' },
-  { ids: ['gemini-3-pro-image'], label: 'G3-Image' },
+  { ids: ['gemini-3-pro-high', 'gemini-3-pro-low'], label: 'Gemini Pro' },
+  { ids: ['gemini-3-flash'], label: 'Gemini Flash' },
+  { ids: ['gemini-3-pro-image'], label: 'Gemini Image' },
 ];
 
 export function matchModelName(modelName: string, target: string): boolean {

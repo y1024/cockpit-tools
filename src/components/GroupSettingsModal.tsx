@@ -14,6 +14,7 @@ import {
   getModelDisplayName,
   getDefaultGroups,
   isBlacklistedModel,
+  resolveDefaultGroupId,
 } from '../utils/modelNames';
 import './GroupSettingsModal.css';
 
@@ -77,17 +78,36 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
   }, [visibleModels]);
 
   const buildGroups = useCallback((savedGroupNames?: Record<string, string>): GroupData[] => {
-    const visibleModelSet = new Set(visibleModels.map(model => model.id));
+    const modelDisplayMap = new Map<string, string | undefined>();
+    for (const model of visibleModels) {
+      modelDisplayMap.set(model.id, model.displayName);
+    }
+
+    const groupedModelSets = new Map<string, Set<string>>();
     const defaultGroups = getDefaultGroups().map(group => {
-      const mergedIds = [...group.desktopModels, ...group.pluginModels];
-      const dedupedIds = Array.from(new Set(mergedIds));
-      const availableGroupModels = dedupedIds.filter(modelId => visibleModelSet.has(modelId));
+      groupedModelSets.set(group.id, new Set<string>());
       return {
         id: group.id,
         name: group.name,
-        models: availableGroupModels,
+        models: [] as string[],
       };
     });
+
+    for (const model of visibleModels) {
+      const matchedGroupId = resolveDefaultGroupId(model.id, model.displayName);
+      if (!matchedGroupId) {
+        continue;
+      }
+      groupedModelSets.get(matchedGroupId)?.add(model.id);
+    }
+
+    for (const group of defaultGroups) {
+      group.models = Array.from(groupedModelSets.get(group.id) || []).sort((a, b) =>
+        (modelDisplayMap.get(a) || a).localeCompare(modelDisplayMap.get(b) || b, undefined, {
+          sensitivity: 'base',
+        }),
+      );
+    }
 
     const fixedModelSet = new Set(defaultGroups.flatMap(group => group.models));
     const otherModels = visibleModels

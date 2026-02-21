@@ -20,6 +20,14 @@ use super::config::get_shared_dir;
 /// 分组配置文件名
 const GROUP_SETTINGS_FILE: &str = "group_settings.json";
 
+const LEGACY_GROUP_NAME_G3_PRO: &str = "G3-Pro";
+const LEGACY_GROUP_NAME_G3_FLASH: &str = "G3-Flash";
+const LEGACY_GROUP_NAME_G3_IMAGE: &str = "G3-Image";
+
+const GROUP_NAME_GEMINI_PRO: &str = "Gemini Pro";
+const GROUP_NAME_GEMINI_FLASH: &str = "Gemini Flash";
+const GROUP_NAME_GEMINI_IMAGE: &str = "Gemini Image";
+
 /// 配置来源
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -82,18 +90,18 @@ impl Default for GroupSettings {
         group_mappings.insert("gpt-oss-120b-medium".to_string(), "claude_45".to_string());
         group_names.insert("claude_45".to_string(), "Claude 4.5".to_string());
 
-        // G3-Pro 分组
+        // Gemini Pro 分组
         group_mappings.insert("gemini-3-pro-high".to_string(), "g3_pro".to_string());
         group_mappings.insert("gemini-3-pro-low".to_string(), "g3_pro".to_string());
-        group_names.insert("g3_pro".to_string(), "G3-Pro".to_string());
+        group_names.insert("g3_pro".to_string(), GROUP_NAME_GEMINI_PRO.to_string());
 
-        // G3-Flash 分组
+        // Gemini Flash 分组
         group_mappings.insert("gemini-3-flash".to_string(), "g3_flash".to_string());
-        group_names.insert("g3_flash".to_string(), "G3-Flash".to_string());
+        group_names.insert("g3_flash".to_string(), GROUP_NAME_GEMINI_FLASH.to_string());
 
-        // G3-Image 分组
+        // Gemini Image 分组
         group_mappings.insert("gemini-3-pro-image".to_string(), "g3_image".to_string());
-        group_names.insert("g3_image".to_string(), "G3-Image".to_string());
+        group_names.insert("g3_image".to_string(), GROUP_NAME_GEMINI_IMAGE.to_string());
 
         let group_order = vec![
             "claude_45".to_string(),
@@ -195,6 +203,30 @@ impl GroupSettings {
     }
 }
 
+fn migrate_legacy_group_names(settings: &mut GroupSettings) {
+    let mut migrate_name = |group_id: &str, legacy_name: &str, new_name: &str| {
+        if let Some(current_name) = settings.group_names.get(group_id) {
+            if current_name == legacy_name {
+                settings
+                    .group_names
+                    .insert(group_id.to_string(), new_name.to_string());
+            }
+        }
+    };
+
+    migrate_name("g3_pro", LEGACY_GROUP_NAME_G3_PRO, GROUP_NAME_GEMINI_PRO);
+    migrate_name(
+        "g3_flash",
+        LEGACY_GROUP_NAME_G3_FLASH,
+        GROUP_NAME_GEMINI_FLASH,
+    );
+    migrate_name(
+        "g3_image",
+        LEGACY_GROUP_NAME_G3_IMAGE,
+        GROUP_NAME_GEMINI_IMAGE,
+    );
+}
+
 /// 获取分组配置文件路径
 fn get_group_settings_path() -> PathBuf {
     get_shared_dir().join(GROUP_SETTINGS_FILE)
@@ -243,6 +275,8 @@ pub fn load_group_settings() -> GroupSettings {
                     }
                 }
             }
+
+            migrate_legacy_group_names(&mut settings);
 
             settings
         }

@@ -7,6 +7,17 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.8.6] - 2026-02-21
+
+### 变更
+- **模型分组自动归类支持忽略版本号**：新增前缀/模式匹配，Claude 与 Gemini 模型按家族归组，不再依赖预置精确 ID。
+- **“其他模型”归类优化**：Claude Sonnet/Opus 变体与 Gemini x Pro/Flash/Pro Image 变体会自动归入目标默认分组，不再落入 `其他模型`。
+- **Gemini 默认分组名称升级**：默认分组展示名从 `G3-Pro`、`G3-Flash`、`G3-Image` 调整为 `Gemini Pro`、`Gemini Flash`、`Gemini Image`。
+
+### 修复
+- **旧分组名称兼容迁移**：读取历史配置时，旧 `G3-*` 分组名会自动迁移为新的 Gemini 命名。
+
+---
 ## [0.8.5] - 2026-02-19
 
 ### 新增

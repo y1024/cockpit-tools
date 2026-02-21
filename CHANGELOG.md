@@ -7,6 +7,17 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.8.6] - 2026-02-21
+
+### Changed
+- **Model group auto-classification now ignores version suffixes**: Added prefix/pattern matching for model families so Claude and Gemini variants are grouped by family (Pro/Flash/Image) even when exact IDs are not pre-listed.
+- **"Other Models" cleanup for Claude/Gemini variants**: Claude Sonnet/Opus variants and Gemini x Pro/Flash/Pro Image variants are now routed into their target default groups instead of falling into `Other Models`.
+- **Default Gemini group labels renamed**: Group display names were updated from `G3-Pro`, `G3-Flash`, `G3-Image` to `Gemini Pro`, `Gemini Flash`, `Gemini Image` for version-agnostic naming.
+
+### Fixed
+- **Legacy group-name compatibility**: Existing saved group settings with legacy `G3-*` names are automatically migrated to the new Gemini labels on load.
+
+---
 ## [0.8.5] - 2026-02-19
 
 ### Added

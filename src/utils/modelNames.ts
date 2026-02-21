@@ -72,6 +72,33 @@ const AUTH_MODEL_BLACKLIST_NAME_SET = new Set(
   AUTH_MODEL_BLACKLIST_DISPLAY_NAMES.map((name) => name.toLowerCase()),
 );
 
+// 按模型家族分组，忽略具体版本号（如 Gemini 3.1 / 4 / 4.5）
+const GEMINI_ANY_PRO_TIER_ID_PATTERN = /^gemini-\d+(?:\.\d+)?-pro-(high|low)(?:-|$)/;
+const GEMINI_ANY_FLASH_ID_PATTERN = /^gemini-\d+(?:\.\d+)?-flash(?:-|$)/;
+const GEMINI_ANY_IMAGE_ID_PATTERN = /^gemini-\d+(?:\.\d+)?-pro-image(?:-|$)/;
+
+const GEMINI_ANY_PRO_TIER_NAME_PATTERN = /^gemini \d+(?:\.\d+)? pro(?: \((high|low)\)| (high|low))\b/;
+const GEMINI_ANY_FLASH_NAME_PATTERN = /^gemini \d+(?:\.\d+)? flash\b/;
+const GEMINI_ANY_IMAGE_NAME_PATTERN = /^gemini \d+(?:\.\d+)? pro image\b/;
+
+type GroupPrefixMatcher = (normalizedModelId: string, normalizedModelName: string) => boolean;
+
+const DEFAULT_GROUP_PREFIX_MATCHERS: Record<string, GroupPrefixMatcher> = {
+  claude_45: (normalizedModelId, normalizedModelName) =>
+    normalizedModelId.startsWith('claude-') ||
+    normalizedModelId.startsWith('model_claude') ||
+    normalizedModelName.startsWith('claude '),
+  g3_pro: (normalizedModelId, normalizedModelName) =>
+    GEMINI_ANY_PRO_TIER_ID_PATTERN.test(normalizedModelId) ||
+    GEMINI_ANY_PRO_TIER_NAME_PATTERN.test(normalizedModelName),
+  g3_flash: (normalizedModelId, normalizedModelName) =>
+    GEMINI_ANY_FLASH_ID_PATTERN.test(normalizedModelId) ||
+    GEMINI_ANY_FLASH_NAME_PATTERN.test(normalizedModelName),
+  g3_image: (normalizedModelId, normalizedModelName) =>
+    GEMINI_ANY_IMAGE_ID_PATTERN.test(normalizedModelId) ||
+    GEMINI_ANY_IMAGE_NAME_PATTERN.test(normalizedModelName),
+};
+
 /**
  * 获取模型的友好显示名称
  * @param modelId 模型 ID
@@ -114,6 +141,37 @@ export interface DefaultGroup {
   pluginModels: string[];   // 插件端模型 ID
 }
 
+function normalizeModelIdForGroupMatch(modelId: string): string {
+  return modelId.trim().toLowerCase();
+}
+
+function normalizeModelNameForGroupMatch(modelId: string, displayName?: string): string {
+  const source = (displayName?.trim() || modelId).toLowerCase();
+  return source
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isExactDefaultGroupMatch(group: DefaultGroup, normalizedModelId: string): boolean {
+  const isDesktopMatch = group.desktopModels.some(
+    (id) => normalizeModelIdForGroupMatch(id) === normalizedModelId,
+  );
+  const isPluginMatch = group.pluginModels.some(
+    (id) => normalizeModelIdForGroupMatch(id) === normalizedModelId,
+  );
+  return isDesktopMatch || isPluginMatch;
+}
+
+function matchesDefaultGroupPrefixRule(
+  groupId: string,
+  normalizedModelId: string,
+  normalizedModelName: string,
+): boolean {
+  const matcher = DEFAULT_GROUP_PREFIX_MATCHERS[groupId];
+  return matcher ? matcher(normalizedModelId, normalizedModelName) : false;
+}
+
 /** 获取默认分组配置（支持两种格式） */
 export function getDefaultGroups(): DefaultGroup[] {
   return [
@@ -137,7 +195,7 @@ export function getDefaultGroups(): DefaultGroup[] {
     },
     {
       id: 'g3_pro',
-      name: 'G3-Pro',
+      name: 'Gemini Pro',
       desktopModels: [
         'gemini-3-pro-high',
         'gemini-3-pro-low',
@@ -149,7 +207,7 @@ export function getDefaultGroups(): DefaultGroup[] {
     },
     {
       id: 'g3_flash',
-      name: 'G3-Flash',
+      name: 'Gemini Flash',
       desktopModels: [
         'gemini-3-flash',
       ],
@@ -159,7 +217,7 @@ export function getDefaultGroups(): DefaultGroup[] {
     },
     {
       id: 'g3_image',
-      name: 'G3-Image',
+      name: 'Gemini Image',
       desktopModels: [
         'gemini-3-pro-image',
       ],
@@ -171,36 +229,66 @@ export function getDefaultGroups(): DefaultGroup[] {
 }
 
 /**
+ * 解析模型默认分组
+ * 匹配顺序：精确 ID 命中 -> 前缀/模式命中
+ */
+export function resolveDefaultGroupId(modelId: string, displayName?: string): string | null {
+  const normalizedModelId = normalizeModelIdForGroupMatch(modelId);
+  const normalizedModelName = normalizeModelNameForGroupMatch(modelId, displayName);
+  if (!normalizedModelId) {
+    return null;
+  }
+
+  const defaultGroups = getDefaultGroups();
+
+  for (const group of defaultGroups) {
+    if (isExactDefaultGroupMatch(group, normalizedModelId)) {
+      return group.id;
+    }
+  }
+
+  for (const group of defaultGroups) {
+    if (matchesDefaultGroupPrefixRule(group.id, normalizedModelId, normalizedModelName)) {
+      return group.id;
+    }
+  }
+
+  return null;
+}
+
+/**
  * 自动分组模型（支持两种格式）
  * @param modelIds 模型 ID 列表
  * @returns 分组结果
  */
 export function autoGroupModels(modelIds: string[]): { id: string; name: string; models: string[] }[] {
   const defaultGroups = getDefaultGroups();
+  const groupedModels = new Map<string, string[]>();
+
+  for (const modelId of modelIds) {
+    const groupId = resolveDefaultGroupId(modelId);
+    if (!groupId) {
+      continue;
+    }
+    const existing = groupedModels.get(groupId);
+    if (existing) {
+      existing.push(modelId);
+    } else {
+      groupedModels.set(groupId, [modelId]);
+    }
+  }
+
   const result: { id: string; name: string; models: string[] }[] = [];
-  const matchedModels = new Set<string>();
-  
   for (const group of defaultGroups) {
-    const groupModels: string[] = [];
-    
-    for (const modelId of modelIds) {
-      // 检查是否匹配桌面端或插件端格式
-      const isDesktopMatch = group.desktopModels.includes(modelId);
-      const isPluginMatch = group.pluginModels.includes(modelId);
-      
-      if (isDesktopMatch || isPluginMatch) {
-        groupModels.push(modelId);
-        matchedModels.add(modelId);
-      }
+    const models = groupedModels.get(group.id);
+    if (!models?.length) {
+      continue;
     }
-    
-    if (groupModels.length > 0) {
-      result.push({
-        id: group.id,
-        name: group.name,
-        models: groupModels,
-      });
-    }
+    result.push({
+      id: group.id,
+      name: group.name,
+      models,
+    });
   }
   
   // 不生成"其他"分组，只保留预定义分组
