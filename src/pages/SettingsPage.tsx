@@ -66,6 +66,14 @@ const FALLBACK_PLATFORM_SETTINGS_ORDER: Record<PlatformId, number> = {
   windsurf: 3,
   kiro: 4,
 };
+type UpdateCheckSource = 'auto' | 'manual';
+type UpdateCheckFinishedDetail = {
+  source: UpdateCheckSource;
+  status: 'has_update' | 'up_to_date' | 'failed';
+  currentVersion?: string;
+  latestVersion?: string;
+  error?: string;
+};
 
 export function SettingsPage() {
   const { t } = useTranslation();
@@ -147,10 +155,62 @@ export function SettingsPage() {
   const suppressGeneralSaveRef = useRef(false);
   
   const [appVersion, setAppVersion] = useState('');
+  const [updateChecking, setUpdateChecking] = useState(false);
+  const [updateCheckMessage, setUpdateCheckMessage] = useState<{
+    text: string;
+    tone?: 'error' | 'success';
+  } | null>(null);
 
   useEffect(() => {
     getVersion().then(ver => setAppVersion(`v${ver}`));
   }, []);
+
+  useEffect(() => {
+    const handleStarted = (event: Event) => {
+      const detail = (event as CustomEvent<{ source?: UpdateCheckSource }>).detail;
+      if (detail?.source !== 'manual') {
+        return;
+      }
+      setUpdateChecking(true);
+      setUpdateCheckMessage(null);
+    };
+
+    const handleFinished = (event: Event) => {
+      const detail = (event as CustomEvent<UpdateCheckFinishedDetail>).detail;
+      if (!detail || detail.source !== 'manual') {
+        return;
+      }
+
+      setUpdateChecking(false);
+
+      if (detail.status === 'up_to_date') {
+        const version = detail.latestVersion || detail.currentVersion;
+        const upToDateText = t('settings.about.upToDate');
+        setUpdateCheckMessage({
+          text: version ? `${upToDateText} v${version}` : upToDateText,
+          tone: 'success',
+        });
+        return;
+      }
+
+      if (detail.status === 'failed') {
+        setUpdateCheckMessage({
+          text: t('settings.about.checkFailed'),
+          tone: 'error',
+        });
+        return;
+      }
+
+      setUpdateCheckMessage(null);
+    };
+
+    window.addEventListener('update-check-started', handleStarted as EventListener);
+    window.addEventListener('update-check-finished', handleFinished as EventListener);
+    return () => {
+      window.removeEventListener('update-check-started', handleStarted as EventListener);
+      window.removeEventListener('update-check-finished', handleFinished as EventListener);
+    };
+  }, [t]);
   
   // Network States
   const [wsEnabled, setWsEnabled] = useState(true);
@@ -599,8 +659,15 @@ export function SettingsPage() {
   const kiroQuotaAlertThresholdIsPreset = THRESHOLD_PRESET_VALUES.includes(kiroQuotaAlertThreshold);
 
   // 检查更新
-  const handleCheckUpdate = async () => {
-    window.dispatchEvent(new Event('update-check-requested'));
+  const handleCheckUpdate = () => {
+    if (updateChecking) {
+      return;
+    }
+    window.dispatchEvent(
+      new CustomEvent('update-check-requested', {
+        detail: { source: 'manual' as UpdateCheckSource },
+      }),
+    );
   };
 
   return (
@@ -1926,6 +1993,7 @@ export function SettingsPage() {
                   <button 
                     className="btn btn-sm btn-ghost"
                     onClick={handleCheckUpdate}
+                    disabled={updateChecking}
                     style={{ 
                       fontSize: '12px', 
                       padding: '4px 10px',
@@ -1934,9 +2002,20 @@ export function SettingsPage() {
                       gap: '4px'
                     }}
                   >
-                    <><RefreshCw size={14} /> {t('settings.about.checkUpdate')}</>
+                    <>
+                      <RefreshCw size={14} className={updateChecking ? 'spin' : undefined} />
+                      {updateChecking ? t('settings.about.checking') : t('settings.about.checkUpdate')}
+                    </>
                   </button>
                 </div>
+                {updateCheckMessage && (
+                  <div
+                    className={`action-message${updateCheckMessage.tone ? ` ${updateCheckMessage.tone}` : ''}`}
+                    style={{ marginTop: '10px', marginBottom: 0 }}
+                  >
+                    <span className="action-message-text">{updateCheckMessage.text}</span>
+                  </div>
+                )}
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                 {t('settings.about.slogan')}

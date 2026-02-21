@@ -34,10 +34,22 @@ pub struct CodexQuota {
     pub hourly_percentage: i32,
     /// 5小时配额重置时间 (Unix timestamp)
     pub hourly_reset_time: Option<i64>,
+    /// 主窗口时长（分钟）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hourly_window_minutes: Option<i64>,
+    /// 主窗口是否存在（接口返回）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hourly_window_present: Option<bool>,
     /// 周配额百分比 (0-100)
     pub weekly_percentage: i32,
     /// 周配额重置时间 (Unix timestamp)
     pub weekly_reset_time: Option<i64>,
+    /// 次窗口时长（分钟）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub weekly_window_minutes: Option<i64>,
+    /// 次窗口是否存在（接口返回）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub weekly_window_present: Option<bool>,
     /// 原始响应数据
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raw_data: Option<serde_json::Value>,

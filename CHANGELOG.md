@@ -7,6 +7,19 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.8.8] - 2026-02-21
+
+### Changed
+- **Codex quota windows now follow window presence**: Codex quota rendering is now driven by `primary_window` / `secondary_window` presence instead of always forcing two fixed lines.
+- **Codex window labels now use Codex-style rules**: Window labels now use unified dynamic formatting (`5h`, `Weekly`, `Xd`, `Xh`, `Xm`) based on actual window minutes.
+- **Multi-instance Codex account selector now shows plan badge**: Bound-account dropdown/list in Codex instances now shows subscription badges (`FREE/PLUS/PRO/TEAM/ENTERPRISE`) alongside account emails to reduce free-plan ambiguity.
+- **Manual update check now always shows feedback**: Clicking `Check Updates` now shows loading state and explicit result feedback (`up to date` / `check failed`) instead of silent no-op when no new version is found.
+- **Release workflow now auto-publishes checksums**: GitHub Release pipeline now automatically generates and uploads `SHA256SUMS.txt` from release assets, removing manual checksum upload.
+
+### Refactored
+- **Shared Codex quota-window helper introduced**: Codex account page, dashboard cards, and Codex instances now reuse the same window-label/window-visibility helper to keep display logic consistent.
+
+---
 ## [0.8.7] - 2026-02-21
 
 ### Changed

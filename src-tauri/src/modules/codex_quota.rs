@@ -84,6 +84,32 @@ struct UsageResponse {
     code_review_rate_limit: Option<RateLimitInfo>,
 }
 
+fn normalize_remaining_percentage(window: &WindowInfo) -> i32 {
+    let used = window.used_percent.unwrap_or(0).clamp(0, 100);
+    100 - used
+}
+
+fn normalize_window_minutes(window: &WindowInfo) -> Option<i64> {
+    let seconds = window.limit_window_seconds?;
+    if seconds <= 0 {
+        return None;
+    }
+    Some((seconds + 59) / 60)
+}
+
+fn normalize_reset_time(window: &WindowInfo) -> Option<i64> {
+    if let Some(reset_at) = window.reset_at {
+        return Some(reset_at);
+    }
+
+    let reset_after_seconds = window.reset_after_seconds?;
+    if reset_after_seconds < 0 {
+        return None;
+    }
+
+    Some(chrono::Utc::now().timestamp() + reset_after_seconds)
+}
+
 /// 查询单个账号的配额
 pub async fn fetch_quota(account: &CodexAccount) -> Result<CodexQuota, String> {
     let client = reqwest::Client::new();
@@ -171,27 +197,31 @@ pub async fn fetch_quota(account: &CodexAccount) -> Result<CodexQuota, String> {
 /// 从使用率响应中解析配额信息
 fn parse_quota_from_usage(usage: &UsageResponse, raw_body: &str) -> Result<CodexQuota, String> {
     let rate_limit = usage.rate_limit.as_ref();
+    let primary_window = rate_limit.and_then(|r| r.primary_window.as_ref());
+    let secondary_window = rate_limit.and_then(|r| r.secondary_window.as_ref());
 
     // Primary window = 5小时配额（session）
-    let (hourly_percentage, hourly_reset_time) =
-        if let Some(primary) = rate_limit.and_then(|r| r.primary_window.as_ref()) {
-            let used = primary.used_percent.unwrap_or(0);
-            let remaining = 100 - used;
-            let reset_at = primary.reset_at;
-            (remaining, reset_at)
+    let (hourly_percentage, hourly_reset_time, hourly_window_minutes) =
+        if let Some(primary) = primary_window {
+            (
+                normalize_remaining_percentage(primary),
+                normalize_reset_time(primary),
+                normalize_window_minutes(primary),
+            )
         } else {
-            (100, None)
+            (100, None, None)
         };
 
     // Secondary window = 周配额
-    let (weekly_percentage, weekly_reset_time) =
-        if let Some(secondary) = rate_limit.and_then(|r| r.secondary_window.as_ref()) {
-            let used = secondary.used_percent.unwrap_or(0);
-            let remaining = 100 - used;
-            let reset_at = secondary.reset_at;
-            (remaining, reset_at)
+    let (weekly_percentage, weekly_reset_time, weekly_window_minutes) =
+        if let Some(secondary) = secondary_window {
+            (
+                normalize_remaining_percentage(secondary),
+                normalize_reset_time(secondary),
+                normalize_window_minutes(secondary),
+            )
         } else {
-            (100, None)
+            (100, None, None)
         };
 
     // 保存原始响应
@@ -200,8 +230,12 @@ fn parse_quota_from_usage(usage: &UsageResponse, raw_body: &str) -> Result<Codex
     Ok(CodexQuota {
         hourly_percentage,
         hourly_reset_time,
+        hourly_window_minutes,
+        hourly_window_present: Some(primary_window.is_some()),
         weekly_percentage,
         weekly_reset_time,
+        weekly_window_minutes,
+        weekly_window_present: Some(secondary_window.is_some()),
         raw_data,
     })
 }

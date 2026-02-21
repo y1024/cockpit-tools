@@ -3,7 +3,11 @@ import { PlatformInstancesContent } from '../components/platform/PlatformInstanc
 import { useCodexInstanceStore } from '../stores/useCodexInstanceStore';
 import { useCodexAccountStore } from '../stores/useCodexAccountStore';
 import type { CodexAccount } from '../types/codex';
-import { getCodexQuotaClass } from '../types/codex';
+import {
+  getCodexPlanDisplayName,
+  getCodexQuotaClass,
+  getCodexQuotaWindows,
+} from '../types/codex';
 import { usePlatformRuntimeSupport } from '../hooks/usePlatformRuntimeSupport';
 
 /**
@@ -25,24 +29,27 @@ export function CodexInstancesContent() {
     if (!account.quota) {
       return <span className="account-quota-empty">{t('instances.quota.empty', '暂无配额缓存')}</span>;
     }
-    const hourly = account.quota.hourly_percentage;
-    const weekly = account.quota.weekly_percentage;
+    const windows = getCodexQuotaWindows(account.quota);
+    if (windows.length === 0) {
+      return <span className="account-quota-empty">{t('instances.quota.empty', '暂无配额缓存')}</span>;
+    }
     return (
       <div className="account-quota-preview">
-        <span className="account-quota-item">
-          <span className={`quota-dot ${resolveQuotaClass(hourly)}`} />
-          <span className={`quota-text ${resolveQuotaClass(hourly)}`}>
-            {t('codex.instances.quota.hourly', '5h')} {hourly}%
+        {windows.map((window) => (
+          <span className="account-quota-item" key={window.id}>
+            <span className={`quota-dot ${resolveQuotaClass(window.percentage)}`} />
+            <span className={`quota-text ${resolveQuotaClass(window.percentage)}`}>
+              {window.label} {window.percentage}%
+            </span>
           </span>
-        </span>
-        <span className="account-quota-item">
-          <span className={`quota-dot ${resolveQuotaClass(weekly)}`} />
-          <span className={`quota-text ${resolveQuotaClass(weekly)}`}>
-            {t('codex.instances.quota.weekly', '周')} {weekly}%
-          </span>
-        </span>
+        ))}
       </div>
     );
+  };
+
+  const renderCodexPlanBadge = (account: CodexAccount) => {
+    const planName = getCodexPlanDisplayName(account.plan_type);
+    return <span className={`instance-plan-badge ${planName.toLowerCase()}`}>{planName}</span>;
   };
 
   return (
@@ -51,7 +58,10 @@ export function CodexInstancesContent() {
       accounts={accounts}
       fetchAccounts={fetchAccounts}
       renderAccountQuotaPreview={renderCodexQuotaPreview}
-      getAccountSearchText={(account) => account.email}
+      renderAccountBadge={renderCodexPlanBadge}
+      getAccountSearchText={(account) =>
+        `${account.email} ${getCodexPlanDisplayName(account.plan_type)}`
+      }
       appType="codex"
       isSupported={isSupportedPlatform}
       unsupportedTitleKey="common.shared.instances.unsupported.title"

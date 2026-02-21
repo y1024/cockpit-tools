@@ -391,23 +391,75 @@ fn build_antigravity_display_info(lang: &str) -> AccountDisplayInfo {
     }
 }
 
+fn format_codex_window_label(window_minutes: Option<i64>, fallback: &str) -> String {
+    const HOUR_MINUTES: i64 = 60;
+    const DAY_MINUTES: i64 = 24 * HOUR_MINUTES;
+    const WEEK_MINUTES: i64 = 7 * DAY_MINUTES;
+
+    let Some(minutes) = window_minutes.filter(|value| *value > 0) else {
+        return fallback.to_string();
+    };
+
+    if minutes >= WEEK_MINUTES - 1 {
+        let weeks = (minutes + WEEK_MINUTES - 1) / WEEK_MINUTES;
+        return if weeks <= 1 {
+            "Weekly".to_string()
+        } else {
+            format!("{} Week", weeks)
+        };
+    }
+
+    if minutes >= DAY_MINUTES - 1 {
+        let days = (minutes + DAY_MINUTES - 1) / DAY_MINUTES;
+        return format!("{}d", days);
+    }
+
+    if minutes >= HOUR_MINUTES {
+        let hours = (minutes + HOUR_MINUTES - 1) / HOUR_MINUTES;
+        return format!("{}h", hours);
+    }
+
+    format!("{}m", minutes)
+}
+
 fn build_codex_display_info(lang: &str) -> AccountDisplayInfo {
     if let Some(account) = crate::modules::codex_account::get_current_account() {
         let mut quota_lines = if let Some(quota) = &account.quota {
-            vec![
-                format!(
-                    "5h: {}% · {} {}",
-                    quota.hourly_percentage,
+            let has_presence =
+                quota.hourly_window_present.is_some() || quota.weekly_window_present.is_some();
+            let mut lines = Vec::new();
+
+            if !has_presence || quota.hourly_window_present.unwrap_or(false) {
+                lines.push(format!(
+                    "{}: {}% · {} {}",
+                    format_codex_window_label(quota.hourly_window_minutes, "5h"),
+                    quota.hourly_percentage.clamp(0, 100),
                     get_text("reset", lang),
                     format_reset_time_from_ts(lang, quota.hourly_reset_time)
-                ),
-                format!(
-                    "Week: {}% · {} {}",
-                    quota.weekly_percentage,
+                ));
+            }
+
+            if !has_presence || quota.weekly_window_present.unwrap_or(false) {
+                lines.push(format!(
+                    "{}: {}% · {} {}",
+                    format_codex_window_label(quota.weekly_window_minutes, "Weekly"),
+                    quota.weekly_percentage.clamp(0, 100),
                     get_text("reset", lang),
                     format_reset_time_from_ts(lang, quota.weekly_reset_time)
-                ),
-            ]
+                ));
+            }
+
+            if lines.is_empty() {
+                lines.push(format!(
+                    "{}: {}% · {} {}",
+                    format_codex_window_label(quota.hourly_window_minutes, "5h"),
+                    quota.hourly_percentage.clamp(0, 100),
+                    get_text("reset", lang),
+                    format_reset_time_from_ts(lang, quota.hourly_reset_time)
+                ));
+            }
+
+            lines
         } else {
             vec![get_text("loading", lang)]
         };

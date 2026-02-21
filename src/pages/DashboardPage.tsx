@@ -9,7 +9,12 @@ import { usePlatformLayoutStore } from '../stores/usePlatformLayoutStore';
 import { Page } from '../types/navigation';
 import { Users, CheckCircle2, Sparkles, RotateCw, Play, Github } from 'lucide-react';
 import { getSubscriptionTier, getDisplayModels, getModelShortName, formatResetTimeDisplay } from '../utils/account';
-import { getCodexPlanDisplayName, getCodexQuotaClass, formatCodexResetTime } from '../types/codex';
+import {
+  getCodexPlanDisplayName,
+  getCodexQuotaClass,
+  getCodexQuotaWindows,
+  formatCodexResetTime,
+} from '../types/codex';
 import { Account } from '../types/account';
 import { CodexAccount } from '../types/codex';
 import {
@@ -715,6 +720,7 @@ export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTri
 
     const planName = getCodexPlanDisplayName(account.plan_type);
     const planLabel = planName;
+    const quotaWindows = getCodexQuotaWindows(account.quota);
     
     return (
       <div className="account-mini-card">
@@ -728,45 +734,30 @@ export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTri
         </div>
         
         <div className="account-mini-quotas">
-          <div className="mini-quota-row-stacked">
-            <div className="mini-quota-header">
-              <span className="model-name">{t('codex.quota.hourly', '5H')}</span>
-              <span className={`model-pct ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}>
-                {account.quota?.hourly_percentage ?? 100}%
-              </span>
-            </div>
-            <div className="mini-progress-track">
-              <div 
-                className={`mini-progress-bar ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}
-                style={{ width: `${account.quota?.hourly_percentage ?? 100}%` }}
-              />
-            </div>
-            {account.quota?.hourly_reset_time && (
-              <div className="mini-reset-time">
-                {formatCodexResetTime(account.quota.hourly_reset_time, t)}
+          {quotaWindows.length === 0 && (
+            <span className="no-data-text">{t('dashboard.noData', '暂无数据')}</span>
+          )}
+          {quotaWindows.map((window) => (
+            <div key={window.id} className="mini-quota-row-stacked">
+              <div className="mini-quota-header">
+                <span className="model-name">{window.label}</span>
+                <span className={`model-pct ${getCodexQuotaClass(window.percentage)}`}>
+                  {window.percentage}%
+                </span>
               </div>
-            )}
-          </div>
-
-          <div className="mini-quota-row-stacked">
-            <div className="mini-quota-header">
-              <span className="model-name">{t('codex.quota.weekly', 'Week')}</span>
-              <span className={`model-pct ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}>
-                {account.quota?.weekly_percentage ?? 100}%
-              </span>
-            </div>
-            <div className="mini-progress-track">
-              <div 
-                className={`mini-progress-bar ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}
-                style={{ width: `${account.quota?.weekly_percentage ?? 100}%` }}
-              />
-            </div>
-            {account.quota?.weekly_reset_time && (
-              <div className="mini-reset-time">
-                {formatCodexResetTime(account.quota.weekly_reset_time, t)}
+              <div className="mini-progress-track">
+                <div
+                  className={`mini-progress-bar ${getCodexQuotaClass(window.percentage)}`}
+                  style={{ width: `${window.percentage}%` }}
+                />
               </div>
-            )}
-          </div>
+              {window.resetTime && (
+                <div className="mini-reset-time">
+                  {formatCodexResetTime(window.resetTime, t)}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
         <div className="account-mini-actions icon-only-row">

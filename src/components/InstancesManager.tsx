@@ -39,6 +39,7 @@ interface InstancesManagerProps<TAccount extends AccountLike> {
   accounts: TAccount[];
   fetchAccounts: () => Promise<void>;
   renderAccountQuotaPreview: (account: TAccount) => ReactNode;
+  renderAccountBadge?: (account: TAccount) => ReactNode;
   getAccountSearchText?: (account: TAccount) => string;
   appType?: 'antigravity' | 'codex' | 'vscode' | 'windsurf' | 'kiro';
 }
@@ -63,6 +64,7 @@ export function InstancesManager<TAccount extends AccountLike>({
   accounts,
   fetchAccounts,
   renderAccountQuotaPreview,
+  renderAccountBadge,
   getAccountSearchText,
   appType = 'antigravity',
 }: InstancesManagerProps<TAccount>) {
@@ -713,8 +715,11 @@ export function InstancesManager<TAccount extends AccountLike>({
             onClose();
           }}
         >
-          <span className="account-select-email">
-            {t('instances.form.followCurrent', '跟随当前账号')}
+          <span className="account-select-email-row">
+            <span className="account-select-email">
+              {t('instances.form.followCurrent', '跟随当前账号')}
+            </span>
+            {selectedAccount ? renderAccountBadge?.(selectedAccount) : null}
           </span>
           {selectedAccount ? renderAccountQuotaPreview(selectedAccount) : null}
         </button>
@@ -743,8 +748,11 @@ export function InstancesManager<TAccount extends AccountLike>({
             onClose();
           }}
         >
-          <span className="account-select-email" title={maskAccountText(account.email)}>
-            {maskAccountText(account.email)}
+          <span className="account-select-email-row">
+            <span className="account-select-email" title={maskAccountText(account.email)}>
+              {maskAccountText(account.email)}
+            </span>
+            {renderAccountBadge?.(account)}
           </span>
           {renderAccountQuotaPreview(account)}
         </button>
@@ -827,6 +835,7 @@ export function InstancesManager<TAccount extends AccountLike>({
       : isFollowingCurrent
         ? maskAccountText(selectedAccount?.email) || t('instances.form.followCurrent', '跟随当前账号')
         : maskAccountText(selectedAccount?.email) || basePlaceholder;
+    const selectedBadge = !missing && selectedAccount ? renderAccountBadge?.(selectedAccount) : null;
     const selectedQuota = selectedAccount ? renderAccountQuotaPreview(selectedAccount) : null;
 
     return (
@@ -842,8 +851,11 @@ export function InstancesManager<TAccount extends AccountLike>({
           disabled={disabled}
         >
           <span className="account-select-content">
-            <span className="account-select-label" title={selectedLabel}>
-              {selectedLabel}
+            <span className="account-select-label-row">
+              <span className="account-select-label" title={selectedLabel}>
+                {selectedLabel}
+              </span>
+              {selectedBadge}
             </span>
             {selectedQuota && (
               <span className="account-select-meta">
@@ -933,6 +945,7 @@ export function InstancesManager<TAccount extends AccountLike>({
       : isFollowingCurrent
         ? maskAccountText(selectedAccount?.email) || t('instances.form.followCurrent', '跟随当前账号')
         : maskAccountText(selectedAccount?.email) || basePlaceholder;
+    const selectedBadge = !missing && selectedAccount ? renderAccountBadge?.(selectedAccount) : null;
     const selectedQuota = selectedAccount ? renderAccountQuotaPreview(selectedAccount) : null;
 
     return (
@@ -947,8 +960,11 @@ export function InstancesManager<TAccount extends AccountLike>({
           disabled={disabled}
         >
           <span className="account-select-content">
-            <span className="account-select-label" title={selectedLabel}>
-              {selectedLabel}
+            <span className="account-select-label-row">
+              <span className="account-select-label" title={selectedLabel}>
+                {selectedLabel}
+              </span>
+              {selectedBadge}
             </span>
             {selectedQuota && (
               <span className="account-select-meta">

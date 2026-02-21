@@ -623,18 +623,68 @@ fn normalize_quota_alert_threshold(raw: i32) -> i32 {
     raw.clamp(0, 100)
 }
 
+fn format_codex_quota_metric_label(window_minutes: Option<i64>, fallback: &str) -> String {
+    const HOUR_MINUTES: i64 = 60;
+    const DAY_MINUTES: i64 = 24 * HOUR_MINUTES;
+    const WEEK_MINUTES: i64 = 7 * DAY_MINUTES;
+
+    let Some(minutes) = window_minutes.filter(|value| *value > 0) else {
+        return fallback.to_string();
+    };
+
+    if minutes >= WEEK_MINUTES - 1 {
+        let weeks = (minutes + WEEK_MINUTES - 1) / WEEK_MINUTES;
+        return if weeks <= 1 {
+            "Weekly".to_string()
+        } else {
+            format!("{} Week", weeks)
+        };
+    }
+
+    if minutes >= DAY_MINUTES - 1 {
+        let days = (minutes + DAY_MINUTES - 1) / DAY_MINUTES;
+        return format!("{}d", days);
+    }
+
+    if minutes >= HOUR_MINUTES {
+        let hours = (minutes + HOUR_MINUTES - 1) / HOUR_MINUTES;
+        return format!("{}h", hours);
+    }
+
+    format!("{}m", minutes)
+}
+
 fn extract_quota_metrics(account: &CodexAccount) -> Vec<(String, i32)> {
     let Some(quota) = account.quota.as_ref() else {
         return Vec::new();
     };
 
-    vec![
-        (
-            "5小时额度".to_string(),
+    let has_presence =
+        quota.hourly_window_present.is_some() || quota.weekly_window_present.is_some();
+    let mut metrics = Vec::new();
+
+    if !has_presence || quota.hourly_window_present.unwrap_or(false) {
+        metrics.push((
+            format_codex_quota_metric_label(quota.hourly_window_minutes, "5h"),
             quota.hourly_percentage.clamp(0, 100),
-        ),
-        ("周额度".to_string(), quota.weekly_percentage.clamp(0, 100)),
-    ]
+        ));
+    }
+
+    if !has_presence || quota.weekly_window_present.unwrap_or(false) {
+        metrics.push((
+            format_codex_quota_metric_label(quota.weekly_window_minutes, "Weekly"),
+            quota.weekly_percentage.clamp(0, 100),
+        ));
+    }
+
+    if metrics.is_empty() {
+        metrics.push((
+            format_codex_quota_metric_label(quota.hourly_window_minutes, "5h"),
+            quota.hourly_percentage.clamp(0, 100),
+        ));
+    }
+
+    metrics
 }
 
 fn average_quota_percentage(metrics: &[(String, i32)]) -> f64 {

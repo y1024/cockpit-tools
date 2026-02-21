@@ -32,10 +32,18 @@ export interface CodexQuota {
   hourly_percentage: number;
   /** 5小时配额重置时间 (Unix timestamp) */
   hourly_reset_time?: number;
+  /** 主窗口时长（分钟） */
+  hourly_window_minutes?: number;
+  /** 主窗口是否存在（接口返回） */
+  hourly_window_present?: boolean;
   /** 周配额百分比 (0-100) */
   weekly_percentage: number;
   /** 周配额重置时间 (Unix timestamp) */
   weekly_reset_time?: number;
+  /** 次窗口时长（分钟） */
+  weekly_window_minutes?: number;
+  /** 次窗口是否存在（接口返回） */
+  weekly_window_present?: boolean;
   /** 原始响应数据 */
   raw_data?: unknown;
 }
@@ -60,6 +68,91 @@ export function getCodexQuotaClass(percentage: number): string {
 }
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
+
+export interface CodexQuotaWindow {
+  id: 'primary' | 'secondary';
+  label: string;
+  percentage: number;
+  resetTime?: number;
+  windowMinutes?: number;
+}
+
+export function getCodexQuotaWindowLabel(
+  windowMinutes: number | undefined,
+  fallback: 'hourly' | 'weekly' = 'hourly'
+): string {
+  const HOUR_MINUTES = 60;
+  const DAY_MINUTES = 24 * HOUR_MINUTES;
+  const WEEK_MINUTES = 7 * DAY_MINUTES;
+  const safeMinutes =
+    typeof windowMinutes === 'number' && Number.isFinite(windowMinutes) && windowMinutes > 0
+      ? Math.ceil(windowMinutes)
+      : null;
+
+  if (safeMinutes == null) {
+    return fallback === 'weekly' ? 'Weekly' : '5h';
+  }
+
+  if (safeMinutes >= WEEK_MINUTES - 1) {
+    const weeks = Math.ceil(safeMinutes / WEEK_MINUTES);
+    return weeks <= 1 ? 'Weekly' : `${weeks} Week`;
+  }
+
+  if (safeMinutes >= DAY_MINUTES - 1) {
+    return `${Math.ceil(safeMinutes / DAY_MINUTES)}d`;
+  }
+
+  if (safeMinutes >= HOUR_MINUTES) {
+    return `${Math.ceil(safeMinutes / HOUR_MINUTES)}h`;
+  }
+
+  return `${Math.ceil(safeMinutes)}m`;
+}
+
+export function getCodexQuotaWindows(quota: CodexQuota | undefined): CodexQuotaWindow[] {
+  if (!quota) return [];
+
+  const windows: CodexQuotaWindow[] = [];
+  const hasPresenceFlags =
+    quota.hourly_window_present !== undefined || quota.weekly_window_present !== undefined;
+
+  const appendPrimary = !hasPresenceFlags || quota.hourly_window_present === true;
+  const appendSecondary = !hasPresenceFlags || quota.weekly_window_present === true;
+
+  if (appendPrimary) {
+    windows.push({
+      id: 'primary',
+      label: getCodexQuotaWindowLabel(quota.hourly_window_minutes, 'hourly'),
+      percentage: quota.hourly_percentage,
+      resetTime: quota.hourly_reset_time,
+      windowMinutes: quota.hourly_window_minutes,
+    });
+  }
+
+  if (appendSecondary) {
+    windows.push({
+      id: 'secondary',
+      label: getCodexQuotaWindowLabel(quota.weekly_window_minutes, 'weekly'),
+      percentage: quota.weekly_percentage,
+      resetTime: quota.weekly_reset_time,
+      windowMinutes: quota.weekly_window_minutes,
+    });
+  }
+
+  if (windows.length > 0) {
+    return windows;
+  }
+
+  return [
+    {
+      id: 'primary',
+      label: getCodexQuotaWindowLabel(quota.hourly_window_minutes, 'hourly'),
+      percentage: quota.hourly_percentage,
+      resetTime: quota.hourly_reset_time,
+      windowMinutes: quota.hourly_window_minutes,
+    },
+  ];
+}
 
 /** 格式化重置时间显示（相对时间 + 绝对时间） */
 export function formatCodexResetTime(

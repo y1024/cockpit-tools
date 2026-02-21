@@ -16,6 +16,7 @@ interface PlatformInstancesContentProps<TAccount extends AccountLike> {
   accounts: TAccount[];
   fetchAccounts: () => Promise<void>;
   renderAccountQuotaPreview: (account: TAccount) => ReactNode;
+  renderAccountBadge?: (account: TAccount) => ReactNode;
   getAccountSearchText: (account: TAccount) => string;
   appType: InstancesAppType;
   isSupported: boolean;
@@ -30,6 +31,7 @@ export function PlatformInstancesContent<TAccount extends AccountLike>({
   accounts,
   fetchAccounts,
   renderAccountQuotaPreview,
+  renderAccountBadge,
   getAccountSearchText,
   appType,
   isSupported,
@@ -62,6 +64,7 @@ export function PlatformInstancesContent<TAccount extends AccountLike>({
         accounts={accounts}
         fetchAccounts={fetchAccounts}
         renderAccountQuotaPreview={renderAccountQuotaPreview}
+        renderAccountBadge={renderAccountBadge}
         getAccountSearchText={getAccountSearchText}
         appType={appType}
       />

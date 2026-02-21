@@ -31,6 +31,7 @@ import { TagEditModal } from '../components/TagEditModal';
 import {
   getCodexPlanDisplayName,
   getCodexQuotaClass,
+  getCodexQuotaWindows,
   formatCodexResetTime,
   type CodexQuotaErrorInfo,
 } from '../types/codex';
@@ -824,6 +825,18 @@ export function CodexAccountsPage() {
     });
   }, [filteredAccounts, groupByTag, tagFilter, untaggedKey]);
 
+  const quotaColumnLabels = useMemo(() => {
+    const source = filteredAccounts.length > 0 ? filteredAccounts : accounts;
+    const allWindows = source.map((account) => getCodexQuotaWindows(account.quota));
+    const firstWithWindows = allWindows.find((windows) => windows.length > 0) ?? [];
+    const firstWithSecondary = allWindows.find((windows) => windows.length > 1) ?? [];
+
+    return {
+      primary: firstWithWindows[0]?.label ?? '5h',
+      secondary: firstWithSecondary[1]?.label ?? (firstWithWindows.length > 0 ? '—' : 'Weekly'),
+    };
+  }, [accounts, filteredAccounts]);
+
   const toggleTagFilterValue = (tag: string) => {
     setTagFilter((prev) => {
       if (prev.includes(tag)) return prev.filter((item) => item !== tag);
@@ -889,6 +902,7 @@ export function CodexAccountsPage() {
       const planKey = getCodexPlanDisplayName(account.plan_type);
       const planLabel = planKey;
       const isSelected = selected.has(account.id);
+      const quotaWindows = getCodexQuotaWindows(account.quota);
       const quotaErrorMeta = resolveQuotaErrorMeta(account.quota_error);
       const hasQuotaError = Boolean(quotaErrorMeta.rawMessage);
 
@@ -925,47 +939,31 @@ export function CodexAccountsPage() {
                 <span>{quotaErrorMeta.displayText}</span>
               </div>
             )}
-            <div className="quota-item">
-              <div className="quota-header">
-                <Clock size={14} />
-                <span className="quota-label">{t('codex.quota.hourly', '5小时配额')}</span>
-                <span className={`quota-pct ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}>
-                  {account.quota?.hourly_percentage ?? 100}%
-                </span>
-              </div>
-              <div className="quota-bar-track">
-                <div
-                  className={`quota-bar ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}
-                  style={{ width: `${account.quota?.hourly_percentage ?? 100}%` }}
-                />
-              </div>
-              {account.quota?.hourly_reset_time && (
-                <span className="quota-reset">
-                  {formatCodexResetTime(account.quota.hourly_reset_time, t)}
-                </span>
-              )}
-            </div>
-
-            <div className="quota-item">
-              <div className="quota-header">
-                <Calendar size={14} />
-                <span className="quota-label">{t('codex.quota.weekly', '周配额')}</span>
-                <span className={`quota-pct ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}>
-                  {account.quota?.weekly_percentage ?? 100}%
-                </span>
-              </div>
-              <div className="quota-bar-track">
-                <div
-                  className={`quota-bar ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}
-                  style={{ width: `${account.quota?.weekly_percentage ?? 100}%` }}
-                />
-              </div>
-              {account.quota?.weekly_reset_time && (
-                <span className="quota-reset">
-                  {formatCodexResetTime(account.quota.weekly_reset_time, t)}
-                </span>
-              )}
-            </div>
+            {quotaWindows.map((window) => {
+              const QuotaIcon = window.id === 'secondary' ? Calendar : Clock;
+              return (
+                <div key={window.id} className="quota-item">
+                  <div className="quota-header">
+                    <QuotaIcon size={14} />
+                    <span className="quota-label">{window.label}</span>
+                    <span className={`quota-pct ${getCodexQuotaClass(window.percentage)}`}>
+                      {window.percentage}%
+                    </span>
+                  </div>
+                  <div className="quota-bar-track">
+                    <div
+                      className={`quota-bar ${getCodexQuotaClass(window.percentage)}`}
+                      style={{ width: `${window.percentage}%` }}
+                    />
+                  </div>
+                  {window.resetTime && (
+                    <span className="quota-reset">
+                      {formatCodexResetTime(window.resetTime, t)}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
 
             {!account.quota && (
               <div className="quota-empty">{t('common.shared.quota.noData', '暂无配额数据')}</div>
@@ -1023,6 +1021,9 @@ export function CodexAccountsPage() {
       const isCurrent = currentAccount?.id === account.id;
       const planKey = getCodexPlanDisplayName(account.plan_type);
       const planLabel = planKey;
+      const quotaWindows = getCodexQuotaWindows(account.quota);
+      const primaryWindow = quotaWindows[0];
+      const secondaryWindow = quotaWindows[1];
       const quotaErrorMeta = resolveQuotaErrorMeta(account.quota_error);
       const hasQuotaError = Boolean(quotaErrorMeta.rawMessage);
       return (
@@ -1056,50 +1057,58 @@ export function CodexAccountsPage() {
             <span className={`tier-badge ${planKey.toLowerCase()}`}>{planLabel}</span>
           </td>
           <td>
-            <div className="quota-item">
-              <div className="quota-header">
-                <span className="quota-name">{t('codex.quota.hourly', '5小时配额')}</span>
-                <span className={`quota-value ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}>
-                  {account.quota?.hourly_percentage ?? 100}%
-                </span>
-              </div>
-              <div className="quota-progress-track">
-                <div
-                  className={`quota-progress-bar ${getCodexQuotaClass(account.quota?.hourly_percentage ?? 100)}`}
-                  style={{ width: `${account.quota?.hourly_percentage ?? 100}%` }}
-                />
-              </div>
-              {account.quota?.hourly_reset_time && (
-                <div className="quota-footer">
-                  <span className="quota-reset">
-                    {formatCodexResetTime(account.quota.hourly_reset_time, t)}
+            {primaryWindow ? (
+              <div className="quota-item">
+                <div className="quota-header">
+                  <span className="quota-name">{primaryWindow.label}</span>
+                  <span className={`quota-value ${getCodexQuotaClass(primaryWindow.percentage)}`}>
+                    {primaryWindow.percentage}%
                   </span>
                 </div>
-              )}
-            </div>
+                <div className="quota-progress-track">
+                  <div
+                    className={`quota-progress-bar ${getCodexQuotaClass(primaryWindow.percentage)}`}
+                    style={{ width: `${primaryWindow.percentage}%` }}
+                  />
+                </div>
+                {primaryWindow.resetTime && (
+                  <div className="quota-footer">
+                    <span className="quota-reset">
+                      {formatCodexResetTime(primaryWindow.resetTime, t)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="quota-empty">—</div>
+            )}
           </td>
           <td>
-            <div className="quota-item">
-              <div className="quota-header">
-                <span className="quota-name">{t('codex.quota.weekly', '周配额')}</span>
-                <span className={`quota-value ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}>
-                  {account.quota?.weekly_percentage ?? 100}%
-                </span>
-              </div>
-              <div className="quota-progress-track">
-                <div
-                  className={`quota-progress-bar ${getCodexQuotaClass(account.quota?.weekly_percentage ?? 100)}`}
-                  style={{ width: `${account.quota?.weekly_percentage ?? 100}%` }}
-                />
-              </div>
-              {account.quota?.weekly_reset_time && (
-                <div className="quota-footer">
-                  <span className="quota-reset">
-                    {formatCodexResetTime(account.quota.weekly_reset_time, t)}
+            {secondaryWindow ? (
+              <div className="quota-item">
+                <div className="quota-header">
+                  <span className="quota-name">{secondaryWindow.label}</span>
+                  <span className={`quota-value ${getCodexQuotaClass(secondaryWindow.percentage)}`}>
+                    {secondaryWindow.percentage}%
                   </span>
                 </div>
-              )}
-            </div>
+                <div className="quota-progress-track">
+                  <div
+                    className={`quota-progress-bar ${getCodexQuotaClass(secondaryWindow.percentage)}`}
+                    style={{ width: `${secondaryWindow.percentage}%` }}
+                  />
+                </div>
+                {secondaryWindow.resetTime && (
+                  <div className="quota-footer">
+                    <span className="quota-reset">
+                      {formatCodexResetTime(secondaryWindow.resetTime, t)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="quota-empty">—</div>
+            )}
             {hasQuotaError && (
               <div className="quota-error-inline table" title={quotaErrorMeta.rawMessage}>
                 <CircleAlert size={12} />
@@ -1414,8 +1423,8 @@ export function CodexAccountsPage() {
                 </th>
                 <th style={{ width: 260 }}>{t('common.shared.columns.email', '账号')}</th>
                 <th style={{ width: 140 }}>{t('common.shared.columns.plan', '订阅')}</th>
-                <th>{t('codex.columns.hourly', '5小时配额')}</th>
-                <th>{t('codex.columns.weekly', '周配额')}</th>
+                <th>{quotaColumnLabels.primary}</th>
+                <th>{quotaColumnLabels.secondary}</th>
                 <th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th>
               </tr>
             </thead>
@@ -1450,8 +1459,8 @@ export function CodexAccountsPage() {
                 </th>
                 <th style={{ width: 260 }}>{t('common.shared.columns.email', '账号')}</th>
                 <th style={{ width: 140 }}>{t('common.shared.columns.plan', '订阅')}</th>
-                <th>{t('codex.columns.hourly', '5小时配额')}</th>
-                <th>{t('codex.columns.weekly', '周配额')}</th>
+                <th>{quotaColumnLabels.primary}</th>
+                <th>{quotaColumnLabels.secondary}</th>
                 <th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th>
               </tr>
             </thead>

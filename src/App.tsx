@@ -19,6 +19,7 @@ import { useCodexAccountStore } from './stores/useCodexAccountStore';
 import { useGitHubCopilotAccountStore } from './stores/useGitHubCopilotAccountStore';
 import { useWindsurfAccountStore } from './stores/useWindsurfAccountStore';
 import { useKiroAccountStore } from './stores/useKiroAccountStore';
+import type { UpdateCheckResult } from './components/UpdateNotification';
 
 const DashboardPage = lazy(() =>
   import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })),
@@ -121,6 +122,7 @@ type QuotaAlertPayload = {
 };
 
 type QuotaAlertPlatform = 'antigravity' | 'codex' | 'github_copilot' | 'windsurf' | 'kiro';
+type UpdateCheckSource = 'auto' | 'manual';
 
 function normalizeQuotaAlertPlatform(platform: string | undefined): QuotaAlertPlatform {
   switch (platform) {
@@ -190,6 +192,7 @@ function App() {
   const [page, setPage] = useState<Page>('dashboard');
   const [showUpdateNotification, setShowUpdateNotification] = useState(false);
   const [updateNotificationKey, setUpdateNotificationKey] = useState(0);
+  const [updateCheckSource, setUpdateCheckSource] = useState<UpdateCheckSource>('auto');
   const [showCloseDialog, setShowCloseDialog] = useState(false);
   const [showPlatformLayoutModal, setShowPlatformLayoutModal] = useState(false);
   const [showBreakout, setShowBreakout] = useState(false);
@@ -317,6 +320,8 @@ function App() {
         console.log('[App] Should check updates:', shouldCheck);
 
         if (shouldCheck) {
+          setUpdateCheckSource('auto');
+          setUpdateNotificationKey(Date.now());
           setShowUpdateNotification(true);
           // 标记已经检查过了
           await invoke('update_last_check_time');
@@ -525,14 +530,27 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleUpdateRequest = () => {
+    const handleUpdateRequest = (event: Event) => {
+      const detail = (event as CustomEvent<{ source?: UpdateCheckSource }>).detail;
+      const source: UpdateCheckSource = detail?.source === 'manual' ? 'manual' : 'auto';
+      setUpdateCheckSource(source);
+      if (source === 'manual') {
+        window.dispatchEvent(new CustomEvent('update-check-started', { detail: { source } }));
+      }
       setUpdateNotificationKey(Date.now());
       setShowUpdateNotification(true);
     };
-    window.addEventListener('update-check-requested', handleUpdateRequest);
+    window.addEventListener('update-check-requested', handleUpdateRequest as EventListener);
     return () => {
-      window.removeEventListener('update-check-requested', handleUpdateRequest);
+      window.removeEventListener('update-check-requested', handleUpdateRequest as EventListener);
     };
+  }, []);
+
+  const handleUpdateCheckResult = useCallback((result: UpdateCheckResult) => {
+    if (result.source !== 'manual') {
+      return;
+    }
+    window.dispatchEvent(new CustomEvent('update-check-finished', { detail: result }));
   }, []);
 
   useEffect(() => {
@@ -786,7 +804,12 @@ function App() {
       {/* 更新通知 */}
       {showUpdateNotification && (
         <Suspense fallback={null}>
-          <UpdateNotification key={updateNotificationKey} onClose={() => setShowUpdateNotification(false)} />
+          <UpdateNotification
+            key={updateNotificationKey}
+            source={updateCheckSource}
+            onResult={handleUpdateCheckResult}
+            onClose={() => setShowUpdateNotification(false)}
+          />
         </Suspense>
       )}
       <GlobalModal />

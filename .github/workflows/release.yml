@@ -92,9 +92,73 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
 
+  upload-checksums:
+    name: Upload SHA256SUMS
+    needs: release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Determine version
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Download release assets (retry)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          TAG="v${VERSION}"
+          downloaded="false"
+          for i in $(seq 1 30); do
+            if gh release download "$TAG" --dir release-assets --pattern "*" --clobber; then
+              downloaded="true"
+              echo "Downloaded release assets from $TAG"
+              break
+            fi
+            echo "Release assets not ready yet (attempt $i/30). Sleeping 10s..."
+            sleep 10
+          done
+          if [ "$downloaded" != "true" ]; then
+            echo "Failed to download release assets from $TAG after retries."
+            exit 1
+          fi
+
+      - name: Generate SHA256SUMS.txt from release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          rm -f SHA256SUMS.txt
+          find . -type f -print0 \
+            | sort -z \
+            | while IFS= read -r -d '' file; do
+                shasum -a 256 "$file"
+              done \
+            | sed 's#  \./#  #' \
+            > ../SHA256SUMS.txt
+          cd ..
+          test -s SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Upload SHA256SUMS.txt to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "v${VERSION}" SHA256SUMS.txt --clobber
+
   update-homebrew-cask:
     name: Update Homebrew Cask
-    needs: release
+    needs:
+      - release
+      - upload-checksums
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     permissions:

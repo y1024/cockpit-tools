@@ -14,11 +14,28 @@ interface UpdateInfo {
   release_notes_zh: string;
 }
 
-interface UpdateNotificationProps {
-  onClose: () => void;
+type UpdateCheckSource = 'auto' | 'manual';
+type UpdateCheckStatus = 'has_update' | 'up_to_date' | 'failed';
+
+export interface UpdateCheckResult {
+  source: UpdateCheckSource;
+  status: UpdateCheckStatus;
+  currentVersion?: string;
+  latestVersion?: string;
+  error?: string;
 }
 
-export const UpdateNotification: React.FC<UpdateNotificationProps> = ({ onClose }) => {
+interface UpdateNotificationProps {
+  onClose: () => void;
+  source?: UpdateCheckSource;
+  onResult?: (result: UpdateCheckResult) => void;
+}
+
+export const UpdateNotification: React.FC<UpdateNotificationProps> = ({
+  onClose,
+  source = 'auto',
+  onResult,
+}) => {
   const { t, i18n } = useTranslation();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
 
@@ -30,12 +47,29 @@ export const UpdateNotification: React.FC<UpdateNotificationProps> = ({ onClose 
     try {
       const info = await invoke<UpdateInfo>('check_for_updates');
       if (info.has_update) {
+        onResult?.({
+          source,
+          status: 'has_update',
+          currentVersion: info.current_version,
+          latestVersion: info.latest_version,
+        });
         setUpdateInfo(info);
       } else {
+        onResult?.({
+          source,
+          status: 'up_to_date',
+          currentVersion: info.current_version,
+          latestVersion: info.latest_version,
+        });
         onClose();
       }
     } catch (error) {
       console.error('Failed to check for updates:', error);
+      onResult?.({
+        source,
+        status: 'failed',
+        error: String(error),
+      });
       onClose();
     }
   };
