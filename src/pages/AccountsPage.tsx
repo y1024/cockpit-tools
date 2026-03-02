@@ -30,7 +30,8 @@ import {
   GripVertical,
   Eye,
   EyeOff,
-  Tag
+  Tag,
+  BookOpen
 } from 'lucide-react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useAccountStore } from '../stores/useAccountStore'
@@ -2074,6 +2075,7 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
         <OverviewTabsHeader
           active="overview"
           onNavigate={onNavigate}
+          onOpenManual={() => onNavigate?.('manual')}
           subtitle={t('overview.subtitle')}
         />
         {/* 工具栏 */}
@@ -2362,13 +2364,22 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
             </div>
             <h3>{t('accounts.empty.title')}</h3>
             <p>{t('accounts.empty.desc')}</p>
-            <button
-              className="btn btn-primary"
-              onClick={() => openAddModal('oauth')}
-            >
-              <Plus size={18} />
-              {t('accounts.empty.btn')}
-            </button>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => openAddModal('oauth')}
+              >
+                <Plus size={18} />
+                {t('accounts.empty.btn')}
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => onNavigate?.('manual')}
+              >
+                <BookOpen size={18} />
+                {t('manual.navTitle', '查阅接入手册')}
+              </button>
+            </div>
           </div>
         ) : filteredAccounts.length === 0 ? (
           <div className="empty-state">

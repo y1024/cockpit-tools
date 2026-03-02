@@ -951,6 +951,16 @@ fn should_detach_child() -> bool {
     true
 }
 
+#[cfg(target_os = "macos")]
+fn sanitize_macos_gui_launch_env(cmd: &mut Command) {
+    // Avoid inheriting Cockpit bundle identity into child GUI apps.
+    cmd.env_remove("__CFBundleIdentifier");
+    cmd.env_remove("XPC_SERVICE_NAME");
+}
+
+#[cfg(not(target_os = "macos"))]
+fn sanitize_macos_gui_launch_env(_cmd: &mut Command) {}
+
 #[cfg(any(target_os = "macos", target_os = "linux"))]
 fn spawn_detached_unix(cmd: &mut Command) -> Result<Child, String> {
     use std::os::unix::process::CommandExt;
@@ -1093,6 +1103,7 @@ fn resolve_macos_app_root_from_config(app: &str) -> Option<String> {
 #[cfg(target_os = "macos")]
 fn spawn_open_app(app_root: &str, args: &[String]) -> Result<u32, String> {
     let mut cmd = Command::new("open");
+    sanitize_macos_gui_launch_env(&mut cmd);
     cmd.arg("-a").arg(app_root);
     if !args.is_empty() {
         cmd.arg("--args");
@@ -4260,64 +4271,28 @@ pub fn start_antigravity_with_args(
 
     #[cfg(target_os = "macos")]
     {
-        let app_root = resolve_macos_app_root_from_config("antigravity");
-        if let Some(path) = launch_path {
-            let mut cmd = Command::new(&path);
-            if !user_data_dir.trim().is_empty() {
-                cmd.arg("--user-data-dir");
-                cmd.arg(user_data_dir.trim());
-            }
-            cmd.arg("--reuse-window");
-            for arg in extra_args {
-                if !arg.trim().is_empty() {
-                    cmd.arg(arg);
-                }
-            }
-            match spawn_detached_unix(&mut cmd) {
-                Ok(child) => {
-                    crate::modules::logger::log_info("Antigravity 启动命令已发送");
-                    return Ok(child.id());
-                }
-                Err(e) => {
-                    if let Some(app_root) = app_root {
-                        let mut args: Vec<String> = Vec::new();
-                        if !user_data_dir.trim().is_empty() {
-                            args.push("--user-data-dir".to_string());
-                            args.push(user_data_dir.trim().to_string());
-                        }
-                        args.push("--reuse-window".to_string());
-                        for arg in extra_args {
-                            if !arg.trim().is_empty() {
-                                args.push(arg.to_string());
-                            }
-                        }
-                        let pid = spawn_open_app(&app_root, &args)
-                            .map_err(|open_err| format!("启动 Antigravity 失败: {}", open_err))?;
-                        crate::modules::logger::log_info("Antigravity 启动命令已发送");
-                        return Ok(pid);
-                    }
-                    return Err(format!("启动 Antigravity 失败: {}", e));
-                }
+        let app_root = resolve_macos_app_root_from_config("antigravity").or_else(|| {
+            launch_path
+                .as_ref()
+                .and_then(|path| normalize_macos_app_root(path))
+        });
+        let app_root = app_root.ok_or_else(|| app_path_missing_error("antigravity"))?;
+
+        let mut args: Vec<String> = Vec::new();
+        if !user_data_dir.trim().is_empty() {
+            args.push("--user-data-dir".to_string());
+            args.push(user_data_dir.trim().to_string());
+        }
+        args.push("--reuse-window".to_string());
+        for arg in extra_args {
+            if !arg.trim().is_empty() {
+                args.push(arg.to_string());
             }
         }
-        if let Some(app_root) = app_root {
-            let mut args: Vec<String> = Vec::new();
-            if !user_data_dir.trim().is_empty() {
-                args.push("--user-data-dir".to_string());
-                args.push(user_data_dir.trim().to_string());
-            }
-            args.push("--reuse-window".to_string());
-            for arg in extra_args {
-                if !arg.trim().is_empty() {
-                    args.push(arg.to_string());
-                }
-            }
-            let pid = spawn_open_app(&app_root, &args)
-                .map_err(|e| format!("启动 Antigravity 失败: {}", e))?;
-            crate::modules::logger::log_info("Antigravity 启动命令已发送");
-            return Ok(pid);
-        }
-        return Err(app_path_missing_error("antigravity"));
+        let pid =
+            spawn_open_app(&app_root, &args).map_err(|e| format!("启动 Antigravity 失败: {}", e))?;
+        crate::modules::logger::log_info("Antigravity 启动命令已发送");
+        return Ok(pid);
     }
 
     #[cfg(target_os = "windows")]
@@ -4606,6 +4581,7 @@ pub fn start_codex_with_args(codex_home: &str, extra_args: &[String]) -> Result<
         let launch_path = resolve_codex_launch_path().ok();
         if let Some(path) = launch_path {
             let mut cmd = Command::new(&path);
+            sanitize_macos_gui_launch_env(&mut cmd);
             if !codex_home.trim().is_empty() {
                 cmd.env("CODEX_HOME", codex_home.trim());
             }
@@ -4669,6 +4645,7 @@ pub fn start_codex_default() -> Result<u32, String> {
         let app_root = resolve_macos_app_root_from_config("codex");
         if let Ok(launch_path) = resolve_codex_launch_path() {
             let mut cmd = Command::new(&launch_path);
+            sanitize_macos_gui_launch_env(&mut cmd);
             match spawn_detached_unix(&mut cmd) {
                 Ok(child) => {
                     crate::modules::logger::log_info("Codex 启动命令已发送");
@@ -5327,6 +5304,7 @@ pub fn start_vscode_with_args_with_new_window(
         let launch_path = resolve_vscode_launch_path()?;
 
         let mut cmd = Command::new(&launch_path);
+        sanitize_macos_gui_launch_env(&mut cmd);
         cmd.arg("--user-data-dir").arg(target);
         if use_new_window {
             cmd.arg("--new-window");
@@ -5437,6 +5415,7 @@ pub fn start_vscode_default_with_args_with_new_window(
     {
         let launch_path = resolve_vscode_launch_path()?;
         let mut cmd = Command::new(&launch_path);
+        sanitize_macos_gui_launch_env(&mut cmd);
         if use_new_window {
             cmd.arg("--new-window");
         } else {

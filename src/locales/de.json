@@ -151,11 +151,191 @@
     "fingerprints": "Fingerabdrücke",
     "settings": "Einstellungen",
     "codex": "Codex-Konten",
-    "dashboard": "Armaturenbrett",
-    "instances": "Multi-Instanz",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Weitere Plattformen"
+    "dashboard": "Armaturenbrett",
+    "morePlatforms": "Weitere Plattformen",
+    "instances": "Multi-Instanz",
+    "manual": "Benutzerhandbuch"
+  },
+  "platformLayout": {
+    "title": "Plattformlayout",
+    "sidebarSelected": "In der Seitenleiste ausgewählt {{count}}/{{max}}",
+    "reset": "Auf Standard zurücksetzen",
+    "tip": "Zum Neuanordnen ziehen. In der Seitenleiste können maximal zwei Plattformen angezeigt werden. Wenn nur eine ausgewählt ist, wird nur eine angezeigt.",
+    "sidebarToggle": "In Seitenleiste anzeigen",
+    "dashboardToggle": "Im Dashboard anzeigen",
+    "trayToggle": "Im Tray anzeigen",
+    "hiddenBadge": "Ausgeblendet",
+    "openFromMore": "Plattformlayout verwalten",
+    "dragHandleLabel": "Zum Neuanordnen ziehen"
+  },
+  "privacy": {
+    "hideSensitive": "E-Mails ausblenden",
+    "showSensitive": "E-Mails anzeigen"
+  },
+  "instances": {
+    "title": "Instanzen",
+    "subtitle": "Isolierte Profile für den parallelen Betrieb mehrerer Konten.",
+    "defaultName": "Standardinstanz",
+    "search": "Instanzen suchen",
+    "sort": {
+      "label": "Sortierung",
+      "createdAt": "Nach Erstellungszeit",
+      "lastLaunchedAt": "Nach Startzeit",
+      "ascTooltip": "Aktuell: aufsteigend, klicken zum Umschalten auf absteigend",
+      "descTooltip": "Aktuell: absteigend, klicken zum Umschalten auf aufsteigend",
+      "toggleDirection": "Sortierrichtung wechseln"
+    },
+    "actions": {
+      "create": "Neue Instanz",
+      "refresh": "Aktualisieren",
+      "startAll": "Alle starten",
+      "restartAll": "Alle neu starten",
+      "stopAll": "Alle stoppen",
+      "start": "Starten",
+      "stop": "Stoppen",
+      "openFolder": "Ordner öffnen",
+      "edit": "Bearbeiten",
+      "openRootDir": "Ordner öffnen",
+      "selectPath": "Pfad auswählen",
+      "openWindow": "Fenster öffnen"
+    },
+    "bulkConfirm": {
+      "startAll": "Alle gestoppten Instanzen starten?",
+      "restartAll": "Alle laufenden Instanzen neu starten?",
+      "stopAll": "Alle Instanzen schließen?"
+    },
+    "status": {
+      "running": "Laufend",
+      "stopped": "Gestoppt",
+      "restarting": "Neu startend",
+      "starting": "Beginnt"
+    },
+    "labels": {
+      "path": "Verzeichnis",
+      "args": "Startparameter",
+      "argsEmpty": "Keine",
+      "bindAccount": "Gekoppeltes Konto",
+      "unbound": "Nicht gekoppelt",
+      "pendingInit": "Warten auf Initialisierung (zuerst einmal starten)",
+      "quota": "Quote",
+      "lastLaunched": "Zuletzt gestartet"
+    },
+    "columns": {
+      "instance": "Instanz",
+      "email": "Konto",
+      "quota": "Quota-Status",
+      "actions": "Aktionen"
+    },
+    "empty": {
+      "title": "Keine Instanzen",
+      "desc": "Erstellen Sie ein isoliertes Konfigurationsverzeichnis, um mehrere Instanzen zu starten."
+    },
+    "modal": {
+      "createTitle": "Neue Instanz",
+      "editTitle": "Instanz bearbeiten"
+    },
+    "form": {
+      "name": "Instanzname",
+      "namePlaceholder": "z. B. Arbeitskonto",
+      "path": "Instanzverzeichnis",
+      "pathPlaceholder": "Verzeichnis auswählen",
+      "pathReadOnly": "Pfad kann beim Bearbeiten nicht geändert werden",
+      "pathAutoHint": "Der Pfad wird automatisch aktualisiert, wenn der Name geändert wird (oder manuell auswählen)",
+      "copyLogin": "Aktuellen Login-Status kopieren",
+      "copyLoginDesc": "Konfiguration und Login-Daten aus dem Standardverzeichnis kopieren",
+      "initMode": "Initialisierungsmodus",
+      "initModeCopy": "Von Quellinstanz kopieren (Standard)",
+      "initModeEmpty": "Leere Instanz (ohne Kopieren)",
+      "emptyInitHint": "Bei Auswahl ohne Kopieren wird nur ein leeres Verzeichnis erstellt. Starten Sie die Instanz einmal, bevor Sie ein Konto binden.",
+      "copySource": "Quell-Instanz kopieren",
+      "copySourceDesc": "Konfiguration und Login-Daten von der ausgewählten Instanz kopieren",
+      "copySourcePlaceholder": "Quell-Instanz auswählen",
+      "copySourceRequired": "Bitte wählen Sie eine Quell-Instanz aus",
+      "copySourceRunningHint": "Die Quell-Instanz läuft. Es wird empfohlen, sie zuerst zu schließen, um Dateninkonsistenzen zu vermeiden.",
+      "bindInject": "Konto koppeln",
+      "bindAfterInit": "Nach Initialisierung bindbar",
+      "bindDisabledHint": "Bei einer leeren Instanz zuerst einmal starten, damit Instanzdaten erstellt werden, danach Konto binden.",
+      "followCurrent": "Aktuellem Konto folgen",
+      "selectAccount": "Konto auswählen",
+      "bindAccount": "Konto koppeln",
+      "unbound": "Nicht gekoppelt",
+      "extraArgs": "Benutzerdefinierte Startparameter",
+      "extraArgsPlaceholder": "z. B. --disable-gpu --log-level=2",
+      "extraArgsDesc": "Argumente durch Leerzeichen trennen, Anführungszeichen werden unterstützt",
+      "nameRequired": "Bitte geben Sie einen Instanznamen ein",
+      "pathRequired": "Bitte wählen Sie ein Instanzverzeichnis aus",
+      "bindRequired": "Bitte wählen Sie ein Konto zum Koppeln aus"
+    },
+    "quota": {
+      "unbound": "Nicht gekoppelt",
+      "accountMissing": "Konto nicht gefunden",
+      "empty": "Kein gecachter Quota-Status"
+    },
+    "messages": {
+      "created": "Instanz erstellt",
+      "emptyCreated": "Leere Instanz erstellt. Bitte einmal starten, bevor Sie ein Konto binden.",
+      "updated": "Instanz aktualisiert",
+      "deleted": "Instanz gelöscht",
+      "started": "Instanz gestartet",
+      "stopped": "Instanz gestoppt",
+      "startedAll": "Alle gestoppten Instanzen gestartet",
+      "restartedAll": "Laufende Instanzen neu gestartet",
+      "closedAll": "Alle Instanzen gestoppt",
+      "allAlreadyRunning": "Alle Instanzen laufen bereits",
+      "noneRunning": "Keine laufenden Instanzen gefunden"
+    },
+    "runningDialog": {
+      "title": "Instanz läuft bereits",
+      "desc": "Diese Instanz läuft bereits. Sie können zum Fenster wechseln oder sie mit der aktuellen Strategie neu starten.",
+      "current": "Aktuelle Strategie: {{name}}",
+      "pathLabel": "Instanzverzeichnis",
+      "go": "Jetzt wechseln",
+      "restart": "Schließen und neu starten"
+    },
+    "initGuide": {
+      "title": "Instanz noch nicht initialisiert",
+      "desc": "Dies ist eine leere Instanz. Aktuell wurde nur das Verzeichnis erstellt, Instanzdaten wurden noch nicht erzeugt.",
+      "tip": "Bitte starten Sie die Instanz einmal. Nach Abschluss der Initialisierung können Sie ein Konto binden.",
+      "startNow": "Jetzt starten"
+    },
+    "restartStrategy": {
+      "button": "Neustart-Strategie",
+      "title": "Neustart-Strategie",
+      "desc": "Wählen Sie die Methode zum Neustart der Instanz. Jede Option beeinflusst Umfang und Stabilität.",
+      "recommended": "Empfohlen",
+      "labels": {
+        "principle": "Technisches Prinzip",
+        "command": "Befehl",
+        "pros": "Vorteile",
+        "cons": "Nachteile"
+      },
+      "safe": {
+        "title": "Sicherer Neustart (Empfohlen)",
+        "principle": "Sendet ein SIGTERM-Signal an alle Antigravity-Prozesse, damit die App speichern und sich selbst beenden kann, und startet dann die Zielinstanz (erzwingt das Beenden, falls erforderlich).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (alle Antigravity-Prozesse)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (alle Antigravity-Prozesse)",
+        "pros": "Näher am normalen Beenden, weniger wahrscheinlich Crash-Warnungen, Daten sind sicherer.",
+        "cons": "Unterstützt nur den vollständigen Neustart aller Instanzen."
+      },
+      "force": {
+        "title": "Erzwungener Neustart",
+        "principle": "Sucht Prozesse anhand von --user-data-dir und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit --user-data-dir)",
+        "pros": "Kann eine einzelne Instanz gezielt neu starten.",
+        "cons": "Könnte Warnungen vor unerwartetem Beenden verursachen, Risiko von Datenverlust für ungespeicherte Daten."
+      }
+    },
+    "stop": {
+      "title": "Instanz hart stoppen",
+      "message": "Sendet ein Beendigungssignal (SIGTERM) an den Prozess. Nicht gespeicherte Daten gehen möglicherweise verloren. Fortfahren?"
+    },
+    "delete": {
+      "title": "Instanz löschen",
+      "message": "Instanz {{name}} löschen? Dies wird die Konfiguration entfernen und den Instanzordner löschen."
+    }
   },
   "settings": {
     "title": "App-Einstellungen",
@@ -186,11 +366,6 @@
       "every1hour": "Jede Stunde",
       "minutes": "Min.",
       "refreshIntervalLimited": "Das Aufwachen beim Zurücksetzen des Kontingents ist aktiviert, daher beträgt das minimale Aktualisierungsintervall 2 Minuten.",
-      "storageTitle": "Verzeichnisse und Speicher",
-      "dataDir": "Datenverzeichnis",
-      "dataDirDesc": "Speicherort für Konten und Konfigurationsdateien.",
-      "fpDir": "Antigravity-Speicher",
-      "fpDirDesc": "Speicherort für Antigravity-Datendateien.",
       "closeBehavior": "Verhalten beim Schließen",
       "closeBehaviorDesc": "Aktion beim Schließen des Fensters wählen",
       "closeBehaviorAsk": "Jedes Mal fragen",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Steuert die Sichtbarkeit des Dock-Symbols unabhängig vom Minimierungsverhalten des Fensters",
       "hideDockIconOff": "Nein (Dock-Symbol anzeigen)",
       "hideDockIconOn": "Ja (Dock-Symbol ausblenden)",
-      "opencodeAppPathDesc": "Leer lassen, um den Standardpfad zu verwenden",
+      "storageTitle": "Verzeichnisse und Speicher",
+      "dataDir": "Datenverzeichnis",
+      "dataDirDesc": "Speicherort für Konten und Konfigurationsdateien.",
+      "fpDir": "Antigravity-Speicher",
+      "fpDirDesc": "Speicherort für Antigravity-Datendateien.",
       "opencodeTitle": "OpenCode-Integration",
       "opencodeRestart": "OpenCode beim Codex-Wechsel neu starten",
       "opencodeRestartDesc": "Codex-Kontoinformationen in OpenCode synchronisieren",
       "opencodeAppPath": "OpenCode-Startpfad",
+      "opencodeAppPathDesc": "Leer lassen, um den Standardpfad zu verwenden",
       "opencodeAppPathPlaceholder": "Standardpfad",
       "opencodePathReset": "Standard zurücksetzen",
       "opencodePathSelect": "Auswählen",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Einstellungen speichern"
   },
+  "appPath": {
+    "missing": {
+      "title": "Anwendungspfad nicht gefunden",
+      "desc": "Der Anwendungspfad für {{app}} wurde nicht gefunden. Bitte jetzt festlegen, um fortzufahren.",
+      "action": "Jetzt festlegen"
+    }
+  },
   "accounts": {
     "title": "Kontoverwaltung",
     "subtitle": "Verwalten Sie Ihre Antigravity-Kontenliste.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Standard",
       "overall": "Nach Gesamtkontingent",
+      "createdAt": "Nach Erstellungszeit",
       "byGroup": "Nach Kontingent von {{group}}",
       "byGroupReset": "Nach Reset-Zeit von {{group}}",
-      "createdAt": "Nach Erstellungszeit",
       "descTooltip": "Absteigend, klicken für Aufsteigend",
       "ascTooltip": "Aufsteigend, klicken für Absteigend",
       "toggleDirection": "Sortierrichtung umschalten"
     },
+    "filterTags": "Tags filtern",
+    "filterTagsCount": "Schlagworte",
+    "noAvailableTags": "Keine verfügbaren Tags",
+    "clearFilter": "Filter löschen",
+    "editTags": "Tags bearbeiten",
+    "tagModal": {
+      "title": "Tags bearbeiten",
+      "hint": "Bis zu {{max}} Tags. Jedes Tag darf höchstens {{maxLength}} Zeichen haben.",
+      "empty": "Keine verfügbaren Tags",
+      "suggestionsTitle": "Tags filtern",
+      "suggestionsEmpty": "Keine verfügbaren Tags",
+      "inputPlaceholder": "Tag eingeben (noch {{remaining}})",
+      "inputDisabledPlaceholder": "Tag-Limit erreicht",
+      "add": "Hinzufügen",
+      "save": "Tags speichern",
+      "error": {
+        "empty": "Tag darf nicht leer sein",
+        "tooLong": "Tag darf maximal {{max}} Zeichen lang sein",
+        "duplicate": "Tag existiert bereits",
+        "tooMany": "Sie können bis zu {{max}} Tags hinzufügen"
+      }
+    },
+    "groupByTag": "Nach Tag gruppieren",
+    "untagged": "Ohne Tag",
+    "deleteTagAria": "Tag {{tag}} löschen",
+    "confirmDeleteTag": "Tag \"{{tag}}\" löschen? Dieser Tag wird von {{count}} Konten entfernt.",
+    "defaultGroup": "Standardgruppe",
     "actions": {
       "viewDetails": "Details anzeigen",
       "viewError": "Fehler anzeigen",
@@ -388,33 +602,6 @@
       "importSuccess": "{{count}} Konten importiert",
       "importPartial": "{{success}} Konten importiert, {{fail}} fehlgeschlagen",
       "importFailed": "Import fehlgeschlagen, refresh_token prüfen"
-    },
-    "confirmDeleteTag": "Tag \"{{tag}}\" löschen? Dieser Tag wird von {{count}} Konten entfernt.",
-    "defaultGroup": "Standardgruppe",
-    "filterTags": "Tags filtern",
-    "filterTagsCount": "Schlagworte",
-    "noAvailableTags": "Keine verfügbaren Tags",
-    "clearFilter": "Filter löschen",
-    "editTags": "Tags bearbeiten",
-    "groupByTag": "Nach Tag gruppieren",
-    "untagged": "Ohne Tag",
-    "deleteTagAria": "Tag {{tag}} löschen",
-    "tagModal": {
-      "title": "Tags bearbeiten",
-      "hint": "Bis zu {{max}} Tags. Jedes Tag darf höchstens {{maxLength}} Zeichen haben.",
-      "empty": "Keine verfügbaren Tags",
-      "suggestionsTitle": "Tags filtern",
-      "suggestionsEmpty": "Keine verfügbaren Tags",
-      "inputPlaceholder": "Tag eingeben (noch {{remaining}})",
-      "inputDisabledPlaceholder": "Tag-Limit erreicht",
-      "add": "Hinzufügen",
-      "save": "Tags speichern",
-      "error": {
-        "empty": "Tag darf nicht leer sein",
-        "tooLong": "Tag darf maximal {{max}} Zeichen lang sein",
-        "duplicate": "Tag existiert bereits",
-        "tooMany": "Sie können bis zu {{max}} Tags hinzufügen"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Weckaufgaben",
     "subtitle": "Mehrere automatische Weckaufgaben mit unabhängigen Steuerungen verwalten.",
+    "verification": {
+      "title": "Bestätigung erforderlich",
+      "columns": {
+        "verifiedAt": "Verifizierungszeit"
+      },
+      "filters": {
+        "all": "Alle"
+      },
+      "actions": {
+        "selectAllAccounts": "Alle auswählen",
+        "clearSelectedAccounts": "Auswahl aufheben",
+        "runCheckNow": "Bestätigung abschließen"
+      },
+      "runHint": {
+        "title": "Hinweise zur Verifizierung",
+        "line1": "„Jetzt prüfen“ sendet eine minimale Chat-Anfrage, indem der Antigravity-Client über ein lokales Gateway und das offizielle Language-Server-Protokoll simuliert wird.",
+        "line2": "Dabei werden wenige Token verbraucht (in der Regel ein kurzer Dialog). Der tatsächliche Verbrauch hängt von Modell und Kontorichtlinie ab.",
+        "line3": "Diese Aktion ändert keine Wakeup-Task-Einstellungen. Sie prüft nur die Kontoverfügbarkeit und schreibt einen Prüfdatensatz.",
+        "line4": "Wenn 403 zurückgegeben wird, muss zuerst die Kontoverifizierung abgeschlossen werden. Das Ergebnis enthält Verifizierungs-URL und Schnellaktionen."
+      },
+      "deleteConfirm": "Möchten Sie das wirklich löschen?"
+    },
     "globalToggle": "Globaler Weckschalter",
     "newTask": "Neue Aufgabe",
     "runTest": "Jetzt testen",
@@ -763,28 +972,6 @@
       "accountsHint": "Mehrere Konten für den Test auswählen.",
       "start": "Test starten",
       "testing": "Teste..."
-    },
-    "verification": {
-      "title": "Bestätigung erforderlich",
-      "columns": {
-        "verifiedAt": "Verifizierungszeit"
-      },
-      "filters": {
-        "all": "Alle"
-      },
-      "actions": {
-        "selectAllAccounts": "Alle auswählen",
-        "clearSelectedAccounts": "Auswahl aufheben",
-        "runCheckNow": "Bestätigung abschließen"
-      },
-      "deleteConfirm": "Möchten Sie das wirklich löschen?",
-      "runHint": {
-        "title": "Hinweise zur Verifizierung",
-        "line1": "„Jetzt prüfen“ sendet eine minimale Chat-Anfrage, indem der Antigravity-Client über ein lokales Gateway und das offizielle Language-Server-Protokoll simuliert wird.",
-        "line2": "Dabei werden wenige Token verbraucht (in der Regel ein kurzer Dialog). Der tatsächliche Verbrauch hängt von Modell und Kontorichtlinie ab.",
-        "line3": "Diese Aktion ändert keine Wakeup-Task-Einstellungen. Sie prüft nur die Kontoverfügbarkeit und schreibt einen Prüfdatensatz.",
-        "line4": "Wenn 403 zurückgegeben wird, muss zuerst die Kontoverifizierung abgeschlossen werden. Das Ergebnis enthält Verifizierungs-URL und Schnellaktionen."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Codex-Konten verwalten",
     "subtitle": "Verwalte deine OpenAI Codex-Konten",
+    "instances": {
+      "subtitle": "Unabhängige Konfiguration pro Instanz, paralleler Betrieb mit mehreren Konten.",
+      "comingSoon": "Multi-Instanz kommt bald",
+      "comingSoonDesc": "Führen Sie mehrere Codex.app-Instanzen mit verschiedenen Konten gleichzeitig aus.",
+      "unsupported": {
+        "desc": "Codex Multi-Instanz ist derzeit nur auf macOS verfügbar."
+      },
+      "quota": {
+        "hourly": "5 Std.",
+        "weekly": "Wöchentlich"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Sendet ein SIGTERM-Signal an alle Codex-Prozesse, damit die App speichern und sich selbst beenden kann, und startet dann die Zielinstanz (erzwingt das Beenden, falls erforderlich).",
+          "commandMac": "macOS: kill -15 <pid> (alle Codex-Prozesse)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (alle Codex-Prozesse)"
+        },
+        "force": {
+          "principle": "Sucht Prozesse anhand von CODEX_HOME und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit CODEX_HOME)"
+        }
+      }
+    },
+    "refreshSuccess": "Kontingent aktualisiert",
+    "refreshFailed": "Kontingent-Aktualisierung fehlgeschlagen: {{error}}",
+    "refreshAllSuccess": "Aktualisierung abgeschlossen, {{count}} Konto/Konten erfolgreich",
+    "refreshAllPartialFailed": "Aktualisierung abgeschlossen, {{success}} / {{total}} Konten erfolgreich, einige fehlgeschlagen",
     "switch": "Wechseln",
     "switched": "Gewechselt zu {{email}}",
     "switchFailed": "Wechsel fehlgeschlagen: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Lokales Konto abrufen"
     },
     "import": {
+      "localDesc": "Codex-Konten aus lokal angemeldeten Sitzungen importieren.",
       "importing": "Lokales Konto wird importiert...",
-      "successMsg": "Import erfolgreich: {{email}}",
-      "localDesc": "Codex-Konten aus lokal angemeldeten Sitzungen importieren."
+      "successMsg": "Import erfolgreich: {{email}}"
     },
     "quota": {
       "hourly": "5-Stunden-Kontingent",
       "weekly": "Wöchentliches Kontingent",
       "reset": "Zurücksetzen"
+    },
+    "quotaError": {
+      "badge": "Kontingentfehler",
+      "generic": "Kontingent-Aktualisierung fehlgeschlagen, bitte später erneut versuchen",
+      "deactivatedWorkspace": "Workspace ist deaktiviert, bitte Konto wechseln oder neu autorisieren"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Wöchentliche Reset-Zeit",
       "hourlyReset": "5-Stunden-Reset-Zeit"
     },
+    "opencodeSwitch": "OpenCode-Schalter",
+    "opencodeSwitchDesc": "Wechsel des Codex-Kontos in OpenCode synchronisieren",
+    "opencodeSwitchFailed": "OpenCode-Schalter konnte nicht aktualisiert werden: {{error}}",
     "columns": {
       "hourly": "5-Std-Quote",
       "weekly": "Wochenquote"
     },
-    "opencodeSwitch": "OpenCode-Schalter",
-    "opencodeSwitchDesc": "Wechsel des Codex-Kontos in OpenCode synchronisieren",
-    "opencodeSwitchFailed": "OpenCode-Schalter konnte nicht aktualisiert werden: {{error}}",
     "filterTags": "Tags filtern",
     "filterTagsCount": "Schlagworte",
     "noAvailableTags": "Keine verfügbaren Tags",
     "clearFilter": "Filter löschen",
-    "editTags": "Tags bearbeiten",
+    "editTags": "Tags bearbeiten"
+  },
+  "githubCopilot": {
+    "title": "GitHub Copilot-Konten verwalten",
     "instances": {
-      "subtitle": "Unabhängige Konfiguration pro Instanz, paralleler Betrieb mit mehreren Konten.",
-      "comingSoon": "Multi-Instanz kommt bald",
-      "comingSoonDesc": "Führen Sie mehrere Codex.app-Instanzen mit verschiedenen Konten gleichzeitig aus.",
       "unsupported": {
-        "desc": "Codex Multi-Instanz ist derzeit nur auf macOS verfügbar."
-      },
-      "quota": {
-        "hourly": "5 Std.",
-        "weekly": "Wöchentlich"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Sendet ein SIGTERM-Signal an alle Codex-Prozesse, damit die App speichern und sich selbst beenden kann, und startet dann die Zielinstanz (erzwingt das Beenden, falls erforderlich).",
-          "commandMac": "macOS: kill -15 <pid> (alle Codex-Prozesse)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (alle Codex-Prozesse)"
-        },
-        "force": {
-          "principle": "Sucht Prozesse anhand von CODEX_HOME und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit CODEX_HOME)"
-        }
+        "desc": "GitHub Copilot Multi-Instanz ist derzeit nur auf macOS verfügbar."
       }
     },
-    "refreshSuccess": "Kontingent aktualisiert",
-    "refreshFailed": "Kontingent-Aktualisierung fehlgeschlagen: {{error}}",
-    "refreshAllSuccess": "Aktualisierung abgeschlossen, {{count}} Konto/Konten erfolgreich",
-    "refreshAllPartialFailed": "Aktualisierung abgeschlossen, {{success}} / {{total}} Konten erfolgreich, einige fehlgeschlagen",
-    "quotaError": {
-      "badge": "Kontingentfehler",
-      "generic": "Kontingent-Aktualisierung fehlgeschlagen, bitte später erneut versuchen",
-      "deactivatedWorkspace": "Workspace ist deaktiviert, bitte Konto wechseln oder neu autorisieren"
+    "empty": {
+      "description": "Klicke auf \"Konto hinzufügen\", um zu starten"
+    },
+    "addModal": {
+      "title": "GitHub Copilot-Konto hinzufügen"
+    },
+    "oauth": {
+      "desc": "Klicke unten und schließe die GitHub-Copilot-Autorisierung im Browser ab."
+    },
+    "token": {
+      "desc": "Fügen Sie Ihr GitHub-Copilot-Access-Token oder exportierte JSON-Daten ein."
+    },
+    "import": {
+      "localDesc": "GitHub Copilot-Konten aus lokal angemeldeten Sitzungen importieren."
+    },
+    "sort": {
+      "weekly": "Wöchentliches Kontingent",
+      "hourly": "5-Stunden-Kontingent",
+      "premium": "Nach Nutzung der Premium-Anfragen",
+      "weeklyReset": "Wöchentliche Reset-Zeit",
+      "hourlyReset": "5-Stunden-Reset-Zeit"
+    },
+    "columns": {
+      "hourly": "5-Std-Quote",
+      "weekly": "Wochenquote",
+      "premium": "Premium-Anfragen"
+    },
+    "usage": {
+      "included": "Inbegriffen"
+    },
+    "injectToVSCode": "Zu VS Code wechseln",
+    "injectSuccess": "Das Token wurde erfolgreich in VS Code eingefügt. VS Code wird gestartet.",
+    "injectRequireClose": "Bitte schließen Sie VS Code vor dem Injizieren.",
+    "flowNotice": {
+      "title": "GitHub-Copilot-Kontoleitfaden (zum Auf-/Zuklappen klicken)",
+      "desc": "Für den Kontowechsel muss der lokale VS-Code-Auth-Speicher gelesen und der System-Anmeldedienst zum Entschlüsseln und Zurückschreiben verwendet werden; die Datenverarbeitung erfolgt nur lokal.",
+      "inject": "Ein-Klick-Wechsel: Dieses Tool liest das lokale Verschlüsselungsmaterial von VS Code (DPAPI/Keychain/Secret Service), entschlüsselt die Auth-Sitzung in state.vscdb, ersetzt das GitHub-Copilot-Token und verschlüsselt sie erneut – alles lokal auf deinem Gerät.",
+      "reason": "Berechtigungsumfang: Lesen der VS-Code-Auth-Datenbank (state.vscdb) und Aufruf der System-Verschlüsselung (Windows DPAPI / macOS Keychain / Linux Secret Service) zum Entschlüsseln und Zurückschreiben.",
+      "storage": "Lesebereich: Es werden nur GitHub-Login-Sitzungsdaten verarbeitet; alle Prozesse werden lokal ausgeführt."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Dateipfad",
       "helpText": "Bitte öffnen Sie den Ordner, um die Datei manuell zu reparieren oder zu löschen, und starten Sie dann die Anwendung neu.",
       "openFolder": "Ordner öffnen"
-    }
-  },
-  "instances": {
-    "title": "Instanzen",
-    "subtitle": "Isolierte Profile für den parallelen Betrieb mehrerer Konten.",
-    "defaultName": "Standardinstanz",
-    "search": "Instanzen suchen",
-    "actions": {
-      "create": "Neue Instanz",
-      "refresh": "Aktualisieren",
-      "startAll": "Alle starten",
-      "restartAll": "Alle neu starten",
-      "stopAll": "Alle stoppen",
-      "start": "Starten",
-      "stop": "Stoppen",
-      "openFolder": "Ordner öffnen",
-      "edit": "Bearbeiten",
-      "openRootDir": "Ordner öffnen",
-      "selectPath": "Pfad auswählen",
-      "openWindow": "Fenster öffnen"
-    },
-    "bulkConfirm": {
-      "startAll": "Alle gestoppten Instanzen starten?",
-      "restartAll": "Alle laufenden Instanzen neu starten?",
-      "stopAll": "Alle Instanzen schließen?"
-    },
-    "status": {
-      "running": "Laufend",
-      "stopped": "Gestoppt",
-      "restarting": "Neu startend",
-      "starting": "Beginnt"
-    },
-    "labels": {
-      "path": "Verzeichnis",
-      "args": "Startparameter",
-      "argsEmpty": "Keine",
-      "bindAccount": "Gekoppeltes Konto",
-      "unbound": "Nicht gekoppelt",
-      "quota": "Quote",
-      "lastLaunched": "Zuletzt gestartet",
-      "pendingInit": "Warten auf Initialisierung (zuerst einmal starten)"
-    },
-    "columns": {
-      "instance": "Instanz",
-      "email": "Konto",
-      "quota": "Quota-Status",
-      "actions": "Aktionen"
-    },
-    "empty": {
-      "title": "Keine Instanzen",
-      "desc": "Erstellen Sie ein isoliertes Konfigurationsverzeichnis, um mehrere Instanzen zu starten."
-    },
-    "form": {
-      "name": "Instanzname",
-      "namePlaceholder": "z. B. Arbeitskonto",
-      "path": "Instanzverzeichnis",
-      "pathPlaceholder": "Verzeichnis auswählen",
-      "pathReadOnly": "Pfad kann beim Bearbeiten nicht geändert werden",
-      "pathAutoHint": "Der Pfad wird automatisch aktualisiert, wenn der Name geändert wird (oder manuell auswählen)",
-      "copyLogin": "Aktuellen Login-Status kopieren",
-      "copyLoginDesc": "Konfiguration und Login-Daten aus dem Standardverzeichnis kopieren",
-      "copySource": "Quell-Instanz kopieren",
-      "copySourceDesc": "Konfiguration und Login-Daten von der ausgewählten Instanz kopieren",
-      "copySourcePlaceholder": "Quell-Instanz auswählen",
-      "copySourceRequired": "Bitte wählen Sie eine Quell-Instanz aus",
-      "copySourceRunningHint": "Die Quell-Instanz läuft. Es wird empfohlen, sie zuerst zu schließen, um Dateninkonsistenzen zu vermeiden.",
-      "bindInject": "Konto koppeln",
-      "followCurrent": "Aktuellem Konto folgen",
-      "selectAccount": "Konto auswählen",
-      "bindAccount": "Konto koppeln",
-      "unbound": "Nicht gekoppelt",
-      "extraArgs": "Benutzerdefinierte Startparameter",
-      "extraArgsPlaceholder": "z. B. --disable-gpu --log-level=2",
-      "extraArgsDesc": "Argumente durch Leerzeichen trennen, Anführungszeichen werden unterstützt",
-      "nameRequired": "Bitte geben Sie einen Instanznamen ein",
-      "pathRequired": "Bitte wählen Sie ein Instanzverzeichnis aus",
-      "bindRequired": "Bitte wählen Sie ein Konto zum Koppeln aus",
-      "initMode": "Initialisierungsmodus",
-      "initModeCopy": "Von Quellinstanz kopieren (Standard)",
-      "initModeEmpty": "Leere Instanz (ohne Kopieren)",
-      "emptyInitHint": "Bei Auswahl ohne Kopieren wird nur ein leeres Verzeichnis erstellt. Starten Sie die Instanz einmal, bevor Sie ein Konto binden.",
-      "bindAfterInit": "Nach Initialisierung bindbar",
-      "bindDisabledHint": "Bei einer leeren Instanz zuerst einmal starten, damit Instanzdaten erstellt werden, danach Konto binden."
-    },
-    "quota": {
-      "unbound": "Nicht gekoppelt",
-      "accountMissing": "Konto nicht gefunden",
-      "empty": "Kein gecachter Quota-Status"
-    },
-    "messages": {
-      "created": "Instanz erstellt",
-      "updated": "Instanz aktualisiert",
-      "deleted": "Instanz gelöscht",
-      "started": "Instanz gestartet",
-      "stopped": "Instanz gestoppt",
-      "startedAll": "Alle gestoppten Instanzen gestartet",
-      "restartedAll": "Laufende Instanzen neu gestartet",
-      "closedAll": "Alle Instanzen gestoppt",
-      "allAlreadyRunning": "Alle Instanzen laufen bereits",
-      "noneRunning": "Keine laufenden Instanzen gefunden",
-      "emptyCreated": "Leere Instanz erstellt. Bitte einmal starten, bevor Sie ein Konto binden."
-    },
-    "runningDialog": {
-      "title": "Instanz läuft bereits",
-      "desc": "Diese Instanz läuft bereits. Sie können zum Fenster wechseln oder sie mit der aktuellen Strategie neu starten.",
-      "current": "Aktuelle Strategie: {{name}}",
-      "pathLabel": "Instanzverzeichnis",
-      "go": "Jetzt wechseln",
-      "restart": "Schließen und neu starten"
-    },
-    "restartStrategy": {
-      "button": "Neustart-Strategie",
-      "title": "Neustart-Strategie",
-      "desc": "Wählen Sie die Methode zum Neustart der Instanz. Jede Option beeinflusst Umfang und Stabilität.",
-      "recommended": "Empfohlen",
-      "labels": {
-        "principle": "Technisches Prinzip",
-        "command": "Befehl",
-        "pros": "Vorteile",
-        "cons": "Nachteile"
-      },
-      "safe": {
-        "title": "Sicherer Neustart (Empfohlen)",
-        "principle": "Sendet ein SIGTERM-Signal an alle Antigravity-Prozesse, damit die App speichern und sich selbst beenden kann, und startet dann die Zielinstanz (erzwingt das Beenden, falls erforderlich).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (alle Antigravity-Prozesse)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (alle Antigravity-Prozesse)",
-        "pros": "Näher am normalen Beenden, weniger wahrscheinlich Crash-Warnungen, Daten sind sicherer.",
-        "cons": "Unterstützt nur den vollständigen Neustart aller Instanzen."
-      },
-      "force": {
-        "title": "Erzwungener Neustart",
-        "principle": "Sucht Prozesse anhand von --user-data-dir und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit --user-data-dir)",
-        "pros": "Kann eine einzelne Instanz gezielt neu starten.",
-        "cons": "Könnte Warnungen vor unerwartetem Beenden verursachen, Risiko von Datenverlust für ungespeicherte Daten."
-      }
-    },
-    "stop": {
-      "title": "Instanz hart stoppen",
-      "message": "Sendet ein Beendigungssignal (SIGTERM) an den Prozess. Nicht gespeicherte Daten gehen möglicherweise verloren. Fortfahren?"
-    },
-    "delete": {
-      "title": "Instanz löschen",
-      "message": "Instanz {{name}} löschen? Dies wird die Konfiguration entfernen und den Instanzordner löschen."
-    },
-    "modal": {
-      "createTitle": "Neue Instanz",
-      "editTitle": "Instanz bearbeiten"
-    },
-    "sort": {
-      "label": "Sortierung",
-      "createdAt": "Nach Erstellungszeit",
-      "lastLaunchedAt": "Nach Startzeit",
-      "ascTooltip": "Aktuell: aufsteigend, klicken zum Umschalten auf absteigend",
-      "descTooltip": "Aktuell: absteigend, klicken zum Umschalten auf aufsteigend",
-      "toggleDirection": "Sortierrichtung wechseln"
-    },
-    "initGuide": {
-      "title": "Instanz noch nicht initialisiert",
-      "desc": "Dies ist eine leere Instanz. Aktuell wurde nur das Verzeichnis erstellt, Instanzdaten wurden noch nicht erzeugt.",
-      "tip": "Bitte starten Sie die Instanz einmal. Nach Abschluss der Initialisierung können Sie ein Konto binden.",
-      "startNow": "Jetzt starten"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Anwendungspfad nicht gefunden",
-      "desc": "Der Anwendungspfad für {{app}} wurde nicht gefunden. Bitte jetzt festlegen, um fortzufahren.",
-      "action": "Jetzt festlegen"
-    }
-  },
-  "githubCopilot": {
-    "title": "GitHub Copilot-Konten verwalten",
-    "instances": {
-      "unsupported": {
-        "desc": "GitHub Copilot Multi-Instanz ist derzeit nur auf macOS verfügbar."
-      }
-    },
-    "empty": {
-      "description": "Klicke auf \"Konto hinzufügen\", um zu starten"
-    },
-    "addModal": {
-      "title": "GitHub Copilot-Konto hinzufügen"
-    },
-    "oauth": {
-      "desc": "Klicke unten und schließe die GitHub-Copilot-Autorisierung im Browser ab."
-    },
-    "token": {
-      "desc": "Fügen Sie Ihr GitHub-Copilot-Access-Token oder exportierte JSON-Daten ein."
-    },
-    "import": {
-      "localDesc": "GitHub Copilot-Konten aus lokal angemeldeten Sitzungen importieren."
-    },
-    "sort": {
-      "weekly": "Wöchentliches Kontingent",
-      "hourly": "5-Stunden-Kontingent",
-      "weeklyReset": "Wöchentliche Reset-Zeit",
-      "hourlyReset": "5-Stunden-Reset-Zeit",
-      "premium": "Nach Nutzung der Premium-Anfragen"
-    },
-    "columns": {
-      "hourly": "5-Std-Quote",
-      "weekly": "Wochenquote",
-      "premium": "Premium-Anfragen"
-    },
-    "flowNotice": {
-      "title": "GitHub-Copilot-Kontoleitfaden (zum Auf-/Zuklappen klicken)",
-      "desc": "Für den Kontowechsel muss der lokale VS-Code-Auth-Speicher gelesen und der System-Anmeldedienst zum Entschlüsseln und Zurückschreiben verwendet werden; die Datenverarbeitung erfolgt nur lokal.",
-      "reason": "Berechtigungsumfang: Lesen der VS-Code-Auth-Datenbank (state.vscdb) und Aufruf der System-Verschlüsselung (Windows DPAPI / macOS Keychain / Linux Secret Service) zum Entschlüsseln und Zurückschreiben.",
-      "storage": "Lesebereich: Es werden nur GitHub-Login-Sitzungsdaten verarbeitet; alle Prozesse werden lokal ausgeführt.",
-      "inject": "Ein-Klick-Wechsel: Dieses Tool liest das lokale Verschlüsselungsmaterial von VS Code (DPAPI/Keychain/Secret Service), entschlüsselt die Auth-Sitzung in state.vscdb, ersetzt das GitHub-Copilot-Token und verschlüsselt sie erneut – alles lokal auf deinem Gerät."
-    },
-    "injectToVSCode": "Zu VS Code wechseln",
-    "injectSuccess": "Das Token wurde erfolgreich in VS Code eingefügt. VS Code wird gestartet.",
-    "injectRequireClose": "Bitte schließen Sie VS Code vor dem Injizieren.",
-    "usage": {
-      "included": "Inbegriffen"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Schnellwechsel fehlgeschlagen: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "E-Mails ausblenden",
-    "showSensitive": "E-Mails anzeigen"
-  },
   "windsurf": {
     "title": "Windsurf-Konten verwalten",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Anmeldung erfolgreich: {{login}}",
       "failed": "Anmeldung fehlgeschlagen: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Plattformlayout",
-    "sidebarSelected": "In der Seitenleiste ausgewählt {{count}}/{{max}}",
-    "reset": "Auf Standard zurücksetzen",
-    "tip": "Zum Neuanordnen ziehen. In der Seitenleiste können maximal zwei Plattformen angezeigt werden. Wenn nur eine ausgewählt ist, wird nur eine angezeigt.",
-    "sidebarToggle": "In Seitenleiste anzeigen",
-    "dashboardToggle": "Im Dashboard anzeigen",
-    "trayToggle": "Im Tray anzeigen",
-    "hiddenBadge": "Ausgeblendet",
-    "openFromMore": "Plattformlayout verwalten",
-    "dragHandleLabel": "Zum Neuanordnen ziehen"
-  },
-  "breakout": {
-    "gameOver": "Spiel vorbei",
-    "gameOverRank": "Lokaler Rang #{{rank}}",
-    "startGame": "Spiel starten",
-    "startHint": "Auf Start klicken oder Leertaste drücken",
-    "rankTitle": "Lokales historisches Ranking",
-    "rankCurrent": "Aktuell",
-    "rankNoData": "--",
-    "restart": "Neu starten",
-    "pause": "Pausieren",
-    "resume": "Fortsetzen",
-    "paused": "Pausiert",
-    "level": "Level {{level}}",
-    "levelScore": "Level-Punktzahl {{score}}",
-    "levelCleared": "Level geschafft",
-    "nextLevel": "Nächstes Level",
-    "history": "Verlauf",
-    "historyShort": "Verlauf",
-    "historyEmpty": "Noch keine Einträge",
-    "historyClear": "Leeren",
-    "historyScoreShort": "Punkte {{score}}",
-    "historyLevelShort": "Lv {{level}}",
-    "historyDurationShort": "Zeit {{duration}}",
-    "historyReasonGameOver": "Spiel vorbei",
-    "historyReasonManualExit": "Manuell beendet",
-    "serveHint": "Drücke die Leertaste, um den Ball zu starten",
-    "ranking": "Lokaler Verlauf",
-    "rankingShort": "Lokal",
-    "rankingEmpty": "Noch keine lokalen Einträge",
-    "rankingClear": "Lokales Ranking leeren",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "Wechseln Sie zu Kiro"
   },
+  "breakout": {
+    "gameOver": "Spiel vorbei",
+    "gameOverRank": "Lokaler Rang #{{rank}}",
+    "startGame": "Spiel starten",
+    "startHint": "Auf Start klicken oder Leertaste drücken",
+    "rankTitle": "Lokales historisches Ranking",
+    "rankCurrent": "Aktuell",
+    "rankNoData": "--",
+    "restart": "Neu starten",
+    "pause": "Pausieren",
+    "resume": "Fortsetzen",
+    "paused": "Pausiert",
+    "level": "Level {{level}}",
+    "levelScore": "Level-Punktzahl {{score}}",
+    "levelCleared": "Level geschafft",
+    "nextLevel": "Nächstes Level",
+    "history": "Verlauf",
+    "historyShort": "Verlauf",
+    "historyEmpty": "Noch keine Einträge",
+    "historyClear": "Leeren",
+    "historyScoreShort": "Punkte {{score}}",
+    "historyLevelShort": "Lv {{level}}",
+    "historyDurationShort": "Zeit {{duration}}",
+    "historyReasonGameOver": "Spiel vorbei",
+    "historyReasonManualExit": "Manuell beendet",
+    "serveHint": "Drücke die Leertaste, um den Ball zu starten",
+    "ranking": "Lokaler Verlauf",
+    "rankingShort": "Lokal",
+    "rankingEmpty": "Noch keine lokalen Einträge",
+    "rankingClear": "Lokales Ranking leeren",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "markAllRead": "Alle als gelesen markieren",
     "gotIt": "Verstanden",
     "later": "Später",
-    "clickToClose": "Zum Schließen klicken",
     "new": "Neu",
     "timeAgo": {
       "justNow": "Gerade eben",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 Dringend"
     },
     "refreshed": "Benachrichtigungen aktualisiert ({count} insgesamt)",
+    "clickToClose": "Zum Schließen klicken",
     "clickToEnlarge": "Klicken zum Vergrößern",
     "imageLoadFailed": "Bild konnte nicht geladen werden"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Alle einklappen",
+      "expandAll": "Alle ausklappen",
+      "goAntigravity": "Zu Antigravity",
+      "goCodex": "Zu Codex",
+      "goDashboard": "Zum Dashboard",
+      "goFingerprints": "Zu Geräte-Fingerprints",
+      "goGitHubCopilot": "Zu GitHub Copilot",
+      "goInstances": "Zu Mehrfachinstanzen",
+      "goKiro": "Zu Kiro",
+      "goSettings": "Zu Einstellungen",
+      "goVerification": "Zu Wakeup-Verifikation",
+      "goWakeup": "Zu Wakeup-Aufgaben",
+      "goWindsurf": "Zu Windsurf",
+      "openLayout": "Plattformlayout öffnen"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Antigravity-Kontoverwaltung Daten sichern."
+      },
+      "keywords": {
+        "0": "Antigravity-Kontoverwaltung",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Antigravity-Kontoverwaltung bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Antigravity-Kontoverwaltung, um Fehler zu vermeiden."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Antigravity-Kontoverwaltung.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Antigravity-Kontoverwaltung ab.",
+        "2": "Führe eine manuelle Aktion in Antigravity-Kontoverwaltung aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Antigravity-Kontoverwaltung im täglichen Workflow.",
+      "title": "Antigravity-Kontoverwaltung"
+    },
+    "blocks": {
+      "cautions": "Häufige Fallstricke / Hinweise",
+      "outcomes": "Wobei diese Funktion hilft",
+      "steps": "Empfohlene Schritte"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Dashboard Daten sichern."
+      },
+      "keywords": {
+        "0": "Übersicht",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Dashboard bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Dashboard, um Fehler zu vermeiden."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Dashboard.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Dashboard ab.",
+        "2": "Führe eine manuelle Aktion in Dashboard aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Dashboard im täglichen Workflow.",
+      "title": "Übersicht"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Import/Export, Datenschutz und Troubleshooting Daten sichern.",
+        "1": "Vor Ausführung in Import/Export, Datenschutz und Troubleshooting Filter und Zielbereich prüfen.",
+        "2": "Vor dem Teilen von Logs sensible Daten entfernen (token, cookie, E-Mail)."
+      },
+      "keywords": {
+        "0": "Import/Export, Datenschutz und Troubleshooting",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto",
+        "4": "Einstellungen",
+        "5": "Fehleranalyse",
+        "6": "Logs",
+        "7": "Daten"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Import/Export, Datenschutz und Troubleshooting bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Import/Export, Datenschutz und Troubleshooting, um Fehler zu vermeiden.",
+        "2": "Bestätige erst einen erfolgreichen Lauf in Import/Export, Datenschutz und Troubleshooting, bevor du skalierst.",
+        "3": "Bei Problemen in Import/Export, Datenschutz und Troubleshooting zuerst Logs prüfen und Belege sammeln."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Import/Export, Datenschutz und Troubleshooting.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Import/Export, Datenschutz und Troubleshooting ab.",
+        "2": "Führe eine manuelle Aktion in Import/Export, Datenschutz und Troubleshooting aus und prüfe das Ergebnis.",
+        "3": "Für Troubleshooting: Einstellungen -> Datenverzeichnis -> Öffnen, dann logs.",
+        "4": "Prüfe zuerst die neueste app.log oder app.log.*.",
+        "5": "Beim Melden bitte Zeit, Plattform, Reproduktionsschritte und bereinigte Logs angeben."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Import/Export, Datenschutz und Troubleshooting im täglichen Workflow.",
+      "title": "Import/Export, Datenschutz und Troubleshooting"
+    },
+    "empty": {
+      "desc": "Versuche Stichwörter wie Instanz, Wechsel, Einstellungen, Export.",
+      "title": "Keine passenden Inhalte"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Geräte-Fingerprints Daten sichern."
+      },
+      "keywords": {
+        "0": "Geräte-Fingerprints",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Geräte-Fingerprints bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Geräte-Fingerprints, um Fehler zu vermeiden."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Geräte-Fingerprints.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Geräte-Fingerprints ab.",
+        "2": "Führe eine manuelle Aktion in Geräte-Fingerprints aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Geräte-Fingerprints im täglichen Workflow.",
+      "title": "Geräte-Fingerprints"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Mehrfachinstanzen (wichtig) Daten sichern.",
+        "1": "Vor Ausführung in Mehrfachinstanzen (wichtig) Filter und Zielbereich prüfen."
+      },
+      "keywords": {
+        "0": "Mehrfachinstanzen (wichtig)",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto",
+        "4": "Einstellungen"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Mehrfachinstanzen (wichtig) bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Mehrfachinstanzen (wichtig), um Fehler zu vermeiden.",
+        "2": "Bestätige erst einen erfolgreichen Lauf in Mehrfachinstanzen (wichtig), bevor du skalierst."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Mehrfachinstanzen (wichtig).",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Mehrfachinstanzen (wichtig) ab.",
+        "2": "Führe eine manuelle Aktion in Mehrfachinstanzen (wichtig) aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Mehrfachinstanzen (wichtig) im täglichen Workflow.",
+      "title": "Mehrfachinstanzen (wichtig)"
+    },
+    "navTitle": "Benutzerhandbuch",
+    "providers": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Codex / GitHub Copilot / Windsurf / Kiro Daten sichern.",
+        "1": "Vor Ausführung in Codex / GitHub Copilot / Windsurf / Kiro Filter und Zielbereich prüfen."
+      },
+      "keywords": {
+        "0": "Plattformen Codex / GitHub Copilot / Windsurf / Kiro",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto",
+        "4": "Einstellungen",
+        "5": "Fehleranalyse"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Codex / GitHub Copilot / Windsurf / Kiro bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Codex / GitHub Copilot / Windsurf / Kiro, um Fehler zu vermeiden.",
+        "2": "Bestätige erst einen erfolgreichen Lauf in Codex / GitHub Copilot / Windsurf / Kiro, bevor du skalierst."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Codex / GitHub Copilot / Windsurf / Kiro ab.",
+        "2": "Führe eine manuelle Aktion in Codex / GitHub Copilot / Windsurf / Kiro aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Codex / GitHub Copilot / Windsurf / Kiro im täglichen Workflow.",
+      "title": "Plattformen Codex / GitHub Copilot / Windsurf / Kiro"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Schnellstart (5 Minuten) Daten sichern.",
+        "1": "Vor Ausführung in Schnellstart (5 Minuten) Filter und Zielbereich prüfen."
+      },
+      "keywords": {
+        "0": "Schnellstart (5 Minuten)",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Schnellstart (5 Minuten) bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Schnellstart (5 Minuten), um Fehler zu vermeiden.",
+        "2": "Bestätige erst einen erfolgreichen Lauf in Schnellstart (5 Minuten), bevor du skalierst."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Schnellstart (5 Minuten).",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Schnellstart (5 Minuten) ab.",
+        "2": "Führe eine manuelle Aktion in Schnellstart (5 Minuten) aus und prüfe das Ergebnis.",
+        "3": "Für Troubleshooting: Einstellungen -> Datenverzeichnis -> Öffnen, dann logs."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Schnellstart (5 Minuten) im täglichen Workflow.",
+      "title": "Schnellstart (5 Minuten)"
+    },
+    "resultCount": "Insgesamt {{count}} Abschnitte",
+    "searchAria": "Handbuch durchsuchen",
+    "searchPlaceholder": "Funktionen, Szenarien oder Stichwörter suchen (z. B. Instanz, Inject, Wakeup, Fingerprint)",
+    "settings": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Einstellungen und Systemfunktionen Daten sichern.",
+        "1": "Vor Ausführung in Einstellungen und Systemfunktionen Filter und Zielbereich prüfen."
+      },
+      "keywords": {
+        "0": "Einstellungen und Systemfunktionen",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto",
+        "4": "Einstellungen",
+        "5": "Fehleranalyse"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Einstellungen und Systemfunktionen bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Einstellungen und Systemfunktionen, um Fehler zu vermeiden.",
+        "2": "Bestätige erst einen erfolgreichen Lauf in Einstellungen und Systemfunktionen, bevor du skalierst."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Einstellungen und Systemfunktionen.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Einstellungen und Systemfunktionen ab.",
+        "2": "Führe eine manuelle Aktion in Einstellungen und Systemfunktionen aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Einstellungen und Systemfunktionen im täglichen Workflow.",
+      "title": "Einstellungen und Systemfunktionen"
+    },
+    "subtitle": "Leitfaden nach Arbeitsszenarien. Erst Ziel verstehen, dann dem empfohlenen Ablauf folgen.",
+    "title": "Benutzerhandbuch",
+    "wakeup": {
+      "cautions": {
+        "0": "Vor riskanten oder Batch-Aktionen in Wakeup-Aufgaben und Verifikation Daten sichern.",
+        "1": "Vor Ausführung in Wakeup-Aufgaben und Verifikation Filter und Zielbereich prüfen."
+      },
+      "keywords": {
+        "0": "Wakeup-Aufgaben und Verifikation",
+        "1": "Leitfaden",
+        "2": "Workflow",
+        "3": "Konto",
+        "4": "Einstellungen"
+      },
+      "outcomes": {
+        "0": "Verstehe, was dir Wakeup-Aufgaben und Verifikation bringt.",
+        "1": "Nutze den empfohlenen Ablauf in Wakeup-Aufgaben und Verifikation, um Fehler zu vermeiden."
+      },
+      "steps": {
+        "0": "Öffne die Seite für Wakeup-Aufgaben und Verifikation.",
+        "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Wakeup-Aufgaben und Verifikation ab.",
+        "2": "Führe eine manuelle Aktion in Wakeup-Aufgaben und Verifikation aus und prüfe das Ergebnis."
+      },
+      "summary": "Dieser Abschnitt erklärt die Nutzung von Wakeup-Aufgaben und Verifikation im täglichen Workflow.",
+      "title": "Wakeup-Aufgaben und Verifikation"
+    }
   }
 }

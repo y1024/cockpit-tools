@@ -151,11 +151,191 @@
     "fingerprints": "Impronte",
     "settings": "Impostazioni",
     "codex": "Account Codex",
-    "dashboard": "Pannello di controllo",
-    "instances": "Multi-Istanza",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Altre piattaforme"
+    "dashboard": "Pannello di controllo",
+    "morePlatforms": "Altre piattaforme",
+    "instances": "Multi-Istanza",
+    "manual": "Manuale utente"
+  },
+  "platformLayout": {
+    "title": "Layout piattaforme",
+    "sidebarSelected": "Selezionate nella barra laterale {{count}}/{{max}}",
+    "reset": "Ripristina predefiniti",
+    "tip": "Trascina per riordinare. Nella barra laterale possono essere mostrate al massimo due piattaforme. Se ne selezioni solo una, verrà mostrata solo una.",
+    "sidebarToggle": "Mostra nella barra laterale",
+    "dashboardToggle": "Mostra nella dashboard",
+    "trayToggle": "Mostra nell'area di notifica",
+    "hiddenBadge": "Nascosto",
+    "openFromMore": "Gestisci layout piattaforme",
+    "dragHandleLabel": "Trascina per riordinare"
+  },
+  "privacy": {
+    "hideSensitive": "Nascondi email",
+    "showSensitive": "Mostra email"
+  },
+  "instances": {
+    "title": "Istanze Multiple",
+    "subtitle": "Profili isolati per l'esecuzione parallela di più account.",
+    "defaultName": "Istanza predefinita",
+    "search": "Cerca istanze",
+    "sort": {
+      "label": "Ordinamento",
+      "createdAt": "Per data di creazione",
+      "lastLaunchedAt": "Per data di avvio",
+      "ascTooltip": "Attuale: crescente, fai clic per passare a decrescente",
+      "descTooltip": "Attuale: decrescente, fai clic per passare a crescente",
+      "toggleDirection": "Cambia direzione ordinamento"
+    },
+    "actions": {
+      "create": "Nuova istanza",
+      "refresh": "Aggiorna",
+      "startAll": "Avvia tutto",
+      "restartAll": "Riavvia tutto",
+      "stopAll": "Ferma tutto",
+      "start": "Avvia",
+      "stop": "Ferma",
+      "openFolder": "Apri cartella",
+      "edit": "Modifica",
+      "openRootDir": "Apri cartella",
+      "selectPath": "Seleziona percorso",
+      "openWindow": "Apri finestra"
+    },
+    "bulkConfirm": {
+      "startAll": "Avviare tutte le istanze fermate?",
+      "restartAll": "Riavviare tutte le istanze in esecuzione?",
+      "stopAll": "Chiudere tutte le istanze?"
+    },
+    "status": {
+      "running": "In esecuzione",
+      "stopped": "Fermato",
+      "restarting": "Riavvio in corso",
+      "starting": "Di partenza"
+    },
+    "labels": {
+      "path": "Directory",
+      "args": "Argomenti di avvio",
+      "argsEmpty": "Nessuno",
+      "bindAccount": "Account collegato",
+      "unbound": "Non collegato",
+      "pendingInit": "In attesa di inizializzazione (avvia prima una volta)",
+      "quota": "Quota",
+      "lastLaunched": "Ultimo avvio"
+    },
+    "columns": {
+      "instance": "Istanza",
+      "email": "Account",
+      "quota": "Stato quota",
+      "actions": "Azioni"
+    },
+    "empty": {
+      "title": "Nessuna istanza",
+      "desc": "Crea una directory di configurazione isolata per avviare rapidamente più istanze."
+    },
+    "modal": {
+      "createTitle": "Nuova istanza",
+      "editTitle": "Modifica istanza"
+    },
+    "form": {
+      "name": "Nome istanza",
+      "namePlaceholder": "es: Account di lavoro",
+      "path": "Directory istanza",
+      "pathPlaceholder": "Seleziona directory",
+      "pathReadOnly": "Il percorso non può essere modificato durante la modifica",
+      "pathAutoHint": "Il percorso si aggiorna automaticamente quando il nome cambia (o seleziona manualmente)",
+      "copyLogin": "Copia stato di accesso attuale",
+      "copyLoginDesc": "Copia configurazione e dati di accesso dalla directory predefinita",
+      "initMode": "Modalità di inizializzazione",
+      "initModeCopy": "Copia dall'istanza sorgente (predefinito)",
+      "initModeEmpty": "Istanza vuota (senza copia)",
+      "emptyInitHint": "Se scegli senza copia, verrà creata solo una cartella vuota. Avvia una volta prima di collegare un account.",
+      "copySource": "Copia istanza sorgente",
+      "copySourceDesc": "Copia configurazione e dati di accesso dall'istanza selezionata",
+      "copySourcePlaceholder": "Seleziona istanza sorgente",
+      "copySourceRequired": "Seleziona un'istanza sorgente",
+      "copySourceRunningHint": "L'istanza sorgente è in esecuzione. Si consiglia di chiuderla prima per evitare incongruenze nei dati.",
+      "bindInject": "Collega account",
+      "bindAfterInit": "Collegabile dopo l'inizializzazione",
+      "bindDisabledHint": "Per un'istanza vuota, avviala una volta per generare i dati e poi collega l'account.",
+      "followCurrent": "Segui account attuale",
+      "selectAccount": "Seleziona account",
+      "bindAccount": "Collega account",
+      "unbound": "Non collegato",
+      "extraArgs": "Argomenti di avvio personalizzati",
+      "extraArgsPlaceholder": "es: --disable-gpu --log-level=2",
+      "extraArgsDesc": "Separa gli argomenti con spazi, le virgolette sono supportate",
+      "nameRequired": "Inserisci un nome istanza",
+      "pathRequired": "Seleziona una directory istanza",
+      "bindRequired": "Seleziona un account da collegare"
+    },
+    "quota": {
+      "unbound": "Account non collegato",
+      "accountMissing": "Account non trovato",
+      "empty": "Nessuna quota in cache"
+    },
+    "messages": {
+      "created": "Istanza creata",
+      "emptyCreated": "Istanza vuota creata. Avviala una volta prima di collegare un account.",
+      "updated": "Istanza aggiornata",
+      "deleted": "Istanza eliminata",
+      "started": "Istanza avviata",
+      "stopped": "Istanza fermata",
+      "startedAll": "Tutte le istanze fermate sono state avviate",
+      "restartedAll": "Istanze in esecuzione riavviate",
+      "closedAll": "Tutte le istanze sono state fermate",
+      "allAlreadyRunning": "Tutte le istanze sono già in esecuzione",
+      "noneRunning": "Nessuna istanza in esecuzione trovata"
+    },
+    "runningDialog": {
+      "title": "L'istanza è già in esecuzione",
+      "desc": "Questa istanza è già avviata. Puoi passare alla finestra o riavviarla secondo la strategia attuale.",
+      "current": "Strategia attuale: {{name}}",
+      "pathLabel": "Directory istanza",
+      "go": "Passa ora",
+      "restart": "Chiudi e riavvia"
+    },
+    "initGuide": {
+      "title": "Istanza non ancora inizializzata",
+      "desc": "Questa è un'istanza vuota. Al momento è stata creata solo la cartella e i dati dell'istanza non sono ancora stati generati.",
+      "tip": "Avvia prima l'istanza una volta. Al termine dell'inizializzazione potrai collegare un account.",
+      "startNow": "Avvia ora"
+    },
+    "restartStrategy": {
+      "button": "Strategia di riavvio",
+      "title": "Strategia di riavvio",
+      "desc": "Scegli il metodo di riavvio dell'istanza. Ogni opzione influisce sulla portata e sulla stabilità.",
+      "recommended": "Consigliato",
+      "labels": {
+        "principle": "Principio tecnico",
+        "command": "Comando",
+        "pros": "Pro",
+        "cons": "Contro"
+      },
+      "safe": {
+        "title": "Riavvio sicuro (Consigliato)",
+        "principle": "Invia un segnale SIGTERM a tutti i processi Antigravity, chiedendo all'app di salvare e chiudersi, quindi avvia l'istanza di destinazione (forza la chiusura se necessario).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (tutti i processi Antigravity)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (tutti i processi Antigravity)",
+        "pros": "Più vicino a una chiusura normale, meno probabilità di avvisi di arresto anomalo, dati più sicuri.",
+        "cons": "Supporta solo il riavvio globale di tutte le istanze."
+      },
+      "force": {
+        "title": "Riavvio forzato",
+        "principle": "Identifica i processi tramite --user-data-dir e li chiude forzatamente (SIGKILL / taskkill /F), quindi avvia l'istanza di destinazione.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (corrispondenza --user-data-dir)",
+        "pros": "Può riavviare con precisione una singola istanza.",
+        "cons": "Potrebbe causare un avviso di \"chiusura imprevista\", rischio di perdita di dati non salvati."
+      }
+    },
+    "stop": {
+      "title": "Arresto forzato istanza",
+      "message": "Invia un segnale di arresto (SIGTERM) al processo dell'istanza. I dati non salvati potrebbero andare persi. Continuare?"
+    },
+    "delete": {
+      "title": "Elimina istanza",
+      "message": "Eliminare l'istanza {{name}}? Questo rimuoverà la configurazione e cancellerà la cartella dell'istanza."
+    }
   },
   "settings": {
     "title": "Impostazioni App",
@@ -186,11 +366,6 @@
       "every1hour": "Ogni ora",
       "minutes": "min",
       "refreshIntervalLimited": "Il risveglio al ripristino della quota è abilitato, quindi l'intervallo minimo di aggiornamento è di 2 minuti.",
-      "storageTitle": "Directory e archiviazione",
-      "dataDir": "Directory dati",
-      "dataDirDesc": "Posizione di archiviazione per account e file di configurazione.",
-      "fpDir": "Archiviazione Antigravity",
-      "fpDirDesc": "Posizione dei file di dati di Antigravity.",
       "closeBehavior": "Comportamento alla chiusura",
       "closeBehaviorDesc": "Scegli azione alla chiusura della finestra",
       "closeBehaviorAsk": "Chiedi ogni volta",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Controlla la visibilità dell’icona del Dock in modo indipendente dal comportamento di minimizzazione della finestra",
       "hideDockIconOff": "No (Mostra icona del Dock)",
       "hideDockIconOn": "Sì (Nascondi icona del Dock)",
-      "opencodeAppPathDesc": "Lascia vuoto per usare il percorso predefinito",
+      "storageTitle": "Directory e archiviazione",
+      "dataDir": "Directory dati",
+      "dataDirDesc": "Posizione di archiviazione per account e file di configurazione.",
+      "fpDir": "Archiviazione Antigravity",
+      "fpDirDesc": "Posizione dei file di dati di Antigravity.",
       "opencodeTitle": "Integrazione OpenCode",
       "opencodeRestart": "Riavvia OpenCode quando si cambia Codex",
       "opencodeRestartDesc": "Sincronizza le informazioni dell'account Codex in OpenCode",
       "opencodeAppPath": "Percorso di avvio OpenCode",
+      "opencodeAppPathDesc": "Lascia vuoto per usare il percorso predefinito",
       "opencodeAppPathPlaceholder": "Percorso predefinito",
       "opencodePathReset": "Ripristina predefinito",
       "opencodePathSelect": "Seleziona",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Salva Impostazioni"
   },
+  "appPath": {
+    "missing": {
+      "title": "Percorso dell’applicazione non trovato",
+      "desc": "Impossibile trovare il percorso dell’applicazione {{app}}. Impostalo ora per continuare.",
+      "action": "Imposta ora"
+    }
+  },
   "accounts": {
     "title": "Gestione Account",
     "subtitle": "Gestisci la tua lista di account Antigravity.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Predefinito",
       "overall": "Per quota complessiva",
+      "createdAt": "Per data di creazione",
       "byGroup": "Per quota di {{group}}",
       "byGroupReset": "Per ora di reset {{group}}",
-      "createdAt": "Per data di creazione",
       "descTooltip": "Decrescente, clicca per Ascendente",
       "ascTooltip": "Ascendente, clicca per Decrescente",
       "toggleDirection": "Inverti ordine"
     },
+    "filterTags": "Filtra tag",
+    "filterTagsCount": "Tag",
+    "noAvailableTags": "Nessun tag disponibile",
+    "clearFilter": "Cancella filtro",
+    "editTags": "Modifica tag",
+    "tagModal": {
+      "title": "Modifica tag",
+      "hint": "Fino a {{max}} tag. Ogni tag può contenere al massimo {{maxLength}} caratteri.",
+      "empty": "Nessun tag disponibile",
+      "suggestionsTitle": "Filtra tag",
+      "suggestionsEmpty": "Nessun tag disponibile",
+      "inputPlaceholder": "Inserisci un tag (ne restano {{remaining}})",
+      "inputDisabledPlaceholder": "Limite tag raggiunto",
+      "add": "Aggiungi",
+      "save": "Salva tag",
+      "error": {
+        "empty": "Il tag non può essere vuoto",
+        "tooLong": "Il tag non può superare {{max}} caratteri",
+        "duplicate": "Il tag esiste già",
+        "tooMany": "Puoi aggiungere fino a {{max}} tag"
+      }
+    },
+    "groupByTag": "Raggruppa per tag",
+    "untagged": "Senza tag",
+    "deleteTagAria": "Elimina tag {{tag}}",
+    "confirmDeleteTag": "Eliminare il tag \"{{tag}}\"? Questo tag verrà rimosso da {{count}} account.",
+    "defaultGroup": "Gruppo predefinito",
     "actions": {
       "viewDetails": "Vedi dettagli",
       "viewError": "Vedi errore",
@@ -388,33 +602,6 @@
       "importSuccess": "Importati {{count}} account",
       "importPartial": "Importati {{success}} account, falliti {{fail}}",
       "importFailed": "Importazione non riuscita, controlla refresh_token"
-    },
-    "confirmDeleteTag": "Eliminare il tag \"{{tag}}\"? Questo tag verrà rimosso da {{count}} account.",
-    "defaultGroup": "Gruppo predefinito",
-    "filterTags": "Filtra tag",
-    "filterTagsCount": "Tag",
-    "noAvailableTags": "Nessun tag disponibile",
-    "clearFilter": "Cancella filtro",
-    "editTags": "Modifica tag",
-    "groupByTag": "Raggruppa per tag",
-    "untagged": "Senza tag",
-    "deleteTagAria": "Elimina tag {{tag}}",
-    "tagModal": {
-      "title": "Modifica tag",
-      "hint": "Fino a {{max}} tag. Ogni tag può contenere al massimo {{maxLength}} caratteri.",
-      "empty": "Nessun tag disponibile",
-      "suggestionsTitle": "Filtra tag",
-      "suggestionsEmpty": "Nessun tag disponibile",
-      "inputPlaceholder": "Inserisci un tag (ne restano {{remaining}})",
-      "inputDisabledPlaceholder": "Limite tag raggiunto",
-      "add": "Aggiungi",
-      "save": "Salva tag",
-      "error": {
-        "empty": "Il tag non può essere vuoto",
-        "tooLong": "Il tag non può superare {{max}} caratteri",
-        "duplicate": "Il tag esiste già",
-        "tooMany": "Puoi aggiungere fino a {{max}} tag"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Attività di risveglio",
     "subtitle": "Gestisci più attività di risveglio automatico con controlli indipendenti.",
+    "verification": {
+      "title": "Verifica richiesta",
+      "columns": {
+        "verifiedAt": "Ora di verifica"
+      },
+      "filters": {
+        "all": "Tutti"
+      },
+      "actions": {
+        "selectAllAccounts": "Seleziona tutto",
+        "clearSelectedAccounts": "Deseleziona tutto",
+        "runCheckNow": "Completa verifica"
+      },
+      "runHint": {
+        "title": "Note di verifica",
+        "line1": "« Controlla ora » invia una richiesta chat minima simulando il client Antigravity tramite gateway locale e protocollo ufficiale Language Server.",
+        "line2": "Questa operazione consuma una piccola quantità di token (di solito un breve dialogo). Il consumo reale dipende da modello e policy dell’account.",
+        "line3": "Questa azione non modifica la configurazione delle attività di risveglio. Controlla solo la disponibilità dell’account e registra lo storico di controllo.",
+        "line4": "Se viene restituito 403, è necessario completare prima la verifica dell’account. Il risultato includerà URL di verifica e azioni rapide."
+      },
+      "deleteConfirm": "Confermare l'eliminazione?"
+    },
     "globalToggle": "Interruttore globale di risveglio",
     "newTask": "Nuova attività",
     "runTest": "Test immediato",
@@ -763,28 +972,6 @@
       "accountsHint": "Seleziona più account per il test.",
       "start": "Avvia test",
       "testing": "Test in corso..."
-    },
-    "verification": {
-      "title": "Verifica richiesta",
-      "columns": {
-        "verifiedAt": "Ora di verifica"
-      },
-      "filters": {
-        "all": "Tutti"
-      },
-      "actions": {
-        "selectAllAccounts": "Seleziona tutto",
-        "clearSelectedAccounts": "Deseleziona tutto",
-        "runCheckNow": "Completa verifica"
-      },
-      "deleteConfirm": "Confermare l'eliminazione?",
-      "runHint": {
-        "title": "Note di verifica",
-        "line1": "« Controlla ora » invia una richiesta chat minima simulando il client Antigravity tramite gateway locale e protocollo ufficiale Language Server.",
-        "line2": "Questa operazione consuma una piccola quantità di token (di solito un breve dialogo). Il consumo reale dipende da modello e policy dell’account.",
-        "line3": "Questa azione non modifica la configurazione delle attività di risveglio. Controlla solo la disponibilità dell’account e registra lo storico di controllo.",
-        "line4": "Se viene restituito 403, è necessario completare prima la verifica dell’account. Il risultato includerà URL di verifica e azioni rapide."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Gestione account Codex",
     "subtitle": "Gestisci i tuoi account OpenAI Codex",
+    "instances": {
+      "subtitle": "Configurazione indipendente per istanza, operazione parallela con più account.",
+      "comingSoon": "Multi-Istanza In Arrivo",
+      "comingSoonDesc": "Esegui più istanze Codex.app con account diversi contemporaneamente.",
+      "unsupported": {
+        "desc": "La multi-istanza Codex è attualmente disponibile solo su macOS."
+      },
+      "quota": {
+        "hourly": "5 ore",
+        "weekly": "Settimanale"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Invia un segnale SIGTERM a tutti i processi Codex, chiedendo all'app di salvare e chiudersi, quindi avvia l'istanza di destinazione (forza la chiusura se necessario).",
+          "commandMac": "macOS: kill -15 <pid> (tutti i processi Codex)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (tutti i processi Codex)"
+        },
+        "force": {
+          "principle": "Identifica i processi tramite CODEX_HOME e li chiude forzatamente (SIGKILL / taskkill /F), quindi avvia l'istanza di destinazione.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (corrispondenza CODEX_HOME)"
+        }
+      }
+    },
+    "refreshSuccess": "Quota aggiornata",
+    "refreshFailed": "Aggiornamento quota non riuscito: {{error}}",
+    "refreshAllSuccess": "Aggiornamento completato, {{count}} account riusciti",
+    "refreshAllPartialFailed": "Aggiornamento completato, {{success}} / {{total}} account riusciti, alcuni non riusciti",
     "switch": "Cambia",
     "switched": "Passato a {{email}}",
     "switchFailed": "Cambio non riuscito: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Ottieni account locale"
     },
     "import": {
+      "localDesc": "Importa account Codex da sessioni locali con accesso.",
       "importing": "Importazione dell'account locale...",
-      "successMsg": "Importazione riuscita: {{email}}",
-      "localDesc": "Importa account Codex da sessioni locali con accesso."
+      "successMsg": "Importazione riuscita: {{email}}"
     },
     "quota": {
       "hourly": "Quota di 5 ore",
       "weekly": "Quota settimanale",
       "reset": "Reimposta"
+    },
+    "quotaError": {
+      "badge": "Errore quota",
+      "generic": "Aggiornamento quota non riuscito, riprova più tardi",
+      "deactivatedWorkspace": "Workspace disattivato, cambia account o riautorizza"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Ora di reset settimanale",
       "hourlyReset": "Ora di reset 5 ore"
     },
+    "opencodeSwitch": "Interruttore OpenCode",
+    "opencodeSwitchDesc": "Sincronizza il cambio dell'account Codex in OpenCode",
+    "opencodeSwitchFailed": "Impossibile aggiornare l'interruttore OpenCode: {{error}}",
     "columns": {
       "hourly": "Quota 5h",
       "weekly": "Quota sett."
     },
-    "opencodeSwitch": "Interruttore OpenCode",
-    "opencodeSwitchDesc": "Sincronizza il cambio dell'account Codex in OpenCode",
-    "opencodeSwitchFailed": "Impossibile aggiornare l'interruttore OpenCode: {{error}}",
     "filterTags": "Filtra tag",
     "filterTagsCount": "Tag",
     "noAvailableTags": "Nessun tag disponibile",
     "clearFilter": "Cancella filtro",
-    "editTags": "Modifica tag",
+    "editTags": "Modifica tag"
+  },
+  "githubCopilot": {
+    "title": "Gestione account GitHub Copilot",
     "instances": {
-      "subtitle": "Configurazione indipendente per istanza, operazione parallela con più account.",
-      "comingSoon": "Multi-Istanza In Arrivo",
-      "comingSoonDesc": "Esegui più istanze Codex.app con account diversi contemporaneamente.",
       "unsupported": {
-        "desc": "La multi-istanza Codex è attualmente disponibile solo su macOS."
-      },
-      "quota": {
-        "hourly": "5 ore",
-        "weekly": "Settimanale"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Invia un segnale SIGTERM a tutti i processi Codex, chiedendo all'app di salvare e chiudersi, quindi avvia l'istanza di destinazione (forza la chiusura se necessario).",
-          "commandMac": "macOS: kill -15 <pid> (tutti i processi Codex)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (tutti i processi Codex)"
-        },
-        "force": {
-          "principle": "Identifica i processi tramite CODEX_HOME e li chiude forzatamente (SIGKILL / taskkill /F), quindi avvia l'istanza di destinazione.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (corrispondenza CODEX_HOME)"
-        }
+        "desc": "La multi-istanza GitHub Copilot è attualmente disponibile solo su macOS."
       }
     },
-    "refreshSuccess": "Quota aggiornata",
-    "refreshFailed": "Aggiornamento quota non riuscito: {{error}}",
-    "refreshAllSuccess": "Aggiornamento completato, {{count}} account riusciti",
-    "refreshAllPartialFailed": "Aggiornamento completato, {{success}} / {{total}} account riusciti, alcuni non riusciti",
-    "quotaError": {
-      "badge": "Errore quota",
-      "generic": "Aggiornamento quota non riuscito, riprova più tardi",
-      "deactivatedWorkspace": "Workspace disattivato, cambia account o riautorizza"
+    "empty": {
+      "description": "Fai clic su \"Aggiungi account\" per iniziare"
+    },
+    "addModal": {
+      "title": "Aggiungi account GitHub Copilot"
+    },
+    "oauth": {
+      "desc": "Fai clic qui sotto e completa l'autorizzazione di GitHub Copilot nel browser."
+    },
+    "token": {
+      "desc": "Incolla il token di accesso GitHub Copilot o i dati JSON esportati."
+    },
+    "import": {
+      "localDesc": "Importa account GitHub Copilot da sessioni locali con accesso."
+    },
+    "sort": {
+      "weekly": "Quota settimanale",
+      "hourly": "Quota 5 ore",
+      "premium": "Per utilizzo delle richieste premium",
+      "weeklyReset": "Ora di reset settimanale",
+      "hourlyReset": "Ora di reset 5 ore"
+    },
+    "columns": {
+      "hourly": "Quota 5h",
+      "weekly": "Quota sett.",
+      "premium": "Richieste premium"
+    },
+    "usage": {
+      "included": "Incluso"
+    },
+    "injectToVSCode": "Passa a VS Code",
+    "injectSuccess": "Il token è stato inserito correttamente in VS Code. VS Code si sta avviando.",
+    "injectRequireClose": "Chiudi VS Code prima di eseguire l'iniezione.",
+    "flowNotice": {
+      "title": "Guida agli account GitHub Copilot (clicca per espandere/comprimere)",
+      "desc": "Il cambio account richiede la lettura dello storage di autenticazione locale di VS Code e l’uso del servizio credenziali di sistema per decifrare e riscrivere; i dati vengono elaborati solo in locale.",
+      "inject": "Cambio con un clic: questo strumento legge il materiale di crittografia locale di VS Code (DPAPI/Keychain/Secret Service), decifra la sessione di autenticazione in state.vscdb, sostituisce il token GitHub Copilot e cifra di nuovo il tutto — interamente in locale sul tuo dispositivo.",
+      "reason": "Ambito permessi: leggere il database di autenticazione di VS Code (state.vscdb) e usare la cifratura di sistema (Windows DPAPI / macOS Keychain / Linux Secret Service) per decifrare e riscrivere.",
+      "storage": "Ambito di lettura: vengono trattati solo i dati relativi alle sessioni di accesso GitHub; tutti i processi vengono eseguiti in locale."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Percorso file",
       "helpText": "Apri la cartella per riparare manualmente o eliminare il file, quindi riavvia l'applicazione.",
       "openFolder": "Apri cartella"
-    }
-  },
-  "instances": {
-    "title": "Istanze Multiple",
-    "subtitle": "Profili isolati per l'esecuzione parallela di più account.",
-    "defaultName": "Istanza predefinita",
-    "search": "Cerca istanze",
-    "actions": {
-      "create": "Nuova istanza",
-      "refresh": "Aggiorna",
-      "startAll": "Avvia tutto",
-      "restartAll": "Riavvia tutto",
-      "stopAll": "Ferma tutto",
-      "start": "Avvia",
-      "stop": "Ferma",
-      "openFolder": "Apri cartella",
-      "edit": "Modifica",
-      "openRootDir": "Apri cartella",
-      "selectPath": "Seleziona percorso",
-      "openWindow": "Apri finestra"
-    },
-    "bulkConfirm": {
-      "startAll": "Avviare tutte le istanze fermate?",
-      "restartAll": "Riavviare tutte le istanze in esecuzione?",
-      "stopAll": "Chiudere tutte le istanze?"
-    },
-    "status": {
-      "running": "In esecuzione",
-      "stopped": "Fermato",
-      "restarting": "Riavvio in corso",
-      "starting": "Di partenza"
-    },
-    "labels": {
-      "path": "Directory",
-      "args": "Argomenti di avvio",
-      "argsEmpty": "Nessuno",
-      "bindAccount": "Account collegato",
-      "unbound": "Non collegato",
-      "quota": "Quota",
-      "lastLaunched": "Ultimo avvio",
-      "pendingInit": "In attesa di inizializzazione (avvia prima una volta)"
-    },
-    "columns": {
-      "instance": "Istanza",
-      "email": "Account",
-      "quota": "Stato quota",
-      "actions": "Azioni"
-    },
-    "empty": {
-      "title": "Nessuna istanza",
-      "desc": "Crea una directory di configurazione isolata per avviare rapidamente più istanze."
-    },
-    "form": {
-      "name": "Nome istanza",
-      "namePlaceholder": "es: Account di lavoro",
-      "path": "Directory istanza",
-      "pathPlaceholder": "Seleziona directory",
-      "pathReadOnly": "Il percorso non può essere modificato durante la modifica",
-      "pathAutoHint": "Il percorso si aggiorna automaticamente quando il nome cambia (o seleziona manualmente)",
-      "copyLogin": "Copia stato di accesso attuale",
-      "copyLoginDesc": "Copia configurazione e dati di accesso dalla directory predefinita",
-      "copySource": "Copia istanza sorgente",
-      "copySourceDesc": "Copia configurazione e dati di accesso dall'istanza selezionata",
-      "copySourcePlaceholder": "Seleziona istanza sorgente",
-      "copySourceRequired": "Seleziona un'istanza sorgente",
-      "copySourceRunningHint": "L'istanza sorgente è in esecuzione. Si consiglia di chiuderla prima per evitare incongruenze nei dati.",
-      "bindInject": "Collega account",
-      "followCurrent": "Segui account attuale",
-      "selectAccount": "Seleziona account",
-      "bindAccount": "Collega account",
-      "unbound": "Non collegato",
-      "extraArgs": "Argomenti di avvio personalizzati",
-      "extraArgsPlaceholder": "es: --disable-gpu --log-level=2",
-      "extraArgsDesc": "Separa gli argomenti con spazi, le virgolette sono supportate",
-      "nameRequired": "Inserisci un nome istanza",
-      "pathRequired": "Seleziona una directory istanza",
-      "bindRequired": "Seleziona un account da collegare",
-      "initMode": "Modalità di inizializzazione",
-      "initModeCopy": "Copia dall'istanza sorgente (predefinito)",
-      "initModeEmpty": "Istanza vuota (senza copia)",
-      "emptyInitHint": "Se scegli senza copia, verrà creata solo una cartella vuota. Avvia una volta prima di collegare un account.",
-      "bindAfterInit": "Collegabile dopo l'inizializzazione",
-      "bindDisabledHint": "Per un'istanza vuota, avviala una volta per generare i dati e poi collega l'account."
-    },
-    "quota": {
-      "unbound": "Account non collegato",
-      "accountMissing": "Account non trovato",
-      "empty": "Nessuna quota in cache"
-    },
-    "messages": {
-      "created": "Istanza creata",
-      "updated": "Istanza aggiornata",
-      "deleted": "Istanza eliminata",
-      "started": "Istanza avviata",
-      "stopped": "Istanza fermata",
-      "startedAll": "Tutte le istanze fermate sono state avviate",
-      "restartedAll": "Istanze in esecuzione riavviate",
-      "closedAll": "Tutte le istanze sono state fermate",
-      "allAlreadyRunning": "Tutte le istanze sono già in esecuzione",
-      "noneRunning": "Nessuna istanza in esecuzione trovata",
-      "emptyCreated": "Istanza vuota creata. Avviala una volta prima di collegare un account."
-    },
-    "runningDialog": {
-      "title": "L'istanza è già in esecuzione",
-      "desc": "Questa istanza è già avviata. Puoi passare alla finestra o riavviarla secondo la strategia attuale.",
-      "current": "Strategia attuale: {{name}}",
-      "pathLabel": "Directory istanza",
-      "go": "Passa ora",
-      "restart": "Chiudi e riavvia"
-    },
-    "restartStrategy": {
-      "button": "Strategia di riavvio",
-      "title": "Strategia di riavvio",
-      "desc": "Scegli il metodo di riavvio dell'istanza. Ogni opzione influisce sulla portata e sulla stabilità.",
-      "recommended": "Consigliato",
-      "labels": {
-        "principle": "Principio tecnico",
-        "command": "Comando",
-        "pros": "Pro",
-        "cons": "Contro"
-      },
-      "safe": {
-        "title": "Riavvio sicuro (Consigliato)",
-        "principle": "Invia un segnale SIGTERM a tutti i processi Antigravity, chiedendo all'app di salvare e chiudersi, quindi avvia l'istanza di destinazione (forza la chiusura se necessario).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (tutti i processi Antigravity)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (tutti i processi Antigravity)",
-        "pros": "Più vicino a una chiusura normale, meno probabilità di avvisi di arresto anomalo, dati più sicuri.",
-        "cons": "Supporta solo il riavvio globale di tutte le istanze."
-      },
-      "force": {
-        "title": "Riavvio forzato",
-        "principle": "Identifica i processi tramite --user-data-dir e li chiude forzatamente (SIGKILL / taskkill /F), quindi avvia l'istanza di destinazione.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (corrispondenza --user-data-dir)",
-        "pros": "Può riavviare con precisione una singola istanza.",
-        "cons": "Potrebbe causare un avviso di \"chiusura imprevista\", rischio di perdita di dati non salvati."
-      }
-    },
-    "stop": {
-      "title": "Arresto forzato istanza",
-      "message": "Invia un segnale di arresto (SIGTERM) al processo dell'istanza. I dati non salvati potrebbero andare persi. Continuare?"
-    },
-    "delete": {
-      "title": "Elimina istanza",
-      "message": "Eliminare l'istanza {{name}}? Questo rimuoverà la configurazione e cancellerà la cartella dell'istanza."
-    },
-    "modal": {
-      "createTitle": "Nuova istanza",
-      "editTitle": "Modifica istanza"
-    },
-    "sort": {
-      "label": "Ordinamento",
-      "createdAt": "Per data di creazione",
-      "lastLaunchedAt": "Per data di avvio",
-      "ascTooltip": "Attuale: crescente, fai clic per passare a decrescente",
-      "descTooltip": "Attuale: decrescente, fai clic per passare a crescente",
-      "toggleDirection": "Cambia direzione ordinamento"
-    },
-    "initGuide": {
-      "title": "Istanza non ancora inizializzata",
-      "desc": "Questa è un'istanza vuota. Al momento è stata creata solo la cartella e i dati dell'istanza non sono ancora stati generati.",
-      "tip": "Avvia prima l'istanza una volta. Al termine dell'inizializzazione potrai collegare un account.",
-      "startNow": "Avvia ora"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Percorso dell’applicazione non trovato",
-      "desc": "Impossibile trovare il percorso dell’applicazione {{app}}. Impostalo ora per continuare.",
-      "action": "Imposta ora"
-    }
-  },
-  "githubCopilot": {
-    "title": "Gestione account GitHub Copilot",
-    "instances": {
-      "unsupported": {
-        "desc": "La multi-istanza GitHub Copilot è attualmente disponibile solo su macOS."
-      }
-    },
-    "empty": {
-      "description": "Fai clic su \"Aggiungi account\" per iniziare"
-    },
-    "addModal": {
-      "title": "Aggiungi account GitHub Copilot"
-    },
-    "oauth": {
-      "desc": "Fai clic qui sotto e completa l'autorizzazione di GitHub Copilot nel browser."
-    },
-    "token": {
-      "desc": "Incolla il token di accesso GitHub Copilot o i dati JSON esportati."
-    },
-    "import": {
-      "localDesc": "Importa account GitHub Copilot da sessioni locali con accesso."
-    },
-    "sort": {
-      "weekly": "Quota settimanale",
-      "hourly": "Quota 5 ore",
-      "weeklyReset": "Ora di reset settimanale",
-      "hourlyReset": "Ora di reset 5 ore",
-      "premium": "Per utilizzo delle richieste premium"
-    },
-    "columns": {
-      "hourly": "Quota 5h",
-      "weekly": "Quota sett.",
-      "premium": "Richieste premium"
-    },
-    "flowNotice": {
-      "title": "Guida agli account GitHub Copilot (clicca per espandere/comprimere)",
-      "desc": "Il cambio account richiede la lettura dello storage di autenticazione locale di VS Code e l’uso del servizio credenziali di sistema per decifrare e riscrivere; i dati vengono elaborati solo in locale.",
-      "reason": "Ambito permessi: leggere il database di autenticazione di VS Code (state.vscdb) e usare la cifratura di sistema (Windows DPAPI / macOS Keychain / Linux Secret Service) per decifrare e riscrivere.",
-      "storage": "Ambito di lettura: vengono trattati solo i dati relativi alle sessioni di accesso GitHub; tutti i processi vengono eseguiti in locale.",
-      "inject": "Cambio con un clic: questo strumento legge il materiale di crittografia locale di VS Code (DPAPI/Keychain/Secret Service), decifra la sessione di autenticazione in state.vscdb, sostituisce il token GitHub Copilot e cifra di nuovo il tutto — interamente in locale sul tuo dispositivo."
-    },
-    "injectToVSCode": "Passa a VS Code",
-    "injectSuccess": "Il token è stato inserito correttamente in VS Code. VS Code si sta avviando.",
-    "injectRequireClose": "Chiudi VS Code prima di eseguire l'iniezione.",
-    "usage": {
-      "included": "Incluso"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Cambio rapido non riuscito: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "Nascondi email",
-    "showSensitive": "Mostra email"
-  },
   "windsurf": {
     "title": "Gestione account Windsurf",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Accesso riuscito: {{login}}",
       "failed": "Accesso non riuscito: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Layout piattaforme",
-    "sidebarSelected": "Selezionate nella barra laterale {{count}}/{{max}}",
-    "reset": "Ripristina predefiniti",
-    "tip": "Trascina per riordinare. Nella barra laterale possono essere mostrate al massimo due piattaforme. Se ne selezioni solo una, verrà mostrata solo una.",
-    "sidebarToggle": "Mostra nella barra laterale",
-    "dashboardToggle": "Mostra nella dashboard",
-    "trayToggle": "Mostra nell'area di notifica",
-    "hiddenBadge": "Nascosto",
-    "openFromMore": "Gestisci layout piattaforme",
-    "dragHandleLabel": "Trascina per riordinare"
-  },
-  "breakout": {
-    "gameOver": "Partita finita",
-    "gameOverRank": "Posizione locale attuale #{{rank}}",
-    "startGame": "Avvia gioco",
-    "startHint": "Clicca Avvia o premi Spazio",
-    "rankTitle": "Classifica storica locale",
-    "rankCurrent": "Attuale",
-    "rankNoData": "--",
-    "restart": "Ricomincia",
-    "pause": "Pausa",
-    "resume": "Riprendi",
-    "paused": "In pausa",
-    "level": "Livello {{level}}",
-    "levelScore": "Punteggio del livello {{score}}",
-    "levelCleared": "Livello completato",
-    "nextLevel": "Livello successivo",
-    "history": "Cronologia",
-    "historyShort": "Cronologia",
-    "historyEmpty": "Nessun record",
-    "historyClear": "Cancella",
-    "historyScoreShort": "Punteggio {{score}}",
-    "historyLevelShort": "Liv {{level}}",
-    "historyDurationShort": "Tempo {{duration}}",
-    "historyReasonGameOver": "Partita finita",
-    "historyReasonManualExit": "Uscita manuale",
-    "serveHint": "Premi Spazio per lanciare la palla",
-    "ranking": "Cronologia locale",
-    "rankingShort": "Locale",
-    "rankingEmpty": "Nessun record locale",
-    "rankingClear": "Cancella classifica locale",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "Passa a Kiro"
   },
+  "breakout": {
+    "gameOver": "Partita finita",
+    "gameOverRank": "Posizione locale attuale #{{rank}}",
+    "startGame": "Avvia gioco",
+    "startHint": "Clicca Avvia o premi Spazio",
+    "rankTitle": "Classifica storica locale",
+    "rankCurrent": "Attuale",
+    "rankNoData": "--",
+    "restart": "Ricomincia",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "paused": "In pausa",
+    "level": "Livello {{level}}",
+    "levelScore": "Punteggio del livello {{score}}",
+    "levelCleared": "Livello completato",
+    "nextLevel": "Livello successivo",
+    "history": "Cronologia",
+    "historyShort": "Cronologia",
+    "historyEmpty": "Nessun record",
+    "historyClear": "Cancella",
+    "historyScoreShort": "Punteggio {{score}}",
+    "historyLevelShort": "Liv {{level}}",
+    "historyDurationShort": "Tempo {{duration}}",
+    "historyReasonGameOver": "Partita finita",
+    "historyReasonManualExit": "Uscita manuale",
+    "serveHint": "Premi Spazio per lanciare la palla",
+    "ranking": "Cronologia locale",
+    "rankingShort": "Locale",
+    "rankingEmpty": "Nessun record locale",
+    "rankingClear": "Cancella classifica locale",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Notifiche",
     "empty": "Nessuna notifica",
     "markAllRead": "Segna tutto come letto",
     "gotIt": "Capito",
     "later": "Più tardi",
-    "clickToClose": "Clicca per chiudere",
     "new": "Nuovo",
     "timeAgo": {
       "justNow": "Proprio ora",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 Urgente"
     },
     "refreshed": "Notifiche aggiornate ({count} in totale)",
+    "clickToClose": "Clicca per chiudere",
     "clickToEnlarge": "Clicca per ingrandire",
     "imageLoadFailed": "Caricamento immagine fallito"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Comprimi tutto",
+      "expandAll": "Espandi tutto",
+      "goAntigravity": "Vai ad Antigravity",
+      "goCodex": "Vai a Codex",
+      "goDashboard": "Vai alla dashboard",
+      "goFingerprints": "Vai alle impronte dispositivo",
+      "goGitHubCopilot": "Vai a GitHub Copilot",
+      "goInstances": "Vai a multi-istanza",
+      "goKiro": "Vai a Kiro",
+      "goSettings": "Vai alle impostazioni",
+      "goVerification": "Vai alla verifica wakeup",
+      "goWakeup": "Vai alle attività wakeup",
+      "goWindsurf": "Vai a Windsurf",
+      "openLayout": "Apri layout piattaforme"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Gestione account Antigravity."
+      },
+      "keywords": {
+        "0": "Gestione account Antigravity",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Gestione account Antigravity per te.",
+        "1": "Usa il flusso consigliato in Gestione account Antigravity per ridurre errori."
+      },
+      "steps": {
+        "0": "Apri la pagina di Gestione account Antigravity.",
+        "1": "Completa setup base e collegamenti richiesti in Gestione account Antigravity.",
+        "2": "Esegui un’operazione manuale in Gestione account Antigravity per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Gestione account Antigravity nel flusso quotidiano.",
+      "title": "Gestione account Antigravity"
+    },
+    "blocks": {
+      "cautions": "Errori comuni / note",
+      "outcomes": "A cosa serve questa funzione",
+      "steps": "Passaggi consigliati"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Dashboard."
+      },
+      "keywords": {
+        "0": "Panoramica",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Dashboard per te.",
+        "1": "Usa il flusso consigliato in Dashboard per ridurre errori."
+      },
+      "steps": {
+        "0": "Apri la pagina di Dashboard.",
+        "1": "Completa setup base e collegamenti richiesti in Dashboard.",
+        "2": "Esegui un’operazione manuale in Dashboard per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Dashboard nel flusso quotidiano.",
+      "title": "Panoramica"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Import/Export, privacy e troubleshooting.",
+        "1": "Verifica filtri e target prima di eseguire in Import/Export, privacy e troubleshooting.",
+        "2": "Rimuovi dati sensibili prima di condividere i log (token, cookie, email)."
+      },
+      "keywords": {
+        "0": "Import/Export, privacy e troubleshooting",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account",
+        "4": "impostazioni",
+        "5": "diagnosi",
+        "6": "log",
+        "7": "dati"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Import/Export, privacy e troubleshooting per te.",
+        "1": "Usa il flusso consigliato in Import/Export, privacy e troubleshooting per ridurre errori.",
+        "2": "Conferma un’esecuzione riuscita in Import/Export, privacy e troubleshooting prima di scalare.",
+        "3": "Se c’è un problema in Import/Export, privacy e troubleshooting, controlla prima i log e raccogli evidenze."
+      },
+      "steps": {
+        "0": "Apri la pagina di Import/Export, privacy e troubleshooting.",
+        "1": "Completa setup base e collegamenti richiesti in Import/Export, privacy e troubleshooting.",
+        "2": "Esegui un’operazione manuale in Import/Export, privacy e troubleshooting per verificare il risultato.",
+        "3": "Per troubleshooting: Impostazioni -> Directory dati -> Apri, poi logs.",
+        "4": "Controlla prima il file più recente app.log o app.log.*.",
+        "5": "Nel report includi ora, piattaforma, passi di riproduzione e log anonimizzati."
+      },
+      "summary": "Questa sezione spiega come usare Import/Export, privacy e troubleshooting nel flusso quotidiano.",
+      "title": "Import/Export, privacy e troubleshooting"
+    },
+    "empty": {
+      "desc": "Prova parole chiave come istanza, switch, impostazioni, esporta.",
+      "title": "Nessun contenuto corrispondente"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Impronte dispositivo."
+      },
+      "keywords": {
+        "0": "Impronte dispositivo",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Impronte dispositivo per te.",
+        "1": "Usa il flusso consigliato in Impronte dispositivo per ridurre errori."
+      },
+      "steps": {
+        "0": "Apri la pagina di Impronte dispositivo.",
+        "1": "Completa setup base e collegamenti richiesti in Impronte dispositivo.",
+        "2": "Esegui un’operazione manuale in Impronte dispositivo per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Impronte dispositivo nel flusso quotidiano.",
+      "title": "Impronte dispositivo"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Multi-istanza (chiave).",
+        "1": "Verifica filtri e target prima di eseguire in Multi-istanza (chiave)."
+      },
+      "keywords": {
+        "0": "Multi-istanza (chiave)",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account",
+        "4": "impostazioni"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Multi-istanza (chiave) per te.",
+        "1": "Usa il flusso consigliato in Multi-istanza (chiave) per ridurre errori.",
+        "2": "Conferma un’esecuzione riuscita in Multi-istanza (chiave) prima di scalare."
+      },
+      "steps": {
+        "0": "Apri la pagina di Multi-istanza (chiave).",
+        "1": "Completa setup base e collegamenti richiesti in Multi-istanza (chiave).",
+        "2": "Esegui un’operazione manuale in Multi-istanza (chiave) per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Multi-istanza (chiave) nel flusso quotidiano.",
+      "title": "Multi-istanza (chiave)"
+    },
+    "navTitle": "Manuale utente",
+    "providers": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Verifica filtri e target prima di eseguire in Codex / GitHub Copilot / Windsurf / Kiro."
+      },
+      "keywords": {
+        "0": "Piattaforme Codex / GitHub Copilot / Windsurf / Kiro",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account",
+        "4": "impostazioni",
+        "5": "diagnosi"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Codex / GitHub Copilot / Windsurf / Kiro per te.",
+        "1": "Usa il flusso consigliato in Codex / GitHub Copilot / Windsurf / Kiro per ridurre errori.",
+        "2": "Conferma un’esecuzione riuscita in Codex / GitHub Copilot / Windsurf / Kiro prima di scalare."
+      },
+      "steps": {
+        "0": "Apri la pagina di Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Completa setup base e collegamenti richiesti in Codex / GitHub Copilot / Windsurf / Kiro.",
+        "2": "Esegui un’operazione manuale in Codex / GitHub Copilot / Windsurf / Kiro per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Codex / GitHub Copilot / Windsurf / Kiro nel flusso quotidiano.",
+      "title": "Piattaforme Codex / GitHub Copilot / Windsurf / Kiro"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Avvio rapido (5 minuti).",
+        "1": "Verifica filtri e target prima di eseguire in Avvio rapido (5 minuti)."
+      },
+      "keywords": {
+        "0": "Avvio rapido (5 minuti)",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Avvio rapido (5 minuti) per te.",
+        "1": "Usa il flusso consigliato in Avvio rapido (5 minuti) per ridurre errori.",
+        "2": "Conferma un’esecuzione riuscita in Avvio rapido (5 minuti) prima di scalare."
+      },
+      "steps": {
+        "0": "Apri la pagina di Avvio rapido (5 minuti).",
+        "1": "Completa setup base e collegamenti richiesti in Avvio rapido (5 minuti).",
+        "2": "Esegui un’operazione manuale in Avvio rapido (5 minuti) per verificare il risultato.",
+        "3": "Per troubleshooting: Impostazioni -> Directory dati -> Apri, poi logs."
+      },
+      "summary": "Questa sezione spiega come usare Avvio rapido (5 minuti) nel flusso quotidiano.",
+      "title": "Avvio rapido (5 minuti)"
+    },
+    "resultCount": "{{count}} sezioni totali",
+    "searchAria": "Cerca nel manuale",
+    "searchPlaceholder": "Cerca funzioni, scenari o parole chiave (es: istanza, inject, wakeup, impronta)",
+    "settings": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Impostazioni e capacità di sistema.",
+        "1": "Verifica filtri e target prima di eseguire in Impostazioni e capacità di sistema."
+      },
+      "keywords": {
+        "0": "Impostazioni e capacità di sistema",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account",
+        "4": "impostazioni",
+        "5": "diagnosi"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Impostazioni e capacità di sistema per te.",
+        "1": "Usa il flusso consigliato in Impostazioni e capacità di sistema per ridurre errori.",
+        "2": "Conferma un’esecuzione riuscita in Impostazioni e capacità di sistema prima di scalare."
+      },
+      "steps": {
+        "0": "Apri la pagina di Impostazioni e capacità di sistema.",
+        "1": "Completa setup base e collegamenti richiesti in Impostazioni e capacità di sistema.",
+        "2": "Esegui un’operazione manuale in Impostazioni e capacità di sistema per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Impostazioni e capacità di sistema nel flusso quotidiano.",
+      "title": "Impostazioni e capacità di sistema"
+    },
+    "subtitle": "Guida per scenari operativi. Prima capisci l’obiettivo, poi segui il flusso consigliato.",
+    "title": "Manuale utente",
+    "wakeup": {
+      "cautions": {
+        "0": "Esegui backup dati prima di azioni rischiose o massive in Attività wakeup e verifica.",
+        "1": "Verifica filtri e target prima di eseguire in Attività wakeup e verifica."
+      },
+      "keywords": {
+        "0": "Attività wakeup e verifica",
+        "1": "guida",
+        "2": "flusso",
+        "3": "account",
+        "4": "impostazioni"
+      },
+      "outcomes": {
+        "0": "Capisci cosa può fare Attività wakeup e verifica per te.",
+        "1": "Usa il flusso consigliato in Attività wakeup e verifica per ridurre errori."
+      },
+      "steps": {
+        "0": "Apri la pagina di Attività wakeup e verifica.",
+        "1": "Completa setup base e collegamenti richiesti in Attività wakeup e verifica.",
+        "2": "Esegui un’operazione manuale in Attività wakeup e verifica per verificare il risultato."
+      },
+      "summary": "Questa sezione spiega come usare Attività wakeup e verifica nel flusso quotidiano.",
+      "title": "Attività wakeup e verifica"
+    }
   }
 }

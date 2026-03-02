@@ -55,6 +55,9 @@ const WakeupVerificationPage = lazy(() =>
 const SettingsPage = lazy(() =>
   import('./pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
 );
+const ManualPage = lazy(() =>
+  import('./pages/ManualPage').then((module) => ({ default: module.ManualPage })),
+);
 const InstancesPage = lazy(() =>
   import('./pages/InstancesPage').then((module) => ({ default: module.InstancesPage })),
 );
@@ -842,6 +845,7 @@ function App() {
             case 'github-copilot':
             case 'windsurf':
             case 'kiro':
+            case 'manual':
             case 'settings':
               setPage(target as Page);
               break;
@@ -861,6 +865,19 @@ function App() {
   const handleDragStart = () => {
     getCurrentWindow().startDragging();
   };
+
+  useEffect(() => {
+    const handleRequestNavigate = (e: Event) => {
+      const custom = e as CustomEvent<Page>;
+      if (custom.detail) {
+        setPage(custom.detail);
+      }
+    };
+    window.addEventListener('app-request-navigate', handleRequestNavigate as EventListener);
+    return () => {
+      window.removeEventListener('app-request-navigate', handleRequestNavigate as EventListener);
+    };
+  }, []);
   const suspenseFallback = (
     <div className="loading-state">
       {t('common.loading', '加载中...')}
@@ -1053,6 +1070,12 @@ function App() {
           {page === 'fingerprints' && <FingerprintsPage onNavigate={setPage} />}
           {page === 'wakeup' && <WakeupTasksPage onNavigate={setPage} />}
           {page === 'verification' && <WakeupVerificationPage onNavigate={setPage} />}
+          {page === 'manual' && (
+            <ManualPage
+              onNavigate={setPage}
+              onOpenPlatformLayout={() => setShowPlatformLayoutModal(true)}
+            />
+          )}
           {page === 'settings' && <SettingsPage />}
         </Suspense>
       </div>

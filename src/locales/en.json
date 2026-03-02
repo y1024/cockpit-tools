@@ -155,39 +155,8 @@
     "windsurf": "Windsurf",
     "dashboard": "Dashboard",
     "morePlatforms": "More Platforms",
-    "instances": "Multi-Instance"
-  },
-  "breakout": {
-    "gameOver": "Game Over",
-    "gameOverRank": "Local Rank #{{rank}}",
-    "startGame": "Start Game",
-    "startHint": "Click start or press Space",
-    "serveHint": "Press Space to launch the ball",
-    "rankTitle": "Local Leaderboard",
-    "rankCurrent": "Current",
-    "rankNoData": "--",
-    "ranking": "Local Leaderboard",
-    "rankingShort": "Local",
-    "rankingEmpty": "No local ranking data yet",
-    "rankingClear": "Clear Local Ranking",
-    "rankingRankShort": "#{{rank}}",
-    "restart": "Restart",
-    "pause": "Pause",
-    "resume": "Resume",
-    "paused": "Paused",
-    "level": "Level {{level}}",
-    "levelScore": "Level Score {{score}}",
-    "levelCleared": "Level Cleared",
-    "nextLevel": "Next Level",
-    "history": "History",
-    "historyShort": "Log",
-    "historyEmpty": "No records yet",
-    "historyClear": "Clear",
-    "historyScoreShort": "Score {{score}}",
-    "historyLevelShort": "Lv {{level}}",
-    "historyDurationShort": "Time {{duration}}",
-    "historyReasonGameOver": "Game Over",
-    "historyReasonManualExit": "Manual Exit"
+    "instances": "Multi-Instance",
+    "manual": "User Manual"
   },
   "platformLayout": {
     "title": "Platform Layout",
@@ -1438,6 +1407,38 @@
     },
     "injectToVSCode": "Switch to Kiro"
   },
+  "breakout": {
+    "gameOver": "Game Over",
+    "gameOverRank": "Local Rank #{{rank}}",
+    "startGame": "Start Game",
+    "startHint": "Click start or press Space",
+    "rankTitle": "Local Leaderboard",
+    "rankCurrent": "Current",
+    "rankNoData": "--",
+    "restart": "Restart",
+    "pause": "Pause",
+    "resume": "Resume",
+    "paused": "Paused",
+    "level": "Level {{level}}",
+    "levelScore": "Level Score {{score}}",
+    "levelCleared": "Level Cleared",
+    "nextLevel": "Next Level",
+    "history": "History",
+    "historyShort": "Log",
+    "historyEmpty": "No records yet",
+    "historyClear": "Clear",
+    "historyScoreShort": "Score {{score}}",
+    "historyLevelShort": "Lv {{level}}",
+    "historyDurationShort": "Time {{duration}}",
+    "historyReasonGameOver": "Game Over",
+    "historyReasonManualExit": "Manual Exit",
+    "serveHint": "Press Space to launch the ball",
+    "ranking": "Local Leaderboard",
+    "rankingShort": "Local",
+    "rankingEmpty": "No local ranking data yet",
+    "rankingClear": "Clear Local Ranking",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Notifications",
     "empty": "No notifications",
@@ -1461,5 +1462,263 @@
     "clickToClose": "Click to close",
     "clickToEnlarge": "Click to enlarge",
     "imageLoadFailed": "Image failed to load"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Collapse all",
+      "expandAll": "Expand all",
+      "goAntigravity": "Go to Antigravity",
+      "goCodex": "Go to Codex",
+      "goDashboard": "Go to Dashboard",
+      "goFingerprints": "Go to Device Fingerprints",
+      "goGitHubCopilot": "Go to GitHub Copilot",
+      "goInstances": "Go to Multi-Instance",
+      "goKiro": "Go to Kiro",
+      "goSettings": "Go to Settings",
+      "goVerification": "Go to Wakeup Verification",
+      "goWakeup": "Go to Wakeup Tasks",
+      "goWindsurf": "Go to Windsurf",
+      "openLayout": "Open Platform Layout"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "If you see abnormal statuses (for example 403/refresh failed), refresh first, then decide whether to remove and re-login."
+      },
+      "keywords": {
+        "0": "antigravity",
+        "1": "account management",
+        "2": "quota",
+        "3": "tags"
+      },
+      "outcomes": {
+        "0": "Supports OAuth, import, export, and bulk operations.",
+        "1": "Supports tag filtering, sorting, and grouped display."
+      },
+      "steps": {
+        "0": "Click \"Add Account\" to complete authorization or import.",
+        "1": "Use \"Refresh All\" to sync one full round of quota status first.",
+        "2": "Sort by quota/reset time and choose the account you want to use now."
+      },
+      "summary": "Manage the Antigravity account lifecycle: add, refresh quota, switch, group, and tag.",
+      "title": "Antigravity Account Management"
+    },
+    "blocks": {
+      "cautions": "Common pitfalls / notes",
+      "outcomes": "What this feature helps with",
+      "steps": "Recommended steps"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Dashboard is for the big picture. For fine-grained operations, go to the specific platform page."
+      },
+      "keywords": {
+        "0": "dashboard",
+        "1": "overview",
+        "2": "recommended switch",
+        "3": "dashboard"
+      },
+      "outcomes": {
+        "0": "See multi-platform \"current account / recommended account / quota overview\" on one page.",
+        "1": "Use quick switch buttons to reduce page-hopping cost."
+      },
+      "steps": {
+        "0": "First check whether each platform card has account and quota data.",
+        "1": "If status is abnormal, click refresh or enter the corresponding platform page to handle it.",
+        "2": "If you need to change platform display order, open \"Platform Layout\" management."
+      },
+      "summary": "For global overview: quickly check account status on each platform, use recommended switching, and jump to feature pages.",
+      "title": "Dashboard"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Before importing JSON from untrusted sources, validate it in a test environment first.",
+        "1": "Before deletion and bulk operations, confirm filters first to avoid accidental deletion.",
+        "2": "Before sharing logs, redact sensitive data. Do not paste full token, cookie, email, etc."
+      },
+      "keywords": {
+        "0": "import",
+        "1": "export",
+        "2": "privacy",
+        "3": "email masking",
+        "4": "troubleshooting",
+        "5": "logs",
+        "6": "log directory",
+        "7": "app.log"
+      },
+      "outcomes": {
+        "0": "Import accounts in bulk for fast environment migration.",
+        "1": "Export JSON for backup or cross-device migration.",
+        "2": "Locate issues via error hints and file repair guidance.",
+        "3": "Quickly locate runtime issues through app.log* in Data Directory/logs."
+      },
+      "steps": {
+        "0": "Before bulk operations, export current data once as a snapshot.",
+        "1": "On list pages, switch privacy view via \"Show/Hide Email\".",
+        "2": "When file corruption prompts appear, follow the dialog and open the directory to repair.",
+        "3": "For troubleshooting, go to \"Settings -> Data Directory -> Open\", then enter logs folder.",
+        "4": "Check the latest app.log or app.log.* first (date-rotated log files).",
+        "5": "When submitting feedback, include: occurrence time, platform, reproduction steps, key error logs (20 lines before/after)."
+      },
+      "summary": "Covers daily maintenance: JSON import/export, masked email display, exception handling and recovery flow.",
+      "title": "Import/Export, Privacy & Troubleshooting"
+    },
+    "empty": {
+      "desc": "Try different keywords, for example \"instance\", \"switch\", \"settings\", \"export\".",
+      "title": "No matching content"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Before deleting a fingerprint, check bound account count first to avoid affecting production accounts by mistake."
+      },
+      "keywords": {
+        "0": "fingerprint",
+        "1": "binding",
+        "2": "import",
+        "3": "capture"
+      },
+      "outcomes": {
+        "0": "Generate/capture new fingerprints and maintain metadata.",
+        "1": "View accounts bound to a fingerprint and add/remove bindings."
+      },
+      "steps": {
+        "0": "Create or import fingerprints first.",
+        "1": "Open details and confirm fingerprint info is correct.",
+        "2": "In binding management, bind accounts to target fingerprints."
+      },
+      "summary": "Manage fingerprint templates and account bindings. Supports generation, capture, import, and binding maintenance.",
+      "title": "Device Fingerprints"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Before copying from source instance, close the source first to avoid data inconsistency.",
+        "1": "You cannot bind an account before a blank instance is initialized. This is expected behavior."
+      },
+      "keywords": {
+        "0": "multi-instance",
+        "1": "instance",
+        "2": "isolation",
+        "3": "parallel",
+        "4": "initialization"
+      },
+      "outcomes": {
+        "0": "Isolate work/personal account environments.",
+        "1": "Run multiple accounts in parallel to reduce repeated login switching.",
+        "2": "Validate new config in a test instance first, then return to main instance."
+      },
+      "steps": {
+        "0": "When creating a new instance, prefer \"Copy Source Instance\" for faster usability.",
+        "1": "If you choose \"Blank Instance\", start once for initialization, then bind account.",
+        "2": "After binding account, manage lifecycle via \"Start / Locate Window / Stop\"."
+      },
+      "summary": "Used for account isolation and parallel running. Each instance has independent directory and state to avoid cross-contamination.",
+      "title": "Multi-Instance (Key)"
+    },
+    "navTitle": "User Manual",
+    "providers": {
+      "cautions": {
+        "0": "Account management notes describe local read/write and permission scope. Read first before operating.",
+        "1": "Some platforms or capabilities are system-limited. Follow on-page prompts."
+      },
+      "keywords": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro platforms",
+        "1": "github copilot",
+        "2": "windsurf",
+        "3": "kiro",
+        "4": "inject",
+        "5": "account switch"
+      },
+      "outcomes": {
+        "0": "Codex: account switching + quota refresh.",
+        "1": "GitHub Copilot/Windsurf/Kiro: support injection into VS Code chain.",
+        "2": "Each platform supports independent filtering, grouping, import, and export."
+      },
+      "steps": {
+        "0": "Complete OAuth or Token import first.",
+        "1": "Confirm plan/quota and reset time are visible in account list.",
+        "2": "Execute \"Switch/Inject\" and verify in client that it takes effect."
+      },
+      "summary": "The four platform pages share the same structure: account overview + multi-instance, with OAuth, Token/JSON import and switching.",
+      "title": "Codex / GitHub Copilot / Windsurf / Kiro Platforms"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "For first-time usage, operate one platform only. Finish one full flow before bulk import.",
+        "1": "If a platform startup path is missing, fill path in settings before continuing."
+      },
+      "keywords": {
+        "0": "quick start",
+        "1": "beginner",
+        "2": "first run",
+        "3": "onboarding"
+      },
+      "outcomes": {
+        "0": "First check global status on Dashboard, then operate on specific platform pages.",
+        "1": "Complete one full closed loop on one platform first, then scale to others.",
+        "2": "Understand that \"account management\" and \"multi-instance\" are two different workflows."
+      },
+      "steps": {
+        "0": "Open \"Dashboard\" and confirm the platforms you need are visible.",
+        "1": "Go to target platform page (for example Codex / GitHub Copilot), then add 1 account first.",
+        "2": "Use \"Switch/Inject\" button to verify account switching takes effect.",
+        "3": "Then go to \"Multi-Instance\" and create 1 instance to verify isolation and parallel running."
+      },
+      "summary": "Follow the first-run sequence: \"Check status -> Add account -> Switch account -> Create multi-instance\" to avoid getting lost.",
+      "title": "Quick Start (5 minutes)"
+    },
+    "resultCount": "{{count}} sections total",
+    "searchAria": "Search manual",
+    "searchPlaceholder": "Search feature, scenario, or keyword (for example: multi-instance, inject, wakeup, fingerprint)",
+    "settings": {
+      "cautions": {
+        "0": "When path detection fails, manually selecting executable path is the safest option.",
+        "1": "Too-low thresholds trigger frequent alerts. Start around 20%."
+      },
+      "keywords": {
+        "0": "settings",
+        "1": "path",
+        "2": "refresh",
+        "3": "threshold",
+        "4": "language",
+        "5": "theme"
+      },
+      "outcomes": {
+        "0": "Configure auto-refresh and quota alerts across platforms in one place.",
+        "1": "Set startup paths for each client and fix \"missing path\" issues.",
+        "2": "Adjust window behavior, language, and theme to fit your habits."
+      },
+      "steps": {
+        "0": "In \"General\" tab, finish baseline language/theme/path setup first.",
+        "1": "Then adjust auto-refresh and alert threshold per platform.",
+        "2": "After network service port changes, restart as prompted to apply."
+      },
+      "summary": "Centralized management for language, theme, auto-refresh, alert threshold, app paths, and network service settings.",
+      "title": "Settings & System Capabilities"
+    },
+    "subtitle": "Built-in instructions organized by task scenarios: know \"why to use\" first, then follow steps to \"use immediately\".",
+    "title": "User Manual",
+    "wakeup": {
+      "cautions": {
+        "0": "For first-time setup, select only a small number of accounts. Expand after stability is confirmed.",
+        "1": "If verification result is abnormal, check errors and verification links in details first."
+      },
+      "keywords": {
+        "0": "wakeup",
+        "1": "task",
+        "2": "verification",
+        "3": "schedule",
+        "4": "history"
+      },
+      "outcomes": {
+        "0": "Create recurring tasks and record historical execution results.",
+        "1": "Use verification page for batch checks and failure analysis."
+      },
+      "steps": {
+        "0": "Create a new task in \"Wakeup Tasks\" and set model and trigger mode.",
+        "1": "Run manually once first to ensure task parameters are valid.",
+        "2": "On \"Verification\" page, run batch inspection and historical review."
+      },
+      "summary": "Used for scheduled wakeup tasks and batch verification, helping continuous tracking of account availability and status.",
+      "title": "Wakeup Tasks & Verification"
+    }
   }
 }

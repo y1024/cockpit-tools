@@ -24,6 +24,7 @@ import {
   Play,
   Eye,
   EyeOff,
+  BookOpen
 } from 'lucide-react';
 import { useGitHubCopilotAccountStore } from '../stores/useGitHubCopilotAccountStore';
 import * as githubCopilotService from '../services/githubCopilotService';
@@ -852,10 +853,16 @@ export function GitHubCopilotAccountsPage() {
           <Globe size={48} />
           <h3>{t('common.shared.empty.title', '暂无账号')}</h3>
           <p>{t('githubCopilot.empty.description', '点击"添加账号"开始管理您的 GitHub Copilot 账号')}</p>
-          <button className="btn btn-primary" onClick={() => openAddModal('oauth')}>
-            <Plus size={16} />
-            {t('common.shared.addAccount', '添加账号')}
-          </button>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
+            <button className="btn btn-primary" onClick={() => openAddModal('oauth')}>
+              <Plus size={16} />
+              {t('common.shared.addAccount', '添加账号')}
+            </button>
+            <button className="btn btn-secondary" onClick={() => window.dispatchEvent(new CustomEvent('app-request-navigate', { detail: 'manual' }))}>
+              <BookOpen size={16} />
+              {t('manual.navTitle', '功能使用手册')}
+            </button>
+          </div>
         </div>
       ) : filteredAccounts.length === 0 ? (
         <div className="empty-state">

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlarmClock, Fingerprint, Layers, ShieldCheck } from 'lucide-react';
+import { AlarmClock, Fingerprint, Layers, ShieldCheck, HelpCircle } from 'lucide-react';
 import { Page } from '../types/navigation';
 import { RobotIcon } from './icons/RobotIcon';
 
@@ -9,6 +9,7 @@ interface OverviewTabsHeaderProps {
   onNavigate?: (page: Page) => void;
   subtitle: string;
   title?: string;
+  onOpenManual?: () => void;
 }
 
 interface TabSpec {
@@ -22,6 +23,7 @@ export function OverviewTabsHeader({
   onNavigate,
   subtitle,
   title,
+  onOpenManual,
 }: OverviewTabsHeaderProps) {
   const { t } = useTranslation();
   const tabs: TabSpec[] = [
@@ -55,7 +57,19 @@ export function OverviewTabsHeader({
   return (
     <>
       <div className="page-header">
-        <div className="page-title">{title ?? t('overview.brandTitle')}</div>
+        <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {title ?? t('overview.brandTitle')}
+          {onOpenManual && (
+            <button
+              className="btn btn-secondary icon-only"
+              onClick={onOpenManual}
+              title={t('manual.navTitle', '功能使用手册')}
+              style={{ padding: '6px', borderRadius: '50%', background: 'transparent', border: 'none', color: 'var(--text-secondary)' }}
+            >
+              <HelpCircle size={18} />
+            </button>
+          )}
+        </div>
         <div className="page-subtitle">{subtitle}</div>
       </div>
       <div className="page-tabs-row page-tabs-center">

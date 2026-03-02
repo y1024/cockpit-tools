@@ -151,11 +151,191 @@
     "fingerprints": "Empreintes",
     "settings": "Paramètres",
     "codex": "Comptes Codex",
-    "dashboard": "Tableau de bord",
-    "instances": "Multi-Instance",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Plus de plateformes"
+    "dashboard": "Tableau de bord",
+    "morePlatforms": "Plus de plateformes",
+    "instances": "Multi-Instance",
+    "manual": "Guide d'utilisation"
+  },
+  "platformLayout": {
+    "title": "Disposition des plateformes",
+    "sidebarSelected": "Sélectionnées dans la barre latérale {{count}}/{{max}}",
+    "reset": "Réinitialiser par défaut",
+    "tip": "Faites glisser pour réorganiser. Jusqu'à deux plateformes peuvent être affichées dans la barre latérale. Si une seule est sélectionnée, une seule est affichée.",
+    "sidebarToggle": "Afficher dans la barre latérale",
+    "dashboardToggle": "Afficher dans le tableau de bord",
+    "trayToggle": "Afficher dans la zone de notification",
+    "hiddenBadge": "Masqué",
+    "openFromMore": "Gérer la disposition des plateformes",
+    "dragHandleLabel": "Glisser pour réorganiser"
+  },
+  "privacy": {
+    "hideSensitive": "Masquer les e-mails",
+    "showSensitive": "Afficher les e-mails"
+  },
+  "instances": {
+    "title": "Instances Multiples",
+    "subtitle": "Profils isolés pour l'exécution parallèle de plusieurs comptes.",
+    "defaultName": "Instance par défaut",
+    "search": "Rechercher des instances",
+    "sort": {
+      "label": "Tri",
+      "createdAt": "Par date de création",
+      "lastLaunchedAt": "Par date de lancement",
+      "ascTooltip": "Actuel : croissant, cliquez pour passer en décroissant",
+      "descTooltip": "Actuel : décroissant, cliquez pour passer en croissant",
+      "toggleDirection": "Changer le sens du tri"
+    },
+    "actions": {
+      "create": "Nouvelle instance",
+      "refresh": "Actualiser",
+      "startAll": "Tout démarrer",
+      "restartAll": "Tout redémarrer",
+      "stopAll": "Tout arrêter",
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "openFolder": "Ouvrir le dossier",
+      "edit": "Modifier",
+      "openRootDir": "Ouvrir le dossier",
+      "selectPath": "Choisir le chemin",
+      "openWindow": "Ouvrir la fenêtre"
+    },
+    "bulkConfirm": {
+      "startAll": "Démarrer toutes les instances arrêtées ?",
+      "restartAll": "Redémarrer toutes les instances en cours ?",
+      "stopAll": "Fermer toutes les instances ?"
+    },
+    "status": {
+      "running": "En cours",
+      "stopped": "Arrêté",
+      "restarting": "Redémarrage",
+      "starting": "Départ"
+    },
+    "labels": {
+      "path": "Répertoire",
+      "args": "Arguments de lancement",
+      "argsEmpty": "Aucun",
+      "bindAccount": "Compte lié",
+      "unbound": "Non lié",
+      "pendingInit": "En attente d'initialisation (démarrez une fois d'abord)",
+      "quota": "Quota",
+      "lastLaunched": "Dernier lancement"
+    },
+    "columns": {
+      "instance": "Exemple",
+      "email": "Compte",
+      "quota": "État du quota",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "Aucune instance",
+      "desc": "Créez un répertoire de configuration isolé pour lancer plusieurs instances rapidement."
+    },
+    "modal": {
+      "createTitle": "Nouvelle instance",
+      "editTitle": "Modifier l’instance"
+    },
+    "form": {
+      "name": "Nom de l'instance",
+      "namePlaceholder": "ex : Compte professionnel",
+      "path": "Répertoire de l'instance",
+      "pathPlaceholder": "Choisir le répertoire",
+      "pathReadOnly": "Le chemin ne peut pas être modifié lors de l'édition",
+      "pathAutoHint": "Le chemin est mis à jour automatiquement lors du changement de nom (ou choisir manuellement)",
+      "copyLogin": "Copier l'état de connexion actuel",
+      "copyLoginDesc": "Copier la configuration et les données de connexion du répertoire par défaut",
+      "initMode": "Mode d'initialisation",
+      "initModeCopy": "Copier depuis l'instance source (par défaut)",
+      "initModeEmpty": "Instance vide (sans copie)",
+      "emptyInitHint": "Si vous choisissez sans copie, seul un dossier vide sera créé. Démarrez une fois avant de lier un compte.",
+      "copySource": "Copier une instance source",
+      "copySourceDesc": "Copier la configuration et les données de connexion de l'instance sélectionnée",
+      "copySourcePlaceholder": "Choisir l'instance source",
+      "copySourceRequired": "Veuillez choisir une instance source",
+      "copySourceRunningHint": "L'instance source est en cours d'exécution. Il est recommandé de la fermer d'abord pour éviter toute incohérence de données.",
+      "bindInject": "Lier le compte",
+      "bindAfterInit": "Liaison possible après initialisation",
+      "bindDisabledHint": "Pour une instance vide, démarrez-la une fois pour générer les données, puis liez le compte.",
+      "followCurrent": "Suivre le compte actuel",
+      "selectAccount": "Choisir le compte",
+      "bindAccount": "Lier le compte",
+      "unbound": "Non lié",
+      "extraArgs": "Arguments de lancement personnalisés",
+      "extraArgsPlaceholder": "ex : --disable-gpu --log-level=2",
+      "extraArgsDesc": "Séparer les arguments par des espaces, les guillemets sont pris en charge",
+      "nameRequired": "Veuillez saisir un nom d'instance",
+      "pathRequired": "Veuillez choisir un répertoire d'instance",
+      "bindRequired": "Veuillez choisir un compte à lier"
+    },
+    "quota": {
+      "unbound": "Compte non lié",
+      "accountMissing": "Compte introuvable",
+      "empty": "Aucun quota en cache"
+    },
+    "messages": {
+      "created": "Instance créée",
+      "emptyCreated": "Instance vide créée. Démarrez-la une fois avant de lier un compte.",
+      "updated": "Instance mise à jour",
+      "deleted": "Instance supprimée",
+      "started": "Instance démarrée",
+      "stopped": "Instance arrêtée",
+      "startedAll": "Toutes les instances arrêtées ont été démarrées",
+      "restartedAll": "Instances en cours redémarrées",
+      "closedAll": "Toutes les instances ont été arrêtées",
+      "allAlreadyRunning": "Toutes les instances sont déjà en cours d'exécution",
+      "noneRunning": "Aucune instance en cours d'exécution trouvée"
+    },
+    "runningDialog": {
+      "title": "L'instance est déjà en cours d'exécution",
+      "desc": "Cette instance est déjà lancée. Vous pouvez basculer vers la fenêtre ou la redémarrer selon la stratégie actuelle.",
+      "current": "Stratégie actuelle : {{name}}",
+      "pathLabel": "Répertoire de l'instance",
+      "go": "Basculer maintenant",
+      "restart": "Fermer et redémarrer"
+    },
+    "initGuide": {
+      "title": "Instance non initialisée",
+      "desc": "Cette instance est une « instance vide ». Seul le dossier a été créé, les données d'instance ne sont pas encore générées.",
+      "tip": "Veuillez démarrer l'instance une fois. Une fois l'initialisation terminée, vous pourrez lier un compte.",
+      "startNow": "Démarrer maintenant"
+    },
+    "restartStrategy": {
+      "button": "Stratégie de redémarrage",
+      "title": "Stratégie de redémarrage",
+      "desc": "Choisissez la méthode de redémarrage de l'instance. Chaque option affecte la portée et la stabilité.",
+      "recommended": "Recommandé",
+      "labels": {
+        "principle": "Principe technique",
+        "command": "Commande",
+        "pros": "Avantages",
+        "cons": "Inconvénients"
+      },
+      "safe": {
+        "title": "Redémarrage sécurisé (Recommandé)",
+        "principle": "Envoie un signal SIGTERM à tous les processus Antigravity, demandant à l'application de sauvegarder et de s'arrêter, puis lance l'instance cible (arrêt forcé si nécessaire).",
+        "commandMac": "macOS/Linux : kill -15 <pid> (tous les processus Antigravity)",
+        "commandWin": "Windows : taskkill /F /PID <pid> (tous les processus Antigravity)",
+        "pros": "Plus proche d'un arrêt normal, moins de risques d'avertissements de plantage, données plus sûres.",
+        "cons": "Ne prend en charge que le redémarrage global de toutes les instances."
+      },
+      "force": {
+        "title": "Redémarrage forcé",
+        "principle": "Identifie les processus par --user-data-dir et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
+        "commandMac": "macOS/Linux : pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows : taskkill /F /PID <pid> (correspondance --user-data-dir)",
+        "pros": "Peut redémarrer précisément une seule instance.",
+        "cons": "Peut provoquer un avertissement de \"fermeture inattendue\", risque de perte de données non sauvegardées."
+      }
+    },
+    "stop": {
+      "title": "Arrêt forcé de l'instance",
+      "message": "Envoie un signal d'arrêt (SIGTERM) au processus de l'instance. Des données non sauvegardées peuvent être perdues. Continuer ?"
+    },
+    "delete": {
+      "title": "Supprimer l'instance",
+      "message": "Supprimer l'instance {{name}} ? Cela supprimera la configuration et le dossier de l'instance."
+    }
   },
   "settings": {
     "title": "Paramètres de l'application",
@@ -186,11 +366,6 @@
       "every1hour": "Toutes les heures",
       "minutes": "min",
       "refreshIntervalLimited": "Le réveil lors de la réinitialisation du quota est activé, l'intervalle d'actualisation est donc de 2 minutes minimum.",
-      "storageTitle": "Répertoires et stockage",
-      "dataDir": "Répertoire de données",
-      "dataDirDesc": "Emplacement de stockage des comptes et fichiers de configuration.",
-      "fpDir": "Stockage Antigravity",
-      "fpDirDesc": "Emplacement des fichiers de données Antigravity.",
       "closeBehavior": "Comportement à la fermeture",
       "closeBehaviorDesc": "Action à la fermeture de la fenêtre",
       "closeBehaviorAsk": "Demander à chaque fois",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Contrôle l’affichage de l’icône du Dock indépendamment du comportement de minimisation de la fenêtre",
       "hideDockIconOff": "Non (Afficher l’icône du Dock)",
       "hideDockIconOn": "Oui (Masquer l’icône du Dock)",
-      "opencodeAppPathDesc": "Laisser vide pour utiliser le chemin par défaut",
+      "storageTitle": "Répertoires et stockage",
+      "dataDir": "Répertoire de données",
+      "dataDirDesc": "Emplacement de stockage des comptes et fichiers de configuration.",
+      "fpDir": "Stockage Antigravity",
+      "fpDirDesc": "Emplacement des fichiers de données Antigravity.",
       "opencodeTitle": "Intégration OpenCode",
       "opencodeRestart": "Redémarrer OpenCode lors du changement de Codex",
       "opencodeRestartDesc": "Synchroniser les informations du compte Codex dans OpenCode",
       "opencodeAppPath": "Chemin de lancement OpenCode",
+      "opencodeAppPathDesc": "Laisser vide pour utiliser le chemin par défaut",
       "opencodeAppPathPlaceholder": "Chemin par défaut",
       "opencodePathReset": "Réinitialiser par défaut",
       "opencodePathSelect": "Sélectionner",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Enregistrer les paramètres"
   },
+  "appPath": {
+    "missing": {
+      "title": "Chemin de l’application introuvable",
+      "desc": "Impossible de trouver le chemin de l’application {{app}}. Veuillez le définir maintenant pour continuer.",
+      "action": "Définir maintenant"
+    }
+  },
   "accounts": {
     "title": "Gestion des comptes",
     "subtitle": "Gérez votre liste de comptes Antigravity.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Par défaut",
       "overall": "Par quota global",
+      "createdAt": "Par date de création",
       "byGroup": "Par quota de {{group}}",
       "byGroupReset": "Par heure de réinitialisation de {{group}}",
-      "createdAt": "Par date de création",
       "descTooltip": "Descendant, cliquer pour Ascendant",
       "ascTooltip": "Ascendant, cliquer pour Descendant",
       "toggleDirection": "Changer la direction"
     },
+    "filterTags": "Filtrer les tags",
+    "filterTagsCount": "Balises",
+    "noAvailableTags": "Aucun tag disponible",
+    "clearFilter": "Effacer le filtre",
+    "editTags": "Modifier les tags",
+    "tagModal": {
+      "title": "Modifier les tags",
+      "hint": "Jusqu'à {{max}} tags. Chaque tag peut contenir au maximum {{maxLength}} caractères.",
+      "empty": "Aucun tag disponible",
+      "suggestionsTitle": "Filtrer les tags",
+      "suggestionsEmpty": "Aucun tag disponible",
+      "inputPlaceholder": "Saisir un tag ({{remaining}} restants)",
+      "inputDisabledPlaceholder": "Limite de tags atteinte",
+      "add": "Ajouter",
+      "save": "Enregistrer les tags",
+      "error": {
+        "empty": "Le tag ne peut pas être vide",
+        "tooLong": "Le tag ne peut pas dépasser {{max}} caractères",
+        "duplicate": "Le tag existe déjà",
+        "tooMany": "Vous pouvez ajouter jusqu'à {{max}} tags"
+      }
+    },
+    "groupByTag": "Grouper par tag",
+    "untagged": "Sans tag",
+    "deleteTagAria": "Supprimer le tag {{tag}}",
+    "confirmDeleteTag": "Supprimer l'étiquette \"{{tag}}\" ? Cette étiquette sera supprimée de {{count}} comptes.",
+    "defaultGroup": "Groupe par défaut",
     "actions": {
       "viewDetails": "Voir les détails",
       "viewError": "Voir l'erreur",
@@ -388,33 +602,6 @@
       "importSuccess": "Importé {{count}} comptes",
       "importPartial": "Importé {{success}} comptes, échec {{fail}}",
       "importFailed": "Échec de l'import, vérifiez refresh_token"
-    },
-    "confirmDeleteTag": "Supprimer l'étiquette \"{{tag}}\" ? Cette étiquette sera supprimée de {{count}} comptes.",
-    "defaultGroup": "Groupe par défaut",
-    "filterTags": "Filtrer les tags",
-    "filterTagsCount": "Balises",
-    "noAvailableTags": "Aucun tag disponible",
-    "clearFilter": "Effacer le filtre",
-    "editTags": "Modifier les tags",
-    "groupByTag": "Grouper par tag",
-    "untagged": "Sans tag",
-    "deleteTagAria": "Supprimer le tag {{tag}}",
-    "tagModal": {
-      "title": "Modifier les tags",
-      "hint": "Jusqu'à {{max}} tags. Chaque tag peut contenir au maximum {{maxLength}} caractères.",
-      "empty": "Aucun tag disponible",
-      "suggestionsTitle": "Filtrer les tags",
-      "suggestionsEmpty": "Aucun tag disponible",
-      "inputPlaceholder": "Saisir un tag ({{remaining}} restants)",
-      "inputDisabledPlaceholder": "Limite de tags atteinte",
-      "add": "Ajouter",
-      "save": "Enregistrer les tags",
-      "error": {
-        "empty": "Le tag ne peut pas être vide",
-        "tooLong": "Le tag ne peut pas dépasser {{max}} caractères",
-        "duplicate": "Le tag existe déjà",
-        "tooMany": "Vous pouvez ajouter jusqu'à {{max}} tags"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Tâches de réveil",
     "subtitle": "Gérez plusieurs tâches de réveil automatique avec des contrôles indépendants.",
+    "verification": {
+      "title": "Vérification requise",
+      "columns": {
+        "verifiedAt": "Heure de vérification"
+      },
+      "filters": {
+        "all": "Tous"
+      },
+      "actions": {
+        "selectAllAccounts": "Tout sélectionner",
+        "clearSelectedAccounts": "Effacer la sélection",
+        "runCheckNow": "Terminer la vérification"
+      },
+      "runHint": {
+        "title": "Notes de vérification",
+        "line1": "« Détecter maintenant » envoie une requête de chat minimale en simulant le client Antigravity via une passerelle locale et le protocole officiel Language Server.",
+        "line2": "Cette opération consomme une petite quantité de jetons (généralement un court dialogue). La consommation réelle dépend du modèle et de la politique du compte.",
+        "line3": "Cette action ne modifie pas la configuration des tâches de réveil. Elle détecte seulement la disponibilité du compte et enregistre l’historique de détection.",
+        "line4": "Si un 403 est renvoyé, vous devez d’abord terminer la vérification du compte. Le résultat inclura l’URL de vérification et des actions rapides."
+      },
+      "deleteConfirm": "Confirmer la suppression ?"
+    },
     "globalToggle": "Interrupteur global de réveil",
     "newTask": "Nouvelle tâche",
     "runTest": "Tester maintenant",
@@ -763,28 +972,6 @@
       "accountsHint": "Sélectionnez plusieurs comptes pour tester.",
       "start": "Lancer le test",
       "testing": "Test en cours..."
-    },
-    "verification": {
-      "title": "Vérification requise",
-      "columns": {
-        "verifiedAt": "Heure de vérification"
-      },
-      "filters": {
-        "all": "Tous"
-      },
-      "actions": {
-        "selectAllAccounts": "Tout sélectionner",
-        "clearSelectedAccounts": "Effacer la sélection",
-        "runCheckNow": "Terminer la vérification"
-      },
-      "deleteConfirm": "Confirmer la suppression ?",
-      "runHint": {
-        "title": "Notes de vérification",
-        "line1": "« Détecter maintenant » envoie une requête de chat minimale en simulant le client Antigravity via une passerelle locale et le protocole officiel Language Server.",
-        "line2": "Cette opération consomme une petite quantité de jetons (généralement un court dialogue). La consommation réelle dépend du modèle et de la politique du compte.",
-        "line3": "Cette action ne modifie pas la configuration des tâches de réveil. Elle détecte seulement la disponibilité du compte et enregistre l’historique de détection.",
-        "line4": "Si un 403 est renvoyé, vous devez d’abord terminer la vérification du compte. Le résultat inclura l’URL de vérification et des actions rapides."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Gestion des comptes Codex",
     "subtitle": "Gérez vos comptes OpenAI Codex",
+    "instances": {
+      "subtitle": "Configuration indépendante par instance, fonctionnement parallèle avec plusieurs comptes.",
+      "comingSoon": "Multi-Instance Bientôt Disponible",
+      "comingSoonDesc": "Exécutez plusieurs instances Codex.app avec différents comptes simultanément.",
+      "unsupported": {
+        "desc": "Le multi-instance Codex n'est actuellement disponible que sur macOS."
+      },
+      "quota": {
+        "hourly": "5h",
+        "weekly": "Hebdomadaire"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Envoie un signal SIGTERM à tous les processus Codex, demandant à l'application de sauvegarder et de s'arrêter, puis lance l'instance cible (arrêt forcé si nécessaire).",
+          "commandMac": "macOS : kill -15 <pid> (tous les processus Codex)",
+          "commandWin": "Windows : taskkill /F /PID <pid> (tous les processus Codex)"
+        },
+        "force": {
+          "principle": "Identifie les processus par CODEX_HOME et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
+          "commandMac": "macOS : pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows : taskkill /F /PID <pid> (correspondance CODEX_HOME)"
+        }
+      }
+    },
+    "refreshSuccess": "Quota actualisé",
+    "refreshFailed": "Échec de l’actualisation du quota : {{error}}",
+    "refreshAllSuccess": "Actualisation terminée, {{count}} compte(s) réussi(s)",
+    "refreshAllPartialFailed": "Actualisation terminée, {{success}} / {{total}} compte(s) réussi(s), certains ont échoué",
     "switch": "Basculer",
     "switched": "Basculé vers {{email}}",
     "switchFailed": "Échec du basculement : {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Récupérer le compte local"
     },
     "import": {
+      "localDesc": "Importer des comptes Codex depuis des sessions locales connectées.",
       "importing": "Importation du compte local...",
-      "successMsg": "Importation réussie : {{email}}",
-      "localDesc": "Importer des comptes Codex depuis des sessions locales connectées."
+      "successMsg": "Importation réussie : {{email}}"
     },
     "quota": {
       "hourly": "Quota de 5 heures",
       "weekly": "Quota hebdomadaire",
       "reset": "Réinitialiser"
+    },
+    "quotaError": {
+      "badge": "Erreur de quota",
+      "generic": "Échec de l’actualisation du quota, veuillez réessayer plus tard",
+      "deactivatedWorkspace": "L’espace de travail est désactivé, changez de compte ou réautorisez"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Heure de réinitialisation hebdomadaire",
       "hourlyReset": "Heure de réinitialisation sur 5 heures"
     },
+    "opencodeSwitch": "Interrupteur OpenCode",
+    "opencodeSwitchDesc": "Synchroniser le changement de compte Codex dans OpenCode",
+    "opencodeSwitchFailed": "Échec de la mise à jour de l'interrupteur OpenCode : {{error}}",
     "columns": {
       "hourly": "Quota 5h",
       "weekly": "Quota hebdo"
     },
-    "opencodeSwitch": "Interrupteur OpenCode",
-    "opencodeSwitchDesc": "Synchroniser le changement de compte Codex dans OpenCode",
-    "opencodeSwitchFailed": "Échec de la mise à jour de l'interrupteur OpenCode : {{error}}",
     "filterTags": "Filtrer les tags",
     "filterTagsCount": "Balises",
     "noAvailableTags": "Aucun tag disponible",
     "clearFilter": "Effacer le filtre",
-    "editTags": "Modifier les tags",
+    "editTags": "Modifier les tags"
+  },
+  "githubCopilot": {
+    "title": "Gestion des comptes GitHub Copilot",
     "instances": {
-      "subtitle": "Configuration indépendante par instance, fonctionnement parallèle avec plusieurs comptes.",
-      "comingSoon": "Multi-Instance Bientôt Disponible",
-      "comingSoonDesc": "Exécutez plusieurs instances Codex.app avec différents comptes simultanément.",
       "unsupported": {
-        "desc": "Le multi-instance Codex n'est actuellement disponible que sur macOS."
-      },
-      "quota": {
-        "hourly": "5h",
-        "weekly": "Hebdomadaire"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Envoie un signal SIGTERM à tous les processus Codex, demandant à l'application de sauvegarder et de s'arrêter, puis lance l'instance cible (arrêt forcé si nécessaire).",
-          "commandMac": "macOS : kill -15 <pid> (tous les processus Codex)",
-          "commandWin": "Windows : taskkill /F /PID <pid> (tous les processus Codex)"
-        },
-        "force": {
-          "principle": "Identifie les processus par CODEX_HOME et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
-          "commandMac": "macOS : pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows : taskkill /F /PID <pid> (correspondance CODEX_HOME)"
-        }
+        "desc": "Le multi-instance GitHub Copilot n'est actuellement disponible que sur macOS."
       }
     },
-    "refreshSuccess": "Quota actualisé",
-    "refreshFailed": "Échec de l’actualisation du quota : {{error}}",
-    "refreshAllSuccess": "Actualisation terminée, {{count}} compte(s) réussi(s)",
-    "refreshAllPartialFailed": "Actualisation terminée, {{success}} / {{total}} compte(s) réussi(s), certains ont échoué",
-    "quotaError": {
-      "badge": "Erreur de quota",
-      "generic": "Échec de l’actualisation du quota, veuillez réessayer plus tard",
-      "deactivatedWorkspace": "L’espace de travail est désactivé, changez de compte ou réautorisez"
+    "empty": {
+      "description": "Cliquez sur « Ajouter un compte » pour commencer"
+    },
+    "addModal": {
+      "title": "Ajouter un compte GitHub Copilot"
+    },
+    "oauth": {
+      "desc": "Cliquez ci-dessous et terminez l'autorisation GitHub Copilot dans le navigateur."
+    },
+    "token": {
+      "desc": "Collez votre jeton d'accès GitHub Copilot ou des données JSON exportées."
+    },
+    "import": {
+      "localDesc": "Importer des comptes GitHub Copilot depuis des sessions locales connectées."
+    },
+    "sort": {
+      "weekly": "Quota hebdomadaire",
+      "hourly": "Quota de 5 heures",
+      "premium": "Par usage des requêtes premium",
+      "weeklyReset": "Heure de réinitialisation hebdomadaire",
+      "hourlyReset": "Heure de réinitialisation sur 5 heures"
+    },
+    "columns": {
+      "hourly": "Quota 5h",
+      "weekly": "Quota hebdo",
+      "premium": "Requêtes premium"
+    },
+    "usage": {
+      "included": "Inclus"
+    },
+    "injectToVSCode": "Basculer vers VS Code",
+    "injectSuccess": "Le jeton a été injecté dans VS Code avec succès. VS Code est en cours de lancement.",
+    "injectRequireClose": "Veuillez fermer VS Code avant l’injection.",
+    "flowNotice": {
+      "title": "Guide des comptes GitHub Copilot (cliquer pour déplier/replier)",
+      "desc": "Le changement de compte nécessite la lecture du stockage d’authentification local de VS Code et l’utilisation du service d’identifiants du système pour déchiffrer et réécrire ; les données restent traitées uniquement en local.",
+      "inject": "Changement en un clic : cet outil lit le matériel de chiffrement local de VS Code (DPAPI/Keychain/Secret Service), déchiffre la session d’authentification dans state.vscdb, remplace le jeton GitHub Copilot puis rechiffre le tout — entièrement en local sur votre machine.",
+      "reason": "Portée des autorisations : lire la base d’authentification VS Code (state.vscdb) et appeler le chiffrement système (Windows DPAPI / macOS Keychain / Linux Secret Service) pour déchiffrer et réécrire.",
+      "storage": "Portée de lecture : seules les données liées aux sessions de connexion GitHub sont traitées ; tous les processus sont exécutés localement."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Emplacement du fichier",
       "helpText": "Veuillez ouvrir le dossier pour réparer manuellement ou supprimer le fichier, puis redémarrez l'application.",
       "openFolder": "Ouvrir le dossier"
-    }
-  },
-  "instances": {
-    "title": "Instances Multiples",
-    "subtitle": "Profils isolés pour l'exécution parallèle de plusieurs comptes.",
-    "defaultName": "Instance par défaut",
-    "search": "Rechercher des instances",
-    "actions": {
-      "create": "Nouvelle instance",
-      "refresh": "Actualiser",
-      "startAll": "Tout démarrer",
-      "restartAll": "Tout redémarrer",
-      "stopAll": "Tout arrêter",
-      "start": "Démarrer",
-      "stop": "Arrêter",
-      "openFolder": "Ouvrir le dossier",
-      "edit": "Modifier",
-      "openRootDir": "Ouvrir le dossier",
-      "selectPath": "Choisir le chemin",
-      "openWindow": "Ouvrir la fenêtre"
-    },
-    "bulkConfirm": {
-      "startAll": "Démarrer toutes les instances arrêtées ?",
-      "restartAll": "Redémarrer toutes les instances en cours ?",
-      "stopAll": "Fermer toutes les instances ?"
-    },
-    "status": {
-      "running": "En cours",
-      "stopped": "Arrêté",
-      "restarting": "Redémarrage",
-      "starting": "Départ"
-    },
-    "labels": {
-      "path": "Répertoire",
-      "args": "Arguments de lancement",
-      "argsEmpty": "Aucun",
-      "bindAccount": "Compte lié",
-      "unbound": "Non lié",
-      "quota": "Quota",
-      "lastLaunched": "Dernier lancement",
-      "pendingInit": "En attente d'initialisation (démarrez une fois d'abord)"
-    },
-    "columns": {
-      "instance": "Exemple",
-      "email": "Compte",
-      "quota": "État du quota",
-      "actions": "Actions"
-    },
-    "empty": {
-      "title": "Aucune instance",
-      "desc": "Créez un répertoire de configuration isolé pour lancer plusieurs instances rapidement."
-    },
-    "form": {
-      "name": "Nom de l'instance",
-      "namePlaceholder": "ex : Compte professionnel",
-      "path": "Répertoire de l'instance",
-      "pathPlaceholder": "Choisir le répertoire",
-      "pathReadOnly": "Le chemin ne peut pas être modifié lors de l'édition",
-      "pathAutoHint": "Le chemin est mis à jour automatiquement lors du changement de nom (ou choisir manuellement)",
-      "copyLogin": "Copier l'état de connexion actuel",
-      "copyLoginDesc": "Copier la configuration et les données de connexion du répertoire par défaut",
-      "copySource": "Copier une instance source",
-      "copySourceDesc": "Copier la configuration et les données de connexion de l'instance sélectionnée",
-      "copySourcePlaceholder": "Choisir l'instance source",
-      "copySourceRequired": "Veuillez choisir une instance source",
-      "copySourceRunningHint": "L'instance source est en cours d'exécution. Il est recommandé de la fermer d'abord pour éviter toute incohérence de données.",
-      "bindInject": "Lier le compte",
-      "followCurrent": "Suivre le compte actuel",
-      "selectAccount": "Choisir le compte",
-      "bindAccount": "Lier le compte",
-      "unbound": "Non lié",
-      "extraArgs": "Arguments de lancement personnalisés",
-      "extraArgsPlaceholder": "ex : --disable-gpu --log-level=2",
-      "extraArgsDesc": "Séparer les arguments par des espaces, les guillemets sont pris en charge",
-      "nameRequired": "Veuillez saisir un nom d'instance",
-      "pathRequired": "Veuillez choisir un répertoire d'instance",
-      "bindRequired": "Veuillez choisir un compte à lier",
-      "initMode": "Mode d'initialisation",
-      "initModeCopy": "Copier depuis l'instance source (par défaut)",
-      "initModeEmpty": "Instance vide (sans copie)",
-      "emptyInitHint": "Si vous choisissez sans copie, seul un dossier vide sera créé. Démarrez une fois avant de lier un compte.",
-      "bindAfterInit": "Liaison possible après initialisation",
-      "bindDisabledHint": "Pour une instance vide, démarrez-la une fois pour générer les données, puis liez le compte."
-    },
-    "quota": {
-      "unbound": "Compte non lié",
-      "accountMissing": "Compte introuvable",
-      "empty": "Aucun quota en cache"
-    },
-    "messages": {
-      "created": "Instance créée",
-      "updated": "Instance mise à jour",
-      "deleted": "Instance supprimée",
-      "started": "Instance démarrée",
-      "stopped": "Instance arrêtée",
-      "startedAll": "Toutes les instances arrêtées ont été démarrées",
-      "restartedAll": "Instances en cours redémarrées",
-      "closedAll": "Toutes les instances ont été arrêtées",
-      "allAlreadyRunning": "Toutes les instances sont déjà en cours d'exécution",
-      "noneRunning": "Aucune instance en cours d'exécution trouvée",
-      "emptyCreated": "Instance vide créée. Démarrez-la une fois avant de lier un compte."
-    },
-    "runningDialog": {
-      "title": "L'instance est déjà en cours d'exécution",
-      "desc": "Cette instance est déjà lancée. Vous pouvez basculer vers la fenêtre ou la redémarrer selon la stratégie actuelle.",
-      "current": "Stratégie actuelle : {{name}}",
-      "pathLabel": "Répertoire de l'instance",
-      "go": "Basculer maintenant",
-      "restart": "Fermer et redémarrer"
-    },
-    "restartStrategy": {
-      "button": "Stratégie de redémarrage",
-      "title": "Stratégie de redémarrage",
-      "desc": "Choisissez la méthode de redémarrage de l'instance. Chaque option affecte la portée et la stabilité.",
-      "recommended": "Recommandé",
-      "labels": {
-        "principle": "Principe technique",
-        "command": "Commande",
-        "pros": "Avantages",
-        "cons": "Inconvénients"
-      },
-      "safe": {
-        "title": "Redémarrage sécurisé (Recommandé)",
-        "principle": "Envoie un signal SIGTERM à tous les processus Antigravity, demandant à l'application de sauvegarder et de s'arrêter, puis lance l'instance cible (arrêt forcé si nécessaire).",
-        "commandMac": "macOS/Linux : kill -15 <pid> (tous les processus Antigravity)",
-        "commandWin": "Windows : taskkill /F /PID <pid> (tous les processus Antigravity)",
-        "pros": "Plus proche d'un arrêt normal, moins de risques d'avertissements de plantage, données plus sûres.",
-        "cons": "Ne prend en charge que le redémarrage global de toutes les instances."
-      },
-      "force": {
-        "title": "Redémarrage forcé",
-        "principle": "Identifie les processus par --user-data-dir et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
-        "commandMac": "macOS/Linux : pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows : taskkill /F /PID <pid> (correspondance --user-data-dir)",
-        "pros": "Peut redémarrer précisément une seule instance.",
-        "cons": "Peut provoquer un avertissement de \"fermeture inattendue\", risque de perte de données non sauvegardées."
-      }
-    },
-    "stop": {
-      "title": "Arrêt forcé de l'instance",
-      "message": "Envoie un signal d'arrêt (SIGTERM) au processus de l'instance. Des données non sauvegardées peuvent être perdues. Continuer ?"
-    },
-    "delete": {
-      "title": "Supprimer l'instance",
-      "message": "Supprimer l'instance {{name}} ? Cela supprimera la configuration et le dossier de l'instance."
-    },
-    "modal": {
-      "createTitle": "Nouvelle instance",
-      "editTitle": "Modifier l’instance"
-    },
-    "sort": {
-      "label": "Tri",
-      "createdAt": "Par date de création",
-      "lastLaunchedAt": "Par date de lancement",
-      "ascTooltip": "Actuel : croissant, cliquez pour passer en décroissant",
-      "descTooltip": "Actuel : décroissant, cliquez pour passer en croissant",
-      "toggleDirection": "Changer le sens du tri"
-    },
-    "initGuide": {
-      "title": "Instance non initialisée",
-      "desc": "Cette instance est une « instance vide ». Seul le dossier a été créé, les données d'instance ne sont pas encore générées.",
-      "tip": "Veuillez démarrer l'instance une fois. Une fois l'initialisation terminée, vous pourrez lier un compte.",
-      "startNow": "Démarrer maintenant"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Chemin de l’application introuvable",
-      "desc": "Impossible de trouver le chemin de l’application {{app}}. Veuillez le définir maintenant pour continuer.",
-      "action": "Définir maintenant"
-    }
-  },
-  "githubCopilot": {
-    "title": "Gestion des comptes GitHub Copilot",
-    "instances": {
-      "unsupported": {
-        "desc": "Le multi-instance GitHub Copilot n'est actuellement disponible que sur macOS."
-      }
-    },
-    "empty": {
-      "description": "Cliquez sur « Ajouter un compte » pour commencer"
-    },
-    "addModal": {
-      "title": "Ajouter un compte GitHub Copilot"
-    },
-    "oauth": {
-      "desc": "Cliquez ci-dessous et terminez l'autorisation GitHub Copilot dans le navigateur."
-    },
-    "token": {
-      "desc": "Collez votre jeton d'accès GitHub Copilot ou des données JSON exportées."
-    },
-    "import": {
-      "localDesc": "Importer des comptes GitHub Copilot depuis des sessions locales connectées."
-    },
-    "sort": {
-      "weekly": "Quota hebdomadaire",
-      "hourly": "Quota de 5 heures",
-      "weeklyReset": "Heure de réinitialisation hebdomadaire",
-      "hourlyReset": "Heure de réinitialisation sur 5 heures",
-      "premium": "Par usage des requêtes premium"
-    },
-    "columns": {
-      "hourly": "Quota 5h",
-      "weekly": "Quota hebdo",
-      "premium": "Requêtes premium"
-    },
-    "flowNotice": {
-      "title": "Guide des comptes GitHub Copilot (cliquer pour déplier/replier)",
-      "desc": "Le changement de compte nécessite la lecture du stockage d’authentification local de VS Code et l’utilisation du service d’identifiants du système pour déchiffrer et réécrire ; les données restent traitées uniquement en local.",
-      "reason": "Portée des autorisations : lire la base d’authentification VS Code (state.vscdb) et appeler le chiffrement système (Windows DPAPI / macOS Keychain / Linux Secret Service) pour déchiffrer et réécrire.",
-      "storage": "Portée de lecture : seules les données liées aux sessions de connexion GitHub sont traitées ; tous les processus sont exécutés localement.",
-      "inject": "Changement en un clic : cet outil lit le matériel de chiffrement local de VS Code (DPAPI/Keychain/Secret Service), déchiffre la session d’authentification dans state.vscdb, remplace le jeton GitHub Copilot puis rechiffre le tout — entièrement en local sur votre machine."
-    },
-    "injectToVSCode": "Basculer vers VS Code",
-    "injectSuccess": "Le jeton a été injecté dans VS Code avec succès. VS Code est en cours de lancement.",
-    "injectRequireClose": "Veuillez fermer VS Code avant l’injection.",
-    "usage": {
-      "included": "Inclus"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Échec du changement rapide : {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "Masquer les e-mails",
-    "showSensitive": "Afficher les e-mails"
-  },
   "windsurf": {
     "title": "Gestion des comptes Windsurf",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Connexion réussie : {{login}}",
       "failed": "Échec de la connexion : {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Disposition des plateformes",
-    "sidebarSelected": "Sélectionnées dans la barre latérale {{count}}/{{max}}",
-    "reset": "Réinitialiser par défaut",
-    "tip": "Faites glisser pour réorganiser. Jusqu'à deux plateformes peuvent être affichées dans la barre latérale. Si une seule est sélectionnée, une seule est affichée.",
-    "sidebarToggle": "Afficher dans la barre latérale",
-    "dashboardToggle": "Afficher dans le tableau de bord",
-    "trayToggle": "Afficher dans la zone de notification",
-    "hiddenBadge": "Masqué",
-    "openFromMore": "Gérer la disposition des plateformes",
-    "dragHandleLabel": "Glisser pour réorganiser"
-  },
-  "breakout": {
-    "gameOver": "Partie terminée",
-    "gameOverRank": "Classement local actuel #{{rank}}",
-    "startGame": "Démarrer",
-    "startHint": "Cliquez sur démarrer ou appuyez sur Espace",
-    "rankTitle": "Classement historique local",
-    "rankCurrent": "Actuel",
-    "rankNoData": "--",
-    "restart": "Recommencer",
-    "pause": "Pause",
-    "resume": "Reprendre",
-    "paused": "En pause",
-    "level": "Niveau {{level}}",
-    "levelScore": "Score du niveau {{score}}",
-    "levelCleared": "Niveau terminé",
-    "nextLevel": "Niveau suivant",
-    "history": "Historique",
-    "historyShort": "Historique",
-    "historyEmpty": "Aucun enregistrement",
-    "historyClear": "Effacer",
-    "historyScoreShort": "Score {{score}}",
-    "historyLevelShort": "Niv {{level}}",
-    "historyDurationShort": "Durée {{duration}}",
-    "historyReasonGameOver": "Partie terminée",
-    "historyReasonManualExit": "Sortie manuelle",
-    "serveHint": "Appuyez sur Espace pour lancer la balle",
-    "ranking": "Historique local",
-    "rankingShort": "Locale",
-    "rankingEmpty": "Aucun enregistrement local",
-    "rankingClear": "Effacer l'historique local",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "Passer à Kiro"
   },
+  "breakout": {
+    "gameOver": "Partie terminée",
+    "gameOverRank": "Classement local actuel #{{rank}}",
+    "startGame": "Démarrer",
+    "startHint": "Cliquez sur démarrer ou appuyez sur Espace",
+    "rankTitle": "Classement historique local",
+    "rankCurrent": "Actuel",
+    "rankNoData": "--",
+    "restart": "Recommencer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "paused": "En pause",
+    "level": "Niveau {{level}}",
+    "levelScore": "Score du niveau {{score}}",
+    "levelCleared": "Niveau terminé",
+    "nextLevel": "Niveau suivant",
+    "history": "Historique",
+    "historyShort": "Historique",
+    "historyEmpty": "Aucun enregistrement",
+    "historyClear": "Effacer",
+    "historyScoreShort": "Score {{score}}",
+    "historyLevelShort": "Niv {{level}}",
+    "historyDurationShort": "Durée {{duration}}",
+    "historyReasonGameOver": "Partie terminée",
+    "historyReasonManualExit": "Sortie manuelle",
+    "serveHint": "Appuyez sur Espace pour lancer la balle",
+    "ranking": "Historique local",
+    "rankingShort": "Locale",
+    "rankingEmpty": "Aucun enregistrement local",
+    "rankingClear": "Effacer l'historique local",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Notifications",
     "empty": "Aucune notification",
     "markAllRead": "Tout marquer comme lu",
     "gotIt": "Compris",
     "later": "Plus tard",
-    "clickToClose": "Cliquer pour fermer",
     "new": "Nouveauté",
     "timeAgo": {
       "justNow": "À l'instant",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 Urgent"
     },
     "refreshed": "Notifications actualisées ({count} au total)",
+    "clickToClose": "Cliquer pour fermer",
     "clickToEnlarge": "Cliquer pour agrandir",
     "imageLoadFailed": "Échec du chargement de l'image"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Tout réduire",
+      "expandAll": "Tout développer",
+      "goAntigravity": "Aller à Antigravity",
+      "goCodex": "Aller à Codex",
+      "goDashboard": "Aller au tableau de bord",
+      "goFingerprints": "Aller aux empreintes",
+      "goGitHubCopilot": "Aller à GitHub Copilot",
+      "goInstances": "Aller aux multi-instances",
+      "goKiro": "Aller à Kiro",
+      "goSettings": "Aller aux paramètres",
+      "goVerification": "Aller à la vérification wakeup",
+      "goWakeup": "Aller aux tâches wakeup",
+      "goWindsurf": "Aller à Windsurf",
+      "openLayout": "Ouvrir la disposition des plateformes"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Gestion des comptes Antigravity."
+      },
+      "keywords": {
+        "0": "Gestion des comptes Antigravity",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Gestion des comptes Antigravity vous apporte.",
+        "1": "Utiliser le flux recommandé dans Gestion des comptes Antigravity pour limiter les erreurs."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Gestion des comptes Antigravity.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Gestion des comptes Antigravity.",
+        "2": "Exécutez une action manuelle dans Gestion des comptes Antigravity pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Gestion des comptes Antigravity dans le flux quotidien.",
+      "title": "Gestion des comptes Antigravity"
+    },
+    "blocks": {
+      "cautions": "Pièges fréquents / points d’attention",
+      "outcomes": "Ce que cette fonction permet",
+      "steps": "Étapes recommandées"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Tableau de bord."
+      },
+      "keywords": {
+        "0": "Tableau de bord",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Tableau de bord vous apporte.",
+        "1": "Utiliser le flux recommandé dans Tableau de bord pour limiter les erreurs."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Tableau de bord.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Tableau de bord.",
+        "2": "Exécutez une action manuelle dans Tableau de bord pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Tableau de bord dans le flux quotidien.",
+      "title": "Tableau de bord"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Import/Export, confidentialité et dépannage.",
+        "1": "Vérifiez filtres et cible avant exécution dans Import/Export, confidentialité et dépannage.",
+        "2": "Retirez les données sensibles avant partage des logs (token, cookie, e-mail)."
+      },
+      "keywords": {
+        "0": "Import/Export, confidentialité et dépannage",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte",
+        "4": "paramètres",
+        "5": "dépannage",
+        "6": "journaux",
+        "7": "données"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Import/Export, confidentialité et dépannage vous apporte.",
+        "1": "Utiliser le flux recommandé dans Import/Export, confidentialité et dépannage pour limiter les erreurs.",
+        "2": "Valider une exécution réussie dans Import/Export, confidentialité et dépannage avant de passer au lot.",
+        "3": "En cas de problème dans Import/Export, confidentialité et dépannage, vérifier d’abord les logs et les preuves."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Import/Export, confidentialité et dépannage.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Import/Export, confidentialité et dépannage.",
+        "2": "Exécutez une action manuelle dans Import/Export, confidentialité et dépannage pour vérifier le résultat.",
+        "3": "Pour le dépannage: Paramètres -> Dossier de données -> Ouvrir, puis logs.",
+        "4": "Consultez d’abord le dernier app.log ou app.log.*.",
+        "5": "Lors du signalement, joignez heure, plateforme, étapes et logs anonymisés."
+      },
+      "summary": "Cette section explique comment utiliser Import/Export, confidentialité et dépannage dans le flux quotidien.",
+      "title": "Import/Export, confidentialité et dépannage"
+    },
+    "empty": {
+      "desc": "Essayez des mots-clés: instance, bascule, paramètres, export.",
+      "title": "Aucun contenu correspondant"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Empreintes d’appareil."
+      },
+      "keywords": {
+        "0": "Empreintes d’appareil",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Empreintes d’appareil vous apporte.",
+        "1": "Utiliser le flux recommandé dans Empreintes d’appareil pour limiter les erreurs."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Empreintes d’appareil.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Empreintes d’appareil.",
+        "2": "Exécutez une action manuelle dans Empreintes d’appareil pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Empreintes d’appareil dans le flux quotidien.",
+      "title": "Empreintes d’appareil"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Multi-instances (important).",
+        "1": "Vérifiez filtres et cible avant exécution dans Multi-instances (important)."
+      },
+      "keywords": {
+        "0": "Multi-instances (important)",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte",
+        "4": "paramètres"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Multi-instances (important) vous apporte.",
+        "1": "Utiliser le flux recommandé dans Multi-instances (important) pour limiter les erreurs.",
+        "2": "Valider une exécution réussie dans Multi-instances (important) avant de passer au lot."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Multi-instances (important).",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Multi-instances (important).",
+        "2": "Exécutez une action manuelle dans Multi-instances (important) pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Multi-instances (important) dans le flux quotidien.",
+      "title": "Multi-instances (important)"
+    },
+    "navTitle": "Manuel d’utilisation",
+    "providers": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Vérifiez filtres et cible avant exécution dans Codex / GitHub Copilot / Windsurf / Kiro."
+      },
+      "keywords": {
+        "0": "Plateformes Codex / GitHub Copilot / Windsurf / Kiro",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte",
+        "4": "paramètres",
+        "5": "dépannage"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Codex / GitHub Copilot / Windsurf / Kiro vous apporte.",
+        "1": "Utiliser le flux recommandé dans Codex / GitHub Copilot / Windsurf / Kiro pour limiter les erreurs.",
+        "2": "Valider une exécution réussie dans Codex / GitHub Copilot / Windsurf / Kiro avant de passer au lot."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Codex / GitHub Copilot / Windsurf / Kiro.",
+        "2": "Exécutez une action manuelle dans Codex / GitHub Copilot / Windsurf / Kiro pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Codex / GitHub Copilot / Windsurf / Kiro dans le flux quotidien.",
+      "title": "Plateformes Codex / GitHub Copilot / Windsurf / Kiro"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Démarrage rapide (5 min).",
+        "1": "Vérifiez filtres et cible avant exécution dans Démarrage rapide (5 min)."
+      },
+      "keywords": {
+        "0": "Démarrage rapide (5 min)",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Démarrage rapide (5 min) vous apporte.",
+        "1": "Utiliser le flux recommandé dans Démarrage rapide (5 min) pour limiter les erreurs.",
+        "2": "Valider une exécution réussie dans Démarrage rapide (5 min) avant de passer au lot."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Démarrage rapide (5 min).",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Démarrage rapide (5 min).",
+        "2": "Exécutez une action manuelle dans Démarrage rapide (5 min) pour vérifier le résultat.",
+        "3": "Pour le dépannage: Paramètres -> Dossier de données -> Ouvrir, puis logs."
+      },
+      "summary": "Cette section explique comment utiliser Démarrage rapide (5 min) dans le flux quotidien.",
+      "title": "Démarrage rapide (5 min)"
+    },
+    "resultCount": "{{count}} sections au total",
+    "searchAria": "Rechercher dans le manuel",
+    "searchPlaceholder": "Rechercher une fonction, un scénario ou un mot-clé (ex: instance, injection, wakeup, empreinte)",
+    "settings": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Paramètres et capacités système.",
+        "1": "Vérifiez filtres et cible avant exécution dans Paramètres et capacités système."
+      },
+      "keywords": {
+        "0": "Paramètres et capacités système",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte",
+        "4": "paramètres",
+        "5": "dépannage"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Paramètres et capacités système vous apporte.",
+        "1": "Utiliser le flux recommandé dans Paramètres et capacités système pour limiter les erreurs.",
+        "2": "Valider une exécution réussie dans Paramètres et capacités système avant de passer au lot."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Paramètres et capacités système.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Paramètres et capacités système.",
+        "2": "Exécutez une action manuelle dans Paramètres et capacités système pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Paramètres et capacités système dans le flux quotidien.",
+      "title": "Paramètres et capacités système"
+    },
+    "subtitle": "Guide organisé par scénarios. Comprendre l’objectif puis suivre le flux recommandé.",
+    "title": "Manuel d’utilisation",
+    "wakeup": {
+      "cautions": {
+        "0": "Sauvegardez les données avant les actions risquées ou en lot dans Tâches wakeup et vérification.",
+        "1": "Vérifiez filtres et cible avant exécution dans Tâches wakeup et vérification."
+      },
+      "keywords": {
+        "0": "Tâches wakeup et vérification",
+        "1": "guide",
+        "2": "flux",
+        "3": "compte",
+        "4": "paramètres"
+      },
+      "outcomes": {
+        "0": "Comprendre ce que Tâches wakeup et vérification vous apporte.",
+        "1": "Utiliser le flux recommandé dans Tâches wakeup et vérification pour limiter les erreurs."
+      },
+      "steps": {
+        "0": "Ouvrez la page de Tâches wakeup et vérification.",
+        "1": "Terminez la configuration de base et les liaisons nécessaires dans Tâches wakeup et vérification.",
+        "2": "Exécutez une action manuelle dans Tâches wakeup et vérification pour vérifier le résultat."
+      },
+      "summary": "Cette section explique comment utiliser Tâches wakeup et vérification dans le flux quotidien.",
+      "title": "Tâches wakeup et vérification"
+    }
   }
 }

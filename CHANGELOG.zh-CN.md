@@ -7,6 +7,20 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.9.9] - 2026-03-02
+
+### 新增
+- **内置功能使用手册页面**：新增独立 `manual` 页面，按场景组织快速开始、仪表盘、平台账号、多开实例、设备指纹、唤醒/验证、设置、导入导出与排障等章节，并支持关键词搜索与章节展开/收起。
+- **关键页面增加一键查阅手册入口**：在仪表盘/页头及各平台账号空状态（Antigravity、Codex、GitHub Copilot、Windsurf、Kiro）新增手册跳转入口，降低首次上手成本。
+
+### 变更
+- **手册页面支持“就地跳转操作”快捷动作**：各章节可直接跳转到对应功能页（仪表盘、Antigravity、Codex、GitHub Copilot、Windsurf、Kiro、多开实例、设备指纹、唤醒任务、验证、设置），并可在手册内直接打开平台布局。
+- **手册多语言覆盖扩展到全部语言包**：在所有已支持语言中补齐 `manual.*` 与 `nav.manual` 键，确保手册与导航文案在多语言环境下保持一致。
+
+### 修复
+- **修复 macOS 下启动第三方应用时权限弹窗归因到 Cockpit 的问题**：从 Cockpit 启动 Antigravity/Codex/GitHub Copilot/Windsurf/Kiro 时，受保护目录权限弹窗被归因为 Cockpit 的情况显著减少。
+
+---
 ## [0.9.8] - 2026-03-01
 
 ### 变更

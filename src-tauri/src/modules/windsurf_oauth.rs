@@ -1057,8 +1057,8 @@ pub async fn build_payload_from_password(
         return Err(friendly);
     }
 
-    let firebase_resp: Value = serde_json::from_str(&text)
-        .map_err(|e| format!("解析 Firebase 响应失败: {}", e))?;
+    let firebase_resp: Value =
+        serde_json::from_str(&text).map_err(|e| format!("解析 Firebase 响应失败: {}", e))?;
 
     let id_token = firebase_resp
         .get("idToken")

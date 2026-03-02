@@ -5,10 +5,7 @@ use std::collections::HashMap;
 
 fn refresh_tray_menu(app: &tauri::AppHandle) {
     if let Err(err) = crate::modules::tray::update_tray_menu(app) {
-        crate::modules::logger::log_warn(&format!(
-            "[GroupSettings] 更新托盘菜单失败: {}",
-            err
-        ));
+        crate::modules::logger::log_warn(&format!("[GroupSettings] 更新托盘菜单失败: {}", err));
     }
 }
 
@@ -42,7 +39,11 @@ pub fn save_group_settings(
 /// 设置模型的分组
 #[tauri::command]
 #[allow(non_snake_case)]
-pub fn set_model_group(app: tauri::AppHandle, modelId: String, groupId: String) -> Result<(), String> {
+pub fn set_model_group(
+    app: tauri::AppHandle,
+    modelId: String,
+    groupId: String,
+) -> Result<(), String> {
     let mut settings = group_settings::load_group_settings();
     settings.set_model_group(&modelId, &groupId);
     group_settings::update_group_settings(settings)?;

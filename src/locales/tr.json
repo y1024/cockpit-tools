@@ -151,11 +151,191 @@
     "fingerprints": "Parmak İzleri",
     "settings": "Ayarlar",
     "codex": "Codex Hesapları",
-    "dashboard": "Gösterge Paneli",
-    "instances": "Çoklu Örnek",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Daha Fazla Platform"
+    "dashboard": "Gösterge Paneli",
+    "morePlatforms": "Daha Fazla Platform",
+    "instances": "Çoklu Örnek",
+    "manual": "Kullanım kılavuzu"
+  },
+  "platformLayout": {
+    "title": "Platform Düzeni",
+    "sidebarSelected": "Kenar çubuğunda seçili {{count}}/{{max}}",
+    "reset": "Varsayılana sıfırla",
+    "tip": "Sıralamayı değiştirmek için sürükleyin. Kenar çubuğunda en fazla iki platform gösterilebilir. Yalnızca bir platform seçilirse yalnızca bir platform gösterilir.",
+    "sidebarToggle": "Kenar çubuğunda göster",
+    "dashboardToggle": "Panoda göster",
+    "trayToggle": "Tepside göster",
+    "hiddenBadge": "Gizli",
+    "openFromMore": "Platform düzenini yönet",
+    "dragHandleLabel": "Sürükleyerek sırala"
+  },
+  "privacy": {
+    "hideSensitive": "E-postaları gizle",
+    "showSensitive": "E-postaları göster"
+  },
+  "instances": {
+    "title": "Çoklu Oturum",
+    "subtitle": "Birden fazla hesabın paralel çalışması için izole edilmiş profiller.",
+    "defaultName": "Varsayılan oturum",
+    "search": "Oturum ara",
+    "sort": {
+      "label": "Sıralama",
+      "createdAt": "Oluşturma zamanına göre",
+      "lastLaunchedAt": "Başlatma zamanına göre",
+      "ascTooltip": "Mevcut: artan, azalana geçmek için tıklayın",
+      "descTooltip": "Mevcut: azalan, artana geçmek için tıklayın",
+      "toggleDirection": "Sıralama yönünü değiştir"
+    },
+    "actions": {
+      "create": "Yeni oturum",
+      "refresh": "Yenile",
+      "startAll": "Tümünü başlat",
+      "restartAll": "Tümünü yeniden başlat",
+      "stopAll": "Tümünü durdur",
+      "start": "Başlat",
+      "stop": "Durdur",
+      "openFolder": "Klasörü aç",
+      "edit": "Düzenle",
+      "openRootDir": "Klasörü aç",
+      "selectPath": "Yol seç",
+      "openWindow": "Pencereyi aç"
+    },
+    "bulkConfirm": {
+      "startAll": "Tüm durdurulmuş oturumlar başlatılsın mı?",
+      "restartAll": "Tüm çalışan oturumlar yeniden başlatılsın mı?",
+      "stopAll": "Tüm oturumlar kapatılsın mı?"
+    },
+    "status": {
+      "running": "Çalışıyor",
+      "stopped": "Durduruldu",
+      "restarting": "Yeniden başlatılıyor",
+      "starting": "Başlangıç"
+    },
+    "labels": {
+      "path": "Dizin",
+      "args": "Başlatma parametreleri",
+      "argsEmpty": "Yok",
+      "bindAccount": "Bağlı hesap",
+      "unbound": "Bağlı değil",
+      "pendingInit": "Başlatma bekleniyor (önce bir kez çalıştırın)",
+      "quota": "Kota",
+      "lastLaunched": "Son başlatma"
+    },
+    "columns": {
+      "instance": "Oturum",
+      "email": "Hesap",
+      "quota": "Kota durumu",
+      "actions": "İşlemler"
+    },
+    "empty": {
+      "title": "Oturum bulunamadı",
+      "desc": "Birden fazla oturumu hızlıca başlatmak için izole edilmiş bir yapılandırma dizini oluşturun."
+    },
+    "modal": {
+      "createTitle": "Yeni örnek",
+      "editTitle": "Örneği düzenle"
+    },
+    "form": {
+      "name": "Oturum adı",
+      "namePlaceholder": "ör: İş hesabı",
+      "path": "Oturum dizini",
+      "pathPlaceholder": "Dizin seçin",
+      "pathReadOnly": "Düzenleme sırasında yol değiştirilemez",
+      "pathAutoHint": "İsim değiştirildiğinde yol otomatik olarak güncellenir (veya manuel olarak seçin)",
+      "copyLogin": "Mevcut giriş durumunu kopyala",
+      "copyLoginDesc": "Yapılandırma ve giriş verilerini varsayılan dizinden kopyala",
+      "initMode": "Başlatma modu",
+      "initModeCopy": "Kaynak örnekten kopyala (varsayılan)",
+      "initModeEmpty": "Boş örnek (kopyalama yok)",
+      "emptyInitHint": "Kopyalama olmadan seçildiğinde yalnızca boş bir dizin oluşturulur. Hesap bağlamadan önce bir kez başlatmanız gerekir.",
+      "copySource": "Kaynak oturumu kopyala",
+      "copySourceDesc": "Yapılandırma ve giriş verilerini seçilen oturumdan kopyala",
+      "copySourcePlaceholder": "Kaynak oturumu seçin",
+      "copySourceRequired": "Lütfen bir kaynak oturumu seçin",
+      "copySourceRunningHint": "Kaynak oturum çalışıyor. Veri tutarsızlığını önlemek için önce kapatılması önerilir.",
+      "bindInject": "Hesabı bağla",
+      "bindAfterInit": "Başlatmadan sonra bağlanabilir",
+      "bindDisabledHint": "Boş örnekte önce bir kez çalıştırarak verileri oluşturun, ardından hesabı bağlayın.",
+      "followCurrent": "Mevcut hesabı takip et",
+      "selectAccount": "Hesap seç",
+      "bindAccount": "Hesabı bağla",
+      "unbound": "Bağlı değil",
+      "extraArgs": "Özel başlatma parametreleri",
+      "extraArgsPlaceholder": "ör: --disable-gpu --log-level=2",
+      "extraArgsDesc": "Parametreleri boşlukla ayırın, tırnak işaretleri desteklenir",
+      "nameRequired": "Lütfen bir oturum adı girin",
+      "pathRequired": "Lütfen bir oturum dizini seçin",
+      "bindRequired": "Lütfen bağlanacak bir hesap seçin"
+    },
+    "quota": {
+      "unbound": "Hesap bağlı değil",
+      "accountMissing": "Hesap bulunamadı",
+      "empty": "Önbelleğe alınmış kota yok"
+    },
+    "messages": {
+      "created": "Oturum oluşturuldu",
+      "emptyCreated": "Boş örnek oluşturuldu. Hesap bağlamadan önce bir kez başlatın.",
+      "updated": "Oturum güncellendi",
+      "deleted": "Oturum silindi",
+      "started": "Oturum başlatıldı",
+      "stopped": "Oturum durduruldu",
+      "startedAll": "Tüm durdurulmuş oturumlar başlatıldı",
+      "restartedAll": "Çalışan oturumlar yeniden başlatıldı",
+      "closedAll": "Tüm oturumlar durduruldu",
+      "allAlreadyRunning": "Tüm oturumlar zaten çalışıyor",
+      "noneRunning": "Çalışan oturum bulunamadı"
+    },
+    "runningDialog": {
+      "title": "Oturum zaten çalışıyor",
+      "desc": "Bu oturum zaten başlatıldı. Pencereye geçiş yapabilir veya mevcut stratejiye göre yeniden başlatabilirsiniz.",
+      "current": "Mevcut strateji: {{name}}",
+      "pathLabel": "Oturum dizini",
+      "go": "Şimdi geçiş yap",
+      "restart": "Kapat ve yeniden başlat"
+    },
+    "initGuide": {
+      "title": "Örnek henüz başlatılmadı",
+      "desc": "Bu bir \"boş örnek\". Şu anda yalnızca dizin oluşturuldu, örnek verileri henüz üretilmedi.",
+      "tip": "Lütfen önce örneği bir kez başlatın. Başlatma tamamlandıktan sonra hesap bağlayabilirsiniz.",
+      "startNow": "Hemen başlat"
+    },
+    "restartStrategy": {
+      "button": "Yeniden başlatma stratejisi",
+      "title": "Yeniden başlatma stratejisi",
+      "desc": "Oturumu yeniden başlatma yöntemini seçin. Her seçenek kapsamı ve kararlılığı etkiler.",
+      "recommended": "Önerilen",
+      "labels": {
+        "principle": "Teknik prensip",
+        "command": "Komut",
+        "pros": "Artılar",
+        "cons": "Eksiler"
+      },
+      "safe": {
+        "title": "Güvenli yeniden başlatma (Önerilen)",
+        "principle": "Tüm Antigravity işlemlerine SIGTERM sinyali göndererek uygulamanın verileri kaydedip kapanmasını ister, ardından hedef oturumu başlatır (gerekirse kapanmaya zorlar).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (tüm Antigravity işlemleri)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (tüm Antigravity işlemleri)",
+        "pros": "Normal kapanmaya en yakın yöntem, hata uyarısı olasılığı düşük, veriler daha güvenli.",
+        "cons": "Sadece tüm oturumların genel olarak yeniden başlatılmasını destekler."
+      },
+      "force": {
+        "title": "Zorunlu yeniden başlatma",
+        "principle": "İşlemleri --user-data-dir aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir ile eşleşen)",
+        "pros": "Tek bir oturumu hassas bir şekilde yeniden başlatabilir.",
+        "cons": "Beklenmedik kapanma uyarısına neden olabilir, kaydedilmemiş veri kaybı riski vardır."
+      }
+    },
+    "stop": {
+      "title": "Oturumu durdurmaya zorla",
+      "message": "Oturum işlemine durdurma sinyali (SIGTERM) gönderir. Kaydedilmemiş veriler kaybolabilir. Devam edilsin mi?"
+    },
+    "delete": {
+      "title": "Oturumu sil",
+      "message": "{{name}} oturumu silinsin mi? Bu işlem yapılandırmayı kaldıracak ve oturum klasörünü silecektir."
+    }
   },
   "settings": {
     "title": "Uygulama Ayarları",
@@ -186,11 +366,6 @@
       "every1hour": "Her saat",
       "minutes": "dk",
       "refreshIntervalLimited": "Kota sıfırlama uyandırma özelliği etkin olduğundan, minimum yenileme aralığı 2 dakikadır.",
-      "storageTitle": "Dizinler ve Depolama",
-      "dataDir": "Veri dizini",
-      "dataDirDesc": "Hesaplar ve yapılandırma dosyaları için depolama konumu.",
-      "fpDir": "Antigravity Depolama",
-      "fpDirDesc": "Antigravity veri dosyalarının depolandığı konum.",
       "closeBehavior": "Kapanış Davranışı",
       "closeBehaviorDesc": "Pencere kapatıldığında yapılacak işlem",
       "closeBehaviorAsk": "Her seferinde sor",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Dock simgesinin görünürlüğünü pencere küçültme davranışından bağımsız olarak kontrol eder",
       "hideDockIconOff": "Hayır (Dock simgesini göster)",
       "hideDockIconOn": "Evet (Dock simgesini gizle)",
-      "opencodeAppPathDesc": "Varsayılan yolu kullanmak için boş bırakın",
+      "storageTitle": "Dizinler ve Depolama",
+      "dataDir": "Veri dizini",
+      "dataDirDesc": "Hesaplar ve yapılandırma dosyaları için depolama konumu.",
+      "fpDir": "Antigravity Depolama",
+      "fpDirDesc": "Antigravity veri dosyalarının depolandığı konum.",
       "opencodeTitle": "OpenCode Entegrasyonu",
       "opencodeRestart": "Codex değiştirildiğinde OpenCode'u yeniden başlat",
       "opencodeRestartDesc": "OpenCode içinde Codex hesap bilgisini senkronize et",
       "opencodeAppPath": "OpenCode başlatma yolu",
+      "opencodeAppPathDesc": "Varsayılan yolu kullanmak için boş bırakın",
       "opencodeAppPathPlaceholder": "Varsayılan yol",
       "opencodePathReset": "Varsayılanı sıfırla",
       "opencodePathSelect": "Seç",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Ayarları Kaydet"
   },
+  "appPath": {
+    "missing": {
+      "title": "Uygulama yolu bulunamadı",
+      "desc": "{{app}} uygulama yolu bulunamadı. Devam etmek için şimdi ayarlayın.",
+      "action": "Şimdi ayarla"
+    }
+  },
   "accounts": {
     "title": "Hesap Yönetimi",
     "subtitle": "Antigravity hesap listenizi yönetin.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Varsayılan",
       "overall": "Toplam kotaya göre",
+      "createdAt": "Oluşturma zamanına göre",
       "byGroup": "{{group}} kotasına göre",
       "byGroupReset": "{{group}} sıfırlama zamanına göre",
-      "createdAt": "Oluşturma zamanına göre",
       "descTooltip": "Azalan, Artan için tıkla",
       "ascTooltip": "Artan, Azalan için tıkla",
       "toggleDirection": "Yönü değiştir"
     },
+    "filterTags": "Etiketleri filtrele",
+    "filterTagsCount": "Etiketler",
+    "noAvailableTags": "Kullanılabilir etiket yok",
+    "clearFilter": "Filtreyi temizle",
+    "editTags": "Etiketleri düzenle",
+    "tagModal": {
+      "title": "Etiketleri düzenle",
+      "hint": "En fazla {{max}} etiket. Her etiket en fazla {{maxLength}} karakter olabilir.",
+      "empty": "Kullanılabilir etiket yok",
+      "suggestionsTitle": "Etiketleri filtrele",
+      "suggestionsEmpty": "Kullanılabilir etiket yok",
+      "inputPlaceholder": "Etiket girin ({{remaining}} kaldı)",
+      "inputDisabledPlaceholder": "Etiket limitine ulaşıldı",
+      "add": "Ekle",
+      "save": "Etiketleri kaydet",
+      "error": {
+        "empty": "Etiket boş olamaz",
+        "tooLong": "Etiket en fazla {{max}} karakter olabilir",
+        "duplicate": "Etiket zaten mevcut",
+        "tooMany": "En fazla {{max}} etiket ekleyebilirsiniz"
+      }
+    },
+    "groupByTag": "Etikete göre grupla",
+    "untagged": "Etiketsiz",
+    "deleteTagAria": "{{tag}} etiketini sil",
+    "confirmDeleteTag": "\"{{tag}}\" etiketi silinsin mi? Bu etiket {{count}} hesaptan kaldırılacak.",
+    "defaultGroup": "Varsayılan Grup",
     "actions": {
       "viewDetails": "Detayları görüntüle",
       "viewError": "Hata görüntüle",
@@ -388,33 +602,6 @@
       "importSuccess": "{{count}} hesap içe aktarıldı",
       "importPartial": "{{success}} hesap başarıyla içe aktarıldı, {{fail}} hata",
       "importFailed": "İçe aktarma başarısız, lütfen refresh_token'ı kontrol edin"
-    },
-    "confirmDeleteTag": "\"{{tag}}\" etiketi silinsin mi? Bu etiket {{count}} hesaptan kaldırılacak.",
-    "defaultGroup": "Varsayılan Grup",
-    "filterTags": "Etiketleri filtrele",
-    "filterTagsCount": "Etiketler",
-    "noAvailableTags": "Kullanılabilir etiket yok",
-    "clearFilter": "Filtreyi temizle",
-    "editTags": "Etiketleri düzenle",
-    "groupByTag": "Etikete göre grupla",
-    "untagged": "Etiketsiz",
-    "deleteTagAria": "{{tag}} etiketini sil",
-    "tagModal": {
-      "title": "Etiketleri düzenle",
-      "hint": "En fazla {{max}} etiket. Her etiket en fazla {{maxLength}} karakter olabilir.",
-      "empty": "Kullanılabilir etiket yok",
-      "suggestionsTitle": "Etiketleri filtrele",
-      "suggestionsEmpty": "Kullanılabilir etiket yok",
-      "inputPlaceholder": "Etiket girin ({{remaining}} kaldı)",
-      "inputDisabledPlaceholder": "Etiket limitine ulaşıldı",
-      "add": "Ekle",
-      "save": "Etiketleri kaydet",
-      "error": {
-        "empty": "Etiket boş olamaz",
-        "tooLong": "Etiket en fazla {{max}} karakter olabilir",
-        "duplicate": "Etiket zaten mevcut",
-        "tooMany": "En fazla {{max}} etiket ekleyebilirsiniz"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Uyandırma Görevleri",
     "subtitle": "Bağımsız kontrollere sahip birden fazla otomatik uyandırma görevini yönetin.",
+    "verification": {
+      "title": "Doğrulama gerekli",
+      "columns": {
+        "verifiedAt": "Doğrulama zamanı"
+      },
+      "filters": {
+        "all": "Tümü"
+      },
+      "actions": {
+        "selectAllAccounts": "Tümünü seç",
+        "clearSelectedAccounts": "Seçimi temizle",
+        "runCheckNow": "Doğrulamayı tamamla"
+      },
+      "runHint": {
+        "title": "Doğrulama notları",
+        "line1": "“Şimdi kontrol et”, Antigravity istemcisini yerel ağ geçidi ve resmi Language Server protokolü ile simüle ederek minimum bir sohbet isteği gönderir.",
+        "line2": "Bu işlem az miktarda token tüketir (genelde kısa bir konuşma). Gerçek tüketim modele ve hesap politikasına bağlıdır.",
+        "line3": "Bu işlem uyandırma görevi ayarlarını değiştirmez. Yalnızca hesap kullanılabilirliğini kontrol eder ve kontrol kaydı oluşturur.",
+        "line4": "403 dönerse önce hesap doğrulaması tamamlanmalıdır. Sonuçta doğrulama adresi ve hızlı işlemler gösterilir."
+      },
+      "deleteConfirm": "Silme işlemi onaylansın mı?"
+    },
     "globalToggle": "Genel Uyandırma Anahtarı",
     "newTask": "Yeni Görev",
     "runTest": "Testi Çalıştır",
@@ -763,28 +972,6 @@
       "accountsHint": "Test edilecek birden fazla hesap seçin.",
       "start": "Testi başlat",
       "testing": "Test ediliyor..."
-    },
-    "verification": {
-      "title": "Doğrulama gerekli",
-      "columns": {
-        "verifiedAt": "Doğrulama zamanı"
-      },
-      "filters": {
-        "all": "Tümü"
-      },
-      "actions": {
-        "selectAllAccounts": "Tümünü seç",
-        "clearSelectedAccounts": "Seçimi temizle",
-        "runCheckNow": "Doğrulamayı tamamla"
-      },
-      "deleteConfirm": "Silme işlemi onaylansın mı?",
-      "runHint": {
-        "title": "Doğrulama notları",
-        "line1": "“Şimdi kontrol et”, Antigravity istemcisini yerel ağ geçidi ve resmi Language Server protokolü ile simüle ederek minimum bir sohbet isteği gönderir.",
-        "line2": "Bu işlem az miktarda token tüketir (genelde kısa bir konuşma). Gerçek tüketim modele ve hesap politikasına bağlıdır.",
-        "line3": "Bu işlem uyandırma görevi ayarlarını değiştirmez. Yalnızca hesap kullanılabilirliğini kontrol eder ve kontrol kaydı oluşturur.",
-        "line4": "403 dönerse önce hesap doğrulaması tamamlanmalıdır. Sonuçta doğrulama adresi ve hızlı işlemler gösterilir."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Codex Hesap Yönetimi",
     "subtitle": "OpenAI Codex hesaplarınızı yönetin",
+    "instances": {
+      "subtitle": "Örnek başına bağımsız yapılandırma, birden fazla hesapla paralel çalışma.",
+      "comingSoon": "Çoklu Örnek Yakında",
+      "comingSoonDesc": "Farklı hesaplarla birden fazla Codex.app örneğini aynı anda çalıştırın.",
+      "unsupported": {
+        "desc": "Codex çoklu örnek şu anda yalnızca macOS'ta kullanılabilir."
+      },
+      "quota": {
+        "hourly": "5sa",
+        "weekly": "Haftalık"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Tüm Codex işlemlerine SIGTERM sinyali göndererek uygulamanın verileri kaydedip kapanmasını ister, ardından hedef oturumu başlatır (gerekirse kapanmaya zorlar).",
+          "commandMac": "macOS: kill -15 <pid> (tüm Codex işlemleri)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (tüm Codex işlemleri)"
+        },
+        "force": {
+          "principle": "İşlemleri CODEX_HOME aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME ile eşleşen)"
+        }
+      }
+    },
+    "refreshSuccess": "Kota yenilendi",
+    "refreshFailed": "Kota yenileme başarısız: {{error}}",
+    "refreshAllSuccess": "Yenileme tamamlandı, {{count}} hesap başarılı",
+    "refreshAllPartialFailed": "Yenileme tamamlandı, {{success}} / {{total}} hesap başarılı, bazıları başarısız",
     "switch": "Değiştir",
     "switched": "{{email}} hesabına geçildi",
     "switchFailed": "Değiştirme başarısız: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Yerel hesabı al"
     },
     "import": {
+      "localDesc": "Yerelde oturum açılmış oturumlardan Codex hesaplarını içe aktar.",
       "importing": "Yerel hesap içe aktarılıyor...",
-      "successMsg": "İçe aktarma başarılı: {{email}}",
-      "localDesc": "Yerelde oturum açılmış oturumlardan Codex hesaplarını içe aktar."
+      "successMsg": "İçe aktarma başarılı: {{email}}"
     },
     "quota": {
       "hourly": "5 saatlik kota",
       "weekly": "Haftalık kota",
       "reset": "Sıfırla"
+    },
+    "quotaError": {
+      "badge": "Kota hatası",
+      "generic": "Kota yenileme başarısız, lütfen daha sonra tekrar deneyin",
+      "deactivatedWorkspace": "Çalışma alanı devre dışı, hesap değiştirin veya yeniden yetkilendirin"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Haftalık sıfırlama zamanı",
       "hourlyReset": "5 saatlik sıfırlama zamanı"
     },
+    "opencodeSwitch": "OpenCode geçiş anahtarı",
+    "opencodeSwitchDesc": "OpenCode içinde Codex hesap geçişini senkronize et",
+    "opencodeSwitchFailed": "OpenCode anahtarı güncellenemedi: {{error}}",
     "columns": {
       "hourly": "5 saatlik kota",
       "weekly": "Haftalık kota"
     },
-    "opencodeSwitch": "OpenCode geçiş anahtarı",
-    "opencodeSwitchDesc": "OpenCode içinde Codex hesap geçişini senkronize et",
-    "opencodeSwitchFailed": "OpenCode anahtarı güncellenemedi: {{error}}",
     "filterTags": "Etiketleri filtrele",
     "filterTagsCount": "Etiketler",
     "noAvailableTags": "Kullanılabilir etiket yok",
     "clearFilter": "Filtreyi temizle",
-    "editTags": "Etiketleri düzenle",
+    "editTags": "Etiketleri düzenle"
+  },
+  "githubCopilot": {
+    "title": "GitHub Copilot Hesap Yönetimi",
     "instances": {
-      "subtitle": "Örnek başına bağımsız yapılandırma, birden fazla hesapla paralel çalışma.",
-      "comingSoon": "Çoklu Örnek Yakında",
-      "comingSoonDesc": "Farklı hesaplarla birden fazla Codex.app örneğini aynı anda çalıştırın.",
       "unsupported": {
-        "desc": "Codex çoklu örnek şu anda yalnızca macOS'ta kullanılabilir."
-      },
-      "quota": {
-        "hourly": "5sa",
-        "weekly": "Haftalık"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Tüm Codex işlemlerine SIGTERM sinyali göndererek uygulamanın verileri kaydedip kapanmasını ister, ardından hedef oturumu başlatır (gerekirse kapanmaya zorlar).",
-          "commandMac": "macOS: kill -15 <pid> (tüm Codex işlemleri)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (tüm Codex işlemleri)"
-        },
-        "force": {
-          "principle": "İşlemleri CODEX_HOME aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME ile eşleşen)"
-        }
+        "desc": "GitHub Copilot çoklu örnek şu anda yalnızca macOS'ta kullanılabilir."
       }
     },
-    "refreshSuccess": "Kota yenilendi",
-    "refreshFailed": "Kota yenileme başarısız: {{error}}",
-    "refreshAllSuccess": "Yenileme tamamlandı, {{count}} hesap başarılı",
-    "refreshAllPartialFailed": "Yenileme tamamlandı, {{success}} / {{total}} hesap başarılı, bazıları başarısız",
-    "quotaError": {
-      "badge": "Kota hatası",
-      "generic": "Kota yenileme başarısız, lütfen daha sonra tekrar deneyin",
-      "deactivatedWorkspace": "Çalışma alanı devre dışı, hesap değiştirin veya yeniden yetkilendirin"
+    "empty": {
+      "description": "\"Hesap ekle\"ye tıklayın"
+    },
+    "addModal": {
+      "title": "GitHub Copilot hesabı ekle"
+    },
+    "oauth": {
+      "desc": "Aşağıdaki düğmeye tıklayın ve tarayıcıda GitHub Copilot yetkilendirmesini tamamlayın."
+    },
+    "token": {
+      "desc": "GitHub Copilot erişim belirtecini veya dışa aktarılan JSON verisini yapıştırın."
+    },
+    "import": {
+      "localDesc": "Yerelde oturum açılmış oturumlardan GitHub Copilot hesaplarını içe aktar."
+    },
+    "sort": {
+      "weekly": "Haftalık kota",
+      "hourly": "5 saatlik kota",
+      "premium": "Premium istek kullanımına göre",
+      "weeklyReset": "Haftalık sıfırlama zamanı",
+      "hourlyReset": "5 saatlik sıfırlama zamanı"
+    },
+    "columns": {
+      "hourly": "5 saatlik kota",
+      "weekly": "Haftalık kota",
+      "premium": "Premium istekler"
+    },
+    "usage": {
+      "included": "Dahil"
+    },
+    "injectToVSCode": "VS Code'a geç",
+    "injectSuccess": "Belirteç VS Code'a başarıyla enjekte edildi. VS Code başlatılıyor.",
+    "injectRequireClose": "Enjeksiyondan önce lütfen VS Code'u kapatın.",
+    "flowNotice": {
+      "title": "GitHub Copilot hesap kılavuzu (genişletmek/daraltmak için tıklayın)",
+      "desc": "Hesap değiştirme, VS Code yerel kimlik doğrulama deposunun okunmasını ve şifre çözme/geri yazma için sistem kimlik bilgisi hizmetinin kullanılmasını gerektirir; veriler yalnızca yerelde işlenir.",
+      "inject": "Tek tıkla geçiş: Bu araç VS Code'un yerel şifreleme materyalini (DPAPI/Keychain/Secret Service) okur, state.vscdb içindeki kimlik doğrulama oturumunu çözer, GitHub Copilot belirtecini değiştirir ve yeniden şifreler — tüm işlem cihazınızda yerel olarak yapılır.",
+      "reason": "İzin kapsamı: VS Code kimlik doğrulama veritabanını (state.vscdb) okumak ve şifre çözme/geri yazma için sistem şifreleme yeteneklerini (Windows DPAPI / macOS Keychain / Linux Secret Service) çağırmak.",
+      "storage": "Okuma kapsamı: yalnızca GitHub oturum açma oturumu ile ilgili veriler işlenir; tüm işlemler yerel olarak yürütülür."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Dosya Konumu",
       "helpText": "Lütfen dosyayı manuel olarak onarmak veya silmek için klasörü açın, ardından uygulamayı yeniden başlatın.",
       "openFolder": "Klasörü Aç"
-    }
-  },
-  "instances": {
-    "title": "Çoklu Oturum",
-    "subtitle": "Birden fazla hesabın paralel çalışması için izole edilmiş profiller.",
-    "defaultName": "Varsayılan oturum",
-    "search": "Oturum ara",
-    "actions": {
-      "create": "Yeni oturum",
-      "refresh": "Yenile",
-      "startAll": "Tümünü başlat",
-      "restartAll": "Tümünü yeniden başlat",
-      "stopAll": "Tümünü durdur",
-      "start": "Başlat",
-      "stop": "Durdur",
-      "openFolder": "Klasörü aç",
-      "edit": "Düzenle",
-      "openRootDir": "Klasörü aç",
-      "selectPath": "Yol seç",
-      "openWindow": "Pencereyi aç"
-    },
-    "bulkConfirm": {
-      "startAll": "Tüm durdurulmuş oturumlar başlatılsın mı?",
-      "restartAll": "Tüm çalışan oturumlar yeniden başlatılsın mı?",
-      "stopAll": "Tüm oturumlar kapatılsın mı?"
-    },
-    "status": {
-      "running": "Çalışıyor",
-      "stopped": "Durduruldu",
-      "restarting": "Yeniden başlatılıyor",
-      "starting": "Başlangıç"
-    },
-    "labels": {
-      "path": "Dizin",
-      "args": "Başlatma parametreleri",
-      "argsEmpty": "Yok",
-      "bindAccount": "Bağlı hesap",
-      "unbound": "Bağlı değil",
-      "quota": "Kota",
-      "lastLaunched": "Son başlatma",
-      "pendingInit": "Başlatma bekleniyor (önce bir kez çalıştırın)"
-    },
-    "columns": {
-      "instance": "Oturum",
-      "email": "Hesap",
-      "quota": "Kota durumu",
-      "actions": "İşlemler"
-    },
-    "empty": {
-      "title": "Oturum bulunamadı",
-      "desc": "Birden fazla oturumu hızlıca başlatmak için izole edilmiş bir yapılandırma dizini oluşturun."
-    },
-    "form": {
-      "name": "Oturum adı",
-      "namePlaceholder": "ör: İş hesabı",
-      "path": "Oturum dizini",
-      "pathPlaceholder": "Dizin seçin",
-      "pathReadOnly": "Düzenleme sırasında yol değiştirilemez",
-      "pathAutoHint": "İsim değiştirildiğinde yol otomatik olarak güncellenir (veya manuel olarak seçin)",
-      "copyLogin": "Mevcut giriş durumunu kopyala",
-      "copyLoginDesc": "Yapılandırma ve giriş verilerini varsayılan dizinden kopyala",
-      "copySource": "Kaynak oturumu kopyala",
-      "copySourceDesc": "Yapılandırma ve giriş verilerini seçilen oturumdan kopyala",
-      "copySourcePlaceholder": "Kaynak oturumu seçin",
-      "copySourceRequired": "Lütfen bir kaynak oturumu seçin",
-      "copySourceRunningHint": "Kaynak oturum çalışıyor. Veri tutarsızlığını önlemek için önce kapatılması önerilir.",
-      "bindInject": "Hesabı bağla",
-      "followCurrent": "Mevcut hesabı takip et",
-      "selectAccount": "Hesap seç",
-      "bindAccount": "Hesabı bağla",
-      "unbound": "Bağlı değil",
-      "extraArgs": "Özel başlatma parametreleri",
-      "extraArgsPlaceholder": "ör: --disable-gpu --log-level=2",
-      "extraArgsDesc": "Parametreleri boşlukla ayırın, tırnak işaretleri desteklenir",
-      "nameRequired": "Lütfen bir oturum adı girin",
-      "pathRequired": "Lütfen bir oturum dizini seçin",
-      "bindRequired": "Lütfen bağlanacak bir hesap seçin",
-      "initMode": "Başlatma modu",
-      "initModeCopy": "Kaynak örnekten kopyala (varsayılan)",
-      "initModeEmpty": "Boş örnek (kopyalama yok)",
-      "emptyInitHint": "Kopyalama olmadan seçildiğinde yalnızca boş bir dizin oluşturulur. Hesap bağlamadan önce bir kez başlatmanız gerekir.",
-      "bindAfterInit": "Başlatmadan sonra bağlanabilir",
-      "bindDisabledHint": "Boş örnekte önce bir kez çalıştırarak verileri oluşturun, ardından hesabı bağlayın."
-    },
-    "quota": {
-      "unbound": "Hesap bağlı değil",
-      "accountMissing": "Hesap bulunamadı",
-      "empty": "Önbelleğe alınmış kota yok"
-    },
-    "messages": {
-      "created": "Oturum oluşturuldu",
-      "updated": "Oturum güncellendi",
-      "deleted": "Oturum silindi",
-      "started": "Oturum başlatıldı",
-      "stopped": "Oturum durduruldu",
-      "startedAll": "Tüm durdurulmuş oturumlar başlatıldı",
-      "restartedAll": "Çalışan oturumlar yeniden başlatıldı",
-      "closedAll": "Tüm oturumlar durduruldu",
-      "allAlreadyRunning": "Tüm oturumlar zaten çalışıyor",
-      "noneRunning": "Çalışan oturum bulunamadı",
-      "emptyCreated": "Boş örnek oluşturuldu. Hesap bağlamadan önce bir kez başlatın."
-    },
-    "runningDialog": {
-      "title": "Oturum zaten çalışıyor",
-      "desc": "Bu oturum zaten başlatıldı. Pencereye geçiş yapabilir veya mevcut stratejiye göre yeniden başlatabilirsiniz.",
-      "current": "Mevcut strateji: {{name}}",
-      "pathLabel": "Oturum dizini",
-      "go": "Şimdi geçiş yap",
-      "restart": "Kapat ve yeniden başlat"
-    },
-    "restartStrategy": {
-      "button": "Yeniden başlatma stratejisi",
-      "title": "Yeniden başlatma stratejisi",
-      "desc": "Oturumu yeniden başlatma yöntemini seçin. Her seçenek kapsamı ve kararlılığı etkiler.",
-      "recommended": "Önerilen",
-      "labels": {
-        "principle": "Teknik prensip",
-        "command": "Komut",
-        "pros": "Artılar",
-        "cons": "Eksiler"
-      },
-      "safe": {
-        "title": "Güvenli yeniden başlatma (Önerilen)",
-        "principle": "Tüm Antigravity işlemlerine SIGTERM sinyali göndererek uygulamanın verileri kaydedip kapanmasını ister, ardından hedef oturumu başlatır (gerekirse kapanmaya zorlar).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (tüm Antigravity işlemleri)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (tüm Antigravity işlemleri)",
-        "pros": "Normal kapanmaya en yakın yöntem, hata uyarısı olasılığı düşük, veriler daha güvenli.",
-        "cons": "Sadece tüm oturumların genel olarak yeniden başlatılmasını destekler."
-      },
-      "force": {
-        "title": "Zorunlu yeniden başlatma",
-        "principle": "İşlemleri --user-data-dir aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir ile eşleşen)",
-        "pros": "Tek bir oturumu hassas bir şekilde yeniden başlatabilir.",
-        "cons": "Beklenmedik kapanma uyarısına neden olabilir, kaydedilmemiş veri kaybı riski vardır."
-      }
-    },
-    "stop": {
-      "title": "Oturumu durdurmaya zorla",
-      "message": "Oturum işlemine durdurma sinyali (SIGTERM) gönderir. Kaydedilmemiş veriler kaybolabilir. Devam edilsin mi?"
-    },
-    "delete": {
-      "title": "Oturumu sil",
-      "message": "{{name}} oturumu silinsin mi? Bu işlem yapılandırmayı kaldıracak ve oturum klasörünü silecektir."
-    },
-    "modal": {
-      "createTitle": "Yeni örnek",
-      "editTitle": "Örneği düzenle"
-    },
-    "sort": {
-      "label": "Sıralama",
-      "createdAt": "Oluşturma zamanına göre",
-      "lastLaunchedAt": "Başlatma zamanına göre",
-      "ascTooltip": "Mevcut: artan, azalana geçmek için tıklayın",
-      "descTooltip": "Mevcut: azalan, artana geçmek için tıklayın",
-      "toggleDirection": "Sıralama yönünü değiştir"
-    },
-    "initGuide": {
-      "title": "Örnek henüz başlatılmadı",
-      "desc": "Bu bir \"boş örnek\". Şu anda yalnızca dizin oluşturuldu, örnek verileri henüz üretilmedi.",
-      "tip": "Lütfen önce örneği bir kez başlatın. Başlatma tamamlandıktan sonra hesap bağlayabilirsiniz.",
-      "startNow": "Hemen başlat"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Uygulama yolu bulunamadı",
-      "desc": "{{app}} uygulama yolu bulunamadı. Devam etmek için şimdi ayarlayın.",
-      "action": "Şimdi ayarla"
-    }
-  },
-  "githubCopilot": {
-    "title": "GitHub Copilot Hesap Yönetimi",
-    "instances": {
-      "unsupported": {
-        "desc": "GitHub Copilot çoklu örnek şu anda yalnızca macOS'ta kullanılabilir."
-      }
-    },
-    "empty": {
-      "description": "\"Hesap ekle\"ye tıklayın"
-    },
-    "addModal": {
-      "title": "GitHub Copilot hesabı ekle"
-    },
-    "oauth": {
-      "desc": "Aşağıdaki düğmeye tıklayın ve tarayıcıda GitHub Copilot yetkilendirmesini tamamlayın."
-    },
-    "token": {
-      "desc": "GitHub Copilot erişim belirtecini veya dışa aktarılan JSON verisini yapıştırın."
-    },
-    "import": {
-      "localDesc": "Yerelde oturum açılmış oturumlardan GitHub Copilot hesaplarını içe aktar."
-    },
-    "sort": {
-      "weekly": "Haftalık kota",
-      "hourly": "5 saatlik kota",
-      "weeklyReset": "Haftalık sıfırlama zamanı",
-      "hourlyReset": "5 saatlik sıfırlama zamanı",
-      "premium": "Premium istek kullanımına göre"
-    },
-    "columns": {
-      "hourly": "5 saatlik kota",
-      "weekly": "Haftalık kota",
-      "premium": "Premium istekler"
-    },
-    "flowNotice": {
-      "title": "GitHub Copilot hesap kılavuzu (genişletmek/daraltmak için tıklayın)",
-      "desc": "Hesap değiştirme, VS Code yerel kimlik doğrulama deposunun okunmasını ve şifre çözme/geri yazma için sistem kimlik bilgisi hizmetinin kullanılmasını gerektirir; veriler yalnızca yerelde işlenir.",
-      "reason": "İzin kapsamı: VS Code kimlik doğrulama veritabanını (state.vscdb) okumak ve şifre çözme/geri yazma için sistem şifreleme yeteneklerini (Windows DPAPI / macOS Keychain / Linux Secret Service) çağırmak.",
-      "storage": "Okuma kapsamı: yalnızca GitHub oturum açma oturumu ile ilgili veriler işlenir; tüm işlemler yerel olarak yürütülür.",
-      "inject": "Tek tıkla geçiş: Bu araç VS Code'un yerel şifreleme materyalini (DPAPI/Keychain/Secret Service) okur, state.vscdb içindeki kimlik doğrulama oturumunu çözer, GitHub Copilot belirtecini değiştirir ve yeniden şifreler — tüm işlem cihazınızda yerel olarak yapılır."
-    },
-    "injectToVSCode": "VS Code'a geç",
-    "injectSuccess": "Belirteç VS Code'a başarıyla enjekte edildi. VS Code başlatılıyor.",
-    "injectRequireClose": "Enjeksiyondan önce lütfen VS Code'u kapatın.",
-    "usage": {
-      "included": "Dahil"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Hızlı geçiş başarısız: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "E-postaları gizle",
-    "showSensitive": "E-postaları göster"
-  },
   "windsurf": {
     "title": "Windsurf Hesap Yönetimi",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Giriş başarılı: {{login}}",
       "failed": "Giriş başarısız: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Platform Düzeni",
-    "sidebarSelected": "Kenar çubuğunda seçili {{count}}/{{max}}",
-    "reset": "Varsayılana sıfırla",
-    "tip": "Sıralamayı değiştirmek için sürükleyin. Kenar çubuğunda en fazla iki platform gösterilebilir. Yalnızca bir platform seçilirse yalnızca bir platform gösterilir.",
-    "sidebarToggle": "Kenar çubuğunda göster",
-    "dashboardToggle": "Panoda göster",
-    "trayToggle": "Tepside göster",
-    "hiddenBadge": "Gizli",
-    "openFromMore": "Platform düzenini yönet",
-    "dragHandleLabel": "Sürükleyerek sırala"
-  },
-  "breakout": {
-    "gameOver": "Oyun bitti",
-    "gameOverRank": "Mevcut yerel sıralama #{{rank}}",
-    "startGame": "Oyunu başlat",
-    "startHint": "Başlat'a tıkla veya Boşluk tuşuna bas",
-    "rankTitle": "Geçmiş yerel sıralama",
-    "rankCurrent": "Mevcut",
-    "rankNoData": "--",
-    "restart": "Yeniden başlat",
-    "pause": "Duraklat",
-    "resume": "Devam et",
-    "paused": "Duraklatıldı",
-    "level": "Seviye {{level}}",
-    "levelScore": "Seviye puanı {{score}}",
-    "levelCleared": "Seviye tamamlandı",
-    "nextLevel": "Sonraki seviye",
-    "history": "Geçmiş",
-    "historyShort": "Geçmiş",
-    "historyEmpty": "Henüz kayıt yok",
-    "historyClear": "Temizle",
-    "historyScoreShort": "Skor {{score}}",
-    "historyLevelShort": "Sv {{level}}",
-    "historyDurationShort": "Süre {{duration}}",
-    "historyReasonGameOver": "Oyun bitti",
-    "historyReasonManualExit": "Manuel çıkış",
-    "serveHint": "Topu fırlatmak için Boşluk tuşuna basın",
-    "ranking": "Yerel geçmiş",
-    "rankingShort": "Yerel",
-    "rankingEmpty": "Henüz yerel kayıt yok",
-    "rankingClear": "Yerel sıralamayı temizle",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "Kiro'ya geç"
   },
+  "breakout": {
+    "gameOver": "Oyun bitti",
+    "gameOverRank": "Mevcut yerel sıralama #{{rank}}",
+    "startGame": "Oyunu başlat",
+    "startHint": "Başlat'a tıkla veya Boşluk tuşuna bas",
+    "rankTitle": "Geçmiş yerel sıralama",
+    "rankCurrent": "Mevcut",
+    "rankNoData": "--",
+    "restart": "Yeniden başlat",
+    "pause": "Duraklat",
+    "resume": "Devam et",
+    "paused": "Duraklatıldı",
+    "level": "Seviye {{level}}",
+    "levelScore": "Seviye puanı {{score}}",
+    "levelCleared": "Seviye tamamlandı",
+    "nextLevel": "Sonraki seviye",
+    "history": "Geçmiş",
+    "historyShort": "Geçmiş",
+    "historyEmpty": "Henüz kayıt yok",
+    "historyClear": "Temizle",
+    "historyScoreShort": "Skor {{score}}",
+    "historyLevelShort": "Sv {{level}}",
+    "historyDurationShort": "Süre {{duration}}",
+    "historyReasonGameOver": "Oyun bitti",
+    "historyReasonManualExit": "Manuel çıkış",
+    "serveHint": "Topu fırlatmak için Boşluk tuşuna basın",
+    "ranking": "Yerel geçmiş",
+    "rankingShort": "Yerel",
+    "rankingEmpty": "Henüz yerel kayıt yok",
+    "rankingClear": "Yerel sıralamayı temizle",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Bildirimler",
     "empty": "Bildirim yok",
     "markAllRead": "Tümünü okundu işaretle",
     "gotIt": "Anlaşıldı",
     "later": "Daha sonra",
-    "clickToClose": "Kapatmak için tıklayın",
     "new": "Yeni",
     "timeAgo": {
       "justNow": "Az önce",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 Acil"
     },
     "refreshed": "Bildirimler güncellendi (toplam {count})",
+    "clickToClose": "Kapatmak için tıklayın",
     "clickToEnlarge": "Büyütmek için tıkla",
     "imageLoadFailed": "Resim yüklenemedi"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Tümünü daralt",
+      "expandAll": "Tümünü genişlet",
+      "goAntigravity": "Antigravity sayfasına git",
+      "goCodex": "Codex sayfasına git",
+      "goDashboard": "Gösterge paneline git",
+      "goFingerprints": "Cihaz parmak izi sayfasına git",
+      "goGitHubCopilot": "GitHub Copilot sayfasına git",
+      "goInstances": "Çoklu instance sayfasına git",
+      "goKiro": "Kiro sayfasına git",
+      "goSettings": "Ayarlara git",
+      "goVerification": "Wakeup doğrulamasına git",
+      "goWakeup": "Wakeup görevlerine git",
+      "goWindsurf": "Windsurf sayfasına git",
+      "openLayout": "Platform düzenini aç"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Antigravity hesap yönetimi içinde riskli veya toplu işlemden önce veri yedeği alın."
+      },
+      "keywords": {
+        "0": "Antigravity hesap yönetimi",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap"
+      },
+      "outcomes": {
+        "0": "Antigravity hesap yönetimi ile nelerin çözüldüğünü anlayın.",
+        "1": "Antigravity hesap yönetimi içinde önerilen akışı kullanarak hataları azaltın."
+      },
+      "steps": {
+        "0": "Antigravity hesap yönetimi sayfasını açın.",
+        "1": "Antigravity hesap yönetimi için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Antigravity hesap yönetimi içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Antigravity hesap yönetimi kullanımını açıklar.",
+      "title": "Antigravity hesap yönetimi"
+    },
+    "blocks": {
+      "cautions": "Yaygın hatalar / notlar",
+      "outcomes": "Bu özellik ne sağlar",
+      "steps": "Önerilen adımlar"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Gösterge paneli içinde riskli veya toplu işlemden önce veri yedeği alın."
+      },
+      "keywords": {
+        "0": "Gösterge paneli",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap"
+      },
+      "outcomes": {
+        "0": "Gösterge paneli ile nelerin çözüldüğünü anlayın.",
+        "1": "Gösterge paneli içinde önerilen akışı kullanarak hataları azaltın."
+      },
+      "steps": {
+        "0": "Gösterge paneli sayfasını açın.",
+        "1": "Gösterge paneli için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Gösterge paneli içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Gösterge paneli kullanımını açıklar.",
+      "title": "Gösterge paneli"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "İçe/Dışa aktarma, gizlilik ve troubleshooting çalıştırmadan önce filtre ve hedef kapsamını doğrulayın.",
+        "2": "Log paylaşmadan önce hassas verileri kaldırın (token, cookie, e-posta)."
+      },
+      "keywords": {
+        "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap",
+        "4": "ayarlar",
+        "5": "sorun giderme",
+        "6": "loglar",
+        "7": "veri"
+      },
+      "outcomes": {
+        "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting ile nelerin çözüldüğünü anlayın.",
+        "1": "İçe/Dışa aktarma, gizlilik ve troubleshooting içinde önerilen akışı kullanarak hataları azaltın.",
+        "2": "Ölçeklemeden önce İçe/Dışa aktarma, gizlilik ve troubleshooting içinde bir başarılı çalıştırma doğrulayın.",
+        "3": "İçe/Dışa aktarma, gizlilik ve troubleshooting içinde sorun olursa önce logs kontrol edin ve kanıt toplayın."
+      },
+      "steps": {
+        "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting sayfasını açın.",
+        "1": "İçe/Dışa aktarma, gizlilik ve troubleshooting için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için İçe/Dışa aktarma, gizlilik ve troubleshooting içinde bir manuel işlem çalıştırın.",
+        "3": "Troubleshooting için: Ayarlar -> Veri Dizini -> Aç, sonra logs klasörü.",
+        "4": "Önce en yeni app.log veya app.log.* dosyasını kontrol edin.",
+        "5": "Raporlarken zaman, platform, yeniden üretim adımları ve maskelenmiş logları ekleyin."
+      },
+      "summary": "Bu bölüm, günlük akışta İçe/Dışa aktarma, gizlilik ve troubleshooting kullanımını açıklar.",
+      "title": "İçe/Dışa aktarma, gizlilik ve troubleshooting"
+    },
+    "empty": {
+      "desc": "instance, switch, ayarlar, export gibi kelimeleri deneyin.",
+      "title": "Eşleşen içerik yok"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Cihaz parmak izi içinde riskli veya toplu işlemden önce veri yedeği alın."
+      },
+      "keywords": {
+        "0": "Cihaz parmak izi",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap"
+      },
+      "outcomes": {
+        "0": "Cihaz parmak izi ile nelerin çözüldüğünü anlayın.",
+        "1": "Cihaz parmak izi içinde önerilen akışı kullanarak hataları azaltın."
+      },
+      "steps": {
+        "0": "Cihaz parmak izi sayfasını açın.",
+        "1": "Cihaz parmak izi için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Cihaz parmak izi içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Cihaz parmak izi kullanımını açıklar.",
+      "title": "Cihaz parmak izi"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Çoklu instance (kritik) içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "Çoklu instance (kritik) çalıştırmadan önce filtre ve hedef kapsamını doğrulayın."
+      },
+      "keywords": {
+        "0": "Çoklu instance (kritik)",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap",
+        "4": "ayarlar"
+      },
+      "outcomes": {
+        "0": "Çoklu instance (kritik) ile nelerin çözüldüğünü anlayın.",
+        "1": "Çoklu instance (kritik) içinde önerilen akışı kullanarak hataları azaltın.",
+        "2": "Ölçeklemeden önce Çoklu instance (kritik) içinde bir başarılı çalıştırma doğrulayın."
+      },
+      "steps": {
+        "0": "Çoklu instance (kritik) sayfasını açın.",
+        "1": "Çoklu instance (kritik) için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Çoklu instance (kritik) içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Çoklu instance (kritik) kullanımını açıklar.",
+      "title": "Çoklu instance (kritik)"
+    },
+    "navTitle": "Kullanım Kılavuzu",
+    "providers": {
+      "cautions": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro çalıştırmadan önce filtre ve hedef kapsamını doğrulayın."
+      },
+      "keywords": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro platformları",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap",
+        "4": "ayarlar",
+        "5": "sorun giderme"
+      },
+      "outcomes": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro ile nelerin çözüldüğünü anlayın.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro içinde önerilen akışı kullanarak hataları azaltın.",
+        "2": "Ölçeklemeden önce Codex / GitHub Copilot / Windsurf / Kiro içinde bir başarılı çalıştırma doğrulayın."
+      },
+      "steps": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro sayfasını açın.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Codex / GitHub Copilot / Windsurf / Kiro içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Codex / GitHub Copilot / Windsurf / Kiro kullanımını açıklar.",
+      "title": "Codex / GitHub Copilot / Windsurf / Kiro platformları"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Hızlı başlangıç (5 dakika) içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "Hızlı başlangıç (5 dakika) çalıştırmadan önce filtre ve hedef kapsamını doğrulayın."
+      },
+      "keywords": {
+        "0": "Hızlı başlangıç (5 dakika)",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap"
+      },
+      "outcomes": {
+        "0": "Hızlı başlangıç (5 dakika) ile nelerin çözüldüğünü anlayın.",
+        "1": "Hızlı başlangıç (5 dakika) içinde önerilen akışı kullanarak hataları azaltın.",
+        "2": "Ölçeklemeden önce Hızlı başlangıç (5 dakika) içinde bir başarılı çalıştırma doğrulayın."
+      },
+      "steps": {
+        "0": "Hızlı başlangıç (5 dakika) sayfasını açın.",
+        "1": "Hızlı başlangıç (5 dakika) için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Hızlı başlangıç (5 dakika) içinde bir manuel işlem çalıştırın.",
+        "3": "Troubleshooting için: Ayarlar -> Veri Dizini -> Aç, sonra logs klasörü."
+      },
+      "summary": "Bu bölüm, günlük akışta Hızlı başlangıç (5 dakika) kullanımını açıklar.",
+      "title": "Hızlı başlangıç (5 dakika)"
+    },
+    "resultCount": "Toplam {{count}} bölüm",
+    "searchAria": "Kılavuzda ara",
+    "searchPlaceholder": "Özellik, senaryo veya anahtar kelime ara (örn: instance, inject, wakeup, fingerprint)",
+    "settings": {
+      "cautions": {
+        "0": "Ayarlar ve sistem yetenekleri içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "Ayarlar ve sistem yetenekleri çalıştırmadan önce filtre ve hedef kapsamını doğrulayın."
+      },
+      "keywords": {
+        "0": "Ayarlar ve sistem yetenekleri",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap",
+        "4": "ayarlar",
+        "5": "sorun giderme"
+      },
+      "outcomes": {
+        "0": "Ayarlar ve sistem yetenekleri ile nelerin çözüldüğünü anlayın.",
+        "1": "Ayarlar ve sistem yetenekleri içinde önerilen akışı kullanarak hataları azaltın.",
+        "2": "Ölçeklemeden önce Ayarlar ve sistem yetenekleri içinde bir başarılı çalıştırma doğrulayın."
+      },
+      "steps": {
+        "0": "Ayarlar ve sistem yetenekleri sayfasını açın.",
+        "1": "Ayarlar ve sistem yetenekleri için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Ayarlar ve sistem yetenekleri içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Ayarlar ve sistem yetenekleri kullanımını açıklar.",
+      "title": "Ayarlar ve sistem yetenekleri"
+    },
+    "subtitle": "Görev senaryolarına göre düzenlenmiş rehber. Önce hedefi anlayın, sonra önerilen akışı izleyin.",
+    "title": "Kullanım Kılavuzu",
+    "wakeup": {
+      "cautions": {
+        "0": "Wakeup görevleri ve doğrulama içinde riskli veya toplu işlemden önce veri yedeği alın.",
+        "1": "Wakeup görevleri ve doğrulama çalıştırmadan önce filtre ve hedef kapsamını doğrulayın."
+      },
+      "keywords": {
+        "0": "Wakeup görevleri ve doğrulama",
+        "1": "rehber",
+        "2": "akış",
+        "3": "hesap",
+        "4": "ayarlar"
+      },
+      "outcomes": {
+        "0": "Wakeup görevleri ve doğrulama ile nelerin çözüldüğünü anlayın.",
+        "1": "Wakeup görevleri ve doğrulama içinde önerilen akışı kullanarak hataları azaltın."
+      },
+      "steps": {
+        "0": "Wakeup görevleri ve doğrulama sayfasını açın.",
+        "1": "Wakeup görevleri ve doğrulama için temel kurulum ve gerekli bağları tamamlayın.",
+        "2": "Beklenen sonucu doğrulamak için Wakeup görevleri ve doğrulama içinde bir manuel işlem çalıştırın."
+      },
+      "summary": "Bu bölüm, günlük akışta Wakeup görevleri ve doğrulama kullanımını açıklar.",
+      "title": "Wakeup görevleri ve doğrulama"
+    }
   }
 }

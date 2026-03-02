@@ -1,5 +1,6 @@
 export type Page =
   | 'dashboard'
+  | 'manual'
   | 'overview'
   | 'codex'
   | 'github-copilot'

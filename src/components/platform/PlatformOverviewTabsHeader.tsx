@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Github, Layers } from 'lucide-react';
+import { Github, Layers, HelpCircle } from 'lucide-react';
 import { CodexIcon } from '../icons/CodexIcon';
 import { WindsurfIcon } from '../icons/WindsurfIcon';
 import { KiroIcon } from '../icons/KiroIcon';
@@ -79,7 +79,17 @@ export function PlatformOverviewTabsHeader({
   return (
     <>
       <div className="page-header">
-        <div className="page-title">{t(config.titleKey, config.titleDefault)}</div>
+        <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {t(config.titleKey, config.titleDefault)}
+          <button
+            className="btn btn-secondary icon-only"
+            onClick={() => window.dispatchEvent(new CustomEvent('app-request-navigate', { detail: 'manual' }))}
+            title={t('manual.navTitle', '功能使用手册')}
+            style={{ padding: '6px', borderRadius: '50%', background: 'transparent', border: 'none', color: 'var(--text-secondary)' }}
+          >
+            <HelpCircle size={18} />
+          </button>
+        </div>
         <div className="page-subtitle">{subtitle}</div>
       </div>
       <div className="page-tabs-row page-tabs-center">

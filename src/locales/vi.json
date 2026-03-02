@@ -151,11 +151,191 @@
     "fingerprints": "Vân tay thiết bị",
     "settings": "Cài đặt",
     "codex": "Tài khoản Codex",
-    "dashboard": "Bảng điều khiển",
-    "instances": "Đa Phiên Bản",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Thêm nền tảng"
+    "dashboard": "Bảng điều khiển",
+    "morePlatforms": "Thêm nền tảng",
+    "instances": "Đa Phiên Bản",
+    "manual": "Hướng dẫn sử dụng"
+  },
+  "platformLayout": {
+    "title": "Bố cục nền tảng",
+    "sidebarSelected": "Đã chọn trên thanh bên {{count}}/{{max}}",
+    "reset": "Đặt lại mặc định",
+    "tip": "Kéo để sắp xếp lại. Thanh bên chỉ hiển thị tối đa hai nền tảng. Nếu chỉ chọn một, chỉ một nền tảng sẽ được hiển thị.",
+    "sidebarToggle": "Hiển thị ở thanh bên",
+    "dashboardToggle": "Hiển thị trên bảng điều khiển",
+    "trayToggle": "Hiển thị trên khay hệ thống",
+    "hiddenBadge": "Ẩn",
+    "openFromMore": "Quản lý bố cục nền tảng",
+    "dragHandleLabel": "Kéo để sắp xếp lại"
+  },
+  "privacy": {
+    "hideSensitive": "Ẩn email",
+    "showSensitive": "Hiện email"
+  },
+  "instances": {
+    "title": "Nhiều phiên bản",
+    "subtitle": "Hồ sơ riêng biệt để chạy song song nhiều tài khoản.",
+    "defaultName": "Phiên bản mặc định",
+    "search": "Tìm kiếm phiên bản",
+    "sort": {
+      "label": "Sắp xếp",
+      "createdAt": "Theo thời gian tạo",
+      "lastLaunchedAt": "Theo thời gian khởi chạy",
+      "ascTooltip": "Hiện tại: tăng dần, bấm để chuyển sang giảm dần",
+      "descTooltip": "Hiện tại: giảm dần, bấm để chuyển sang tăng dần",
+      "toggleDirection": "Chuyển hướng sắp xếp"
+    },
+    "actions": {
+      "create": "Phiên bản mới",
+      "refresh": "Làm mới",
+      "startAll": "Bắt đầu tất cả",
+      "restartAll": "Khởi động lại tất cả",
+      "stopAll": "Dừng tất cả",
+      "start": "Bắt đầu",
+      "stop": "Dừng",
+      "openFolder": "Mở thư mục",
+      "edit": "Chỉnh sửa",
+      "openRootDir": "Mở thư mục",
+      "selectPath": "Chọn đường dẫn",
+      "openWindow": "Mở cửa sổ"
+    },
+    "bulkConfirm": {
+      "startAll": "Bắt đầu tất cả các phiên bản đang dừng?",
+      "restartAll": "Khởi động lại tất cả các phiên bản đang chạy?",
+      "stopAll": "Đóng tất cả các phiên bản?"
+    },
+    "status": {
+      "running": "Đang chạy",
+      "stopped": "Đã dừng",
+      "restarting": "Đang khởi động lại",
+      "starting": "Bắt đầu"
+    },
+    "labels": {
+      "path": "Thư mục",
+      "args": "Đối số khởi động",
+      "argsEmpty": "Không có",
+      "bindAccount": "Tài khoản liên kết",
+      "unbound": "Chưa liên kết",
+      "pendingInit": "Chờ khởi tạo (hãy chạy một lần trước)",
+      "quota": "Hạn ngạch",
+      "lastLaunched": "Lần chạy cuối"
+    },
+    "columns": {
+      "instance": "Phiên bản",
+      "email": "Tài khoản",
+      "quota": "Trạng thái hạn ngạch",
+      "actions": "Hành động"
+    },
+    "empty": {
+      "title": "Không có phiên bản nào",
+      "desc": "Tạo một thư mục cấu hình riêng biệt để khởi động nhanh nhiều phiên bản."
+    },
+    "modal": {
+      "createTitle": "Tạo phiên bản mới",
+      "editTitle": "Chỉnh sửa phiên bản"
+    },
+    "form": {
+      "name": "Tên phiên bản",
+      "namePlaceholder": "vd: Tài khoản công việc",
+      "path": "Thư mục phiên bản",
+      "pathPlaceholder": "Chọn thư mục",
+      "pathReadOnly": "Đường dẫn không thể thay đổi khi chỉnh sửa",
+      "pathAutoHint": "Đường dẫn tự động cập nhật khi đổi tên (hoặc chọn thủ công)",
+      "copyLogin": "Sao chép trạng thái đăng nhập hiện tại",
+      "copyLoginDesc": "Sao chép cấu hình và dữ liệu đăng nhập từ thư mục mặc định",
+      "initMode": "Chế độ khởi tạo",
+      "initModeCopy": "Sao chép từ phiên bản nguồn (mặc định)",
+      "initModeEmpty": "Phiên bản trống (không sao chép)",
+      "emptyInitHint": "Khi chọn không sao chép, chỉ tạo thư mục trống. Cần khởi chạy một lần trước khi liên kết tài khoản.",
+      "copySource": "Sao chép từ phiên bản nguồn",
+      "copySourceDesc": "Sao chép cấu hình và dữ liệu đăng nhập từ phiên bản đã chọn",
+      "copySourcePlaceholder": "Chọn phiên bản nguồn",
+      "copySourceRequired": "Vui lòng chọn một phiên bản nguồn",
+      "copySourceRunningHint": "Phiên bản nguồn đang chạy. Khuyên dùng đóng nó trước để tránh không nhất quán dữ liệu.",
+      "bindInject": "Liên kết tài khoản",
+      "bindAfterInit": "Có thể liên kết sau khi khởi tạo",
+      "bindDisabledHint": "Với phiên bản trống, hãy khởi chạy một lần để tạo dữ liệu rồi mới liên kết tài khoản.",
+      "followCurrent": "Theo tài khoản hiện tại",
+      "selectAccount": "Chọn tài khoản",
+      "bindAccount": "Liên kết tài khoản",
+      "unbound": "Chưa liên kết",
+      "extraArgs": "Đối số khởi động tùy chỉnh",
+      "extraArgsPlaceholder": "vd: --disable-gpu --log-level=2",
+      "extraArgsDesc": "Phân cách các đối số bằng khoảng trắng, hỗ trợ dấu ngoặc kép",
+      "nameRequired": "Vui lòng nhập tên phiên bản",
+      "pathRequired": "Vui lòng chọn thư mục phiên bản",
+      "bindRequired": "Vui lòng chọn một tài khoản để liên kết"
+    },
+    "quota": {
+      "unbound": "Tài khoản chưa liên kết",
+      "accountMissing": "Không tìm thấy tài khoản",
+      "empty": "Không có hạn ngạch trong bộ nhớ đệm"
+    },
+    "messages": {
+      "created": "Đã tạo phiên bản",
+      "emptyCreated": "Đã tạo phiên bản trống. Hãy khởi chạy một lần trước khi liên kết tài khoản.",
+      "updated": "Đã cập nhật phiên bản",
+      "deleted": "Đã xóa phiên bản",
+      "started": "Đã bắt đầu phiên bản",
+      "stopped": "Đã dừng phiên bản",
+      "startedAll": "Tất cả các phiên bản đã dừng đã được bắt đầu",
+      "restartedAll": "Các phiên bản đang chạy đã được khởi động lại",
+      "closedAll": "Tất cả các phiên bản đã được dừng",
+      "allAlreadyRunning": "Tất cả các phiên bản đã đang chạy",
+      "noneRunning": "Không tìm thấy phiên bản nào đang chạy"
+    },
+    "runningDialog": {
+      "title": "Phiên bản đã đang chạy",
+      "desc": "Phiên bản này đã được bắt đầu. Bạn có thể chuyển sang cửa sổ đó hoặc khởi động lại theo chiến lược hiện tại.",
+      "current": "Chiến lược hiện tại: {{name}}",
+      "pathLabel": "Thư mục phiên bản",
+      "go": "Chuyển sang ngay",
+      "restart": "Đóng và khởi động lại"
+    },
+    "initGuide": {
+      "title": "Phiên bản chưa được khởi tạo",
+      "desc": "Đây là \"phiên bản trống\". Hiện tại chỉ mới tạo thư mục, dữ liệu phiên bản vẫn chưa được tạo.",
+      "tip": "Vui lòng khởi chạy phiên bản một lần trước. Sau khi khởi tạo xong, bạn có thể liên kết tài khoản.",
+      "startNow": "Khởi chạy ngay"
+    },
+    "restartStrategy": {
+      "button": "Chiến lược khởi động lại",
+      "title": "Chiến lược khởi động lại",
+      "desc": "Chọn phương thức khởi động lại phiên bản. Mỗi tùy chọn ảnh hưởng đến phạm vi và độ ổn định.",
+      "recommended": "Khuyên dùng",
+      "labels": {
+        "principle": "Nguyên lý kỹ thuật",
+        "command": "Lệnh",
+        "pros": "Ưu điểm",
+        "cons": "Nhược điểm"
+      },
+      "safe": {
+        "title": "Khởi động lại an toàn (Khuyên dùng)",
+        "principle": "Gửi tín hiệu SIGTERM đến tất cả các tiến trình Antigravity, yêu cầu ứng dụng lưu dữ liệu và đóng lại, sau đó bắt đầu phiên bản đích (buộc đóng nếu cần).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (tất cả tiến trình Antigravity)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (tất cả tiến trình Antigravity)",
+        "pros": "Gần nhất với đóng bình thường, ít khả năng gây ra cảnh báo lỗi, dữ liệu an toàn hơn.",
+        "cons": "Chỉ hỗ trợ khởi động lại toàn cục cho tất cả các phiên bản."
+      },
+      "force": {
+        "title": "Khởi động lại bắt buộc",
+        "principle": "Xác định các tiến trình qua --user-data-dir và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (khớp với --user-data-dir)",
+        "pros": "Có thể khởi động lại chính xác một phiên bản duy nhất.",
+        "cons": "Có thể gây ra cảnh báo \"đóng bất ngờ\", rủi ro mất dữ liệu chưa lưu."
+      }
+    },
+    "stop": {
+      "title": "Buộc dừng phiên bản",
+      "message": "Gửi tín hiệu kết thúc (SIGTERM) đến tiến trình phiên bản. Dữ liệu chưa lưu có thể bị mất. Tiếp tục?"
+    },
+    "delete": {
+      "title": "Xóa phiên bản",
+      "message": "Xóa phiên bản {{name}}? Hành động này sẽ gỡ bỏ cấu hình và xóa thư mục phiên bản."
+    }
   },
   "settings": {
     "title": "Cài đặt ứng dụng",
@@ -186,11 +366,6 @@
       "every1hour": "Mỗi 1 giờ",
       "minutes": "phút",
       "refreshIntervalLimited": "Chức năng đánh thức khi đặt lại hạn mức đang được bật, vì vậy khoảng thời gian làm mới tối thiểu là 2 phút.",
-      "storageTitle": "Thư mục & Lưu trữ",
-      "dataDir": "Thư mục dữ liệu",
-      "dataDirDesc": "Vị trí lưu trữ tài khoản và cấu hình.",
-      "fpDir": "Thư mục lưu trữ Antigravity",
-      "fpDirDesc": "Vị trí lưu trữ tệp dữ liệu Antigravity.",
       "closeBehavior": "Hành động khi đóng",
       "closeBehaviorDesc": "Chọn hành động khi đóng cửa sổ",
       "closeBehaviorAsk": "Hỏi mỗi lần",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Điều khiển hiển thị biểu tượng Dock độc lập, không phụ thuộc vào hành vi thu nhỏ cửa sổ",
       "hideDockIconOff": "Không (Hiện biểu tượng Dock)",
       "hideDockIconOn": "Có (Ẩn biểu tượng Dock)",
-      "opencodeAppPathDesc": "Để trống để dùng đường dẫn mặc định",
+      "storageTitle": "Thư mục & Lưu trữ",
+      "dataDir": "Thư mục dữ liệu",
+      "dataDirDesc": "Vị trí lưu trữ tài khoản và cấu hình.",
+      "fpDir": "Thư mục lưu trữ Antigravity",
+      "fpDirDesc": "Vị trí lưu trữ tệp dữ liệu Antigravity.",
       "opencodeTitle": "Tích hợp OpenCode",
       "opencodeRestart": "Khởi động lại OpenCode khi chuyển Codex",
       "opencodeRestartDesc": "Đồng bộ thông tin tài khoản Codex trong OpenCode",
       "opencodeAppPath": "Đường dẫn khởi chạy OpenCode",
+      "opencodeAppPathDesc": "Để trống để dùng đường dẫn mặc định",
       "opencodeAppPathPlaceholder": "Đường dẫn mặc định",
       "opencodePathReset": "Đặt lại mặc định",
       "opencodePathSelect": "Chọn",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Lưu cài đặt"
   },
+  "appPath": {
+    "missing": {
+      "title": "Không tìm thấy đường dẫn ứng dụng",
+      "desc": "Không tìm thấy đường dẫn ứng dụng {{app}}. Vui lòng đặt ngay để tiếp tục.",
+      "action": "Đặt ngay"
+    }
+  },
   "accounts": {
     "title": "Quản lý tài khoản",
     "subtitle": "Quản lý danh sách tài khoản Antigravity của bạn.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Mặc định",
       "overall": "Theo tổng hạn mức",
+      "createdAt": "Theo thời gian tạo",
       "byGroup": "Theo hạn mức {{group}}",
       "byGroupReset": "Theo thời gian đặt lại {{group}}",
-      "createdAt": "Theo thời gian tạo",
       "descTooltip": "Giảm dần, nhấn để chuyển Tăng dần",
       "ascTooltip": "Tăng dần, nhấn để chuyển Giảm dần",
       "toggleDirection": "Đổi hướng sắp xếp"
     },
+    "filterTags": "Lọc thẻ",
+    "filterTagsCount": "Thẻ",
+    "noAvailableTags": "Không có thẻ nào",
+    "clearFilter": "Xóa bộ lọc",
+    "editTags": "Chỉnh sửa thẻ",
+    "tagModal": {
+      "title": "Chỉnh sửa thẻ",
+      "hint": "Tối đa {{max}} thẻ. Mỗi thẻ có thể dài tối đa {{maxLength}} ký tự.",
+      "empty": "Không có thẻ nào",
+      "suggestionsTitle": "Lọc thẻ",
+      "suggestionsEmpty": "Không có thẻ nào",
+      "inputPlaceholder": "Nhập thẻ (còn {{remaining}})",
+      "inputDisabledPlaceholder": "Đã đạt giới hạn thẻ",
+      "add": "Thêm",
+      "save": "Lưu thẻ",
+      "error": {
+        "empty": "Thẻ không được để trống",
+        "tooLong": "Thẻ không được dài quá {{max}} ký tự",
+        "duplicate": "Thẻ đã tồn tại",
+        "tooMany": "Bạn chỉ có thể thêm tối đa {{max}} thẻ"
+      }
+    },
+    "groupByTag": "Nhóm theo thẻ",
+    "untagged": "Chưa gắn thẻ",
+    "deleteTagAria": "Xóa thẻ {{tag}}",
+    "confirmDeleteTag": "Xóa thẻ \"{{tag}}\"? Thẻ này sẽ bị xóa khỏi {{count}} tài khoản.",
+    "defaultGroup": "Nhóm mặc định",
     "actions": {
       "viewDetails": "Xem chi tiết",
       "viewError": "Xem lỗi",
@@ -388,33 +602,6 @@
       "importSuccess": "Đã nhập {{count}} tài khoản",
       "importPartial": "Đã nhập thành công {{success}} tài khoản, thất bại {{fail}}",
       "importFailed": "Nhập thất bại, vui lòng kiểm tra refresh_token"
-    },
-    "confirmDeleteTag": "Xóa thẻ \"{{tag}}\"? Thẻ này sẽ bị xóa khỏi {{count}} tài khoản.",
-    "defaultGroup": "Nhóm mặc định",
-    "filterTags": "Lọc thẻ",
-    "filterTagsCount": "Thẻ",
-    "noAvailableTags": "Không có thẻ nào",
-    "clearFilter": "Xóa bộ lọc",
-    "editTags": "Chỉnh sửa thẻ",
-    "groupByTag": "Nhóm theo thẻ",
-    "untagged": "Chưa gắn thẻ",
-    "deleteTagAria": "Xóa thẻ {{tag}}",
-    "tagModal": {
-      "title": "Chỉnh sửa thẻ",
-      "hint": "Tối đa {{max}} thẻ. Mỗi thẻ có thể dài tối đa {{maxLength}} ký tự.",
-      "empty": "Không có thẻ nào",
-      "suggestionsTitle": "Lọc thẻ",
-      "suggestionsEmpty": "Không có thẻ nào",
-      "inputPlaceholder": "Nhập thẻ (còn {{remaining}})",
-      "inputDisabledPlaceholder": "Đã đạt giới hạn thẻ",
-      "add": "Thêm",
-      "save": "Lưu thẻ",
-      "error": {
-        "empty": "Thẻ không được để trống",
-        "tooLong": "Thẻ không được dài quá {{max}} ký tự",
-        "duplicate": "Thẻ đã tồn tại",
-        "tooMany": "Bạn chỉ có thể thêm tối đa {{max}} thẻ"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Nhiệm vụ đánh thức",
     "subtitle": "Quản lý nhiều nhiệm vụ đánh thức tự động với điều khiển độc lập.",
+    "verification": {
+      "title": "Yêu cầu xác minh",
+      "columns": {
+        "verifiedAt": "Thời gian xác minh"
+      },
+      "filters": {
+        "all": "Tất cả"
+      },
+      "actions": {
+        "selectAllAccounts": "Chọn tất cả",
+        "clearSelectedAccounts": "Bỏ chọn",
+        "runCheckNow": "Hoàn tất xác minh"
+      },
+      "runHint": {
+        "title": "Ghi chú xác minh",
+        "line1": "“Kiểm tra ngay” sẽ gửi một yêu cầu chat tối thiểu bằng cách mô phỏng client Antigravity qua cổng nội bộ và giao thức Language Server chính thức.",
+        "line2": "Quy trình này tiêu tốn một lượng nhỏ token (thường là một đoạn hội thoại ngắn). Mức tiêu thụ thực tế phụ thuộc vào model và chính sách tài khoản.",
+        "line3": "Thao tác này không thay đổi cấu hình tác vụ đánh thức. Nó chỉ kiểm tra khả dụng của tài khoản và ghi lịch sử kiểm tra.",
+        "line4": "Nếu trả về 403, bạn cần hoàn tất xác minh tài khoản trước. Kết quả sẽ cung cấp URL xác minh và thao tác nhanh."
+      },
+      "deleteConfirm": "Xác nhận xóa?"
+    },
     "globalToggle": "Công tắc đánh thức chung",
     "newTask": "Nhiệm vụ mới",
     "runTest": "Chạy thử",
@@ -763,28 +972,6 @@
       "accountsHint": "Chọn nhiều tài khoản để thử nghiệm.",
       "start": "Bắt đầu thử nghiệm",
       "testing": "Đang thử nghiệm..."
-    },
-    "verification": {
-      "title": "Yêu cầu xác minh",
-      "columns": {
-        "verifiedAt": "Thời gian xác minh"
-      },
-      "filters": {
-        "all": "Tất cả"
-      },
-      "actions": {
-        "selectAllAccounts": "Chọn tất cả",
-        "clearSelectedAccounts": "Bỏ chọn",
-        "runCheckNow": "Hoàn tất xác minh"
-      },
-      "deleteConfirm": "Xác nhận xóa?",
-      "runHint": {
-        "title": "Ghi chú xác minh",
-        "line1": "“Kiểm tra ngay” sẽ gửi một yêu cầu chat tối thiểu bằng cách mô phỏng client Antigravity qua cổng nội bộ và giao thức Language Server chính thức.",
-        "line2": "Quy trình này tiêu tốn một lượng nhỏ token (thường là một đoạn hội thoại ngắn). Mức tiêu thụ thực tế phụ thuộc vào model và chính sách tài khoản.",
-        "line3": "Thao tác này không thay đổi cấu hình tác vụ đánh thức. Nó chỉ kiểm tra khả dụng của tài khoản và ghi lịch sử kiểm tra.",
-        "line4": "Nếu trả về 403, bạn cần hoàn tất xác minh tài khoản trước. Kết quả sẽ cung cấp URL xác minh và thao tác nhanh."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Quản lý tài khoản Codex",
     "subtitle": "Quản lý các tài khoản OpenAI Codex",
+    "instances": {
+      "subtitle": "Cấu hình độc lập cho mỗi phiên bản, vận hành song song với nhiều tài khoản.",
+      "comingSoon": "Đa Phiên Bản Sắp Ra Mắt",
+      "comingSoonDesc": "Chạy nhiều phiên bản Codex.app với các tài khoản khác nhau cùng lúc.",
+      "unsupported": {
+        "desc": "Đa phiên bản Codex hiện chỉ khả dụng trên macOS."
+      },
+      "quota": {
+        "hourly": "5 giờ",
+        "weekly": "Tuần"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Gửi tín hiệu SIGTERM đến tất cả các tiến trình Codex, yêu cầu ứng dụng lưu dữ liệu và đóng lại, sau đó bắt đầu phiên bản đích (buộc đóng nếu cần).",
+          "commandMac": "macOS: kill -15 <pid> (tất cả tiến trình Codex)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (tất cả tiến trình Codex)"
+        },
+        "force": {
+          "principle": "Xác định các tiến trình qua CODEX_HOME và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (khớp với CODEX_HOME)"
+        }
+      }
+    },
+    "refreshSuccess": "Đã làm mới quota",
+    "refreshFailed": "Làm mới quota thất bại: {{error}}",
+    "refreshAllSuccess": "Làm mới hoàn tất, {{count}} tài khoản thành công",
+    "refreshAllPartialFailed": "Làm mới hoàn tất, {{success}} / {{total}} tài khoản thành công và một số thất bại",
     "switch": "Chuyển",
     "switched": "Đã chuyển sang {{email}}",
     "switchFailed": "Chuyển thất bại: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Lấy tài khoản cục bộ"
     },
     "import": {
+      "localDesc": "Nhập tài khoản Codex từ các phiên đăng nhập cục bộ.",
       "importing": "Đang nhập tài khoản cục bộ...",
-      "successMsg": "Nhập thành công: {{email}}",
-      "localDesc": "Nhập tài khoản Codex từ các phiên đăng nhập cục bộ."
+      "successMsg": "Nhập thành công: {{email}}"
     },
     "quota": {
       "hourly": "Hạn mức 5 giờ",
       "weekly": "Hạn mức tuần",
       "reset": "Đặt lại"
+    },
+    "quotaError": {
+      "badge": "Lỗi quota",
+      "generic": "Làm mới quota thất bại, vui lòng thử lại sau",
+      "deactivatedWorkspace": "Workspace đã bị vô hiệu hoá, hãy đổi tài khoản hoặc cấp quyền lại"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Thời gian đặt lại theo tuần",
       "hourlyReset": "Thời gian đặt lại 5 giờ"
     },
+    "opencodeSwitch": "Công tắc OpenCode",
+    "opencodeSwitchDesc": "Đồng bộ chuyển đổi tài khoản Codex trong OpenCode",
+    "opencodeSwitchFailed": "Không thể cập nhật công tắc OpenCode: {{error}}",
     "columns": {
       "hourly": "Hạn mức 5h",
       "weekly": "Hạn mức tuần"
     },
-    "opencodeSwitch": "Công tắc OpenCode",
-    "opencodeSwitchDesc": "Đồng bộ chuyển đổi tài khoản Codex trong OpenCode",
-    "opencodeSwitchFailed": "Không thể cập nhật công tắc OpenCode: {{error}}",
     "filterTags": "Lọc thẻ",
     "filterTagsCount": "Thẻ",
     "noAvailableTags": "Không có thẻ nào",
     "clearFilter": "Xóa bộ lọc",
-    "editTags": "Chỉnh sửa thẻ",
+    "editTags": "Chỉnh sửa thẻ"
+  },
+  "githubCopilot": {
+    "title": "Quản lý tài khoản GitHub Copilot",
     "instances": {
-      "subtitle": "Cấu hình độc lập cho mỗi phiên bản, vận hành song song với nhiều tài khoản.",
-      "comingSoon": "Đa Phiên Bản Sắp Ra Mắt",
-      "comingSoonDesc": "Chạy nhiều phiên bản Codex.app với các tài khoản khác nhau cùng lúc.",
       "unsupported": {
-        "desc": "Đa phiên bản Codex hiện chỉ khả dụng trên macOS."
-      },
-      "quota": {
-        "hourly": "5 giờ",
-        "weekly": "Tuần"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Gửi tín hiệu SIGTERM đến tất cả các tiến trình Codex, yêu cầu ứng dụng lưu dữ liệu và đóng lại, sau đó bắt đầu phiên bản đích (buộc đóng nếu cần).",
-          "commandMac": "macOS: kill -15 <pid> (tất cả tiến trình Codex)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (tất cả tiến trình Codex)"
-        },
-        "force": {
-          "principle": "Xác định các tiến trình qua CODEX_HOME và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (khớp với CODEX_HOME)"
-        }
+        "desc": "Đa phiên bản GitHub Copilot hiện chỉ khả dụng trên macOS."
       }
     },
-    "refreshSuccess": "Đã làm mới quota",
-    "refreshFailed": "Làm mới quota thất bại: {{error}}",
-    "refreshAllSuccess": "Làm mới hoàn tất, {{count}} tài khoản thành công",
-    "refreshAllPartialFailed": "Làm mới hoàn tất, {{success}} / {{total}} tài khoản thành công và một số thất bại",
-    "quotaError": {
-      "badge": "Lỗi quota",
-      "generic": "Làm mới quota thất bại, vui lòng thử lại sau",
-      "deactivatedWorkspace": "Workspace đã bị vô hiệu hoá, hãy đổi tài khoản hoặc cấp quyền lại"
+    "empty": {
+      "description": "Nhấn \"Thêm tài khoản\" để bắt đầu"
+    },
+    "addModal": {
+      "title": "Thêm tài khoản GitHub Copilot"
+    },
+    "oauth": {
+      "desc": "Nhấn nút bên dưới và hoàn tất ủy quyền GitHub Copilot trong trình duyệt."
+    },
+    "token": {
+      "desc": "Dán token truy cập GitHub Copilot hoặc dữ liệu JSON đã xuất."
+    },
+    "import": {
+      "localDesc": "Nhập tài khoản GitHub Copilot từ các phiên đăng nhập cục bộ."
+    },
+    "sort": {
+      "weekly": "Hạn mức tuần",
+      "hourly": "Hạn mức 5 giờ",
+      "premium": "Theo mức dùng yêu cầu Premium",
+      "weeklyReset": "Thời gian đặt lại theo tuần",
+      "hourlyReset": "Thời gian đặt lại 5 giờ"
+    },
+    "columns": {
+      "hourly": "Hạn mức 5h",
+      "weekly": "Hạn mức tuần",
+      "premium": "Yêu cầu Premium"
+    },
+    "usage": {
+      "included": "Đã bao gồm"
+    },
+    "injectToVSCode": "Chuyển sang VS Code",
+    "injectSuccess": "Đã chèn token vào VS Code thành công. VS Code đang được khởi chạy.",
+    "injectRequireClose": "Vui lòng đóng VS Code trước khi chèn.",
+    "flowNotice": {
+      "title": "Hướng dẫn tài khoản GitHub Copilot (bấm để mở rộng/thu gọn)",
+      "desc": "Việc chuyển tài khoản yêu cầu đọc kho xác thực cục bộ của VS Code và dùng dịch vụ thông tin xác thực hệ thống để giải mã/ghi lại; dữ liệu chỉ được xử lý trên máy cục bộ.",
+      "inject": "Chuyển đổi một lần nhấp: công cụ này đọc dữ liệu mã hóa cục bộ của VS Code (DPAPI/Keychain/Secret Service), giải mã phiên xác thực trong state.vscdb, thay thế token GitHub Copilot rồi mã hóa lại — mọi thao tác đều diễn ra cục bộ trên máy của bạn.",
+      "reason": "Phạm vi quyền: đọc cơ sở dữ liệu xác thực VS Code (state.vscdb) và gọi khả năng mã hóa hệ thống (Windows DPAPI / macOS Keychain / Linux Secret Service) để giải mã/ghi lại.",
+      "storage": "Phạm vi đọc: chỉ xử lý dữ liệu liên quan đến phiên đăng nhập GitHub; mọi quy trình đều được thực thi cục bộ."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Vị trí tệp",
       "helpText": "Vui lòng mở thư mục để sửa thủ công hoặc xóa tệp, sau đó khởi động lại ứng dụng.",
       "openFolder": "Mở thư mục"
-    }
-  },
-  "instances": {
-    "title": "Nhiều phiên bản",
-    "subtitle": "Hồ sơ riêng biệt để chạy song song nhiều tài khoản.",
-    "defaultName": "Phiên bản mặc định",
-    "search": "Tìm kiếm phiên bản",
-    "actions": {
-      "create": "Phiên bản mới",
-      "refresh": "Làm mới",
-      "startAll": "Bắt đầu tất cả",
-      "restartAll": "Khởi động lại tất cả",
-      "stopAll": "Dừng tất cả",
-      "start": "Bắt đầu",
-      "stop": "Dừng",
-      "openFolder": "Mở thư mục",
-      "edit": "Chỉnh sửa",
-      "openRootDir": "Mở thư mục",
-      "selectPath": "Chọn đường dẫn",
-      "openWindow": "Mở cửa sổ"
-    },
-    "bulkConfirm": {
-      "startAll": "Bắt đầu tất cả các phiên bản đang dừng?",
-      "restartAll": "Khởi động lại tất cả các phiên bản đang chạy?",
-      "stopAll": "Đóng tất cả các phiên bản?"
-    },
-    "status": {
-      "running": "Đang chạy",
-      "stopped": "Đã dừng",
-      "restarting": "Đang khởi động lại",
-      "starting": "Bắt đầu"
-    },
-    "labels": {
-      "path": "Thư mục",
-      "args": "Đối số khởi động",
-      "argsEmpty": "Không có",
-      "bindAccount": "Tài khoản liên kết",
-      "unbound": "Chưa liên kết",
-      "quota": "Hạn ngạch",
-      "lastLaunched": "Lần chạy cuối",
-      "pendingInit": "Chờ khởi tạo (hãy chạy một lần trước)"
-    },
-    "columns": {
-      "instance": "Phiên bản",
-      "email": "Tài khoản",
-      "quota": "Trạng thái hạn ngạch",
-      "actions": "Hành động"
-    },
-    "empty": {
-      "title": "Không có phiên bản nào",
-      "desc": "Tạo một thư mục cấu hình riêng biệt để khởi động nhanh nhiều phiên bản."
-    },
-    "form": {
-      "name": "Tên phiên bản",
-      "namePlaceholder": "vd: Tài khoản công việc",
-      "path": "Thư mục phiên bản",
-      "pathPlaceholder": "Chọn thư mục",
-      "pathReadOnly": "Đường dẫn không thể thay đổi khi chỉnh sửa",
-      "pathAutoHint": "Đường dẫn tự động cập nhật khi đổi tên (hoặc chọn thủ công)",
-      "copyLogin": "Sao chép trạng thái đăng nhập hiện tại",
-      "copyLoginDesc": "Sao chép cấu hình và dữ liệu đăng nhập từ thư mục mặc định",
-      "copySource": "Sao chép từ phiên bản nguồn",
-      "copySourceDesc": "Sao chép cấu hình và dữ liệu đăng nhập từ phiên bản đã chọn",
-      "copySourcePlaceholder": "Chọn phiên bản nguồn",
-      "copySourceRequired": "Vui lòng chọn một phiên bản nguồn",
-      "copySourceRunningHint": "Phiên bản nguồn đang chạy. Khuyên dùng đóng nó trước để tránh không nhất quán dữ liệu.",
-      "bindInject": "Liên kết tài khoản",
-      "followCurrent": "Theo tài khoản hiện tại",
-      "selectAccount": "Chọn tài khoản",
-      "bindAccount": "Liên kết tài khoản",
-      "unbound": "Chưa liên kết",
-      "extraArgs": "Đối số khởi động tùy chỉnh",
-      "extraArgsPlaceholder": "vd: --disable-gpu --log-level=2",
-      "extraArgsDesc": "Phân cách các đối số bằng khoảng trắng, hỗ trợ dấu ngoặc kép",
-      "nameRequired": "Vui lòng nhập tên phiên bản",
-      "pathRequired": "Vui lòng chọn thư mục phiên bản",
-      "bindRequired": "Vui lòng chọn một tài khoản để liên kết",
-      "initMode": "Chế độ khởi tạo",
-      "initModeCopy": "Sao chép từ phiên bản nguồn (mặc định)",
-      "initModeEmpty": "Phiên bản trống (không sao chép)",
-      "emptyInitHint": "Khi chọn không sao chép, chỉ tạo thư mục trống. Cần khởi chạy một lần trước khi liên kết tài khoản.",
-      "bindAfterInit": "Có thể liên kết sau khi khởi tạo",
-      "bindDisabledHint": "Với phiên bản trống, hãy khởi chạy một lần để tạo dữ liệu rồi mới liên kết tài khoản."
-    },
-    "quota": {
-      "unbound": "Tài khoản chưa liên kết",
-      "accountMissing": "Không tìm thấy tài khoản",
-      "empty": "Không có hạn ngạch trong bộ nhớ đệm"
-    },
-    "messages": {
-      "created": "Đã tạo phiên bản",
-      "updated": "Đã cập nhật phiên bản",
-      "deleted": "Đã xóa phiên bản",
-      "started": "Đã bắt đầu phiên bản",
-      "stopped": "Đã dừng phiên bản",
-      "startedAll": "Tất cả các phiên bản đã dừng đã được bắt đầu",
-      "restartedAll": "Các phiên bản đang chạy đã được khởi động lại",
-      "closedAll": "Tất cả các phiên bản đã được dừng",
-      "allAlreadyRunning": "Tất cả các phiên bản đã đang chạy",
-      "noneRunning": "Không tìm thấy phiên bản nào đang chạy",
-      "emptyCreated": "Đã tạo phiên bản trống. Hãy khởi chạy một lần trước khi liên kết tài khoản."
-    },
-    "runningDialog": {
-      "title": "Phiên bản đã đang chạy",
-      "desc": "Phiên bản này đã được bắt đầu. Bạn có thể chuyển sang cửa sổ đó hoặc khởi động lại theo chiến lược hiện tại.",
-      "current": "Chiến lược hiện tại: {{name}}",
-      "pathLabel": "Thư mục phiên bản",
-      "go": "Chuyển sang ngay",
-      "restart": "Đóng và khởi động lại"
-    },
-    "restartStrategy": {
-      "button": "Chiến lược khởi động lại",
-      "title": "Chiến lược khởi động lại",
-      "desc": "Chọn phương thức khởi động lại phiên bản. Mỗi tùy chọn ảnh hưởng đến phạm vi và độ ổn định.",
-      "recommended": "Khuyên dùng",
-      "labels": {
-        "principle": "Nguyên lý kỹ thuật",
-        "command": "Lệnh",
-        "pros": "Ưu điểm",
-        "cons": "Nhược điểm"
-      },
-      "safe": {
-        "title": "Khởi động lại an toàn (Khuyên dùng)",
-        "principle": "Gửi tín hiệu SIGTERM đến tất cả các tiến trình Antigravity, yêu cầu ứng dụng lưu dữ liệu và đóng lại, sau đó bắt đầu phiên bản đích (buộc đóng nếu cần).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (tất cả tiến trình Antigravity)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (tất cả tiến trình Antigravity)",
-        "pros": "Gần nhất với đóng bình thường, ít khả năng gây ra cảnh báo lỗi, dữ liệu an toàn hơn.",
-        "cons": "Chỉ hỗ trợ khởi động lại toàn cục cho tất cả các phiên bản."
-      },
-      "force": {
-        "title": "Khởi động lại bắt buộc",
-        "principle": "Xác định các tiến trình qua --user-data-dir và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (khớp với --user-data-dir)",
-        "pros": "Có thể khởi động lại chính xác một phiên bản duy nhất.",
-        "cons": "Có thể gây ra cảnh báo \"đóng bất ngờ\", rủi ro mất dữ liệu chưa lưu."
-      }
-    },
-    "stop": {
-      "title": "Buộc dừng phiên bản",
-      "message": "Gửi tín hiệu kết thúc (SIGTERM) đến tiến trình phiên bản. Dữ liệu chưa lưu có thể bị mất. Tiếp tục?"
-    },
-    "delete": {
-      "title": "Xóa phiên bản",
-      "message": "Xóa phiên bản {{name}}? Hành động này sẽ gỡ bỏ cấu hình và xóa thư mục phiên bản."
-    },
-    "modal": {
-      "createTitle": "Tạo phiên bản mới",
-      "editTitle": "Chỉnh sửa phiên bản"
-    },
-    "sort": {
-      "label": "Sắp xếp",
-      "createdAt": "Theo thời gian tạo",
-      "lastLaunchedAt": "Theo thời gian khởi chạy",
-      "ascTooltip": "Hiện tại: tăng dần, bấm để chuyển sang giảm dần",
-      "descTooltip": "Hiện tại: giảm dần, bấm để chuyển sang tăng dần",
-      "toggleDirection": "Chuyển hướng sắp xếp"
-    },
-    "initGuide": {
-      "title": "Phiên bản chưa được khởi tạo",
-      "desc": "Đây là \"phiên bản trống\". Hiện tại chỉ mới tạo thư mục, dữ liệu phiên bản vẫn chưa được tạo.",
-      "tip": "Vui lòng khởi chạy phiên bản một lần trước. Sau khi khởi tạo xong, bạn có thể liên kết tài khoản.",
-      "startNow": "Khởi chạy ngay"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Không tìm thấy đường dẫn ứng dụng",
-      "desc": "Không tìm thấy đường dẫn ứng dụng {{app}}. Vui lòng đặt ngay để tiếp tục.",
-      "action": "Đặt ngay"
-    }
-  },
-  "githubCopilot": {
-    "title": "Quản lý tài khoản GitHub Copilot",
-    "instances": {
-      "unsupported": {
-        "desc": "Đa phiên bản GitHub Copilot hiện chỉ khả dụng trên macOS."
-      }
-    },
-    "empty": {
-      "description": "Nhấn \"Thêm tài khoản\" để bắt đầu"
-    },
-    "addModal": {
-      "title": "Thêm tài khoản GitHub Copilot"
-    },
-    "oauth": {
-      "desc": "Nhấn nút bên dưới và hoàn tất ủy quyền GitHub Copilot trong trình duyệt."
-    },
-    "token": {
-      "desc": "Dán token truy cập GitHub Copilot hoặc dữ liệu JSON đã xuất."
-    },
-    "import": {
-      "localDesc": "Nhập tài khoản GitHub Copilot từ các phiên đăng nhập cục bộ."
-    },
-    "sort": {
-      "weekly": "Hạn mức tuần",
-      "hourly": "Hạn mức 5 giờ",
-      "weeklyReset": "Thời gian đặt lại theo tuần",
-      "hourlyReset": "Thời gian đặt lại 5 giờ",
-      "premium": "Theo mức dùng yêu cầu Premium"
-    },
-    "columns": {
-      "hourly": "Hạn mức 5h",
-      "weekly": "Hạn mức tuần",
-      "premium": "Yêu cầu Premium"
-    },
-    "flowNotice": {
-      "title": "Hướng dẫn tài khoản GitHub Copilot (bấm để mở rộng/thu gọn)",
-      "desc": "Việc chuyển tài khoản yêu cầu đọc kho xác thực cục bộ của VS Code và dùng dịch vụ thông tin xác thực hệ thống để giải mã/ghi lại; dữ liệu chỉ được xử lý trên máy cục bộ.",
-      "reason": "Phạm vi quyền: đọc cơ sở dữ liệu xác thực VS Code (state.vscdb) và gọi khả năng mã hóa hệ thống (Windows DPAPI / macOS Keychain / Linux Secret Service) để giải mã/ghi lại.",
-      "storage": "Phạm vi đọc: chỉ xử lý dữ liệu liên quan đến phiên đăng nhập GitHub; mọi quy trình đều được thực thi cục bộ.",
-      "inject": "Chuyển đổi một lần nhấp: công cụ này đọc dữ liệu mã hóa cục bộ của VS Code (DPAPI/Keychain/Secret Service), giải mã phiên xác thực trong state.vscdb, thay thế token GitHub Copilot rồi mã hóa lại — mọi thao tác đều diễn ra cục bộ trên máy của bạn."
-    },
-    "injectToVSCode": "Chuyển sang VS Code",
-    "injectSuccess": "Đã chèn token vào VS Code thành công. VS Code đang được khởi chạy.",
-    "injectRequireClose": "Vui lòng đóng VS Code trước khi chèn.",
-    "usage": {
-      "included": "Đã bao gồm"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Chuyển nhanh thất bại: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "Ẩn email",
-    "showSensitive": "Hiện email"
-  },
   "windsurf": {
     "title": "Quản lý tài khoản Windsurf",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Đăng nhập thành công: {{login}}",
       "failed": "Đăng nhập thất bại: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Bố cục nền tảng",
-    "sidebarSelected": "Đã chọn trên thanh bên {{count}}/{{max}}",
-    "reset": "Đặt lại mặc định",
-    "tip": "Kéo để sắp xếp lại. Thanh bên chỉ hiển thị tối đa hai nền tảng. Nếu chỉ chọn một, chỉ một nền tảng sẽ được hiển thị.",
-    "sidebarToggle": "Hiển thị ở thanh bên",
-    "dashboardToggle": "Hiển thị trên bảng điều khiển",
-    "trayToggle": "Hiển thị trên khay hệ thống",
-    "hiddenBadge": "Ẩn",
-    "openFromMore": "Quản lý bố cục nền tảng",
-    "dragHandleLabel": "Kéo để sắp xếp lại"
-  },
-  "breakout": {
-    "gameOver": "Kết thúc game",
-    "gameOverRank": "Hạng cục bộ hiện tại #{{rank}}",
-    "startGame": "Bắt đầu chơi",
-    "startHint": "Bấm bắt đầu hoặc nhấn phím Space",
-    "rankTitle": "Xếp hạng lịch sử cục bộ",
-    "rankCurrent": "Hiện tại",
-    "rankNoData": "--",
-    "restart": "Chơi lại",
-    "pause": "Tạm dừng",
-    "resume": "Tiếp tục",
-    "paused": "Đã tạm dừng",
-    "level": "Màn {{level}}",
-    "levelScore": "Điểm màn {{score}}",
-    "levelCleared": "Qua màn",
-    "nextLevel": "Màn tiếp theo",
-    "history": "Lịch sử",
-    "historyShort": "Lịch sử",
-    "historyEmpty": "Chưa có bản ghi",
-    "historyClear": "Xóa",
-    "historyScoreShort": "Điểm {{score}}",
-    "historyLevelShort": "Cấp {{level}}",
-    "historyDurationShort": "Thời gian {{duration}}",
-    "historyReasonGameOver": "Kết thúc game",
-    "historyReasonManualExit": "Thoát thủ công",
-    "serveHint": "Nhấn phím cách để phóng bóng",
-    "ranking": "Lịch sử cục bộ",
-    "rankingShort": "Cục bộ",
-    "rankingEmpty": "Chưa có bản ghi cục bộ",
-    "rankingClear": "Xóa xếp hạng cục bộ",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,6 +1407,38 @@
     },
     "injectToVSCode": "Chuyển sang Kiro"
   },
+  "breakout": {
+    "gameOver": "Kết thúc game",
+    "gameOverRank": "Hạng cục bộ hiện tại #{{rank}}",
+    "startGame": "Bắt đầu chơi",
+    "startHint": "Bấm bắt đầu hoặc nhấn phím Space",
+    "rankTitle": "Xếp hạng lịch sử cục bộ",
+    "rankCurrent": "Hiện tại",
+    "rankNoData": "--",
+    "restart": "Chơi lại",
+    "pause": "Tạm dừng",
+    "resume": "Tiếp tục",
+    "paused": "Đã tạm dừng",
+    "level": "Màn {{level}}",
+    "levelScore": "Điểm màn {{score}}",
+    "levelCleared": "Qua màn",
+    "nextLevel": "Màn tiếp theo",
+    "history": "Lịch sử",
+    "historyShort": "Lịch sử",
+    "historyEmpty": "Chưa có bản ghi",
+    "historyClear": "Xóa",
+    "historyScoreShort": "Điểm {{score}}",
+    "historyLevelShort": "Cấp {{level}}",
+    "historyDurationShort": "Thời gian {{duration}}",
+    "historyReasonGameOver": "Kết thúc game",
+    "historyReasonManualExit": "Thoát thủ công",
+    "serveHint": "Nhấn phím cách để phóng bóng",
+    "ranking": "Lịch sử cục bộ",
+    "rankingShort": "Cục bộ",
+    "rankingEmpty": "Chưa có bản ghi cục bộ",
+    "rankingClear": "Xóa xếp hạng cục bộ",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Thông báo",
     "empty": "Không có thông báo",
@@ -1461,5 +1462,263 @@
     "clickToClose": "Nhấn để đóng",
     "clickToEnlarge": "Nhấn để phóng to",
     "imageLoadFailed": "Không thể tải hình ảnh"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Thu gọn tất cả",
+      "expandAll": "Mở rộng tất cả",
+      "goAntigravity": "Đi tới Antigravity",
+      "goCodex": "Đi tới Codex",
+      "goDashboard": "Đi tới bảng điều khiển",
+      "goFingerprints": "Đi tới dấu vân tay thiết bị",
+      "goGitHubCopilot": "Đi tới GitHub Copilot",
+      "goInstances": "Đi tới đa instance",
+      "goKiro": "Đi tới Kiro",
+      "goSettings": "Đi tới cài đặt",
+      "goVerification": "Đi tới xác minh wakeup",
+      "goWakeup": "Đi tới tác vụ wakeup",
+      "goWindsurf": "Đi tới Windsurf",
+      "openLayout": "Mở bố cục nền tảng"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Quản lý tài khoản Antigravity."
+      },
+      "keywords": {
+        "0": "Quản lý tài khoản Antigravity",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản"
+      },
+      "outcomes": {
+        "0": "Hiểu Quản lý tài khoản Antigravity giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Quản lý tài khoản Antigravity để giảm lỗi thao tác."
+      },
+      "steps": {
+        "0": "Mở trang Quản lý tài khoản Antigravity.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Quản lý tài khoản Antigravity.",
+        "2": "Chạy một thao tác thủ công trong Quản lý tài khoản Antigravity để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Quản lý tài khoản Antigravity trong quy trình hàng ngày.",
+      "title": "Quản lý tài khoản Antigravity"
+    },
+    "blocks": {
+      "cautions": "Lưu ý / lỗi thường gặp",
+      "outcomes": "Tính năng này giúp gì",
+      "steps": "Các bước đề xuất"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Bảng điều khiển."
+      },
+      "keywords": {
+        "0": "Bảng điều khiển",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản"
+      },
+      "outcomes": {
+        "0": "Hiểu Bảng điều khiển giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Bảng điều khiển để giảm lỗi thao tác."
+      },
+      "steps": {
+        "0": "Mở trang Bảng điều khiển.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Bảng điều khiển.",
+        "2": "Chạy một thao tác thủ công trong Bảng điều khiển để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Bảng điều khiển trong quy trình hàng ngày.",
+      "title": "Bảng điều khiển"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Nhập/Xuất, riêng tư và troubleshooting.",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Nhập/Xuất, riêng tư và troubleshooting.",
+        "2": "Xóa thông tin nhạy cảm trước khi chia sẻ logs (token, cookie, email)."
+      },
+      "keywords": {
+        "0": "Nhập/Xuất, riêng tư và troubleshooting",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản",
+        "4": "cài đặt",
+        "5": "khắc phục lỗi",
+        "6": "nhật ký",
+        "7": "dữ liệu"
+      },
+      "outcomes": {
+        "0": "Hiểu Nhập/Xuất, riêng tư và troubleshooting giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Nhập/Xuất, riêng tư và troubleshooting để giảm lỗi thao tác.",
+        "2": "Xác nhận một lần chạy thành công trong Nhập/Xuất, riêng tư và troubleshooting trước khi mở rộng.",
+        "3": "Nếu có sự cố ở Nhập/Xuất, riêng tư và troubleshooting, hãy kiểm tra logs và thu thập bằng chứng trước."
+      },
+      "steps": {
+        "0": "Mở trang Nhập/Xuất, riêng tư và troubleshooting.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Nhập/Xuất, riêng tư và troubleshooting.",
+        "2": "Chạy một thao tác thủ công trong Nhập/Xuất, riêng tư và troubleshooting để xác minh kết quả.",
+        "3": "Khi troubleshooting: Cài đặt -> Thư mục dữ liệu -> Mở, rồi vào logs.",
+        "4": "Ưu tiên kiểm tra app.log hoặc app.log.* mới nhất.",
+        "5": "Khi phản hồi, kèm thời gian, nền tảng, bước tái hiện và logs đã ẩn dữ liệu nhạy cảm."
+      },
+      "summary": "Mục này giải thích cách dùng Nhập/Xuất, riêng tư và troubleshooting trong quy trình hàng ngày.",
+      "title": "Nhập/Xuất, riêng tư và troubleshooting"
+    },
+    "empty": {
+      "desc": "Thử từ khóa: instance, chuyển đổi, cài đặt, xuất dữ liệu.",
+      "title": "Không có nội dung phù hợp"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Dấu vân tay thiết bị."
+      },
+      "keywords": {
+        "0": "Dấu vân tay thiết bị",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản"
+      },
+      "outcomes": {
+        "0": "Hiểu Dấu vân tay thiết bị giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Dấu vân tay thiết bị để giảm lỗi thao tác."
+      },
+      "steps": {
+        "0": "Mở trang Dấu vân tay thiết bị.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Dấu vân tay thiết bị.",
+        "2": "Chạy một thao tác thủ công trong Dấu vân tay thiết bị để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Dấu vân tay thiết bị trong quy trình hàng ngày.",
+      "title": "Dấu vân tay thiết bị"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Đa instance (trọng tâm).",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Đa instance (trọng tâm)."
+      },
+      "keywords": {
+        "0": "Đa instance (trọng tâm)",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản",
+        "4": "cài đặt"
+      },
+      "outcomes": {
+        "0": "Hiểu Đa instance (trọng tâm) giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Đa instance (trọng tâm) để giảm lỗi thao tác.",
+        "2": "Xác nhận một lần chạy thành công trong Đa instance (trọng tâm) trước khi mở rộng."
+      },
+      "steps": {
+        "0": "Mở trang Đa instance (trọng tâm).",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Đa instance (trọng tâm).",
+        "2": "Chạy một thao tác thủ công trong Đa instance (trọng tâm) để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Đa instance (trọng tâm) trong quy trình hàng ngày.",
+      "title": "Đa instance (trọng tâm)"
+    },
+    "navTitle": "Sổ tay sử dụng",
+    "providers": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Codex / GitHub Copilot / Windsurf / Kiro."
+      },
+      "keywords": {
+        "0": "Nền tảng Codex / GitHub Copilot / Windsurf / Kiro",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản",
+        "4": "cài đặt",
+        "5": "khắc phục lỗi"
+      },
+      "outcomes": {
+        "0": "Hiểu Codex / GitHub Copilot / Windsurf / Kiro giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Codex / GitHub Copilot / Windsurf / Kiro để giảm lỗi thao tác.",
+        "2": "Xác nhận một lần chạy thành công trong Codex / GitHub Copilot / Windsurf / Kiro trước khi mở rộng."
+      },
+      "steps": {
+        "0": "Mở trang Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Codex / GitHub Copilot / Windsurf / Kiro.",
+        "2": "Chạy một thao tác thủ công trong Codex / GitHub Copilot / Windsurf / Kiro để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Codex / GitHub Copilot / Windsurf / Kiro trong quy trình hàng ngày.",
+      "title": "Nền tảng Codex / GitHub Copilot / Windsurf / Kiro"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Bắt đầu nhanh (5 phút).",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Bắt đầu nhanh (5 phút)."
+      },
+      "keywords": {
+        "0": "Bắt đầu nhanh (5 phút)",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản"
+      },
+      "outcomes": {
+        "0": "Hiểu Bắt đầu nhanh (5 phút) giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Bắt đầu nhanh (5 phút) để giảm lỗi thao tác.",
+        "2": "Xác nhận một lần chạy thành công trong Bắt đầu nhanh (5 phút) trước khi mở rộng."
+      },
+      "steps": {
+        "0": "Mở trang Bắt đầu nhanh (5 phút).",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Bắt đầu nhanh (5 phút).",
+        "2": "Chạy một thao tác thủ công trong Bắt đầu nhanh (5 phút) để xác minh kết quả.",
+        "3": "Khi troubleshooting: Cài đặt -> Thư mục dữ liệu -> Mở, rồi vào logs."
+      },
+      "summary": "Mục này giải thích cách dùng Bắt đầu nhanh (5 phút) trong quy trình hàng ngày.",
+      "title": "Bắt đầu nhanh (5 phút)"
+    },
+    "resultCount": "Tổng {{count}} mục",
+    "searchAria": "Tìm trong sổ tay",
+    "searchPlaceholder": "Tìm tính năng, kịch bản hoặc từ khóa (vd: instance, inject, wakeup, fingerprint)",
+    "settings": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Cài đặt và năng lực hệ thống.",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Cài đặt và năng lực hệ thống."
+      },
+      "keywords": {
+        "0": "Cài đặt và năng lực hệ thống",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản",
+        "4": "cài đặt",
+        "5": "khắc phục lỗi"
+      },
+      "outcomes": {
+        "0": "Hiểu Cài đặt và năng lực hệ thống giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Cài đặt và năng lực hệ thống để giảm lỗi thao tác.",
+        "2": "Xác nhận một lần chạy thành công trong Cài đặt và năng lực hệ thống trước khi mở rộng."
+      },
+      "steps": {
+        "0": "Mở trang Cài đặt và năng lực hệ thống.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Cài đặt và năng lực hệ thống.",
+        "2": "Chạy một thao tác thủ công trong Cài đặt và năng lực hệ thống để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Cài đặt và năng lực hệ thống trong quy trình hàng ngày.",
+      "title": "Cài đặt và năng lực hệ thống"
+    },
+    "subtitle": "Hướng dẫn theo kịch bản công việc. Hiểu mục tiêu trước, sau đó làm theo quy trình đề xuất.",
+    "title": "Sổ tay sử dụng",
+    "wakeup": {
+      "cautions": {
+        "0": "Sao lưu dữ liệu trước thao tác rủi ro hoặc hàng loạt trong Tác vụ wakeup và xác minh.",
+        "1": "Kiểm tra bộ lọc và phạm vi mục tiêu trước khi chạy trong Tác vụ wakeup và xác minh."
+      },
+      "keywords": {
+        "0": "Tác vụ wakeup và xác minh",
+        "1": "hướng dẫn",
+        "2": "quy trình",
+        "3": "tài khoản",
+        "4": "cài đặt"
+      },
+      "outcomes": {
+        "0": "Hiểu Tác vụ wakeup và xác minh giúp giải quyết điều gì.",
+        "1": "Dùng quy trình đề xuất trong Tác vụ wakeup và xác minh để giảm lỗi thao tác."
+      },
+      "steps": {
+        "0": "Mở trang Tác vụ wakeup và xác minh.",
+        "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Tác vụ wakeup và xác minh.",
+        "2": "Chạy một thao tác thủ công trong Tác vụ wakeup và xác minh để xác minh kết quả."
+      },
+      "summary": "Mục này giải thích cách dùng Tác vụ wakeup và xác minh trong quy trình hàng ngày.",
+      "title": "Tác vụ wakeup và xác minh"
+    }
   }
 }

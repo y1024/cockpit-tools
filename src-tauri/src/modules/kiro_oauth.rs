@@ -90,7 +90,11 @@ fn normalize_email(value: Option<String>) -> Option<String> {
     })
 }
 
-fn set_payload_status(payload: &mut KiroOAuthCompletePayload, status: &str, reason: Option<String>) {
+fn set_payload_status(
+    payload: &mut KiroOAuthCompletePayload,
+    status: &str,
+    reason: Option<String>,
+) {
     payload.status = Some(status.to_string());
     payload.status_reason = reason.and_then(|raw| normalize_non_empty(Some(raw.as_str())));
 }
@@ -346,8 +350,7 @@ fn is_mwinit_tool_available() -> bool {
         cmd.creation_flags(0x08000000);
     }
 
-    cmd
-        .arg("mwinit")
+    cmd.arg("mwinit")
         .stdout(std::process::Stdio::null())
         .stderr(std::process::Stdio::null())
         .status()
@@ -1980,16 +1983,14 @@ mod tests {
             }
         });
 
-        let payload =
-            build_payload_from_snapshot(auth_token, None, Some(usage)).expect("payload should parse");
+        let payload = build_payload_from_snapshot(auth_token, None, Some(usage))
+            .expect("payload should parse");
 
-        let expected_expires_at = chrono::NaiveDateTime::parse_from_str(
-            "2026/02/19 02:01:47",
-            "%Y/%m/%d %H:%M:%S",
-        )
-        .expect("valid datetime")
-        .and_utc()
-        .timestamp();
+        let expected_expires_at =
+            chrono::NaiveDateTime::parse_from_str("2026/02/19 02:01:47", "%Y/%m/%d %H:%M:%S")
+                .expect("valid datetime")
+                .and_utc()
+                .timestamp();
 
         assert_eq!(payload.email, "3493729266@qq.com");
         assert_eq!(payload.user_id.as_deref(), Some("user-123"));

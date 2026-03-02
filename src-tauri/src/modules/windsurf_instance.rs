@@ -1146,7 +1146,13 @@ pub fn collect_windsurf_process_entries() -> Vec<(u32, Option<String>)> {
 
     let mut entries: HashMap<u32, Option<String>> = HashMap::new();
     let mut system = System::new();
-    system.refresh_processes_specifics(sysinfo::ProcessesToUpdate::All, true, ProcessRefreshKind::nothing().with_exe(UpdateKind::OnlyIfNotSet).with_cmd(UpdateKind::OnlyIfNotSet));
+    system.refresh_processes_specifics(
+        sysinfo::ProcessesToUpdate::All,
+        true,
+        ProcessRefreshKind::nothing()
+            .with_exe(UpdateKind::OnlyIfNotSet)
+            .with_cmd(UpdateKind::OnlyIfNotSet),
+    );
     let current_pid = std::process::id();
 
     for (pid, process) in system.processes() {
@@ -1406,7 +1412,11 @@ fn resolve_macos_exec_path(path_str: &str) -> Option<PathBuf> {
 fn detect_windsurf_exec_path() -> Option<PathBuf> {
     for (pid, _) in collect_windsurf_process_entries() {
         let mut system = System::new();
-        system.refresh_processes_specifics(sysinfo::ProcessesToUpdate::All, true, ProcessRefreshKind::nothing().with_exe(UpdateKind::OnlyIfNotSet));
+        system.refresh_processes_specifics(
+            sysinfo::ProcessesToUpdate::All,
+            true,
+            ProcessRefreshKind::nothing().with_exe(UpdateKind::OnlyIfNotSet),
+        );
         if let Some(process) = system.process(sysinfo::Pid::from(pid as usize)) {
             if let Some(path) = process.exe() {
                 return Some(path.to_path_buf());
@@ -1526,6 +1536,16 @@ pub fn ensure_windsurf_launch_path_configured() -> Result<(), String> {
     resolve_windsurf_launch_path().map(|_| ())
 }
 
+#[cfg(target_os = "macos")]
+fn sanitize_macos_gui_launch_env(cmd: &mut Command) {
+    // Avoid inheriting Cockpit bundle identity into child GUI apps.
+    cmd.env_remove("__CFBundleIdentifier");
+    cmd.env_remove("XPC_SERVICE_NAME");
+}
+
+#[cfg(not(target_os = "macos"))]
+fn sanitize_macos_gui_launch_env(_cmd: &mut Command) {}
+
 #[cfg(target_os = "windows")]
 fn spawn_windsurf_windows(
     launch_path: &Path,
@@ -1551,8 +1571,8 @@ fn spawn_windsurf_windows(
             cmd.arg(arg.trim());
         }
     }
-    let child = spawn_command_with_trace(&mut cmd)
-        .map_err(|e| format!("启动 Windsurf 失败: {}", e))?;
+    let child =
+        spawn_command_with_trace(&mut cmd).map_err(|e| format!("启动 Windsurf 失败: {}", e))?;
     Ok(child.id())
 }
 
@@ -1564,6 +1584,7 @@ fn spawn_windsurf_unix(
     use_new_window: bool,
 ) -> Result<u32, String> {
     let mut cmd = Command::new(launch_path);
+    sanitize_macos_gui_launch_env(&mut cmd);
     cmd.stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null());
@@ -1578,8 +1599,8 @@ fn spawn_windsurf_unix(
             cmd.arg(arg.trim());
         }
     }
-    let child = spawn_command_with_trace(&mut cmd)
-        .map_err(|e| format!("启动 Windsurf 失败: {}", e))?;
+    let child =
+        spawn_command_with_trace(&mut cmd).map_err(|e| format!("启动 Windsurf 失败: {}", e))?;
     Ok(child.id())
 }
 

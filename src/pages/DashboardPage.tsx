@@ -7,7 +7,7 @@ import { useWindsurfAccountStore } from '../stores/useWindsurfAccountStore';
 import { useKiroAccountStore } from '../stores/useKiroAccountStore';
 import { usePlatformLayoutStore } from '../stores/usePlatformLayoutStore';
 import { Page } from '../types/navigation';
-import { Users, CheckCircle2, Sparkles, RotateCw, Play, Github } from 'lucide-react';
+import { Users, CheckCircle2, Sparkles, RotateCw, Play, Github, HelpCircle } from 'lucide-react';
 import { Account } from '../types/account';
 import { CodexAccount } from '../types/codex';
 import { GitHubCopilotAccount } from '../types/githubCopilot';
@@ -1256,7 +1256,17 @@ export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTri
   return (
     <main className="main-content dashboard-page fade-in">
       <div className="page-tabs-row" style={{ minHeight: '60px' }}>
-         <div className="page-tabs-label">{t('nav.dashboard', '仪表盘')}</div>
+         <div className="page-tabs-label dashboard-title-label">
+           <span>{t('nav.dashboard', '仪表盘')}</span>
+           <button
+             className="header-action-btn dashboard-manual-btn dashboard-title-manual-btn"
+             onClick={() => window.dispatchEvent(new CustomEvent('app-request-navigate', { detail: 'manual' }))}
+             title={t('manual.navTitle', '功能使用手册')}
+             aria-label={t('manual.navTitle', '功能使用手册')}
+           >
+             <HelpCircle size={16} />
+           </button>
+         </div>
          <div className="dashboard-top-actions">
            <button className="header-action-btn" onClick={onOpenPlatformLayout}>
              <span>{t('platformLayout.title', '平台布局')}</span>

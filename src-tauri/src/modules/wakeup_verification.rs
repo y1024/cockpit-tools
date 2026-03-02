@@ -165,8 +165,10 @@ pub fn load_history() -> Result<Vec<WakeupVerificationBatchHistoryItem>, String>
     let mut history = load_state_file_unlocked()?.history;
 
     if let Ok(accounts) = modules::list_accounts() {
-        let email_by_id: HashMap<String, String> =
-            accounts.into_iter().map(|account| (account.id, account.email)).collect();
+        let email_by_id: HashMap<String, String> = accounts
+            .into_iter()
+            .map(|account| (account.id, account.email))
+            .collect();
         for batch in &mut history {
             for item in &mut batch.records {
                 if let Some(email) = email_by_id.get(&item.account_id) {
@@ -194,7 +196,9 @@ pub fn delete_history(batch_ids: Vec<String>) -> Result<usize, String> {
     let _lock = VERIFY_STATE_LOCK.lock().map_err(|_| "获取验证状态锁失败")?;
     let mut state = load_state_file_unlocked().unwrap_or_default();
     let before = state.history.len();
-    state.history.retain(|item| !targets.contains(&item.batch_id));
+    state
+        .history
+        .retain(|item| !targets.contains(&item.batch_id));
     let deleted = before.saturating_sub(state.history.len());
 
     if deleted > 0 {
@@ -243,7 +247,9 @@ fn append_history_batch(batch: WakeupVerificationBatchHistoryItem) -> Result<(),
 
     state.history.retain(|item| item.batch_id != batch.batch_id);
     state.history.push(batch);
-    state.history.sort_by(|a, b| b.verified_at.cmp(&a.verified_at));
+    state
+        .history
+        .sort_by(|a, b| b.verified_at.cmp(&a.verified_at));
     if state.history.len() > MAX_HISTORY_BATCHES {
         state.history.truncate(MAX_HISTORY_BATCHES);
     }
@@ -470,7 +476,10 @@ pub async fn run_batch(
     };
 
     if let Err(err) = append_history_batch(history_item) {
-        crate::modules::logger::log_warn(&format!("[WakeupVerification] 保存验证历史失败: {}", err));
+        crate::modules::logger::log_warn(&format!(
+            "[WakeupVerification] 保存验证历史失败: {}",
+            err
+        ));
     }
 
     Ok(WakeupVerificationBatchResult {

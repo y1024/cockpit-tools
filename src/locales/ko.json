@@ -151,11 +151,191 @@
     "fingerprints": "기기 지문",
     "settings": "설정",
     "codex": "Codex 계정",
-    "dashboard": "대시보드",
-    "instances": "멀티 인스턴스",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "더 많은 플랫폼"
+    "dashboard": "대시보드",
+    "morePlatforms": "더 많은 플랫폼",
+    "instances": "멀티 인스턴스",
+    "manual": "사용자 매뉴얼"
+  },
+  "platformLayout": {
+    "title": "플랫폼 레이아웃",
+    "sidebarSelected": "사이드바 선택 {{count}}/{{max}}",
+    "reset": "기본값으로 재설정",
+    "tip": "드래그하여 순서를 변경하세요. 사이드바에는 최대 2개 플랫폼만 표시할 수 있습니다. 1개만 선택하면 1개만 표시됩니다.",
+    "sidebarToggle": "사이드바에 표시",
+    "dashboardToggle": "대시보드에 표시",
+    "trayToggle": "트레이에 표시",
+    "hiddenBadge": "숨김",
+    "openFromMore": "플랫폼 레이아웃 관리",
+    "dragHandleLabel": "드래그하여 순서 변경"
+  },
+  "privacy": {
+    "hideSensitive": "이메일 숨기기",
+    "showSensitive": "이메일 표시"
+  },
+  "instances": {
+    "title": "다중 인스턴스",
+    "subtitle": "다중 계정 병렬 실행을 위한 격리된 프로필.",
+    "defaultName": "기본 인스턴스",
+    "search": "인스턴스 검색",
+    "sort": {
+      "label": "정렬",
+      "createdAt": "생성 시간순",
+      "lastLaunchedAt": "실행 시간순",
+      "ascTooltip": "현재: 오름차순, 클릭하여 내림차순으로 전환",
+      "descTooltip": "현재: 내림차순, 클릭하여 오름차순으로 전환",
+      "toggleDirection": "정렬 방향 전환"
+    },
+    "actions": {
+      "create": "새 인스턴스",
+      "refresh": "새로고침",
+      "startAll": "모두 시작",
+      "restartAll": "모두 재시작",
+      "stopAll": "모두 정지",
+      "start": "시작",
+      "stop": "정지",
+      "openFolder": "폴더 열기",
+      "edit": "편집",
+      "openRootDir": "폴더 열기",
+      "selectPath": "폴더 선택",
+      "openWindow": "창 열기"
+    },
+    "bulkConfirm": {
+      "startAll": "정지된 모든 인스턴스를 시작할까요?",
+      "restartAll": "실행 중인 모든 인스턴스를 재시작할까요?",
+      "stopAll": "모든 인스턴스를 닫을까요?"
+    },
+    "status": {
+      "running": "실행 중",
+      "stopped": "정지됨",
+      "restarting": "재시작 중",
+      "starting": "시작"
+    },
+    "labels": {
+      "path": "디렉토리",
+      "args": "실행 인자",
+      "argsEmpty": "없음",
+      "bindAccount": "연결된 계정",
+      "unbound": "연결되지 않음",
+      "pendingInit": "초기화 대기 중(먼저 한 번 실행하세요)",
+      "quota": "쿼터",
+      "lastLaunched": "마지막 실행"
+    },
+    "columns": {
+      "instance": "인스턴스",
+      "email": "계정",
+      "quota": "쿼터 상태",
+      "actions": "작업"
+    },
+    "empty": {
+      "title": "인스턴스가 없습니다",
+      "desc": "격리된 프로필을 만들어 여러 인스턴스를 빠르게 실행해 보세요."
+    },
+    "modal": {
+      "createTitle": "새 인스턴스",
+      "editTitle": "인스턴스 편집"
+    },
+    "form": {
+      "name": "인스턴스 이름",
+      "namePlaceholder": "예: 업무용 계정",
+      "path": "인스턴스 디렉토리",
+      "pathPlaceholder": "인스턴스 디렉토리 선택",
+      "pathReadOnly": "편집 시 경로는 변경할 수 없습니다",
+      "pathAutoHint": "이름 변경 시 경로가 자동 업데이트됩니다 (수동 선택 가능)",
+      "copyLogin": "현재 로그인 상태 복사",
+      "copyLoginDesc": "기본 디렉토리에서 설정 및 로그인 데이터를 복사합니다",
+      "initMode": "초기화 방식",
+      "initModeCopy": "원본 인스턴스 복사(기본값)",
+      "initModeEmpty": "빈 인스턴스(복사 안 함)",
+      "emptyInitHint": "복사 안 함을 선택하면 빈 디렉터리만 생성됩니다. 계정 바인딩 전에 한 번 실행해야 합니다.",
+      "copySource": "소스 인스턴스 복사",
+      "copySourceDesc": "선택한 인스턴스에서 설정 및 로그인 정보를 복사합니다",
+      "copySourcePlaceholder": "원본 인스턴스 선택",
+      "copySourceRequired": "원본 인스턴스를 선택해 주세요",
+      "copySourceRunningHint": "원본 인스턴스가 실행 중입니다. 데이터 불일치를 방지하려면 먼저 종료하는 것을 권장합니다.",
+      "bindInject": "계정 연결",
+      "bindAfterInit": "초기화 후 바인딩 가능",
+      "bindDisabledHint": "빈 인스턴스는 먼저 한 번 실행하여 데이터를 생성한 뒤 계정을 바인딩하세요.",
+      "followCurrent": "현재 계정 팔로우",
+      "selectAccount": "계정 선택",
+      "bindAccount": "계정 연결",
+      "unbound": "연결되지 않음",
+      "extraArgs": "사용자 정의 실행 인자",
+      "extraArgsPlaceholder": "예: --disable-gpu --log-level=2",
+      "extraArgsDesc": "인자는 공백으로 구분하며 따옴표를 지원합니다",
+      "nameRequired": "인스턴스 이름을 입력해 주세요",
+      "pathRequired": "인스턴스 디렉토리를 선택해 주세요",
+      "bindRequired": "연결할 계정을 선택해 주세요"
+    },
+    "quota": {
+      "unbound": "연결된 계정 없음",
+      "accountMissing": "계정을 찾을 수 없음",
+      "empty": "캐시된 쿼터 없음"
+    },
+    "messages": {
+      "created": "인스턴스가 생성되었습니다",
+      "emptyCreated": "빈 인스턴스가 생성되었습니다. 계정 바인딩 전에 먼저 한 번 실행하세요.",
+      "updated": "인스턴스가 업데이트되었습니다",
+      "deleted": "인스턴스가 삭제되었습니다",
+      "started": "인스턴스가 시작되었습니다",
+      "stopped": "인스턴스가 정지되었습니다",
+      "startedAll": "모든 정지된 인스턴스를 시작했습니다",
+      "restartedAll": "실행 중인 인스턴스를 재시작했습니다",
+      "closedAll": "모든 인스턴스를 닫았습니다",
+      "allAlreadyRunning": "모든 인스턴스가 이미 실행 중입니다",
+      "noneRunning": "실행 중인 인스턴스를 찾을 수 없습니다"
+    },
+    "runningDialog": {
+      "title": "인스턴스가 이미 실행 중입니다",
+      "desc": "이 인스턴스는 이미 실행 중입니다. 창으로 이동하거나 현재 전략으로 재시작할 수 있습니다.",
+      "current": "현재 전략: {{name}}",
+      "pathLabel": "인스턴스 디렉토리",
+      "go": "지금 이동",
+      "restart": "닫고 재시작"
+    },
+    "initGuide": {
+      "title": "인스턴스가 아직 초기화되지 않았습니다",
+      "desc": "이 인스턴스는 \"빈 인스턴스\"입니다. 현재 디렉터리만 생성되었고 인스턴스 데이터는 아직 생성되지 않았습니다.",
+      "tip": "먼저 인스턴스를 한 번 실행하세요. 초기화가 완료되면 계정을 바인딩할 수 있습니다.",
+      "startNow": "지금 시작"
+    },
+    "restartStrategy": {
+      "button": "재시작 전략",
+      "title": "재시작 전략",
+      "desc": "인스턴스 재시작 방법을 선택하세요. 각 옵션은 범위와 안정성에 영향을 줍니다.",
+      "recommended": "권장",
+      "labels": {
+        "principle": "기술 원리",
+        "command": "명령어",
+        "pros": "장점",
+        "cons": "단점"
+      },
+      "safe": {
+        "title": "안전한 재시작 (권장)",
+        "principle": "모든 Antigravity 프로세스에 SIGTERM을 보내 앱이 스스로 저장하고 종료하도록 한 다음, 대상 인스턴스를 다시 시작합니다 (필요 시 강제 종료).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (모든 Antigravity 프로세스)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (모든 Antigravity 프로세스)",
+        "pros": "정상 종료에 가까우며 크래시 경고가 발생할 확률이 낮고 데이터가 더 안전합니다.",
+        "cons": "모든 인스턴스의 전체 재시작만 지원합니다."
+      },
+      "force": {
+        "title": "강제 재시작",
+        "principle": "--user-data-dir로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir 일치 항목)",
+        "pros": "단일 인스턴스를 정확하게 재시작할 수 있습니다.",
+        "cons": "“예기치 않은 종료” 경고가 발생할 수 있으며 저장되지 않은 데이터 손실 위험이 있습니다."
+      }
+    },
+    "stop": {
+      "title": "인스턴스 강제 종료",
+      "message": "강제 종료를 위해 종료 신호(SIGTERM)를 보냅니다. 데이터 손실이 발생할 수 있습니다. 계속할까요?"
+    },
+    "delete": {
+      "title": "인스턴스 삭제",
+      "message": "인스턴스 {{name}}을(를) 삭제하시겠습니까? 설정이 제거되고 인스턴스 폴더도 삭제됩니다."
+    }
   },
   "settings": {
     "title": "앱 설정",
@@ -186,11 +366,6 @@
       "every1hour": "1시간마다",
       "minutes": "분",
       "refreshIntervalLimited": "할당량 재설정 시 깨우기가 활성화되어 있으므로 새로고침 간격의 최소값은 2분입니다.",
-      "storageTitle": "디렉터리 및 저장소",
-      "dataDir": "데이터 디렉터리",
-      "dataDirDesc": "계정 및 구성 파일 저장 위치.",
-      "fpDir": "Antigravity 저장소",
-      "fpDirDesc": "Antigravity 데이터 파일 저장 위치.",
       "closeBehavior": "닫기 동작",
       "closeBehaviorDesc": "창을 닫을 때의 동작 선택",
       "closeBehaviorAsk": "항상 묻기",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "창 최소화 동작과 무관하게 Dock 아이콘 표시 상태를 독립적으로 제어합니다",
       "hideDockIconOff": "아니요 (Dock 아이콘 표시)",
       "hideDockIconOn": "예 (Dock 아이콘 숨기기)",
-      "opencodeAppPathDesc": "비워 두면 기본 경로 사용",
+      "storageTitle": "디렉터리 및 저장소",
+      "dataDir": "데이터 디렉터리",
+      "dataDirDesc": "계정 및 구성 파일 저장 위치.",
+      "fpDir": "Antigravity 저장소",
+      "fpDirDesc": "Antigravity 데이터 파일 저장 위치.",
       "opencodeTitle": "OpenCode 연동",
       "opencodeRestart": "Codex 전환 시 OpenCode 재시작",
       "opencodeRestartDesc": "OpenCode에서 Codex 계정 정보를 동기화하여 전환",
       "opencodeAppPath": "OpenCode 실행 경로",
+      "opencodeAppPathDesc": "비워 두면 기본 경로 사용",
       "opencodeAppPathPlaceholder": "기본 경로",
       "opencodePathReset": "기본값으로 재설정",
       "opencodePathSelect": "선택",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "설정 저장"
   },
+  "appPath": {
+    "missing": {
+      "title": "애플리케이션 경로를 찾을 수 없음",
+      "desc": "{{app}} 애플리케이션 경로를 찾을 수 없습니다. 계속하려면 지금 설정해 주세요.",
+      "action": "지금 설정"
+    }
+  },
   "accounts": {
     "title": "계정 관리",
     "subtitle": "Antigravity 계정 목록을 관리합니다.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "기본값",
       "overall": "전체 할당량순",
+      "createdAt": "생성 시간순",
       "byGroup": "{{group}} 할당량순",
       "byGroupReset": "{{group}} 재설정 시간",
-      "createdAt": "생성 시간순",
       "descTooltip": "내림차순, 오름차순으로 전환 클릭",
       "ascTooltip": "오름차순, 내림차순으로 전환 클릭",
       "toggleDirection": "정렬 방향 전환"
     },
+    "filterTags": "태그 필터",
+    "filterTagsCount": "태그",
+    "noAvailableTags": "사용 가능한 태그가 없습니다",
+    "clearFilter": "필터 지우기",
+    "editTags": "태그 편집",
+    "tagModal": {
+      "title": "태그 편집",
+      "hint": "태그는 최대 {{max}}개까지 추가할 수 있으며, 각 태그는 최대 {{maxLength}}자입니다.",
+      "empty": "사용 가능한 태그가 없습니다",
+      "suggestionsTitle": "태그 필터",
+      "suggestionsEmpty": "사용 가능한 태그가 없습니다",
+      "inputPlaceholder": "태그 입력 ({{remaining}}개 남음)",
+      "inputDisabledPlaceholder": "태그 한도에 도달했습니다",
+      "add": "추가",
+      "save": "태그 저장",
+      "error": {
+        "empty": "태그는 비워둘 수 없습니다",
+        "tooLong": "태그는 최대 {{max}}자까지 입력할 수 있습니다",
+        "duplicate": "이미 존재하는 태그입니다",
+        "tooMany": "태그는 최대 {{max}}개까지 추가할 수 있습니다"
+      }
+    },
+    "groupByTag": "태그별 그룹",
+    "untagged": "태그 없음",
+    "deleteTagAria": "태그 {{tag}} 삭제",
+    "confirmDeleteTag": "\"{{tag}}\" 태그를 삭제하시겠습니까? 이 태그는 {{count}}개의 계정에서 제거됩니다.",
+    "defaultGroup": "기본 그룹",
     "actions": {
       "viewDetails": "상세 보기",
       "viewError": "오류 보기",
@@ -388,33 +602,6 @@
       "importSuccess": "{{count}}개 계정 가져옴",
       "importPartial": "{{success}}개 성공, {{fail}}개 실패",
       "importFailed": "가져오기 실패, refresh_token을 확인하세요"
-    },
-    "confirmDeleteTag": "\"{{tag}}\" 태그를 삭제하시겠습니까? 이 태그는 {{count}}개의 계정에서 제거됩니다.",
-    "defaultGroup": "기본 그룹",
-    "filterTags": "태그 필터",
-    "filterTagsCount": "태그",
-    "noAvailableTags": "사용 가능한 태그가 없습니다",
-    "clearFilter": "필터 지우기",
-    "editTags": "태그 편집",
-    "groupByTag": "태그별 그룹",
-    "untagged": "태그 없음",
-    "deleteTagAria": "태그 {{tag}} 삭제",
-    "tagModal": {
-      "title": "태그 편집",
-      "hint": "태그는 최대 {{max}}개까지 추가할 수 있으며, 각 태그는 최대 {{maxLength}}자입니다.",
-      "empty": "사용 가능한 태그가 없습니다",
-      "suggestionsTitle": "태그 필터",
-      "suggestionsEmpty": "사용 가능한 태그가 없습니다",
-      "inputPlaceholder": "태그 입력 ({{remaining}}개 남음)",
-      "inputDisabledPlaceholder": "태그 한도에 도달했습니다",
-      "add": "추가",
-      "save": "태그 저장",
-      "error": {
-        "empty": "태그는 비워둘 수 없습니다",
-        "tooLong": "태그는 최대 {{max}}자까지 입력할 수 있습니다",
-        "duplicate": "이미 존재하는 태그입니다",
-        "tooMany": "태그는 최대 {{max}}개까지 추가할 수 있습니다"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "깨우기 작업",
     "subtitle": "여러 자동 깨우기 작업을 독립적으로 관리합니다.",
+    "verification": {
+      "title": "인증 필요",
+      "columns": {
+        "verifiedAt": "검증 시간"
+      },
+      "filters": {
+        "all": "전체"
+      },
+      "actions": {
+        "selectAllAccounts": "전체 선택",
+        "clearSelectedAccounts": "선택 해제",
+        "runCheckNow": "인증 완료"
+      },
+      "runHint": {
+        "title": "검증 안내",
+        "line1": "지금 점검은 로컬 게이트웨이와 공식 Language Server 프로토콜로 Antigravity 클라이언트를 모사해 최소 대화 요청을 전송합니다.",
+        "line2": "이 과정에서 소량의 토큰(일반적으로 짧은 대화 1회)이 소모되며, 실제 소모량은 모델과 계정 정책에 따라 달라집니다.",
+        "line3": "이 작업은 깨우기 작업 설정을 변경하지 않으며, 계정 가용성 점검 및 점검 기록 저장만 수행합니다.",
+        "line4": "403이 반환되면 먼저 계정 검증을 완료해야 하며, 결과에 검증 주소와 빠른 작업이 제공됩니다."
+      },
+      "deleteConfirm": "삭제를 확인하시겠습니까?"
+    },
     "globalToggle": "깨우기 전체 스위치",
     "newTask": "새 작업",
     "runTest": "즉시 테스트",
@@ -763,28 +972,6 @@
       "accountsHint": "테스트에 사용할 계정을 여러 개 선택하세요.",
       "start": "테스트 시작",
       "testing": "테스트 중..."
-    },
-    "verification": {
-      "title": "인증 필요",
-      "columns": {
-        "verifiedAt": "검증 시간"
-      },
-      "filters": {
-        "all": "전체"
-      },
-      "actions": {
-        "selectAllAccounts": "전체 선택",
-        "clearSelectedAccounts": "선택 해제",
-        "runCheckNow": "인증 완료"
-      },
-      "deleteConfirm": "삭제를 확인하시겠습니까?",
-      "runHint": {
-        "title": "검증 안내",
-        "line1": "지금 점검은 로컬 게이트웨이와 공식 Language Server 프로토콜로 Antigravity 클라이언트를 모사해 최소 대화 요청을 전송합니다.",
-        "line2": "이 과정에서 소량의 토큰(일반적으로 짧은 대화 1회)이 소모되며, 실제 소모량은 모델과 계정 정책에 따라 달라집니다.",
-        "line3": "이 작업은 깨우기 작업 설정을 변경하지 않으며, 계정 가용성 점검 및 점검 기록 저장만 수행합니다.",
-        "line4": "403이 반환되면 먼저 계정 검증을 완료해야 하며, 결과에 검증 주소와 빠른 작업이 제공됩니다."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Codex 계정 관리",
     "subtitle": "OpenAI Codex 계정을 관리합니다",
+    "instances": {
+      "subtitle": "인스턴스별 독립 구성, 여러 계정으로 병렬 운영.",
+      "comingSoon": "멀티 인스턴스 곧 출시",
+      "comingSoonDesc": "다른 계정으로 여러 Codex.app 인스턴스를 동시에 실행할 수 있습니다.",
+      "unsupported": {
+        "desc": "Codex 멀티 인스턴스는 현재 macOS에서만 사용 가능합니다."
+      },
+      "quota": {
+        "hourly": "5시간",
+        "weekly": "주간"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "모든 Codex 프로세스에 SIGTERM을 보내 앱이 스스로 저장하고 종료하도록 한 다음, 대상 인스턴스를 다시 시작합니다 (필요 시 강제 종료).",
+          "commandMac": "macOS: kill -15 <pid> (모든 Codex 프로세스)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (모든 Codex 프로세스)"
+        },
+        "force": {
+          "principle": "CODEX_HOME으로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME 일치 항목)"
+        }
+      }
+    },
+    "refreshSuccess": "할당량이 새로고침되었습니다",
+    "refreshFailed": "할당량 새로고침 실패: {{error}}",
+    "refreshAllSuccess": "새로고침 완료, {{count}}개 계정 성공",
+    "refreshAllPartialFailed": "새로고침 완료, {{success}} / {{total}}개 계정 성공, 일부 실패",
     "switch": "전환",
     "switched": "{{email}}(으)로 전환했습니다",
     "switchFailed": "전환 실패: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "로컬 계정 가져오기"
     },
     "import": {
+      "localDesc": "로컬에 로그인된 세션에서 Codex 계정을 가져오기.",
       "importing": "로컬 계정 가져오는 중...",
-      "successMsg": "가져오기 성공: {{email}}",
-      "localDesc": "로컬에 로그인된 세션에서 Codex 계정을 가져오기."
+      "successMsg": "가져오기 성공: {{email}}"
     },
     "quota": {
       "hourly": "5시간 쿼터",
       "weekly": "주간 쿼터",
       "reset": "재설정"
+    },
+    "quotaError": {
+      "badge": "할당량 오류",
+      "generic": "할당량 새로고침에 실패했습니다. 나중에 다시 시도하세요",
+      "deactivatedWorkspace": "워크스페이스가 비활성화되었습니다. 계정을 전환하거나 다시 인증하세요"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "주간 할당량 재설정 시간",
       "hourlyReset": "5시간 할당량 재설정 시간"
     },
+    "opencodeSwitch": "OpenCode 전환 스위치",
+    "opencodeSwitchDesc": "OpenCode에서 Codex 계정 정보를 동기화하여 전환",
+    "opencodeSwitchFailed": "OpenCode 스위치 업데이트 실패: {{error}}",
     "columns": {
       "hourly": "5시간 쿼터",
       "weekly": "주간 쿼터"
     },
-    "opencodeSwitch": "OpenCode 전환 스위치",
-    "opencodeSwitchDesc": "OpenCode에서 Codex 계정 정보를 동기화하여 전환",
-    "opencodeSwitchFailed": "OpenCode 스위치 업데이트 실패: {{error}}",
     "filterTags": "태그 필터",
     "filterTagsCount": "태그",
     "noAvailableTags": "사용 가능한 태그가 없습니다",
     "clearFilter": "필터 지우기",
-    "editTags": "태그 편집",
+    "editTags": "태그 편집"
+  },
+  "githubCopilot": {
+    "title": "GitHub Copilot 계정 관리",
     "instances": {
-      "subtitle": "인스턴스별 독립 구성, 여러 계정으로 병렬 운영.",
-      "comingSoon": "멀티 인스턴스 곧 출시",
-      "comingSoonDesc": "다른 계정으로 여러 Codex.app 인스턴스를 동시에 실행할 수 있습니다.",
       "unsupported": {
-        "desc": "Codex 멀티 인스턴스는 현재 macOS에서만 사용 가능합니다."
-      },
-      "quota": {
-        "hourly": "5시간",
-        "weekly": "주간"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "모든 Codex 프로세스에 SIGTERM을 보내 앱이 스스로 저장하고 종료하도록 한 다음, 대상 인스턴스를 다시 시작합니다 (필요 시 강제 종료).",
-          "commandMac": "macOS: kill -15 <pid> (모든 Codex 프로세스)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (모든 Codex 프로세스)"
-        },
-        "force": {
-          "principle": "CODEX_HOME으로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME 일치 항목)"
-        }
+        "desc": "GitHub Copilot 멀티 인스턴스는 현재 macOS에서만 사용 가능합니다."
       }
     },
-    "refreshSuccess": "할당량이 새로고침되었습니다",
-    "refreshFailed": "할당량 새로고침 실패: {{error}}",
-    "refreshAllSuccess": "새로고침 완료, {{count}}개 계정 성공",
-    "refreshAllPartialFailed": "새로고침 완료, {{success}} / {{total}}개 계정 성공, 일부 실패",
-    "quotaError": {
-      "badge": "할당량 오류",
-      "generic": "할당량 새로고침에 실패했습니다. 나중에 다시 시도하세요",
-      "deactivatedWorkspace": "워크스페이스가 비활성화되었습니다. 계정을 전환하거나 다시 인증하세요"
+    "empty": {
+      "description": "\"계정 추가\"를 눌러 GitHub Copilot 계정을 관리하세요"
+    },
+    "addModal": {
+      "title": "GitHub Copilot 계정 추가"
+    },
+    "oauth": {
+      "desc": "아래 버튼을 클릭해 브라우저에서 GitHub Copilot 인증을 완료하세요."
+    },
+    "token": {
+      "desc": "GitHub Copilot 액세스 토큰 또는 내보낸 JSON 데이터를 붙여넣으세요."
+    },
+    "import": {
+      "localDesc": "로컬에 로그인된 세션에서 GitHub Copilot 계정을 가져오기."
+    },
+    "sort": {
+      "weekly": "주간 할당량",
+      "hourly": "5시간 할당량",
+      "premium": "프리미엄 요청 사용량순",
+      "weeklyReset": "주간 할당량 재설정 시간",
+      "hourlyReset": "5시간 할당량 재설정 시간"
+    },
+    "columns": {
+      "hourly": "5시간 쿼터",
+      "weekly": "주간 쿼터",
+      "premium": "프리미엄 요청"
+    },
+    "usage": {
+      "included": "포함됨"
+    },
+    "injectToVSCode": "VS Code로 전환",
+    "injectSuccess": "토큰을 VS Code에 성공적으로 주입했습니다. VS Code를 실행하는 중입니다.",
+    "injectRequireClose": "주입하기 전에 VS Code를 종료해 주세요.",
+    "flowNotice": {
+      "title": "GitHub Copilot 계정 안내(클릭하여 펼치기/접기)",
+      "desc": "계정 전환 시 VS Code 로컬 인증 저장소를 읽고 시스템 자격 증명 서비스를 사용해 복호화 및 재기록이 필요하며, 데이터는 로컬에서만 처리됩니다.",
+      "inject": "원클릭 전환: 이 도구는 로컬 VS Code 암호화 자료(DPAPI/Keychain/Secret Service)를 읽어 state.vscdb의 인증 세션을 복호화한 뒤 GitHub Copilot 토큰을 교체하고 다시 암호화합니다. 모든 처리는 로컬 장치에서만 수행됩니다.",
+      "reason": "권한 범위: VS Code 인증 데이터베이스(state.vscdb)를 읽고 시스템 암호화 기능(Windows DPAPI / macOS Keychain / Linux Secret Service)을 호출해 복호화 및 재기록을 수행합니다.",
+      "storage": "읽기 범위: GitHub 로그인 세션 관련 데이터만 처리하며, 모든 과정은 로컬에서 실행됩니다."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "파일 위치",
       "helpText": "폴더를 열어 수동으로 복구하거나 파일을 삭제한 후 애플리케이션을 다시 시작하십시오.",
       "openFolder": "폴더 열기"
-    }
-  },
-  "instances": {
-    "title": "다중 인스턴스",
-    "subtitle": "다중 계정 병렬 실행을 위한 격리된 프로필.",
-    "defaultName": "기본 인스턴스",
-    "search": "인스턴스 검색",
-    "actions": {
-      "create": "새 인스턴스",
-      "refresh": "새로고침",
-      "startAll": "모두 시작",
-      "restartAll": "모두 재시작",
-      "stopAll": "모두 정지",
-      "start": "시작",
-      "stop": "정지",
-      "openFolder": "폴더 열기",
-      "edit": "편집",
-      "openRootDir": "폴더 열기",
-      "selectPath": "폴더 선택",
-      "openWindow": "창 열기"
-    },
-    "bulkConfirm": {
-      "startAll": "정지된 모든 인스턴스를 시작할까요?",
-      "restartAll": "실행 중인 모든 인스턴스를 재시작할까요?",
-      "stopAll": "모든 인스턴스를 닫을까요?"
-    },
-    "status": {
-      "running": "실행 중",
-      "stopped": "정지됨",
-      "restarting": "재시작 중",
-      "starting": "시작"
-    },
-    "labels": {
-      "path": "디렉토리",
-      "args": "실행 인자",
-      "argsEmpty": "없음",
-      "bindAccount": "연결된 계정",
-      "unbound": "연결되지 않음",
-      "quota": "쿼터",
-      "lastLaunched": "마지막 실행",
-      "pendingInit": "초기화 대기 중(먼저 한 번 실행하세요)"
-    },
-    "columns": {
-      "instance": "인스턴스",
-      "email": "계정",
-      "quota": "쿼터 상태",
-      "actions": "작업"
-    },
-    "empty": {
-      "title": "인스턴스가 없습니다",
-      "desc": "격리된 프로필을 만들어 여러 인스턴스를 빠르게 실행해 보세요."
-    },
-    "form": {
-      "name": "인스턴스 이름",
-      "namePlaceholder": "예: 업무용 계정",
-      "path": "인스턴스 디렉토리",
-      "pathPlaceholder": "인스턴스 디렉토리 선택",
-      "pathReadOnly": "편집 시 경로는 변경할 수 없습니다",
-      "pathAutoHint": "이름 변경 시 경로가 자동 업데이트됩니다 (수동 선택 가능)",
-      "copyLogin": "현재 로그인 상태 복사",
-      "copyLoginDesc": "기본 디렉토리에서 설정 및 로그인 데이터를 복사합니다",
-      "copySource": "소스 인스턴스 복사",
-      "copySourceDesc": "선택한 인스턴스에서 설정 및 로그인 정보를 복사합니다",
-      "copySourcePlaceholder": "원본 인스턴스 선택",
-      "copySourceRequired": "원본 인스턴스를 선택해 주세요",
-      "copySourceRunningHint": "원본 인스턴스가 실행 중입니다. 데이터 불일치를 방지하려면 먼저 종료하는 것을 권장합니다.",
-      "bindInject": "계정 연결",
-      "followCurrent": "현재 계정 팔로우",
-      "selectAccount": "계정 선택",
-      "bindAccount": "계정 연결",
-      "unbound": "연결되지 않음",
-      "extraArgs": "사용자 정의 실행 인자",
-      "extraArgsPlaceholder": "예: --disable-gpu --log-level=2",
-      "extraArgsDesc": "인자는 공백으로 구분하며 따옴표를 지원합니다",
-      "nameRequired": "인스턴스 이름을 입력해 주세요",
-      "pathRequired": "인스턴스 디렉토리를 선택해 주세요",
-      "bindRequired": "연결할 계정을 선택해 주세요",
-      "initMode": "초기화 방식",
-      "initModeCopy": "원본 인스턴스 복사(기본값)",
-      "initModeEmpty": "빈 인스턴스(복사 안 함)",
-      "emptyInitHint": "복사 안 함을 선택하면 빈 디렉터리만 생성됩니다. 계정 바인딩 전에 한 번 실행해야 합니다.",
-      "bindAfterInit": "초기화 후 바인딩 가능",
-      "bindDisabledHint": "빈 인스턴스는 먼저 한 번 실행하여 데이터를 생성한 뒤 계정을 바인딩하세요."
-    },
-    "quota": {
-      "unbound": "연결된 계정 없음",
-      "accountMissing": "계정을 찾을 수 없음",
-      "empty": "캐시된 쿼터 없음"
-    },
-    "messages": {
-      "created": "인스턴스가 생성되었습니다",
-      "updated": "인스턴스가 업데이트되었습니다",
-      "deleted": "인스턴스가 삭제되었습니다",
-      "started": "인스턴스가 시작되었습니다",
-      "stopped": "인스턴스가 정지되었습니다",
-      "startedAll": "모든 정지된 인스턴스를 시작했습니다",
-      "restartedAll": "실행 중인 인스턴스를 재시작했습니다",
-      "closedAll": "모든 인스턴스를 닫았습니다",
-      "allAlreadyRunning": "모든 인스턴스가 이미 실행 중입니다",
-      "noneRunning": "실행 중인 인스턴스를 찾을 수 없습니다",
-      "emptyCreated": "빈 인스턴스가 생성되었습니다. 계정 바인딩 전에 먼저 한 번 실행하세요."
-    },
-    "runningDialog": {
-      "title": "인스턴스가 이미 실행 중입니다",
-      "desc": "이 인스턴스는 이미 실행 중입니다. 창으로 이동하거나 현재 전략으로 재시작할 수 있습니다.",
-      "current": "현재 전략: {{name}}",
-      "pathLabel": "인스턴스 디렉토리",
-      "go": "지금 이동",
-      "restart": "닫고 재시작"
-    },
-    "restartStrategy": {
-      "button": "재시작 전략",
-      "title": "재시작 전략",
-      "desc": "인스턴스 재시작 방법을 선택하세요. 각 옵션은 범위와 안정성에 영향을 줍니다.",
-      "recommended": "권장",
-      "labels": {
-        "principle": "기술 원리",
-        "command": "명령어",
-        "pros": "장점",
-        "cons": "단점"
-      },
-      "safe": {
-        "title": "안전한 재시작 (권장)",
-        "principle": "모든 Antigravity 프로세스에 SIGTERM을 보내 앱이 스스로 저장하고 종료하도록 한 다음, 대상 인스턴스를 다시 시작합니다 (필요 시 강제 종료).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (모든 Antigravity 프로세스)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (모든 Antigravity 프로세스)",
-        "pros": "정상 종료에 가까우며 크래시 경고가 발생할 확률이 낮고 데이터가 더 안전합니다.",
-        "cons": "모든 인스턴스의 전체 재시작만 지원합니다."
-      },
-      "force": {
-        "title": "강제 재시작",
-        "principle": "--user-data-dir로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir 일치 항목)",
-        "pros": "단일 인스턴스를 정확하게 재시작할 수 있습니다.",
-        "cons": "“예기치 않은 종료” 경고가 발생할 수 있으며 저장되지 않은 데이터 손실 위험이 있습니다."
-      }
-    },
-    "stop": {
-      "title": "인스턴스 강제 종료",
-      "message": "강제 종료를 위해 종료 신호(SIGTERM)를 보냅니다. 데이터 손실이 발생할 수 있습니다. 계속할까요?"
-    },
-    "delete": {
-      "title": "인스턴스 삭제",
-      "message": "인스턴스 {{name}}을(를) 삭제하시겠습니까? 설정이 제거되고 인스턴스 폴더도 삭제됩니다."
-    },
-    "modal": {
-      "createTitle": "새 인스턴스",
-      "editTitle": "인스턴스 편집"
-    },
-    "sort": {
-      "label": "정렬",
-      "createdAt": "생성 시간순",
-      "lastLaunchedAt": "실행 시간순",
-      "ascTooltip": "현재: 오름차순, 클릭하여 내림차순으로 전환",
-      "descTooltip": "현재: 내림차순, 클릭하여 오름차순으로 전환",
-      "toggleDirection": "정렬 방향 전환"
-    },
-    "initGuide": {
-      "title": "인스턴스가 아직 초기화되지 않았습니다",
-      "desc": "이 인스턴스는 \"빈 인스턴스\"입니다. 현재 디렉터리만 생성되었고 인스턴스 데이터는 아직 생성되지 않았습니다.",
-      "tip": "먼저 인스턴스를 한 번 실행하세요. 초기화가 완료되면 계정을 바인딩할 수 있습니다.",
-      "startNow": "지금 시작"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "애플리케이션 경로를 찾을 수 없음",
-      "desc": "{{app}} 애플리케이션 경로를 찾을 수 없습니다. 계속하려면 지금 설정해 주세요.",
-      "action": "지금 설정"
-    }
-  },
-  "githubCopilot": {
-    "title": "GitHub Copilot 계정 관리",
-    "instances": {
-      "unsupported": {
-        "desc": "GitHub Copilot 멀티 인스턴스는 현재 macOS에서만 사용 가능합니다."
-      }
-    },
-    "empty": {
-      "description": "\"계정 추가\"를 눌러 GitHub Copilot 계정을 관리하세요"
-    },
-    "addModal": {
-      "title": "GitHub Copilot 계정 추가"
-    },
-    "oauth": {
-      "desc": "아래 버튼을 클릭해 브라우저에서 GitHub Copilot 인증을 완료하세요."
-    },
-    "token": {
-      "desc": "GitHub Copilot 액세스 토큰 또는 내보낸 JSON 데이터를 붙여넣으세요."
-    },
-    "import": {
-      "localDesc": "로컬에 로그인된 세션에서 GitHub Copilot 계정을 가져오기."
-    },
-    "sort": {
-      "weekly": "주간 할당량",
-      "hourly": "5시간 할당량",
-      "weeklyReset": "주간 할당량 재설정 시간",
-      "hourlyReset": "5시간 할당량 재설정 시간",
-      "premium": "프리미엄 요청 사용량순"
-    },
-    "columns": {
-      "hourly": "5시간 쿼터",
-      "weekly": "주간 쿼터",
-      "premium": "프리미엄 요청"
-    },
-    "flowNotice": {
-      "title": "GitHub Copilot 계정 안내(클릭하여 펼치기/접기)",
-      "desc": "계정 전환 시 VS Code 로컬 인증 저장소를 읽고 시스템 자격 증명 서비스를 사용해 복호화 및 재기록이 필요하며, 데이터는 로컬에서만 처리됩니다.",
-      "reason": "권한 범위: VS Code 인증 데이터베이스(state.vscdb)를 읽고 시스템 암호화 기능(Windows DPAPI / macOS Keychain / Linux Secret Service)을 호출해 복호화 및 재기록을 수행합니다.",
-      "storage": "읽기 범위: GitHub 로그인 세션 관련 데이터만 처리하며, 모든 과정은 로컬에서 실행됩니다.",
-      "inject": "원클릭 전환: 이 도구는 로컬 VS Code 암호화 자료(DPAPI/Keychain/Secret Service)를 읽어 state.vscdb의 인증 세션을 복호화한 뒤 GitHub Copilot 토큰을 교체하고 다시 암호화합니다. 모든 처리는 로컬 장치에서만 수행됩니다."
-    },
-    "injectToVSCode": "VS Code로 전환",
-    "injectSuccess": "토큰을 VS Code에 성공적으로 주입했습니다. VS Code를 실행하는 중입니다.",
-    "injectRequireClose": "주입하기 전에 VS Code를 종료해 주세요.",
-    "usage": {
-      "included": "포함됨"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "빠른 전환 실패: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "이메일 숨기기",
-    "showSensitive": "이메일 표시"
-  },
   "windsurf": {
     "title": "Windsurf 계정 관리",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "로그인 성공: {{login}}",
       "failed": "로그인 실패: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "플랫폼 레이아웃",
-    "sidebarSelected": "사이드바 선택 {{count}}/{{max}}",
-    "reset": "기본값으로 재설정",
-    "tip": "드래그하여 순서를 변경하세요. 사이드바에는 최대 2개 플랫폼만 표시할 수 있습니다. 1개만 선택하면 1개만 표시됩니다.",
-    "sidebarToggle": "사이드바에 표시",
-    "dashboardToggle": "대시보드에 표시",
-    "trayToggle": "트레이에 표시",
-    "hiddenBadge": "숨김",
-    "openFromMore": "플랫폼 레이아웃 관리",
-    "dragHandleLabel": "드래그하여 순서 변경"
-  },
-  "breakout": {
-    "gameOver": "게임 종료",
-    "gameOverRank": "현재 로컬 순위 #{{rank}}",
-    "startGame": "게임 시작",
-    "startHint": "시작 버튼 또는 스페이스를 누르세요",
-    "rankTitle": "로컬 기록 순위",
-    "rankCurrent": "현재",
-    "rankNoData": "--",
-    "restart": "다시 시작",
-    "pause": "일시정지",
-    "resume": "계속",
-    "paused": "일시정지됨",
-    "level": "레벨 {{level}}",
-    "levelScore": "레벨 점수 {{score}}",
-    "levelCleared": "레벨 클리어",
-    "nextLevel": "다음 레벨",
-    "history": "기록",
-    "historyShort": "기록",
-    "historyEmpty": "기록이 없습니다",
-    "historyClear": "지우기",
-    "historyScoreShort": "점수 {{score}}",
-    "historyLevelShort": "레벨 {{level}}",
-    "historyDurationShort": "시간 {{duration}}",
-    "historyReasonGameOver": "게임 종료",
-    "historyReasonManualExit": "수동 종료",
-    "serveHint": "스페이스바로 공을 발사",
-    "ranking": "로컬 기록",
-    "rankingShort": "로컬",
-    "rankingEmpty": "로컬 기록이 없습니다",
-    "rankingClear": "로컬 기록 지우기",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "키로로 전환"
   },
+  "breakout": {
+    "gameOver": "게임 종료",
+    "gameOverRank": "현재 로컬 순위 #{{rank}}",
+    "startGame": "게임 시작",
+    "startHint": "시작 버튼 또는 스페이스를 누르세요",
+    "rankTitle": "로컬 기록 순위",
+    "rankCurrent": "현재",
+    "rankNoData": "--",
+    "restart": "다시 시작",
+    "pause": "일시정지",
+    "resume": "계속",
+    "paused": "일시정지됨",
+    "level": "레벨 {{level}}",
+    "levelScore": "레벨 점수 {{score}}",
+    "levelCleared": "레벨 클리어",
+    "nextLevel": "다음 레벨",
+    "history": "기록",
+    "historyShort": "기록",
+    "historyEmpty": "기록이 없습니다",
+    "historyClear": "지우기",
+    "historyScoreShort": "점수 {{score}}",
+    "historyLevelShort": "레벨 {{level}}",
+    "historyDurationShort": "시간 {{duration}}",
+    "historyReasonGameOver": "게임 종료",
+    "historyReasonManualExit": "수동 종료",
+    "serveHint": "스페이스바로 공을 발사",
+    "ranking": "로컬 기록",
+    "rankingShort": "로컬",
+    "rankingEmpty": "로컬 기록이 없습니다",
+    "rankingClear": "로컬 기록 지우기",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "알림",
     "empty": "알림이 없습니다",
     "markAllRead": "모두 읽음으로 표시",
     "gotIt": "확인",
     "later": "나중에",
-    "clickToClose": "클릭하여 닫기",
     "new": "새로운 알림",
     "timeAgo": {
       "justNow": "방금 전",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 긴급"
     },
     "refreshed": "알림이 업데이트되었습니다 (총 {count}개)",
+    "clickToClose": "클릭하여 닫기",
     "clickToEnlarge": "클릭하여 확대",
     "imageLoadFailed": "이미지를 불러오지 못했습니다"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "전체 접기",
+      "expandAll": "전체 펼치기",
+      "goAntigravity": "Antigravity로 이동",
+      "goCodex": "Codex로 이동",
+      "goDashboard": "대시보드로 이동",
+      "goFingerprints": "디바이스 지문으로 이동",
+      "goGitHubCopilot": "GitHub Copilot로 이동",
+      "goInstances": "다중 인스턴스로 이동",
+      "goKiro": "Kiro로 이동",
+      "goSettings": "설정으로 이동",
+      "goVerification": "웨이크업 검증으로 이동",
+      "goWakeup": "웨이크업 작업으로 이동",
+      "goWindsurf": "Windsurf로 이동",
+      "openLayout": "플랫폼 레이아웃 열기"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Antigravity 계정 관리에서 대량/고위험 작업 전에는 반드시 백업하세요."
+      },
+      "keywords": {
+        "0": "Antigravity 계정 관리",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정"
+      },
+      "outcomes": {
+        "0": "Antigravity 계정 관리가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "Antigravity 계정 관리의 권장 흐름으로 실수를 줄입니다."
+      },
+      "steps": {
+        "0": "Antigravity 계정 관리 페이지를 엽니다.",
+        "1": "Antigravity 계정 관리의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "Antigravity 계정 관리에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 Antigravity 계정 관리 사용 방법을 설명합니다.",
+      "title": "Antigravity 계정 관리"
+    },
+    "blocks": {
+      "cautions": "자주 발생하는 실수 / 주의사항",
+      "outcomes": "이 기능으로 할 수 있는 일",
+      "steps": "권장 작업 단계"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "대시보드에서 대량/고위험 작업 전에는 반드시 백업하세요."
+      },
+      "keywords": {
+        "0": "대시보드",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정"
+      },
+      "outcomes": {
+        "0": "대시보드가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "대시보드의 권장 흐름으로 실수를 줄입니다."
+      },
+      "steps": {
+        "0": "대시보드 페이지를 엽니다.",
+        "1": "대시보드의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "대시보드에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 대시보드 사용 방법을 설명합니다.",
+      "title": "대시보드"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "가져오기/내보내기, 개인정보, 문제 해결에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "가져오기/내보내기, 개인정보, 문제 해결 실행 전 필터 조건과 대상 범위를 재확인하세요.",
+        "2": "로그 공유 전에 민감정보(token, cookie, 이메일)를 제거하세요."
+      },
+      "keywords": {
+        "0": "가져오기/내보내기, 개인정보, 문제 해결",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정",
+        "4": "설정",
+        "5": "문제해결",
+        "6": "로그",
+        "7": "데이터"
+      },
+      "outcomes": {
+        "0": "가져오기/내보내기, 개인정보, 문제 해결가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "가져오기/내보내기, 개인정보, 문제 해결의 권장 흐름으로 실수를 줄입니다.",
+        "2": "가져오기/내보내기, 개인정보, 문제 해결에서 1회 성공을 확인한 뒤 확장합니다.",
+        "3": "가져오기/내보내기, 개인정보, 문제 해결에서 이슈가 발생하면 먼저 logs를 확인하고 근거를 수집합니다."
+      },
+      "steps": {
+        "0": "가져오기/내보내기, 개인정보, 문제 해결 페이지를 엽니다.",
+        "1": "가져오기/내보내기, 개인정보, 문제 해결의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "가져오기/내보내기, 개인정보, 문제 해결에서 수동 작업을 1회 실행해 결과를 확인합니다.",
+        "3": "문제 해결 시 \"설정 -> 데이터 디렉터리 -> 열기\" 후 logs로 이동합니다.",
+        "4": "최신 app.log 또는 app.log.*를 먼저 확인합니다.",
+        "5": "피드백 시 시간, 플랫폼, 재현 단계, 민감정보 제거 로그를 포함합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 가져오기/내보내기, 개인정보, 문제 해결 사용 방법을 설명합니다.",
+      "title": "가져오기/내보내기, 개인정보, 문제 해결"
+    },
+    "empty": {
+      "desc": "인스턴스, 전환, 설정, 내보내기 같은 키워드를 시도하세요.",
+      "title": "일치하는 내용이 없습니다"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "디바이스 지문에서 대량/고위험 작업 전에는 반드시 백업하세요."
+      },
+      "keywords": {
+        "0": "디바이스 지문",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정"
+      },
+      "outcomes": {
+        "0": "디바이스 지문가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "디바이스 지문의 권장 흐름으로 실수를 줄입니다."
+      },
+      "steps": {
+        "0": "디바이스 지문 페이지를 엽니다.",
+        "1": "디바이스 지문의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "디바이스 지문에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 디바이스 지문 사용 방법을 설명합니다.",
+      "title": "디바이스 지문"
+    },
+    "instances": {
+      "cautions": {
+        "0": "다중 인스턴스 (핵심)에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "다중 인스턴스 (핵심) 실행 전 필터 조건과 대상 범위를 재확인하세요."
+      },
+      "keywords": {
+        "0": "다중 인스턴스 (핵심)",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정",
+        "4": "설정"
+      },
+      "outcomes": {
+        "0": "다중 인스턴스 (핵심)가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "다중 인스턴스 (핵심)의 권장 흐름으로 실수를 줄입니다.",
+        "2": "다중 인스턴스 (핵심)에서 1회 성공을 확인한 뒤 확장합니다."
+      },
+      "steps": {
+        "0": "다중 인스턴스 (핵심) 페이지를 엽니다.",
+        "1": "다중 인스턴스 (핵심)의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "다중 인스턴스 (핵심)에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 다중 인스턴스 (핵심) 사용 방법을 설명합니다.",
+      "title": "다중 인스턴스 (핵심)"
+    },
+    "navTitle": "기능 사용 매뉴얼",
+    "providers": {
+      "cautions": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro 실행 전 필터 조건과 대상 범위를 재확인하세요."
+      },
+      "keywords": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro 플랫폼",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정",
+        "4": "설정",
+        "5": "문제해결"
+      },
+      "outcomes": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro의 권장 흐름으로 실수를 줄입니다.",
+        "2": "Codex / GitHub Copilot / Windsurf / Kiro에서 1회 성공을 확인한 뒤 확장합니다."
+      },
+      "steps": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro 페이지를 엽니다.",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "Codex / GitHub Copilot / Windsurf / Kiro에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 Codex / GitHub Copilot / Windsurf / Kiro 사용 방법을 설명합니다.",
+      "title": "Codex / GitHub Copilot / Windsurf / Kiro 플랫폼"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "빠른 시작 (5분)에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "빠른 시작 (5분) 실행 전 필터 조건과 대상 범위를 재확인하세요."
+      },
+      "keywords": {
+        "0": "빠른 시작 (5분)",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정"
+      },
+      "outcomes": {
+        "0": "빠른 시작 (5분)가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "빠른 시작 (5분)의 권장 흐름으로 실수를 줄입니다.",
+        "2": "빠른 시작 (5분)에서 1회 성공을 확인한 뒤 확장합니다."
+      },
+      "steps": {
+        "0": "빠른 시작 (5분) 페이지를 엽니다.",
+        "1": "빠른 시작 (5분)의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "빠른 시작 (5분)에서 수동 작업을 1회 실행해 결과를 확인합니다.",
+        "3": "문제 해결 시 \"설정 -> 데이터 디렉터리 -> 열기\" 후 logs로 이동합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 빠른 시작 (5분) 사용 방법을 설명합니다.",
+      "title": "빠른 시작 (5분)"
+    },
+    "resultCount": "총 {{count}}개 섹션",
+    "searchAria": "매뉴얼 검색",
+    "searchPlaceholder": "기능, 시나리오 또는 키워드 검색 (예: 다중 인스턴스, 주입, 웨이크업, 지문)",
+    "settings": {
+      "cautions": {
+        "0": "설정 및 시스템 기능에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "설정 및 시스템 기능 실행 전 필터 조건과 대상 범위를 재확인하세요."
+      },
+      "keywords": {
+        "0": "설정 및 시스템 기능",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정",
+        "4": "설정",
+        "5": "문제해결"
+      },
+      "outcomes": {
+        "0": "설정 및 시스템 기능가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "설정 및 시스템 기능의 권장 흐름으로 실수를 줄입니다.",
+        "2": "설정 및 시스템 기능에서 1회 성공을 확인한 뒤 확장합니다."
+      },
+      "steps": {
+        "0": "설정 및 시스템 기능 페이지를 엽니다.",
+        "1": "설정 및 시스템 기능의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "설정 및 시스템 기능에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 설정 및 시스템 기능 사용 방법을 설명합니다.",
+      "title": "설정 및 시스템 기능"
+    },
+    "subtitle": "작업 시나리오별 가이드입니다. 목표를 먼저 파악하고 권장 흐름을 따라주세요.",
+    "title": "기능 사용 매뉴얼",
+    "wakeup": {
+      "cautions": {
+        "0": "웨이크업 작업 및 검증에서 대량/고위험 작업 전에는 반드시 백업하세요.",
+        "1": "웨이크업 작업 및 검증 실행 전 필터 조건과 대상 범위를 재확인하세요."
+      },
+      "keywords": {
+        "0": "웨이크업 작업 및 검증",
+        "1": "가이드",
+        "2": "흐름",
+        "3": "계정",
+        "4": "설정"
+      },
+      "outcomes": {
+        "0": "웨이크업 작업 및 검증가 어떤 문제를 해결하는지 이해합니다.",
+        "1": "웨이크업 작업 및 검증의 권장 흐름으로 실수를 줄입니다."
+      },
+      "steps": {
+        "0": "웨이크업 작업 및 검증 페이지를 엽니다.",
+        "1": "웨이크업 작업 및 검증의 기본 설정과 필요한 바인딩을 완료합니다.",
+        "2": "웨이크업 작업 및 검증에서 수동 작업을 1회 실행해 결과를 확인합니다."
+      },
+      "summary": "이 섹션은 일상 워크플로우에서 웨이크업 작업 및 검증 사용 방법을 설명합니다.",
+      "title": "웨이크업 작업 및 검증"
+    }
   }
 }

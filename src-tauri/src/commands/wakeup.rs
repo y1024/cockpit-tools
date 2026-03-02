@@ -40,7 +40,9 @@ pub fn wakeup_load_history() -> Result<Vec<modules::wakeup_history::WakeupHistor
 }
 
 #[tauri::command]
-pub fn wakeup_add_history(items: Vec<modules::wakeup_history::WakeupHistoryItem>) -> Result<(), String> {
+pub fn wakeup_add_history(
+    items: Vec<modules::wakeup_history::WakeupHistoryItem>,
+) -> Result<(), String> {
     modules::wakeup_history::add_history_items(items)
 }
 
@@ -76,12 +78,6 @@ pub async fn wakeup_verification_run_batch(
 ) -> Result<modules::wakeup_verification::WakeupVerificationBatchResult, String> {
     let final_prompt = prompt.unwrap_or_else(|| "hi".to_string());
     let final_tokens = max_output_tokens.unwrap_or(0);
-    modules::wakeup_verification::run_batch(
-        &app,
-        account_ids,
-        &model,
-        &final_prompt,
-        final_tokens,
-    )
-    .await
+    modules::wakeup_verification::run_batch(&app, account_ids, &model, &final_prompt, final_tokens)
+        .await
 }

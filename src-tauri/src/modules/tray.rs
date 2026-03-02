@@ -421,8 +421,7 @@ fn normalize_antigravity_model_for_match(value: &str) -> String {
     if normalized.starts_with("gemini-3.1-pro-low") || normalized.starts_with("gemini-3-pro-low") {
         return "gemini-3.1-pro-low".to_string();
     }
-    if normalized.starts_with("claude-sonnet-4-6") || normalized.starts_with("claude-sonnet-4-5")
-    {
+    if normalized.starts_with("claude-sonnet-4-6") || normalized.starts_with("claude-sonnet-4-5") {
         return "claude-sonnet-4-6".to_string();
     }
     if normalized.starts_with("claude-opus-4-6-thinking")
@@ -446,9 +445,7 @@ fn antigravity_model_matches(model_name: &str, target: &str) -> bool {
     if left.is_empty() || right.is_empty() {
         return false;
     }
-    left == right
-        || left.starts_with(&(right.clone() + "-"))
-        || right.starts_with(&(left + "-"))
+    left == right || left.starts_with(&(right.clone() + "-")) || right.starts_with(&(left + "-"))
 }
 
 fn parse_model_reset_ts(reset_time: &str) -> Option<i64> {
@@ -802,7 +799,12 @@ fn format_percent_text(percentage: i32) -> String {
     format!("{}%", percentage.clamp(0, 100))
 }
 
-fn format_quota_line(lang: &str, label: &str, value_text: &str, reset_text: Option<&str>) -> String {
+fn format_quota_line(
+    lang: &str,
+    label: &str,
+    value_text: &str,
+    reset_text: Option<&str>,
+) -> String {
     let normalized_reset = reset_text
         .map(|text| text.trim())
         .filter(|text| !text.is_empty() && *text != "—");
@@ -849,7 +851,8 @@ fn build_copilot_quota_lines(lang: &str, usage: CopilotUsage) -> Vec<String> {
             Some(&reset_text),
         ));
     }
-    let premium_value = format_copilot_metric_value(lang, usage.premium).unwrap_or_else(|| "-".to_string());
+    let premium_value =
+        format_copilot_metric_value(lang, usage.premium).unwrap_or_else(|| "-".to_string());
     lines.push(format_quota_line(
         lang,
         &get_text("ghcp_premium", lang),

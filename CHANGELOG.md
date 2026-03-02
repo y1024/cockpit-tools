@@ -7,6 +7,20 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.9.9] - 2026-03-02
+
+### Added
+- **Built-in User Manual page**: Added a new `manual` page with scenario-based sections (quick start, dashboard, provider accounts, multi-instance, fingerprints, wakeup/verification, settings, and import/export + troubleshooting), keyword search, and expand/collapse controls.
+- **One-click manual entry points across key pages**: Added manual shortcuts to dashboard/header areas and account empty states (Antigravity, Codex, GitHub Copilot, Windsurf, Kiro) to reduce first-run friction.
+
+### Changed
+- **Manual page now supports direct action shortcuts**: Each section can jump directly to related pages (Dashboard, Antigravity, Codex, GitHub Copilot, Windsurf, Kiro, Multi-Instance, Fingerprints, Wakeup Tasks, Verification, Settings), and can open Platform Layout from the guide.
+- **Manual localization coverage expanded across locale packs**: Added `manual.*` keys and `nav.manual` labels across all supported locale files to keep guide/navigation copy consistent in multi-language environments.
+
+### Fixed
+- **Fixed permission-prompt attribution to Cockpit when launching third-party apps on macOS**: When launching Antigravity/Codex/GitHub Copilot/Windsurf/Kiro from Cockpit, protected-directory permission prompts are now significantly less likely to be attributed to Cockpit.
+
+---
 ## [0.9.8] - 2026-03-01
 
 ### Changed

@@ -55,7 +55,8 @@ fn is_banned_reason(value: Option<&str>) -> bool {
 }
 
 fn is_banned_account(account: &KiroAccount) -> bool {
-    is_banned_status(account.status.as_deref()) || is_banned_reason(account.status_reason.as_deref())
+    is_banned_status(account.status.as_deref())
+        || is_banned_reason(account.status_reason.as_deref())
 }
 
 fn get_data_dir() -> Result<PathBuf, String> {
@@ -807,7 +808,13 @@ pub fn update_account_tags(account_id: &str, tags: Vec<String>) -> Result<KiroAc
 }
 
 fn clone_object_value(value: Option<&Value>) -> Option<Value> {
-    value.and_then(|raw| if raw.is_object() { Some(raw.clone()) } else { None })
+    value.and_then(|raw| {
+        if raw.is_object() {
+            Some(raw.clone())
+        } else {
+            None
+        }
+    })
 }
 
 fn is_non_empty_json_value(value: &Value) -> bool {
@@ -923,7 +930,10 @@ fn build_import_auth_token(raw: &Value) -> Result<Value, String> {
         if auth_obj.contains_key(key) {
             continue;
         }
-        if let Some(value) = raw_obj.get(key).filter(|value| is_non_empty_json_value(value)) {
+        if let Some(value) = raw_obj
+            .get(key)
+            .filter(|value| is_non_empty_json_value(value))
+        {
             auth_obj.insert(key.to_string(), value.clone());
         }
     }

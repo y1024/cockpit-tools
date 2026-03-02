@@ -151,11 +151,191 @@
     "fingerprints": "デバイス指紋",
     "settings": "設定",
     "codex": "Codex アカウント",
-    "dashboard": "ダッシュボード",
-    "instances": "マルチインスタンス",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "その他のプラットフォーム"
+    "dashboard": "ダッシュボード",
+    "morePlatforms": "その他のプラットフォーム",
+    "instances": "マルチインスタンス",
+    "manual": "ユーザーマニュアル"
+  },
+  "platformLayout": {
+    "title": "プラットフォームレイアウト",
+    "sidebarSelected": "サイドバーで選択済み {{count}}/{{max}}",
+    "reset": "デフォルトにリセット",
+    "tip": "ドラッグして並び替え。サイドバーには最大2つまで表示できます。1つだけ選択した場合は1つだけ表示されます。",
+    "sidebarToggle": "サイドバーに表示",
+    "dashboardToggle": "ダッシュボードに表示",
+    "trayToggle": "トレイに表示",
+    "hiddenBadge": "非表示",
+    "openFromMore": "プラットフォームレイアウトを管理",
+    "dragHandleLabel": "ドラッグして並び替え"
+  },
+  "privacy": {
+    "hideSensitive": "メールを隠す",
+    "showSensitive": "メールを表示"
+  },
+  "instances": {
+    "title": "マルチインスタンス",
+    "subtitle": "複数アカウントの並列実行に向けた独立した設定管理（プロファイル）。",
+    "defaultName": "デフォルトインスタンス",
+    "search": "インスタンスを検索",
+    "sort": {
+      "label": "並び替え",
+      "createdAt": "作成日時順",
+      "lastLaunchedAt": "起動日時順",
+      "ascTooltip": "現在: 昇順、クリックで降順に切り替え",
+      "descTooltip": "現在: 降順、クリックで昇順に切り替え",
+      "toggleDirection": "並び順の方向を切り替え"
+    },
+    "actions": {
+      "create": "新規インスタンス",
+      "refresh": "更新",
+      "startAll": "すべて開始",
+      "restartAll": "すべて再起動",
+      "stopAll": "すべて停止",
+      "start": "開始",
+      "stop": "停止",
+      "openFolder": "フォルダーを開く",
+      "edit": "編集",
+      "openRootDir": "フォルダーを開く",
+      "selectPath": "フォルダーを選択",
+      "openWindow": "ウィンドウを開く"
+    },
+    "bulkConfirm": {
+      "startAll": "停止中のすべてのインスタンスを開始しますか？",
+      "restartAll": "実行中のすべてのインスタンスを再起動しますか？",
+      "stopAll": "すべてのインスタンスを閉じますか？"
+    },
+    "status": {
+      "running": "実行中",
+      "stopped": "停止",
+      "restarting": "再起動中",
+      "starting": "起動"
+    },
+    "labels": {
+      "path": "ディレクトリ",
+      "args": "起動引数",
+      "argsEmpty": "なし",
+      "bindAccount": "紐付けアカウント",
+      "unbound": "未紐付け",
+      "pendingInit": "初期化待ち（先に一度起動してください）",
+      "quota": "クォータ",
+      "lastLaunched": "最終起動"
+    },
+    "columns": {
+      "instance": "インスタンス",
+      "email": "アカウント",
+      "quota": "クォータ状況",
+      "actions": "操作"
+    },
+    "empty": {
+      "title": "インスタンスがありません",
+      "desc": "独立した設定ディレクトリを作成して、マルチインスタンスを素早く起動しましょう。"
+    },
+    "modal": {
+      "createTitle": "新規インスタンス",
+      "editTitle": "インスタンスを編集"
+    },
+    "form": {
+      "name": "インスタンス名",
+      "namePlaceholder": "例: 仕事用アカウント",
+      "path": "インスタンスディレクトリ",
+      "pathPlaceholder": "インスタンスディレクトリを選択",
+      "pathReadOnly": "編集時はパスを変更できません",
+      "pathAutoHint": "名前の変更に合わせてパスが自動更新されます（手動選択も可）",
+      "copyLogin": "現在のログイン状態をコピー",
+      "copyLoginDesc": "デフォルトディレクトリから設定とログインデータをコピーします",
+      "initMode": "初期化方式",
+      "initModeCopy": "元インスタンスをコピー（デフォルト）",
+      "initModeEmpty": "空のインスタンス（コピーしない）",
+      "emptyInitHint": "コピーしないを選ぶと空のディレクトリのみ作成されます。アカウントを紐付ける前に一度起動してください。",
+      "copySource": "コピー元インスタンス",
+      "copySourceDesc": "選択したインスタンスから設定とログイン情報をコピーします",
+      "copySourcePlaceholder": "コピー元インスタンスを選択",
+      "copySourceRequired": "コピー元インスタンスを選択してください",
+      "copySourceRunningHint": "コピー元インスタンスが稼動中です。データ不整合を避けるため、先に閉じることを推奨します。",
+      "bindInject": "アカウントを紐付ける",
+      "bindAfterInit": "初期化後に紐付け可能",
+      "bindDisabledHint": "空のインスタンスは、データ生成のために先に一度起動してからアカウントを紐付けてください。",
+      "followCurrent": "現在のアカウントに追従",
+      "selectAccount": "アカウントを選択",
+      "bindAccount": "アカウントを紐付け",
+      "unbound": "未紐付け",
+      "extraArgs": "カスタム起動引数",
+      "extraArgsPlaceholder": "例: --disable-gpu --log-level=2",
+      "extraArgsDesc": "引数をスペースで区切ります。引用符もサポートされています",
+      "nameRequired": "インスタンス名を入力してください",
+      "pathRequired": "インスタンスディレクトリを選択してください",
+      "bindRequired": "紐付けるアカウントを選択してください"
+    },
+    "quota": {
+      "unbound": "紐付けアカウントなし",
+      "accountMissing": "アカウントが見つかりません",
+      "empty": "キャッシュされたクォータなし"
+    },
+    "messages": {
+      "created": "インスタンスを作成しました",
+      "emptyCreated": "空のインスタンスを作成しました。アカウントを紐付ける前に一度起動してください。",
+      "updated": "インスタンスを更新しました",
+      "deleted": "インスタンスを削除しました",
+      "started": "インスタンスを開始しました",
+      "stopped": "インスタンスを停止しました",
+      "startedAll": "停止中のすべてのインスタンスを開始しました",
+      "restartedAll": "実行中のインスタンスを再起動しました",
+      "closedAll": "すべてのインスタンスを閉じました",
+      "allAlreadyRunning": "すべてのインスタンスが既に実行中です",
+      "noneRunning": "実行中のインスタンスが見つかりません"
+    },
+    "runningDialog": {
+      "title": "インスタンスは既に実行中です",
+      "desc": "このインスタンスは既に実行されています。ウィンドウへ移動するか、現在の戦略で再起動できます。",
+      "current": "現在の戦略: {{name}}",
+      "pathLabel": "インスタンスディレクトリ",
+      "go": "今すぐ移動",
+      "restart": "閉じて再起動"
+    },
+    "initGuide": {
+      "title": "インスタンスは未初期化です",
+      "desc": "このインスタンスは「空のインスタンス」です。現在はディレクトリのみ作成され、インスタンスデータはまだ生成されていません。",
+      "tip": "先にインスタンスを一度起動してください。初期化完了後にアカウントを紐付けできます。",
+      "startNow": "今すぐ起動"
+    },
+    "restartStrategy": {
+      "button": "再起動戦略",
+      "title": "再起動戦略",
+      "desc": "インスタンスの再起動方法を選択してください。各オプションは範囲と安定性に影響します。",
+      "recommended": "推奨",
+      "labels": {
+        "principle": "技術原理",
+        "command": "コマンド",
+        "pros": "メリット",
+        "cons": "デメリット"
+      },
+      "safe": {
+        "title": "安全な再起動（推奨）",
+        "principle": "すべての Antigravity プロセスに SIGTERM を送信して、アプリが自身で保存して終了するように促します。終了後にターゲットインスタンスを起動します（必要に応じて強制終了します）。",
+        "commandMac": "macOS/Linux: kill -15 <pid> (すべての Antigravity プロセス)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (すべての Antigravity プロセス)",
+        "pros": "通常の終了に近く、クラッシュ警告が出にくく、データがより安全です。",
+        "cons": "すべてのインスタンスの全体的な再起動のみをサポートします。"
+      },
+      "force": {
+        "title": "強制再起動",
+        "principle": "--user-data-dir でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir に一致するもの)",
+        "pros": "特定のインスタンスを正確に再起動できます。",
+        "cons": "「予期しない終了」警告が出る可能性があり、未保存のデータ紛失リスクがあります。"
+      }
+    },
+    "stop": {
+      "title": "インスタンスを強制終了",
+      "message": "強制終了のために終了信号（SIGTERM）を送信します。データが失われる可能性があります。続行しますか？"
+    },
+    "delete": {
+      "title": "インスタンスを削除",
+      "message": "インスタンス {{name}} を削除しますか？設定が削除され、インスタンスフォルダーも削除されます。"
+    }
   },
   "settings": {
     "title": "アプリ設定",
@@ -186,11 +366,6 @@
       "every1hour": "1時間ごと",
       "minutes": "分",
       "refreshIntervalLimited": "クォータリセット時の起動が有効になっているため、リフレッシュ間隔の最小値は2分です。",
-      "storageTitle": "ディレクトリとストレージ",
-      "dataDir": "データディレクトリ",
-      "dataDirDesc": "アカウントと設定ファイルの保存場所。",
-      "fpDir": "Antigravityストレージ",
-      "fpDirDesc": "Antigravityデータファイルの保存場所。",
       "closeBehavior": "閉じる時の動作",
       "closeBehaviorDesc": "ウィンドウを閉じる時の動作を選択",
       "closeBehaviorAsk": "毎回確認する",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Dockアイコンの表示状態を独立して制御します。ウィンドウの最小化動作の影響を受けません",
       "hideDockIconOff": "いいえ（Dockアイコンを表示）",
       "hideDockIconOn": "はい（Dockアイコンを隠す）",
-      "opencodeAppPathDesc": "空欄の場合は既定のパスを使用",
+      "storageTitle": "ディレクトリとストレージ",
+      "dataDir": "データディレクトリ",
+      "dataDirDesc": "アカウントと設定ファイルの保存場所。",
+      "fpDir": "Antigravityストレージ",
+      "fpDirDesc": "Antigravityデータファイルの保存場所。",
       "opencodeTitle": "OpenCode 連携",
       "opencodeRestart": "Codex 切替時に OpenCode を自動再起動",
       "opencodeRestartDesc": "OpenCode 内の Codex アカウント情報を同期して切り替え",
       "opencodeAppPath": "OpenCode 起動パス",
+      "opencodeAppPathDesc": "空欄の場合は既定のパスを使用",
       "opencodeAppPathPlaceholder": "既定のパス",
       "opencodePathReset": "既定に戻す",
       "opencodePathSelect": "選択",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "設定を保存"
   },
+  "appPath": {
+    "missing": {
+      "title": "アプリのパスが見つかりません",
+      "desc": "{{app}} のアプリパスが見つかりません。続行するには今すぐ設定してください。",
+      "action": "今すぐ設定"
+    }
+  },
   "accounts": {
     "title": "アカウント管理",
     "subtitle": "Antigravity アカウントの一覧を管理します。",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "デフォルト",
       "overall": "総合クォータ順",
+      "createdAt": "作成日時順",
       "byGroup": "{{group}} クォータ順",
       "byGroupReset": "{{group}} リセット時間順",
-      "createdAt": "作成日時順",
       "descTooltip": "降順（クリックで昇順へ）",
       "ascTooltip": "昇順（クリックで降順へ）",
       "toggleDirection": "並べ替え順序を切り替え"
     },
+    "filterTags": "タグで絞り込み",
+    "filterTagsCount": "タグ",
+    "noAvailableTags": "利用可能なタグはありません",
+    "clearFilter": "フィルターをクリア",
+    "editTags": "タグを編集",
+    "tagModal": {
+      "title": "タグを編集",
+      "hint": "タグは最大{{max}}件まで。1件あたり最大{{maxLength}}文字です。",
+      "empty": "利用可能なタグはありません",
+      "suggestionsTitle": "タグで絞り込み",
+      "suggestionsEmpty": "利用可能なタグはありません",
+      "inputPlaceholder": "タグを入力（残り{{remaining}}件）",
+      "inputDisabledPlaceholder": "タグ上限に達しました",
+      "add": "追加",
+      "save": "タグを保存",
+      "error": {
+        "empty": "タグを入力してください",
+        "tooLong": "タグは{{max}}文字以内で入力してください",
+        "duplicate": "タグは既に存在します",
+        "tooMany": "タグは最大{{max}}件まで追加できます"
+      }
+    },
+    "groupByTag": "タグでグループ化",
+    "untagged": "タグなし",
+    "deleteTagAria": "タグ {{tag}} を削除",
+    "confirmDeleteTag": "タグ「{{tag}}」を削除しますか？このタグは {{count}} 個のアカウントから削除されます。",
+    "defaultGroup": "デフォルトグループ",
     "actions": {
       "viewDetails": "詳細を見る",
       "viewError": "エラーを表示",
@@ -388,33 +602,6 @@
       "importSuccess": "{{count}} 件のアカウントをインポートしました",
       "importPartial": "{{success}} 件成功、{{fail}} 件失敗",
       "importFailed": "インポートに失敗しました。refresh_token を確認してください"
-    },
-    "confirmDeleteTag": "タグ「{{tag}}」を削除しますか？このタグは {{count}} 個のアカウントから削除されます。",
-    "defaultGroup": "デフォルトグループ",
-    "filterTags": "タグで絞り込み",
-    "filterTagsCount": "タグ",
-    "noAvailableTags": "利用可能なタグはありません",
-    "clearFilter": "フィルターをクリア",
-    "editTags": "タグを編集",
-    "groupByTag": "タグでグループ化",
-    "untagged": "タグなし",
-    "deleteTagAria": "タグ {{tag}} を削除",
-    "tagModal": {
-      "title": "タグを編集",
-      "hint": "タグは最大{{max}}件まで。1件あたり最大{{maxLength}}文字です。",
-      "empty": "利用可能なタグはありません",
-      "suggestionsTitle": "タグで絞り込み",
-      "suggestionsEmpty": "利用可能なタグはありません",
-      "inputPlaceholder": "タグを入力（残り{{remaining}}件）",
-      "inputDisabledPlaceholder": "タグ上限に達しました",
-      "add": "追加",
-      "save": "タグを保存",
-      "error": {
-        "empty": "タグを入力してください",
-        "tooLong": "タグは{{max}}文字以内で入力してください",
-        "duplicate": "タグは既に存在します",
-        "tooMany": "タグは最大{{max}}件まで追加できます"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "ウェイクアップタスク",
     "subtitle": "複数の自動ウェイクアップタスクを管理し、個別にオン/オフできます。",
+    "verification": {
+      "title": "認証が必要です",
+      "columns": {
+        "verifiedAt": "検証時間"
+      },
+      "filters": {
+        "all": "すべて"
+      },
+      "actions": {
+        "selectAllAccounts": "すべて選択",
+        "clearSelectedAccounts": "選択解除",
+        "runCheckNow": "認証を完了"
+      },
+      "runHint": {
+        "title": "検証の説明",
+        "line1": "「今すぐチェック」は、ローカルゲートウェイと公式 Language Server プロトコルで Antigravity クライアントを模擬し、最小限の対話リクエストを送信します。",
+        "line2": "この処理では少量のトークン（通常は短い1回の対話分）を消費します。実際の消費量はモデルとアカウントポリシーに依存します。",
+        "line3": "この操作は起動タスクの設定を変更せず、アカウント可用性のチェックとチェック履歴の記録のみを行います。",
+        "line4": "403 が返された場合は、先にアカウント検証を完了してください。結果には検証 URL とクイック操作が表示されます。"
+      },
+      "deleteConfirm": "削除を確認しますか？"
+    },
     "globalToggle": "ウェイクアップ全体スイッチ",
     "newTask": "新規タスク",
     "runTest": "すぐにテスト",
@@ -763,28 +972,6 @@
       "accountsHint": "複数のアカウントでテストできます。",
       "start": "テスト開始",
       "testing": "テスト中..."
-    },
-    "verification": {
-      "title": "認証が必要です",
-      "columns": {
-        "verifiedAt": "検証時間"
-      },
-      "filters": {
-        "all": "すべて"
-      },
-      "actions": {
-        "selectAllAccounts": "すべて選択",
-        "clearSelectedAccounts": "選択解除",
-        "runCheckNow": "認証を完了"
-      },
-      "deleteConfirm": "削除を確認しますか？",
-      "runHint": {
-        "title": "検証の説明",
-        "line1": "「今すぐチェック」は、ローカルゲートウェイと公式 Language Server プロトコルで Antigravity クライアントを模擬し、最小限の対話リクエストを送信します。",
-        "line2": "この処理では少量のトークン（通常は短い1回の対話分）を消費します。実際の消費量はモデルとアカウントポリシーに依存します。",
-        "line3": "この操作は起動タスクの設定を変更せず、アカウント可用性のチェックとチェック履歴の記録のみを行います。",
-        "line4": "403 が返された場合は、先にアカウント検証を完了してください。結果には検証 URL とクイック操作が表示されます。"
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Codex アカウント管理",
     "subtitle": "OpenAI Codex アカウントを管理します",
+    "instances": {
+      "subtitle": "インスタンスごとの独立設定、複数アカウントでの並列運用。",
+      "comingSoon": "マルチインスタンス機能は近日公開",
+      "comingSoonDesc": "異なるアカウントで複数のCodex.appインスタンスを同時に実行できます。お楽しみに。",
+      "unsupported": {
+        "desc": "Codexマルチインスタンスは現在macOSでのみ利用可能です。"
+      },
+      "quota": {
+        "hourly": "5時間",
+        "weekly": "週間"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "すべての Codex プロセスに SIGTERM を送信して、アプリが自身で保存して終了するように促します。終了後にターゲットインスタンスを起動します（必要に応じて強制終了します）。",
+          "commandMac": "macOS: kill -15 <pid> (すべての Codex プロセス)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (すべての Codex プロセス)"
+        },
+        "force": {
+          "principle": "CODEX_HOME でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME に一致するもの)"
+        }
+      }
+    },
+    "refreshSuccess": "クォータを更新しました",
+    "refreshFailed": "クォータの更新に失敗しました: {{error}}",
+    "refreshAllSuccess": "更新完了、{{count}} アカウント成功",
+    "refreshAllPartialFailed": "更新完了、{{success}} / {{total}} アカウント成功、一部失敗",
     "switch": "切替",
     "switched": "{{email}} に切り替えました",
     "switchFailed": "切り替え失敗: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "ローカルアカウント取得"
     },
     "import": {
+      "localDesc": "ローカルでログイン済みのセッションから Codex アカウントをインポート。",
       "importing": "ローカルアカウントをインポート中...",
-      "successMsg": "インポート成功: {{email}}",
-      "localDesc": "ローカルでログイン済みのセッションから Codex アカウントをインポート。"
+      "successMsg": "インポート成功: {{email}}"
     },
     "quota": {
       "hourly": "5 時間クォータ",
       "weekly": "週次クォータ",
       "reset": "リセット"
+    },
+    "quotaError": {
+      "badge": "クォータエラー",
+      "generic": "クォータの更新に失敗しました。後でもう一度お試しください",
+      "deactivatedWorkspace": "ワークスペースが無効です。アカウントを切り替えるか再認証してください"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "週間クォータのリセット時間",
       "hourlyReset": "5時間クォータのリセット時間"
     },
+    "opencodeSwitch": "OpenCode 切り替えスイッチ",
+    "opencodeSwitchDesc": "OpenCode 内の Codex アカウント情報を同期して切り替え",
+    "opencodeSwitchFailed": "OpenCode のスイッチ更新に失敗しました: {{error}}",
     "columns": {
       "hourly": "5時間クォータ",
       "weekly": "週間クォータ"
     },
-    "opencodeSwitch": "OpenCode 切り替えスイッチ",
-    "opencodeSwitchDesc": "OpenCode 内の Codex アカウント情報を同期して切り替え",
-    "opencodeSwitchFailed": "OpenCode のスイッチ更新に失敗しました: {{error}}",
     "filterTags": "タグで絞り込み",
     "filterTagsCount": "タグ",
     "noAvailableTags": "利用可能なタグはありません",
     "clearFilter": "フィルターをクリア",
-    "editTags": "タグを編集",
+    "editTags": "タグを編集"
+  },
+  "githubCopilot": {
+    "title": "GitHub Copilot アカウント管理",
     "instances": {
-      "subtitle": "インスタンスごとの独立設定、複数アカウントでの並列運用。",
-      "comingSoon": "マルチインスタンス機能は近日公開",
-      "comingSoonDesc": "異なるアカウントで複数のCodex.appインスタンスを同時に実行できます。お楽しみに。",
       "unsupported": {
-        "desc": "Codexマルチインスタンスは現在macOSでのみ利用可能です。"
-      },
-      "quota": {
-        "hourly": "5時間",
-        "weekly": "週間"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "すべての Codex プロセスに SIGTERM を送信して、アプリが自身で保存して終了するように促します。終了後にターゲットインスタンスを起動します（必要に応じて強制終了します）。",
-          "commandMac": "macOS: kill -15 <pid> (すべての Codex プロセス)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (すべての Codex プロセス)"
-        },
-        "force": {
-          "principle": "CODEX_HOME でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME に一致するもの)"
-        }
+        "desc": "GitHub Copilotマルチインスタンスは現在macOSでのみ利用可能です。"
       }
     },
-    "refreshSuccess": "クォータを更新しました",
-    "refreshFailed": "クォータの更新に失敗しました: {{error}}",
-    "refreshAllSuccess": "更新完了、{{count}} アカウント成功",
-    "refreshAllPartialFailed": "更新完了、{{success}} / {{total}} アカウント成功、一部失敗",
-    "quotaError": {
-      "badge": "クォータエラー",
-      "generic": "クォータの更新に失敗しました。後でもう一度お試しください",
-      "deactivatedWorkspace": "ワークスペースが無効です。アカウントを切り替えるか再認証してください"
+    "empty": {
+      "description": "「アカウントを追加」から GitHub Copilot アカウントを管理できます"
+    },
+    "addModal": {
+      "title": "GitHub Copilot アカウントを追加"
+    },
+    "oauth": {
+      "desc": "下のボタンをクリックし、ブラウザで GitHub Copilot の認可を完了してください。"
+    },
+    "token": {
+      "desc": "GitHub Copilot のアクセストークン、またはエクスポートした JSON データを貼り付けてください。"
+    },
+    "import": {
+      "localDesc": "ローカルでログイン済みのセッションから GitHub Copilot アカウントをインポート。"
+    },
+    "sort": {
+      "weekly": "週間クォータ",
+      "hourly": "5時間クォータ",
+      "premium": "プレミアム リクエストの使用量順",
+      "weeklyReset": "週間クォータのリセット時間",
+      "hourlyReset": "5時間クォータのリセット時間"
+    },
+    "columns": {
+      "hourly": "5時間クォータ",
+      "weekly": "週間クォータ",
+      "premium": "プレミアム リクエスト"
+    },
+    "usage": {
+      "included": "含まれる"
+    },
+    "injectToVSCode": "VS Codeに切り替え",
+    "injectSuccess": "トークンをVS Codeに正常に注入しました。VS Codeを起動しています。",
+    "injectRequireClose": "注入する前にVS Codeを閉じてください。",
+    "flowNotice": {
+      "title": "GitHub Copilot アカウントガイド（クリックで展開/折りたたみ）",
+      "desc": "アカウント切り替えでは、VS Code のローカル認証ストレージを読み取り、システムの資格情報サービスを使って復号・再書き込みを行う必要があります。データは端末内のみで処理されます。",
+      "inject": "ワンクリック切り替え: このツールはローカルの VS Code 暗号化情報（DPAPI/Keychain/Secret Service）を読み取り、state.vscdb 内の認証セッションを復号して GitHub Copilot トークンを置き換え、再暗号化します。処理はすべて端末内で完結します。",
+      "reason": "必要な権限: VS Code 認証データベース（state.vscdb）を読み取り、システム暗号化機能（Windows DPAPI / macOS Keychain / Linux Secret Service）を呼び出して復号・再書き込みを行います。",
+      "storage": "読み取り範囲: GitHub ログインセッション関連データのみを処理し、すべての処理はローカルで実行されます。"
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "ファイルの場所",
       "helpText": "フォルダを開いて手動で修復するか、ファイルを削除してからアプリケーションを再起動してください。",
       "openFolder": "フォルダを開く"
-    }
-  },
-  "instances": {
-    "title": "マルチインスタンス",
-    "subtitle": "複数アカウントの並列実行に向けた独立した設定管理（プロファイル）。",
-    "defaultName": "デフォルトインスタンス",
-    "search": "インスタンスを検索",
-    "actions": {
-      "create": "新規インスタンス",
-      "refresh": "更新",
-      "startAll": "すべて開始",
-      "restartAll": "すべて再起動",
-      "stopAll": "すべて停止",
-      "start": "開始",
-      "stop": "停止",
-      "openFolder": "フォルダーを開く",
-      "edit": "編集",
-      "openRootDir": "フォルダーを開く",
-      "selectPath": "フォルダーを選択",
-      "openWindow": "ウィンドウを開く"
-    },
-    "bulkConfirm": {
-      "startAll": "停止中のすべてのインスタンスを開始しますか？",
-      "restartAll": "実行中のすべてのインスタンスを再起動しますか？",
-      "stopAll": "すべてのインスタンスを閉じますか？"
-    },
-    "status": {
-      "running": "実行中",
-      "stopped": "停止",
-      "restarting": "再起動中",
-      "starting": "起動"
-    },
-    "labels": {
-      "path": "ディレクトリ",
-      "args": "起動引数",
-      "argsEmpty": "なし",
-      "bindAccount": "紐付けアカウント",
-      "unbound": "未紐付け",
-      "quota": "クォータ",
-      "lastLaunched": "最終起動",
-      "pendingInit": "初期化待ち（先に一度起動してください）"
-    },
-    "columns": {
-      "instance": "インスタンス",
-      "email": "アカウント",
-      "quota": "クォータ状況",
-      "actions": "操作"
-    },
-    "empty": {
-      "title": "インスタンスがありません",
-      "desc": "独立した設定ディレクトリを作成して、マルチインスタンスを素早く起動しましょう。"
-    },
-    "form": {
-      "name": "インスタンス名",
-      "namePlaceholder": "例: 仕事用アカウント",
-      "path": "インスタンスディレクトリ",
-      "pathPlaceholder": "インスタンスディレクトリを選択",
-      "pathReadOnly": "編集時はパスを変更できません",
-      "pathAutoHint": "名前の変更に合わせてパスが自動更新されます（手動選択も可）",
-      "copyLogin": "現在のログイン状態をコピー",
-      "copyLoginDesc": "デフォルトディレクトリから設定とログインデータをコピーします",
-      "copySource": "コピー元インスタンス",
-      "copySourceDesc": "選択したインスタンスから設定とログイン情報をコピーします",
-      "copySourcePlaceholder": "コピー元インスタンスを選択",
-      "copySourceRequired": "コピー元インスタンスを選択してください",
-      "copySourceRunningHint": "コピー元インスタンスが稼動中です。データ不整合を避けるため、先に閉じることを推奨します。",
-      "bindInject": "アカウントを紐付ける",
-      "followCurrent": "現在のアカウントに追従",
-      "selectAccount": "アカウントを選択",
-      "bindAccount": "アカウントを紐付け",
-      "unbound": "未紐付け",
-      "extraArgs": "カスタム起動引数",
-      "extraArgsPlaceholder": "例: --disable-gpu --log-level=2",
-      "extraArgsDesc": "引数をスペースで区切ります。引用符もサポートされています",
-      "nameRequired": "インスタンス名を入力してください",
-      "pathRequired": "インスタンスディレクトリを選択してください",
-      "bindRequired": "紐付けるアカウントを選択してください",
-      "initMode": "初期化方式",
-      "initModeCopy": "元インスタンスをコピー（デフォルト）",
-      "initModeEmpty": "空のインスタンス（コピーしない）",
-      "emptyInitHint": "コピーしないを選ぶと空のディレクトリのみ作成されます。アカウントを紐付ける前に一度起動してください。",
-      "bindAfterInit": "初期化後に紐付け可能",
-      "bindDisabledHint": "空のインスタンスは、データ生成のために先に一度起動してからアカウントを紐付けてください。"
-    },
-    "quota": {
-      "unbound": "紐付けアカウントなし",
-      "accountMissing": "アカウントが見つかりません",
-      "empty": "キャッシュされたクォータなし"
-    },
-    "messages": {
-      "created": "インスタンスを作成しました",
-      "updated": "インスタンスを更新しました",
-      "deleted": "インスタンスを削除しました",
-      "started": "インスタンスを開始しました",
-      "stopped": "インスタンスを停止しました",
-      "startedAll": "停止中のすべてのインスタンスを開始しました",
-      "restartedAll": "実行中のインスタンスを再起動しました",
-      "closedAll": "すべてのインスタンスを閉じました",
-      "allAlreadyRunning": "すべてのインスタンスが既に実行中です",
-      "noneRunning": "実行中のインスタンスが見つかりません",
-      "emptyCreated": "空のインスタンスを作成しました。アカウントを紐付ける前に一度起動してください。"
-    },
-    "runningDialog": {
-      "title": "インスタンスは既に実行中です",
-      "desc": "このインスタンスは既に実行されています。ウィンドウへ移動するか、現在の戦略で再起動できます。",
-      "current": "現在の戦略: {{name}}",
-      "pathLabel": "インスタンスディレクトリ",
-      "go": "今すぐ移動",
-      "restart": "閉じて再起動"
-    },
-    "restartStrategy": {
-      "button": "再起動戦略",
-      "title": "再起動戦略",
-      "desc": "インスタンスの再起動方法を選択してください。各オプションは範囲と安定性に影響します。",
-      "recommended": "推奨",
-      "labels": {
-        "principle": "技術原理",
-        "command": "コマンド",
-        "pros": "メリット",
-        "cons": "デメリット"
-      },
-      "safe": {
-        "title": "安全な再起動（推奨）",
-        "principle": "すべての Antigravity プロセスに SIGTERM を送信して、アプリが自身で保存して終了するように促します。終了後にターゲットインスタンスを起動します（必要に応じて強制終了します）。",
-        "commandMac": "macOS/Linux: kill -15 <pid> (すべての Antigravity プロセス)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (すべての Antigravity プロセス)",
-        "pros": "通常の終了に近く、クラッシュ警告が出にくく、データがより安全です。",
-        "cons": "すべてのインスタンスの全体的な再起動のみをサポートします。"
-      },
-      "force": {
-        "title": "強制再起動",
-        "principle": "--user-data-dir でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir に一致するもの)",
-        "pros": "特定のインスタンスを正確に再起動できます。",
-        "cons": "「予期しない終了」警告が出る可能性があり、未保存のデータ紛失リスクがあります。"
-      }
-    },
-    "stop": {
-      "title": "インスタンスを強制終了",
-      "message": "強制終了のために終了信号（SIGTERM）を送信します。データが失われる可能性があります。続行しますか？"
-    },
-    "delete": {
-      "title": "インスタンスを削除",
-      "message": "インスタンス {{name}} を削除しますか？設定が削除され、インスタンスフォルダーも削除されます。"
-    },
-    "modal": {
-      "createTitle": "新規インスタンス",
-      "editTitle": "インスタンスを編集"
-    },
-    "sort": {
-      "label": "並び替え",
-      "createdAt": "作成日時順",
-      "lastLaunchedAt": "起動日時順",
-      "ascTooltip": "現在: 昇順、クリックで降順に切り替え",
-      "descTooltip": "現在: 降順、クリックで昇順に切り替え",
-      "toggleDirection": "並び順の方向を切り替え"
-    },
-    "initGuide": {
-      "title": "インスタンスは未初期化です",
-      "desc": "このインスタンスは「空のインスタンス」です。現在はディレクトリのみ作成され、インスタンスデータはまだ生成されていません。",
-      "tip": "先にインスタンスを一度起動してください。初期化完了後にアカウントを紐付けできます。",
-      "startNow": "今すぐ起動"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "アプリのパスが見つかりません",
-      "desc": "{{app}} のアプリパスが見つかりません。続行するには今すぐ設定してください。",
-      "action": "今すぐ設定"
-    }
-  },
-  "githubCopilot": {
-    "title": "GitHub Copilot アカウント管理",
-    "instances": {
-      "unsupported": {
-        "desc": "GitHub Copilotマルチインスタンスは現在macOSでのみ利用可能です。"
-      }
-    },
-    "empty": {
-      "description": "「アカウントを追加」から GitHub Copilot アカウントを管理できます"
-    },
-    "addModal": {
-      "title": "GitHub Copilot アカウントを追加"
-    },
-    "oauth": {
-      "desc": "下のボタンをクリックし、ブラウザで GitHub Copilot の認可を完了してください。"
-    },
-    "token": {
-      "desc": "GitHub Copilot のアクセストークン、またはエクスポートした JSON データを貼り付けてください。"
-    },
-    "import": {
-      "localDesc": "ローカルでログイン済みのセッションから GitHub Copilot アカウントをインポート。"
-    },
-    "sort": {
-      "weekly": "週間クォータ",
-      "hourly": "5時間クォータ",
-      "weeklyReset": "週間クォータのリセット時間",
-      "hourlyReset": "5時間クォータのリセット時間",
-      "premium": "プレミアム リクエストの使用量順"
-    },
-    "columns": {
-      "hourly": "5時間クォータ",
-      "weekly": "週間クォータ",
-      "premium": "プレミアム リクエスト"
-    },
-    "flowNotice": {
-      "title": "GitHub Copilot アカウントガイド（クリックで展開/折りたたみ）",
-      "desc": "アカウント切り替えでは、VS Code のローカル認証ストレージを読み取り、システムの資格情報サービスを使って復号・再書き込みを行う必要があります。データは端末内のみで処理されます。",
-      "reason": "必要な権限: VS Code 認証データベース（state.vscdb）を読み取り、システム暗号化機能（Windows DPAPI / macOS Keychain / Linux Secret Service）を呼び出して復号・再書き込みを行います。",
-      "storage": "読み取り範囲: GitHub ログインセッション関連データのみを処理し、すべての処理はローカルで実行されます。",
-      "inject": "ワンクリック切り替え: このツールはローカルの VS Code 暗号化情報（DPAPI/Keychain/Secret Service）を読み取り、state.vscdb 内の認証セッションを復号して GitHub Copilot トークンを置き換え、再暗号化します。処理はすべて端末内で完結します。"
-    },
-    "injectToVSCode": "VS Codeに切り替え",
-    "injectSuccess": "トークンをVS Codeに正常に注入しました。VS Codeを起動しています。",
-    "injectRequireClose": "注入する前にVS Codeを閉じてください。",
-    "usage": {
-      "included": "含まれる"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "クイック切替に失敗しました: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "メールを隠す",
-    "showSensitive": "メールを表示"
-  },
   "windsurf": {
     "title": "Windsurf アカウント管理",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "ログイン成功: {{login}}",
       "failed": "ログイン失敗: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "プラットフォームレイアウト",
-    "sidebarSelected": "サイドバーで選択済み {{count}}/{{max}}",
-    "reset": "デフォルトにリセット",
-    "tip": "ドラッグして並び替え。サイドバーには最大2つまで表示できます。1つだけ選択した場合は1つだけ表示されます。",
-    "sidebarToggle": "サイドバーに表示",
-    "dashboardToggle": "ダッシュボードに表示",
-    "trayToggle": "トレイに表示",
-    "hiddenBadge": "非表示",
-    "openFromMore": "プラットフォームレイアウトを管理",
-    "dragHandleLabel": "ドラッグして並び替え"
-  },
-  "breakout": {
-    "gameOver": "ゲームオーバー",
-    "gameOverRank": "現在のローカル順位 #{{rank}}",
-    "startGame": "ゲーム開始",
-    "startHint": "開始を押すかスペースキーを押してください",
-    "rankTitle": "ローカル履歴ランキング",
-    "rankCurrent": "現在",
-    "rankNoData": "--",
-    "restart": "リスタート",
-    "pause": "一時停止",
-    "resume": "再開",
-    "paused": "一時停止中",
-    "level": "レベル {{level}}",
-    "levelScore": "このレベルのスコア {{score}}",
-    "levelCleared": "レベルクリア",
-    "nextLevel": "次のレベル",
-    "history": "履歴",
-    "historyShort": "履歴",
-    "historyEmpty": "履歴はまだありません",
-    "historyClear": "クリア",
-    "historyScoreShort": "スコア {{score}}",
-    "historyLevelShort": "Lv {{level}}",
-    "historyDurationShort": "時間 {{duration}}",
-    "historyReasonGameOver": "ゲームオーバー",
-    "historyReasonManualExit": "手動終了",
-    "serveHint": "スペースキーでボールを発射",
-    "ranking": "ローカル履歴",
-    "rankingShort": "ローカル",
-    "rankingEmpty": "ローカル履歴はまだありません",
-    "rankingClear": "ローカル履歴をクリア",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "キロに切り替えます"
   },
+  "breakout": {
+    "gameOver": "ゲームオーバー",
+    "gameOverRank": "現在のローカル順位 #{{rank}}",
+    "startGame": "ゲーム開始",
+    "startHint": "開始を押すかスペースキーを押してください",
+    "rankTitle": "ローカル履歴ランキング",
+    "rankCurrent": "現在",
+    "rankNoData": "--",
+    "restart": "リスタート",
+    "pause": "一時停止",
+    "resume": "再開",
+    "paused": "一時停止中",
+    "level": "レベル {{level}}",
+    "levelScore": "このレベルのスコア {{score}}",
+    "levelCleared": "レベルクリア",
+    "nextLevel": "次のレベル",
+    "history": "履歴",
+    "historyShort": "履歴",
+    "historyEmpty": "履歴はまだありません",
+    "historyClear": "クリア",
+    "historyScoreShort": "スコア {{score}}",
+    "historyLevelShort": "Lv {{level}}",
+    "historyDurationShort": "時間 {{duration}}",
+    "historyReasonGameOver": "ゲームオーバー",
+    "historyReasonManualExit": "手動終了",
+    "serveHint": "スペースキーでボールを発射",
+    "ranking": "ローカル履歴",
+    "rankingShort": "ローカル",
+    "rankingEmpty": "ローカル履歴はまだありません",
+    "rankingClear": "ローカル履歴をクリア",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "通知",
     "empty": "通知はありません",
     "markAllRead": "すべて既読にする",
     "gotIt": "了解",
     "later": "後で",
-    "clickToClose": "クリックして閉じる",
     "new": "新着",
     "timeAgo": {
       "justNow": "たった今",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 緊急"
     },
     "refreshed": "公告を更新しました（{count}件）",
+    "clickToClose": "クリックして閉じる",
     "clickToEnlarge": "クリックして拡大",
     "imageLoadFailed": "画像の読み込みに失敗しました"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "すべて折りたたむ",
+      "expandAll": "すべて展開",
+      "goAntigravity": "Antigravityへ",
+      "goCodex": "Codexへ",
+      "goDashboard": "ダッシュボードへ",
+      "goFingerprints": "デバイス指紋へ",
+      "goGitHubCopilot": "GitHub Copilotへ",
+      "goInstances": "マルチインスタンスへ",
+      "goKiro": "Kiroへ",
+      "goSettings": "設定へ",
+      "goVerification": "起動検証へ",
+      "goWakeup": "起動タスクへ",
+      "goWindsurf": "Windsurfへ",
+      "openLayout": "プラットフォーム配置を開く"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Antigravity アカウント管理 で一括・高リスク操作を行う前に必ずバックアップします。"
+      },
+      "keywords": {
+        "0": "Antigravity アカウント管理",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント"
+      },
+      "outcomes": {
+        "0": "Antigravity アカウント管理 で何ができるかを理解します。",
+        "1": "Antigravity アカウント管理 の推奨フローでミスを減らします。"
+      },
+      "steps": {
+        "0": "Antigravity アカウント管理 のページを開きます。",
+        "1": "Antigravity アカウント管理 の基本設定と必要な紐付けを完了します。",
+        "2": "Antigravity アカウント管理 で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは Antigravity アカウント管理 の使い方を説明します。",
+      "title": "Antigravity アカウント管理"
+    },
+    "blocks": {
+      "cautions": "よくある注意点",
+      "outcomes": "この機能でできること",
+      "steps": "推奨手順"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "ダッシュボード で一括・高リスク操作を行う前に必ずバックアップします。"
+      },
+      "keywords": {
+        "0": "ダッシュボード",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント"
+      },
+      "outcomes": {
+        "0": "ダッシュボード で何ができるかを理解します。",
+        "1": "ダッシュボード の推奨フローでミスを減らします。"
+      },
+      "steps": {
+        "0": "ダッシュボード のページを開きます。",
+        "1": "ダッシュボード の基本設定と必要な紐付けを完了します。",
+        "2": "ダッシュボード で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは ダッシュボード の使い方を説明します。",
+      "title": "ダッシュボード"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "インポート/エクスポート・プライバシー・障害対応 で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "インポート/エクスポート・プライバシー・障害対応 実行前にフィルタ条件と対象を再確認します。",
+        "2": "ログ共有前に機密情報（token、cookie、メール）を必ずマスクします。"
+      },
+      "keywords": {
+        "0": "インポート/エクスポート・プライバシー・障害対応",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント",
+        "4": "設定",
+        "5": "障害対応",
+        "6": "ログ",
+        "7": "データ"
+      },
+      "outcomes": {
+        "0": "インポート/エクスポート・プライバシー・障害対応 で何ができるかを理解します。",
+        "1": "インポート/エクスポート・プライバシー・障害対応 の推奨フローでミスを減らします。",
+        "2": "インポート/エクスポート・プライバシー・障害対応 で1回成功を確認してから拡張します。",
+        "3": "インポート/エクスポート・プライバシー・障害対応 で問題が出たら、まず logs を確認して証拠を集めます。"
+      },
+      "steps": {
+        "0": "インポート/エクスポート・プライバシー・障害対応 のページを開きます。",
+        "1": "インポート/エクスポート・プライバシー・障害対応 の基本設定と必要な紐付けを完了します。",
+        "2": "インポート/エクスポート・プライバシー・障害対応 で手動操作を1回実行し、結果を確認します。",
+        "3": "障害対応時は「設定 -> データディレクトリ -> 開く」から logs へ進みます。",
+        "4": "最新の app.log または app.log.* を優先して確認します。",
+        "5": "報告時は発生時刻、プラットフォーム、再現手順、匿名化ログを添付します。"
+      },
+      "summary": "このセクションでは インポート/エクスポート・プライバシー・障害対応 の使い方を説明します。",
+      "title": "インポート/エクスポート・プライバシー・障害対応"
+    },
+    "empty": {
+      "desc": "「インスタンス」「切替」「設定」「エクスポート」などを試してください。",
+      "title": "一致する内容がありません"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "デバイス指紋 で一括・高リスク操作を行う前に必ずバックアップします。"
+      },
+      "keywords": {
+        "0": "デバイス指紋",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント"
+      },
+      "outcomes": {
+        "0": "デバイス指紋 で何ができるかを理解します。",
+        "1": "デバイス指紋 の推奨フローでミスを減らします。"
+      },
+      "steps": {
+        "0": "デバイス指紋 のページを開きます。",
+        "1": "デバイス指紋 の基本設定と必要な紐付けを完了します。",
+        "2": "デバイス指紋 で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは デバイス指紋 の使い方を説明します。",
+      "title": "デバイス指紋"
+    },
+    "instances": {
+      "cautions": {
+        "0": "マルチインスタンス（重点） で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "マルチインスタンス（重点） 実行前にフィルタ条件と対象を再確認します。"
+      },
+      "keywords": {
+        "0": "マルチインスタンス（重点）",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント",
+        "4": "設定"
+      },
+      "outcomes": {
+        "0": "マルチインスタンス（重点） で何ができるかを理解します。",
+        "1": "マルチインスタンス（重点） の推奨フローでミスを減らします。",
+        "2": "マルチインスタンス（重点） で1回成功を確認してから拡張します。"
+      },
+      "steps": {
+        "0": "マルチインスタンス（重点） のページを開きます。",
+        "1": "マルチインスタンス（重点） の基本設定と必要な紐付けを完了します。",
+        "2": "マルチインスタンス（重点） で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは マルチインスタンス（重点） の使い方を説明します。",
+      "title": "マルチインスタンス（重点）"
+    },
+    "navTitle": "機能マニュアル",
+    "providers": {
+      "cautions": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro 実行前にフィルタ条件と対象を再確認します。"
+      },
+      "keywords": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro プラットフォーム",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント",
+        "4": "設定",
+        "5": "障害対応"
+      },
+      "outcomes": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro で何ができるかを理解します。",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro の推奨フローでミスを減らします。",
+        "2": "Codex / GitHub Copilot / Windsurf / Kiro で1回成功を確認してから拡張します。"
+      },
+      "steps": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro のページを開きます。",
+        "1": "Codex / GitHub Copilot / Windsurf / Kiro の基本設定と必要な紐付けを完了します。",
+        "2": "Codex / GitHub Copilot / Windsurf / Kiro で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは Codex / GitHub Copilot / Windsurf / Kiro の使い方を説明します。",
+      "title": "Codex / GitHub Copilot / Windsurf / Kiro プラットフォーム"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "クイックスタート（5分） で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "クイックスタート（5分） 実行前にフィルタ条件と対象を再確認します。"
+      },
+      "keywords": {
+        "0": "クイックスタート（5分）",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント"
+      },
+      "outcomes": {
+        "0": "クイックスタート（5分） で何ができるかを理解します。",
+        "1": "クイックスタート（5分） の推奨フローでミスを減らします。",
+        "2": "クイックスタート（5分） で1回成功を確認してから拡張します。"
+      },
+      "steps": {
+        "0": "クイックスタート（5分） のページを開きます。",
+        "1": "クイックスタート（5分） の基本設定と必要な紐付けを完了します。",
+        "2": "クイックスタート（5分） で手動操作を1回実行し、結果を確認します。",
+        "3": "障害対応時は「設定 -> データディレクトリ -> 開く」から logs へ進みます。"
+      },
+      "summary": "このセクションでは クイックスタート（5分） の使い方を説明します。",
+      "title": "クイックスタート（5分）"
+    },
+    "resultCount": "全 {{count}} セクション",
+    "searchAria": "マニュアルを検索",
+    "searchPlaceholder": "機能・シナリオ・キーワードを検索（例: 多重起動、注入、起動タスク、指紋）",
+    "settings": {
+      "cautions": {
+        "0": "設定とシステム機能 で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "設定とシステム機能 実行前にフィルタ条件と対象を再確認します。"
+      },
+      "keywords": {
+        "0": "設定とシステム機能",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント",
+        "4": "設定",
+        "5": "障害対応"
+      },
+      "outcomes": {
+        "0": "設定とシステム機能 で何ができるかを理解します。",
+        "1": "設定とシステム機能 の推奨フローでミスを減らします。",
+        "2": "設定とシステム機能 で1回成功を確認してから拡張します。"
+      },
+      "steps": {
+        "0": "設定とシステム機能 のページを開きます。",
+        "1": "設定とシステム機能 の基本設定と必要な紐付けを完了します。",
+        "2": "設定とシステム機能 で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは 設定とシステム機能 の使い方を説明します。",
+      "title": "設定とシステム機能"
+    },
+    "subtitle": "作業シナリオ別のガイドです。まず目的を理解し、次に推奨フローに従ってください。",
+    "title": "機能マニュアル",
+    "wakeup": {
+      "cautions": {
+        "0": "起動タスクと検証 で一括・高リスク操作を行う前に必ずバックアップします。",
+        "1": "起動タスクと検証 実行前にフィルタ条件と対象を再確認します。"
+      },
+      "keywords": {
+        "0": "起動タスクと検証",
+        "1": "ガイド",
+        "2": "手順",
+        "3": "アカウント",
+        "4": "設定"
+      },
+      "outcomes": {
+        "0": "起動タスクと検証 で何ができるかを理解します。",
+        "1": "起動タスクと検証 の推奨フローでミスを減らします。"
+      },
+      "steps": {
+        "0": "起動タスクと検証 のページを開きます。",
+        "1": "起動タスクと検証 の基本設定と必要な紐付けを完了します。",
+        "2": "起動タスクと検証 で手動操作を1回実行し、結果を確認します。"
+      },
+      "summary": "このセクションでは 起動タスクと検証 の使い方を説明します。",
+      "title": "起動タスクと検証"
+    }
   }
 }

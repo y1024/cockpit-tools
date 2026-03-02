@@ -402,7 +402,10 @@ mod tests {
         remove_deprecated_groups(&mut settings);
 
         assert!(!settings.group_names.contains_key("g3_image"));
-        assert!(!settings.group_order.iter().any(|group_id| group_id == "g3_image"));
+        assert!(!settings
+            .group_order
+            .iter()
+            .any(|group_id| group_id == "g3_image"));
         assert!(!settings.group_mappings.contains_key("gemini-3-pro-image"));
     }
 

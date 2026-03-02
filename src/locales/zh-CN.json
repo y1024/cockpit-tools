@@ -145,7 +145,6 @@
     }
   },
   "nav": {
-    "dashboard": "仪表盘",
     "overview": "Antigravity 账号",
     "accounts": "账号管理",
     "wakeup": "唤醒任务",
@@ -154,40 +153,10 @@
     "codex": "Codex 账号",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
+    "dashboard": "仪表盘",
     "morePlatforms": "更多平台",
-    "instances": "多开实例"
-  },
-  "breakout": {
-    "gameOver": "本局结束",
-    "gameOverRank": "当前本地排名 #{{rank}}",
-    "startGame": "开始游戏",
-    "startHint": "点击开始按钮或按空格",
-    "serveHint": "按空格开始发球",
-    "rankTitle": "本地历史排名",
-    "rankCurrent": "当前",
-    "rankNoData": "--",
-    "ranking": "本地历史排名",
-    "rankingShort": "本地",
-    "rankingEmpty": "暂无本地排名数据",
-    "rankingClear": "清空本地排名",
-    "rankingRankShort": "#{{rank}}",
-    "restart": "重新开始",
-    "pause": "暂停",
-    "resume": "继续",
-    "paused": "已暂停",
-    "level": "关卡 {{level}}",
-    "levelScore": "本关分数 {{score}}",
-    "levelCleared": "关卡完成",
-    "nextLevel": "下一关",
-    "history": "历史记录",
-    "historyShort": "历史",
-    "historyEmpty": "暂无历史记录",
-    "historyClear": "清空",
-    "historyScoreShort": "分 {{score}}",
-    "historyLevelShort": "关 {{level}}",
-    "historyDurationShort": "时长 {{duration}}",
-    "historyReasonGameOver": "本局结束",
-    "historyReasonManualExit": "手动退出"
+    "instances": "多开实例",
+    "manual": "使用手册"
   },
   "platformLayout": {
     "title": "平台布局",
@@ -663,11 +632,11 @@
       "machineId": "设备 ID",
       "accounts": "绑定账号",
       "actions": "操作",
-      "preview": "预览",
+      "accountCount": "{{count}} 个账号",
       "apply": "应用",
-      "rename": "重命名",
       "noData": "暂无指纹数据",
-      "accountCount": "{{count}} 个账号"
+      "preview": "预览",
+      "rename": "重命名"
     },
     "modals": {
       "generate": {
@@ -686,10 +655,10 @@
         "title": "导入指纹",
         "fromTools": "导入 Antigravity Tools指纹",
         "desc": "从 ~/.antigravity_tools/ 目录导入",
-        "orPasteJson": "或粘贴 JSON",
+        "fromJsonBtn": "从 JSON 导入",
         "jsonExample": "格式示例：",
         "jsonPlaceholder": "工作指纹",
-        "fromJsonBtn": "从 JSON 导入"
+        "orPasteJson": "或粘贴 JSON"
       },
       "bound": {
         "title": "绑定账号管理",
@@ -719,21 +688,21 @@
       "duplicate": "已存在相同指纹：{{name}}，无需重复添加。",
       "readOnly": "只读",
       "current": "当前",
-      "loadFailed": "加载指纹列表失败",
-      "generateFailed": "生成失败",
-      "captureFailed": "捕获失败",
-      "renameFailed": "重命名失败",
-      "deleteFailed": "删除失败",
-      "importFailed": "导入失败",
-      "applyFailed": "应用失败",
-      "addFailed": "添加失败",
-      "processing": "处理中...",
-      "adding": "添加中...",
-      "importing": "导入中...",
-      "boundCount": "已绑定 {{count}} 个账号",
       "addCount": "添加 {{count}} 个账号",
+      "addFailed": "添加失败",
+      "adding": "添加中...",
+      "applyFailed": "应用失败",
+      "boundCount": "已绑定 {{count}} 个账号",
+      "captureFailed": "捕获失败",
       "count": "{{count}} 个",
+      "deleteFailed": "删除失败",
       "fpLabel": "指纹:",
+      "generateFailed": "生成失败",
+      "importFailed": "导入失败",
+      "importing": "导入中...",
+      "loadFailed": "加载指纹列表失败",
+      "processing": "处理中...",
+      "renameFailed": "重命名失败",
       "serviceMachineIdEmpty": "空"
     }
   },
@@ -1180,27 +1149,18 @@
     "usage": {
       "included": "Included"
     },
+    "injectToVSCode": "切换到 VS Code",
+    "injectSuccess": "已成功将令牌注入 VS Code，VS Code 正在启动。",
+    "injectRequireClose": "请先关闭 VS Code 再进行注入。",
     "flowNotice": {
       "title": "GitHub Copilot 账号管理说明（点击展开/收起）",
       "desc": "切换账号时需要读取 VS Code 本地认证存储，并调用系统凭据服务完成解密与回写；数据仅在本机处理。",
       "inject": "一键切号：本工具读取本地 VS Code 加密材料（DPAPI/Keychain/Secret Service），解密 state.vscdb 中的认证会话，替换 GitHub Copilot 令牌并重新加密 —— 全部在本机完成。",
       "reason": "权限需求：读取 VS Code 认证数据库（state.vscdb），并调用系统加密能力（Windows DPAPI / macOS Keychain / Linux Secret Service）进行解密与写回。",
       "storage": "读取范围：仅处理 GitHub 登录会话相关数据，所有流程均在本地执行。"
-    },
-    "injectToVSCode": "切换到 VS Code",
-    "injectSuccess": "已成功将令牌注入 VS Code，VS Code 正在启动。",
-    "injectRequireClose": "请先关闭 VS Code 再进行注入。"
+    }
   },
   "dashboard": {
-    "totalAccounts": "账号总数",
-    "current": "当前账户",
-    "recommended": "推荐账号",
-    "noAccount": "无账号",
-    "switch": "切换",
-    "switchTo": "切换到此账号",
-    "noRecommendation": "暂无更好推荐",
-    "noData": "暂无数据",
-    "viewAllAccounts": "查看所有账号",
     "title": "账号仪表盘",
     "summary": {
       "label": "概览",
@@ -1240,7 +1200,16 @@
     },
     "badges": {
       "recommended": "推荐"
-    }
+    },
+    "totalAccounts": "账号总数",
+    "current": "当前账户",
+    "recommended": "推荐账号",
+    "noAccount": "无账号",
+    "switch": "切换",
+    "switchTo": "切换到此账号",
+    "noRecommendation": "暂无更好推荐",
+    "noData": "暂无数据",
+    "viewAllAccounts": "查看所有账号"
   },
   "error": {
     "fileCorrupted": {
@@ -1357,6 +1326,9 @@
     "columns": {
       "plan": "标签"
     },
+    "injectToVSCode": "切换到 Windsurf",
+    "injectSuccess": "已完成切换，Windsurf 正在启动。",
+    "injectRequireClose": "请先关闭 Windsurf 再进行切换。",
     "flowNotice": {
       "title": "Windsurf 账号管理说明（点击展开/收起）",
       "desc": "切换账号时需要读取 Windsurf 本地认证存储，并按客户端兼容规则调用系统凭据能力完成会话解密与写回；数据仅在本机处理。",
@@ -1364,9 +1336,6 @@
       "reason": "权限需求：读取 Windsurf 认证数据库（state.vscdb），并使用系统加密能力（Windows DPAPI / macOS Keychain / Linux Secret Service）处理登录会话的解密与写回。",
       "storage": "读取范围：仅处理 Windsurf 登录会话相关数据，所有流程均在本地执行。"
     },
-    "injectToVSCode": "切换到 Windsurf",
-    "injectSuccess": "已完成切换，Windsurf 正在启动。",
-    "injectRequireClose": "请先关闭 Windsurf 再进行切换。",
     "password": {
       "desc": "使用 Windsurf 账号的邮箱和密码登录，自动获取 API Key 和账号信息。",
       "emailPlaceholder": "邮箱地址",
@@ -1438,6 +1407,38 @@
     },
     "injectToVSCode": "切换到 Kiro"
   },
+  "breakout": {
+    "gameOver": "本局结束",
+    "gameOverRank": "当前本地排名 #{{rank}}",
+    "startGame": "开始游戏",
+    "startHint": "点击开始按钮或按空格",
+    "rankTitle": "本地历史排名",
+    "rankCurrent": "当前",
+    "rankNoData": "--",
+    "restart": "重新开始",
+    "pause": "暂停",
+    "resume": "继续",
+    "paused": "已暂停",
+    "level": "关卡 {{level}}",
+    "levelScore": "本关分数 {{score}}",
+    "levelCleared": "关卡完成",
+    "nextLevel": "下一关",
+    "history": "历史记录",
+    "historyShort": "历史",
+    "historyEmpty": "暂无历史记录",
+    "historyClear": "清空",
+    "historyScoreShort": "分 {{score}}",
+    "historyLevelShort": "关 {{level}}",
+    "historyDurationShort": "时长 {{duration}}",
+    "historyReasonGameOver": "本局结束",
+    "historyReasonManualExit": "手动退出",
+    "serveHint": "按空格开始发球",
+    "ranking": "本地历史排名",
+    "rankingShort": "本地",
+    "rankingEmpty": "暂无本地排名数据",
+    "rankingClear": "清空本地排名",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "消息通知",
     "empty": "暂无消息",
@@ -1461,5 +1462,263 @@
     "clickToClose": "点击关闭",
     "clickToEnlarge": "点击放大",
     "imageLoadFailed": "图片加载失败"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "全部收起",
+      "expandAll": "全部展开",
+      "goAntigravity": "前往 Antigravity",
+      "goCodex": "前往 Codex",
+      "goDashboard": "前往仪表盘",
+      "goFingerprints": "前往设备指纹",
+      "goGitHubCopilot": "前往 GitHub Copilot",
+      "goInstances": "前往多开实例",
+      "goKiro": "前往 Kiro",
+      "goSettings": "前往设置",
+      "goVerification": "前往唤醒验证",
+      "goWakeup": "前往唤醒任务",
+      "goWindsurf": "前往 Windsurf",
+      "openLayout": "打开平台布局"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "若看到异常状态（如 403/刷新失败），先刷新再判断是否删除重登。"
+      },
+      "keywords": {
+        "0": "Antigravity账号",
+        "1": "账号管理",
+        "2": "配额",
+        "3": "标签"
+      },
+      "outcomes": {
+        "0": "支持 OAuth、导入、导出和批量操作。",
+        "1": "支持标签筛选、排序、分组展示。"
+      },
+      "steps": {
+        "0": "点击“添加账号”完成授权或导入。",
+        "1": "使用“刷新全部”先同步一轮配额状态。",
+        "2": "按配额/重置时间排序，选择当前要使用的账号。"
+      },
+      "summary": "管理 Antigravity 账号生命周期：添加、刷新配额、切换、分组与标签。",
+      "title": "Antigravity 账号管理"
+    },
+    "blocks": {
+      "cautions": "常见坑位 / 注意事项",
+      "outcomes": "这个功能能帮你什么",
+      "steps": "推荐操作步骤"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "仪表盘适合“看全局”，细粒度操作请进入具体平台页。"
+      },
+      "keywords": {
+        "0": "仪表盘",
+        "1": "概览",
+        "2": "推荐切换",
+        "3": "仪表盘看板"
+      },
+      "outcomes": {
+        "0": "在一个页面看到多平台“当前账号/推荐账号/配额概览”。",
+        "1": "通过快捷切换按钮，减少来回切页成本。"
+      },
+      "steps": {
+        "0": "先看每个平台卡片是否有账号和配额数据。",
+        "1": "若状态异常，点击刷新或进入对应平台页处理。",
+        "2": "需要改平台显示顺序时，打开“平台布局”管理。"
+      },
+      "summary": "用于全局看板：快速查看各平台账号状态、推荐切换账号、进入具体功能页。",
+      "title": "仪表盘"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "导入来源不可信的 JSON 前先在测试环境验证。",
+        "1": "删除与批量操作前先确认筛选条件，避免误删。",
+        "2": "反馈日志前请先脱敏，避免粘贴完整 token、cookie、邮箱等敏感信息。"
+      },
+      "keywords": {
+        "0": "导入",
+        "1": "导出",
+        "2": "隐私",
+        "3": "邮箱脱敏",
+        "4": "故障",
+        "5": "日志",
+        "6": "日志目录",
+        "7": "app.log日志"
+      },
+      "outcomes": {
+        "0": "批量导入账号，快速迁移环境。",
+        "1": "导出 JSON 做备份或跨设备迁移。",
+        "2": "通过错误提示和文件修复指引定位问题。",
+        "3": "可通过数据目录下 logs 的 app.log* 快速定位运行异常。"
+      },
+      "steps": {
+        "0": "批量操作前先导出一次当前数据作为快照。",
+        "1": "在列表页通过“显示/隐藏邮箱”切换隐私视图。",
+        "2": "遇到文件损坏提示时，按弹窗指引打开目录修复。",
+        "3": "排障时先进入“设置 -> 数据目录 -> 打开”，进入 logs 文件夹。",
+        "4": "优先查看最新的 app.log 或 app.log.*（按日期滚动的日志文件）。",
+        "5": "提交反馈时建议附上：发生时间、平台、复现步骤、关键报错日志（前后 20 行）。"
+      },
+      "summary": "覆盖日常维护能力：JSON 导入导出、邮箱脱敏显示、异常处理与恢复流程。",
+      "title": "导入导出、隐私与排障"
+    },
+    "empty": {
+      "desc": "尝试更换关键词，例如“实例”“切换”“设置”“导出”。",
+      "title": "没有匹配内容"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "删除指纹前先看绑定账号数量，避免误操作影响生产账号。"
+      },
+      "keywords": {
+        "0": "指纹",
+        "1": "绑定",
+        "2": "导入",
+        "3": "采集"
+      },
+      "outcomes": {
+        "0": "生成/捕获新指纹并维护元数据。",
+        "1": "查看某指纹已绑定账号并增删绑定关系。"
+      },
+      "steps": {
+        "0": "先创建或导入指纹。",
+        "1": "进入详情确认指纹信息是否正确。",
+        "2": "在绑定管理中将账号关联到目标指纹。"
+      },
+      "summary": "管理指纹模板与账号绑定关系，支持生成、捕获、导入和绑定账号维护。",
+      "title": "设备指纹"
+    },
+    "instances": {
+      "cautions": {
+        "0": "复制来源实例前，建议先关闭来源实例，避免数据不一致。",
+        "1": "空白实例未初始化前不能绑定账号，这是正常行为。"
+      },
+      "keywords": {
+        "0": "多开",
+        "1": "实例",
+        "2": "隔离",
+        "3": "并行",
+        "4": "初始化"
+      },
+      "outcomes": {
+        "0": "工作号/个人号环境隔离。",
+        "1": "多账号并行运行，减少反复登录切换。",
+        "2": "新配置先在测试实例验证，再回主实例。"
+      },
+      "steps": {
+        "0": "新建实例时优先选“复制来源实例”，可更快进入可用状态。",
+        "1": "若选“空白实例”，先启动一次初始化，再绑定账号。",
+        "2": "绑定账号后，通过“启动/定位窗口/停止”管理生命周期。"
+      },
+      "summary": "用于账号隔离和并行运行。每个实例有独立目录、独立状态，可避免互相污染。",
+      "title": "多开实例（重点）"
+    },
+    "navTitle": "功能使用手册",
+    "providers": {
+      "cautions": {
+        "0": "账号管理说明条里写了本地读写和权限范围，建议先读再操作。",
+        "1": "部分平台或能力受系统限制，请按页面提示处理。"
+      },
+      "keywords": {
+        "0": "Codex / GitHub Copilot / Windsurf / Kiro 平台",
+        "1": "GitHub Copilot 平台",
+        "2": "Windsurf 平台",
+        "3": "Kiro 平台",
+        "4": "注入",
+        "5": "切号"
+      },
+      "outcomes": {
+        "0": "Codex：账号切换 + 配额刷新。",
+        "1": "GitHub Copilot/Windsurf/Kiro：支持注入到 VS Code 链路。",
+        "2": "每个平台都可独立做筛选、分组、导入导出。"
+      },
+      "steps": {
+        "0": "先完成 OAuth 或 Token 导入。",
+        "1": "确认账号列表中能看到计划/配额和重置时间。",
+        "2": "执行“切换/注入”并在客户端验证生效。"
+      },
+      "summary": "四个平台页结构一致：账号总览 + 多开实例，支持 OAuth、Token/JSON 导入与切换。",
+      "title": "Codex / GitHub Copilot / Windsurf / Kiro 平台"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "第一次上手建议只操作一个平台，先跑通流程再批量导入。",
+        "1": "如果某平台启动路径缺失，先在设置里补路径再继续。"
+      },
+      "keywords": {
+        "0": "快速开始",
+        "1": "新手",
+        "2": "首次运行",
+        "3": "新手引导"
+      },
+      "outcomes": {
+        "0": "先在仪表盘看全局状态，再进入具体平台页操作。",
+        "1": "先完成一个平台的完整闭环，再扩展到其他平台。",
+        "2": "理解“账号管理”和“多开实例”是两条不同工作流。"
+      },
+      "steps": {
+        "0": "打开“仪表盘”，确认你需要管理的平台已经可见。",
+        "1": "进入目标平台页（如 Codex / GitHub Copilot），先添加 1 个账号。",
+        "2": "使用“切换/注入”按钮验证切号生效。",
+        "3": "再进入“多开实例”创建 1 个实例，验证隔离和并行运行。"
+      },
+      "summary": "按“看状态 -> 加账号 -> 切账号 -> 开多实例”的顺序完成首轮上手，避免迷路。",
+      "title": "快速开始（5 分钟）"
+    },
+    "resultCount": "共 {{count}} 个章节",
+    "searchAria": "搜索手册",
+    "searchPlaceholder": "搜索功能、场景或关键词（如：多开、注入、唤醒、指纹）",
+    "settings": {
+      "cautions": {
+        "0": "路径探测失败时，手动选择可执行文件路径最稳妥。",
+        "1": "阈值过低会频繁提醒，建议先从 20% 左右开始。"
+      },
+      "keywords": {
+        "0": "设置",
+        "1": "路径",
+        "2": "刷新",
+        "3": "阈值",
+        "4": "语言",
+        "5": "主题"
+      },
+      "outcomes": {
+        "0": "统一配置各平台自动刷新和配额告警。",
+        "1": "设置各客户端启动路径，修复“路径缺失”问题。",
+        "2": "调整窗口行为、语言和主题，适配你的使用习惯。"
+      },
+      "steps": {
+        "0": "先在“通用”页完成语言/主题/路径的基础设置。",
+        "1": "再按平台调自动刷新与告警阈值。",
+        "2": "网络服务改端口后按提示重启生效。"
+      },
+      "summary": "集中管理语言、主题、自动刷新、告警阈值、应用路径与网络服务配置。",
+      "title": "设置与系统能力"
+    },
+    "subtitle": "按任务场景组织的内置说明：先知道“为什么用”，再按步骤“马上可用”。",
+    "title": "功能使用手册",
+    "wakeup": {
+      "cautions": {
+        "0": "首次配置建议只选少量账号，确认稳定后再扩大范围。",
+        "1": "验证结果异常时优先看详情里的错误与验证链接。"
+      },
+      "keywords": {
+        "0": "唤醒",
+        "1": "任务",
+        "2": "验证",
+        "3": "定时",
+        "4": "历史记录"
+      },
+      "outcomes": {
+        "0": "创建周期任务并记录历史执行结果。",
+        "1": "用验证页批量跑检查并查看失败原因。"
+      },
+      "steps": {
+        "0": "在“唤醒任务”新建任务，设置模型和触发方式。",
+        "1": "先手动运行一次，确认任务参数可用。",
+        "2": "在“验证”页面做批量巡检和历史复盘。"
+      },
+      "summary": "用于定时运行唤醒任务和批量验证结果，帮助你持续跟踪账号可用性与状态。",
+      "title": "唤醒任务与验证"
+    }
   }
 }

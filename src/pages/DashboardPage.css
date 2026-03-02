@@ -20,6 +20,12 @@
   gap: 10px;
 }
 
+.dashboard-title-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Stats Row */
 .stats-row {
   display: grid;
@@ -194,6 +200,26 @@
 .header-action-btn:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.dashboard-manual-btn {
+  width: 28px;
+  min-width: 28px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.dashboard-title-manual-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
+.dashboard-title-manual-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 /* Removed view-all-link, using new footer button */

@@ -151,11 +151,191 @@
     "fingerprints": "Otisky",
     "settings": "Nastavení",
     "codex": "Účty Codex",
-    "dashboard": "Dashboard",
-    "instances": "Více instancí",
     "githubCopilot": "GitHub Copilot",
     "windsurf": "Windsurf",
-    "morePlatforms": "Další platformy"
+    "dashboard": "Dashboard",
+    "morePlatforms": "Další platformy",
+    "instances": "Více instancí",
+    "manual": "Uživatelská příručka"
+  },
+  "platformLayout": {
+    "title": "Rozložení platforem",
+    "sidebarSelected": "Vybráno v postranním panelu {{count}}/{{max}}",
+    "reset": "Obnovit výchozí",
+    "tip": "Přetažením změňte pořadí. V postranním panelu lze zobrazit nejvýše dvě platformy. Pokud je vybrána jen jedna, zobrazí se pouze jedna.",
+    "sidebarToggle": "Zobrazit v postranním panelu",
+    "dashboardToggle": "Zobrazit na nástěnce",
+    "trayToggle": "Zobrazit v systémové liště",
+    "hiddenBadge": "Skryto",
+    "openFromMore": "Spravovat rozložení platforem",
+    "dragHandleLabel": "Přetažením změnit pořadí"
+  },
+  "privacy": {
+    "hideSensitive": "Skrýt e-maily",
+    "showSensitive": "Zobrazit e-maily"
+  },
+  "instances": {
+    "title": "Více instancí",
+    "subtitle": "Izolované profily pro paralelní provoz více účtů.",
+    "defaultName": "Výchozí instance",
+    "search": "Hledat instance",
+    "sort": {
+      "label": "Řazení",
+      "createdAt": "Podle času vytvoření",
+      "lastLaunchedAt": "Podle času spuštění",
+      "ascTooltip": "Aktuálně: vzestupně, kliknutím přepnete na sestupně",
+      "descTooltip": "Aktuálně: sestupně, kliknutím přepnete na vzestupně",
+      "toggleDirection": "Přepnout směr řazení"
+    },
+    "actions": {
+      "create": "Nová instance",
+      "refresh": "Obnovit",
+      "startAll": "Spustit vše",
+      "restartAll": "Restartovat vše",
+      "stopAll": "Zastavit vše",
+      "start": "Spustit",
+      "stop": "Zastavit",
+      "openFolder": "Otevřít složku",
+      "edit": "Upravit",
+      "openRootDir": "Otvřít složku",
+      "selectPath": "Vybrat cestu",
+      "openWindow": "Otevřít okno"
+    },
+    "bulkConfirm": {
+      "startAll": "Spustit všechny zastavené instance?",
+      "restartAll": "Restartovat všechny běžící instance?",
+      "stopAll": "Zavřít všechny instance?"
+    },
+    "status": {
+      "running": "Běží",
+      "stopped": "Zastaveno",
+      "restarting": "Restartování",
+      "starting": "Spuštění"
+    },
+    "labels": {
+      "path": "Adresář",
+      "args": "Argumenty spuštění",
+      "argsEmpty": "Žádné",
+      "bindAccount": "Propojený účet",
+      "unbound": "Nepropojeno",
+      "pendingInit": "Čeká na inicializaci (nejprve jednou spusťte)",
+      "quota": "Kvóta",
+      "lastLaunched": "Poslední spuštění"
+    },
+    "columns": {
+      "instance": "Instance",
+      "email": "Účet",
+      "quota": "Stav kvóty",
+      "actions": "Akce"
+    },
+    "empty": {
+      "title": "Žádné instance",
+      "desc": "Vytvořte izolovaný konfigurační adresář pro rychlé spuštění více instancí."
+    },
+    "modal": {
+      "createTitle": "Nová instance",
+      "editTitle": "Upravit instanci"
+    },
+    "form": {
+      "name": "Název instance",
+      "namePlaceholder": "např. Pracovní účet",
+      "path": "Adresář instance",
+      "pathPlaceholder": "Vybrat adresář",
+      "pathReadOnly": "Cestu nelze při úpravách změnit",
+      "pathAutoHint": "Cesta se automaticky aktualizuje při změně názvu (nebo vyberte ručně)",
+      "copyLogin": "Kopírovat aktuální stav přihlášení",
+      "copyLoginDesc": "Kopírovat konfiguraci a přihlašovací údaje z výchozího adresáře",
+      "initMode": "Režim inicializace",
+      "initModeCopy": "Kopírovat ze zdrojové instance (výchozí)",
+      "initModeEmpty": "Prázdná instance (bez kopírování)",
+      "emptyInitHint": "Při volbě bez kopírování se vytvoří pouze prázdná složka. Před svázáním účtu je nutné instanci jednou spustit.",
+      "copySource": "Kopírovat zdrojovou instanci",
+      "copySourceDesc": "Kopírovat konfiguraci a přihlašovací údaje z vybrané instance",
+      "copySourcePlaceholder": "Vybrat zdrojovou instanci",
+      "copySourceRequired": "Vyberte prosím zdrojovou instanci",
+      "copySourceRunningHint": "Zdrojová instance běží. Doporučuje se ji nejdříve zavřít, aby se předešlo nekonzistenci dat.",
+      "bindInject": "Propojit účet",
+      "bindAfterInit": "Lze svázat po inicializaci",
+      "bindDisabledHint": "U prázdné instance ji nejprve jednou spusťte pro vytvoření dat a poté účet svažte.",
+      "followCurrent": "Sledovat aktuální účet",
+      "selectAccount": "Vybrat účet",
+      "bindAccount": "Propojit účet",
+      "unbound": "Nepropojeno",
+      "extraArgs": "Vlastní argumenty spuštění",
+      "extraArgsPlaceholder": "např. --disable-gpu --log-level=2",
+      "extraArgsDesc": "Argumenty oddělujte mezerami, uvozovky jsou podporovány",
+      "nameRequired": "Zadejte prosím název instance",
+      "pathRequired": "Vyberte prosím adresář instance",
+      "bindRequired": "Vyberte prosím účet k propojení"
+    },
+    "quota": {
+      "unbound": "Účet není propojen",
+      "accountMissing": "Účet nenalezen",
+      "empty": "Žádná kvóta v mezipaměti"
+    },
+    "messages": {
+      "created": "Instance vytvořena",
+      "emptyCreated": "Prázdná instance byla vytvořena. Před svázáním účtu ji nejprve jednou spusťte.",
+      "updated": "Instance aktualizována",
+      "deleted": "Instance smazána",
+      "started": "Instance spuštěna",
+      "stopped": "Instance zastavena",
+      "startedAll": "Všechny zastavené instance byly spuštěny",
+      "restartedAll": "Běžící instance byly restartovány",
+      "closedAll": "Všechny instance byly zastaveny",
+      "allAlreadyRunning": "Všechny instance již běží",
+      "noneRunning": "Nebyly nalezeny žádné běžící instance"
+    },
+    "runningDialog": {
+      "title": "Instance již běží",
+      "desc": "Tato instance je již spuštěna. Můžete se přepnout do okna nebo ji restartovat podle aktuální strategie.",
+      "current": "Aktuální strategie: {{name}}",
+      "pathLabel": "Adresář instance",
+      "go": "Přepnout nyní",
+      "restart": "Zavřít a restartovat"
+    },
+    "initGuide": {
+      "title": "Instance ještě není inicializovaná",
+      "desc": "Toto je prázdná instance. Zatím byl vytvořen pouze adresář a data instance ještě nebyla vygenerována.",
+      "tip": "Nejprve instanci jednou spusťte. Po dokončení inicializace můžete svázat účet.",
+      "startNow": "Spustit nyní"
+    },
+    "restartStrategy": {
+      "button": "Strategie restartu",
+      "title": "Strategie restartu",
+      "desc": "Vyberte metodu pro restartování instance. Každá možnost ovlivňuje rozsah a stabilitu.",
+      "recommended": "Doporučeno",
+      "labels": {
+        "principle": "Technický princip",
+        "command": "Příkaz",
+        "pros": "Plusy",
+        "cons": "Mínusy"
+      },
+      "safe": {
+        "title": "Bezpečný restart (Doporučeno)",
+        "principle": "Odešle signál SIGTERM všem procesům Antigravity, požádá aplikaci o uložení dat a ukončení, poté spustí cílovou instanci (v případě potřeby vynutí ukončení).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (všechny procesy Antigravity)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (všechny procesy Antigravity)",
+        "pros": "Nejblíže normálnímu ukončení, menší pravděpodobnost varování o chybách, data jsou v bezpečí.",
+        "cons": "Podporuje pouze globální restart všech instancí."
+      },
+      "force": {
+        "title": "Vynucený restart",
+        "principle": "Identifikuje procesy pomocí --user-data-dir a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
+        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
+        "commandWin": "Windows: taskkill /F /PID <pid> (shoda s --user-data-dir)",
+        "pros": "Může přesně restartovat jednu konkrétní instanci.",
+        "cons": "Může způsobit varování o „neočekávaném ukončení“, riziko ztráty neuložených dat."
+      }
+    },
+    "stop": {
+      "title": "Vynutit zastavení instance",
+      "message": "Odešle signál k ukončení (SIGTERM) procesu instance. Neuložená data mohou být ztracena. Pokračovat?"
+    },
+    "delete": {
+      "title": "Smazat instanci",
+      "message": "Smazat instanci {{name}}? Tím se odstraní konfigurace a smaže se složka instance."
+    }
   },
   "settings": {
     "title": "Nastavení aplikace",
@@ -186,11 +366,6 @@
       "every1hour": "Každou hodinu",
       "minutes": "min",
       "refreshIntervalLimited": "Probuzení při resetu kvóty je povoleno, proto je minimální interval obnovení 2 minuty.",
-      "storageTitle": "Adresáře a úložiště",
-      "dataDir": "Datový adresář",
-      "dataDirDesc": "Umístění pro uložení účtů a konfiguračních souborů.",
-      "fpDir": "Úložiště Antigravity",
-      "fpDirDesc": "Umístění datových souborů Antigravity.",
       "closeBehavior": "Chování při zavírání",
       "closeBehaviorDesc": "Vyberte akci při zavření okna",
       "closeBehaviorAsk": "Vždy se zeptat",
@@ -204,11 +379,16 @@
       "hideDockIconDesc": "Nezávisle řídí viditelnost ikony v Docku bez vlivu chování minimalizace okna",
       "hideDockIconOff": "Ne (Zobrazit ikonu v Docku)",
       "hideDockIconOn": "Ano (Skrýt ikonu v Docku)",
-      "opencodeAppPathDesc": "Ponechte prázdné pro použití výchozí cesty",
+      "storageTitle": "Adresáře a úložiště",
+      "dataDir": "Datový adresář",
+      "dataDirDesc": "Umístění pro uložení účtů a konfiguračních souborů.",
+      "fpDir": "Úložiště Antigravity",
+      "fpDirDesc": "Umístění datových souborů Antigravity.",
       "opencodeTitle": "Integrace OpenCode",
       "opencodeRestart": "Restartovat OpenCode při přepnutí Codex",
       "opencodeRestartDesc": "Synchronizovat informace o účtu Codex v OpenCode",
       "opencodeAppPath": "Cesta spuštění OpenCode",
+      "opencodeAppPathDesc": "Ponechte prázdné pro použití výchozí cesty",
       "opencodeAppPathPlaceholder": "Výchozí cesta",
       "opencodePathReset": "Obnovit výchozí",
       "opencodePathSelect": "Vybrat",
@@ -287,6 +467,13 @@
     },
     "saveSettings": "Uložit nastavení"
   },
+  "appPath": {
+    "missing": {
+      "title": "Cesta k aplikaci nebyla nalezena",
+      "desc": "Nepodařilo se najít cestu k aplikaci {{app}}. Pro pokračování ji nyní nastavte.",
+      "action": "Nastavit nyní"
+    }
+  },
   "accounts": {
     "title": "Správa účtů",
     "subtitle": "Spravujte svůj seznam účtů Antigravity.",
@@ -349,13 +536,40 @@
     "sort": {
       "default": "Výchozí",
       "overall": "Podle celkové kvóty",
+      "createdAt": "Podle data vytvoření",
       "byGroup": "Podle kvóty {{group}}",
       "byGroupReset": "Podle času resetu {{group}}",
-      "createdAt": "Podle data vytvoření",
       "descTooltip": "Sestupně, kliknutím přepnete na vzestupně",
       "ascTooltip": "Vzestupně, kliknutím přepnete na sestupně",
       "toggleDirection": "Přepnout směr řazení"
     },
+    "filterTags": "Filtrovat štítky",
+    "filterTagsCount": "Štítky",
+    "noAvailableTags": "Žádné dostupné štítky",
+    "clearFilter": "Vymazat filtr",
+    "editTags": "Upravit štítky",
+    "tagModal": {
+      "title": "Upravit štítky",
+      "hint": "Maximálně {{max}} štítků. Každý štítek může mít nejvýše {{maxLength}} znaků.",
+      "empty": "Žádné dostupné štítky",
+      "suggestionsTitle": "Filtrovat štítky",
+      "suggestionsEmpty": "Žádné dostupné štítky",
+      "inputPlaceholder": "Zadejte štítek (zbývá {{remaining}})",
+      "inputDisabledPlaceholder": "Byl dosažen limit štítků",
+      "add": "Přidat",
+      "save": "Uložit štítky",
+      "error": {
+        "empty": "Štítek nesmí být prázdný",
+        "tooLong": "Štítek může mít maximálně {{max}} znaků",
+        "duplicate": "Štítek už existuje",
+        "tooMany": "Můžete přidat až {{max}} štítků"
+      }
+    },
+    "groupByTag": "Seskupit podle štítku",
+    "untagged": "Bez štítku",
+    "deleteTagAria": "Smazat štítek {{tag}}",
+    "confirmDeleteTag": "Smazat štítek \"{{tag}}\"? Tento štítek bude odebrán z {{count}} účtů.",
+    "defaultGroup": "Výchozí skupina",
     "actions": {
       "viewDetails": "Zobrazit detaily",
       "viewError": "Zobrazit chybu",
@@ -388,33 +602,6 @@
       "importSuccess": "Importováno {{count}} účtů",
       "importPartial": "Importováno {{success}} účtů, {{fail}} neúspěšných",
       "importFailed": "Import selhal, zkontrolujte refresh_token"
-    },
-    "confirmDeleteTag": "Smazat štítek \"{{tag}}\"? Tento štítek bude odebrán z {{count}} účtů.",
-    "defaultGroup": "Výchozí skupina",
-    "filterTags": "Filtrovat štítky",
-    "filterTagsCount": "Štítky",
-    "noAvailableTags": "Žádné dostupné štítky",
-    "clearFilter": "Vymazat filtr",
-    "editTags": "Upravit štítky",
-    "groupByTag": "Seskupit podle štítku",
-    "untagged": "Bez štítku",
-    "deleteTagAria": "Smazat štítek {{tag}}",
-    "tagModal": {
-      "title": "Upravit štítky",
-      "hint": "Maximálně {{max}} štítků. Každý štítek může mít nejvýše {{maxLength}} znaků.",
-      "empty": "Žádné dostupné štítky",
-      "suggestionsTitle": "Filtrovat štítky",
-      "suggestionsEmpty": "Žádné dostupné štítky",
-      "inputPlaceholder": "Zadejte štítek (zbývá {{remaining}})",
-      "inputDisabledPlaceholder": "Byl dosažen limit štítků",
-      "add": "Přidat",
-      "save": "Uložit štítky",
-      "error": {
-        "empty": "Štítek nesmí být prázdný",
-        "tooLong": "Štítek může mít maximálně {{max}} znaků",
-        "duplicate": "Štítek už existuje",
-        "tooMany": "Můžete přidat až {{max}} štítků"
-      }
     }
   },
   "overview": {
@@ -599,6 +786,28 @@
   "wakeup": {
     "title": "Úlohy probuzení",
     "subtitle": "Spravujte více automatických úloh probuzení s nezávislým ovládáním.",
+    "verification": {
+      "title": "Vyžadováno ověření",
+      "columns": {
+        "verifiedAt": "Čas ověření"
+      },
+      "filters": {
+        "all": "Vše"
+      },
+      "actions": {
+        "selectAllAccounts": "Vybrat vše",
+        "clearSelectedAccounts": "Zrušit výběr",
+        "runCheckNow": "Dokončit ověření"
+      },
+      "runHint": {
+        "title": "Poznámky k ověření",
+        "line1": "„Zkontrolovat nyní“ odešle minimální chat požadavek simulací klienta Antigravity přes lokální bránu a oficiální protokol Language Server.",
+        "line2": "Tento proces spotřebuje malé množství tokenů (obvykle jeden krátký dialog). Skutečná spotřeba závisí na modelu a zásadách účtu.",
+        "line3": "Tato akce nemění nastavení úloh probuzení. Pouze zkontroluje dostupnost účtu a zapíše záznam kontroly.",
+        "line4": "Pokud se vrátí 403, je nutné nejdříve dokončit ověření účtu. Výsledek nabídne ověřovací URL a rychlé akce."
+      },
+      "deleteConfirm": "Opravdu chcete smazat?"
+    },
     "globalToggle": "Globální přepínač probuzení",
     "newTask": "Nová úloha",
     "runTest": "Okamžitý test",
@@ -763,28 +972,6 @@
       "accountsHint": "Vyberte více účtů pro test.",
       "start": "Spustit test",
       "testing": "Testování..."
-    },
-    "verification": {
-      "title": "Vyžadováno ověření",
-      "columns": {
-        "verifiedAt": "Čas ověření"
-      },
-      "filters": {
-        "all": "Vše"
-      },
-      "actions": {
-        "selectAllAccounts": "Vybrat vše",
-        "clearSelectedAccounts": "Zrušit výběr",
-        "runCheckNow": "Dokončit ověření"
-      },
-      "deleteConfirm": "Opravdu chcete smazat?",
-      "runHint": {
-        "title": "Poznámky k ověření",
-        "line1": "„Zkontrolovat nyní“ odešle minimální chat požadavek simulací klienta Antigravity přes lokální bránu a oficiální protokol Language Server.",
-        "line2": "Tento proces spotřebuje malé množství tokenů (obvykle jeden krátký dialog). Skutečná spotřeba závisí na modelu a zásadách účtu.",
-        "line3": "Tato akce nemění nastavení úloh probuzení. Pouze zkontroluje dostupnost účtu a zapíše záznam kontroly.",
-        "line4": "Pokud se vrátí 403, je nutné nejdříve dokončit ověření účtu. Výsledek nabídne ověřovací URL a rychlé akce."
-      }
     }
   },
   "update_notification": {
@@ -812,6 +999,34 @@
   "codex": {
     "title": "Správa účtů Codex",
     "subtitle": "Spravujte své účty OpenAI Codex",
+    "instances": {
+      "subtitle": "Nezávislá konfigurace pro každou instanci, paralelní provoz s více účty.",
+      "comingSoon": "Funkce více instancí již brzy",
+      "comingSoonDesc": "Spusťte více instancí Codex.app s různými účty současně, zůstaňte naladěni.",
+      "unsupported": {
+        "desc": "Více instancí Codex je aktuálně dostupné pouze na macOS."
+      },
+      "quota": {
+        "hourly": "5 hodin",
+        "weekly": "Týdně"
+      },
+      "restartStrategy": {
+        "safe": {
+          "principle": "Odešle signál SIGTERM všem procesům Codex, požádá aplikaci o uložení dat a ukončení, poté spustí cílovou instanci (v případě potřeby vynutí ukončení).",
+          "commandMac": "macOS: kill -15 <pid> (všechny procesy Codex)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (všechny procesy Codex)"
+        },
+        "force": {
+          "principle": "Identifikuje procesy pomocí CODEX_HOME a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (shoda s CODEX_HOME)"
+        }
+      }
+    },
+    "refreshSuccess": "Kvóta obnovena",
+    "refreshFailed": "Obnovení kvóty selhalo: {{error}}",
+    "refreshAllSuccess": "Obnovení dokončeno, úspěšných účtů: {{count}}",
+    "refreshAllPartialFailed": "Obnovení dokončeno, {{success}} / {{total}} účtů úspěšných, některé selhaly",
     "switch": "Přepnout",
     "switched": "Přepnuto na {{email}}",
     "switchFailed": "Přepnutí se nezdařilo: {{error}}",
@@ -845,14 +1060,19 @@
       "import": "Načíst lokální účet"
     },
     "import": {
+      "localDesc": "Importovat účty Codex z místně přihlášených relací.",
       "importing": "Import lokálního účtu...",
-      "successMsg": "Import proběhl úspěšně: {{email}}",
-      "localDesc": "Importovat účty Codex z místně přihlášených relací."
+      "successMsg": "Import proběhl úspěšně: {{email}}"
     },
     "quota": {
       "hourly": "Kvóta 5 hodin",
       "weekly": "Týdenní kvóta",
       "reset": "Reset"
+    },
+    "quotaError": {
+      "badge": "Chyba kvóty",
+      "generic": "Obnovení kvóty se nezdařilo, zkuste to prosím později",
+      "deactivatedWorkspace": "Pracovní prostor je deaktivovaný, přepněte účet nebo znovu autorizujte"
     },
     "plan": {
       "free": "FREE",
@@ -879,50 +1099,65 @@
       "weeklyReset": "Čas týdenního resetu",
       "hourlyReset": "Čas resetu 5 hodin"
     },
+    "opencodeSwitch": "Přepínač OpenCode",
+    "opencodeSwitchDesc": "Synchronizovat přepnutí účtu Codex v OpenCode",
+    "opencodeSwitchFailed": "Nepodařilo se aktualizovat přepínač OpenCode: {{error}}",
     "columns": {
       "hourly": "Kvóta 5h",
       "weekly": "Kvóta týdn."
     },
-    "opencodeSwitch": "Přepínač OpenCode",
-    "opencodeSwitchDesc": "Synchronizovat přepnutí účtu Codex v OpenCode",
-    "opencodeSwitchFailed": "Nepodařilo se aktualizovat přepínač OpenCode: {{error}}",
     "filterTags": "Filtrovat štítky",
     "filterTagsCount": "Štítky",
     "noAvailableTags": "Žádné dostupné štítky",
     "clearFilter": "Vymazat filtr",
-    "editTags": "Upravit štítky",
+    "editTags": "Upravit štítky"
+  },
+  "githubCopilot": {
+    "title": "Správa účtů GitHub Copilot",
     "instances": {
-      "subtitle": "Nezávislá konfigurace pro každou instanci, paralelní provoz s více účty.",
-      "comingSoon": "Funkce více instancí již brzy",
-      "comingSoonDesc": "Spusťte více instancí Codex.app s různými účty současně, zůstaňte naladěni.",
       "unsupported": {
-        "desc": "Více instancí Codex je aktuálně dostupné pouze na macOS."
-      },
-      "quota": {
-        "hourly": "5 hodin",
-        "weekly": "Týdně"
-      },
-      "restartStrategy": {
-        "safe": {
-          "principle": "Odešle signál SIGTERM všem procesům Codex, požádá aplikaci o uložení dat a ukončení, poté spustí cílovou instanci (v případě potřeby vynutí ukončení).",
-          "commandMac": "macOS: kill -15 <pid> (všechny procesy Codex)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (všechny procesy Codex)"
-        },
-        "force": {
-          "principle": "Identifikuje procesy pomocí CODEX_HOME a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
-          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (shoda s CODEX_HOME)"
-        }
+        "desc": "Více instancí GitHub Copilot je aktuálně dostupné pouze na macOS."
       }
     },
-    "refreshSuccess": "Kvóta obnovena",
-    "refreshFailed": "Obnovení kvóty selhalo: {{error}}",
-    "refreshAllSuccess": "Obnovení dokončeno, úspěšných účtů: {{count}}",
-    "refreshAllPartialFailed": "Obnovení dokončeno, {{success}} / {{total}} účtů úspěšných, některé selhaly",
-    "quotaError": {
-      "badge": "Chyba kvóty",
-      "generic": "Obnovení kvóty se nezdařilo, zkuste to prosím později",
-      "deactivatedWorkspace": "Pracovní prostor je deaktivovaný, přepněte účet nebo znovu autorizujte"
+    "empty": {
+      "description": "Klikněte na „Přidat účet“"
+    },
+    "addModal": {
+      "title": "Přidat účet GitHub Copilot"
+    },
+    "oauth": {
+      "desc": "Klikněte níže a dokončete autorizaci GitHub Copilot v prohlížeči."
+    },
+    "token": {
+      "desc": "Vložte access token GitHub Copilot nebo exportovaná data JSON."
+    },
+    "import": {
+      "localDesc": "Importovat účty GitHub Copilot z místně přihlášených relací."
+    },
+    "sort": {
+      "weekly": "Týdenní kvóta",
+      "hourly": "5hodinová kvóta",
+      "premium": "Podle využití prémiových požadavků",
+      "weeklyReset": "Čas týdenního resetu",
+      "hourlyReset": "Čas resetu 5 hodin"
+    },
+    "columns": {
+      "hourly": "Kvóta 5h",
+      "weekly": "Kvóta týdn.",
+      "premium": "Prémiové požadavky"
+    },
+    "usage": {
+      "included": "Zahrnuto"
+    },
+    "injectToVSCode": "Přepnout do VS Code",
+    "injectSuccess": "Token byl úspěšně vložen do VS Code. VS Code se spouští.",
+    "injectRequireClose": "Před injektováním prosím zavřete VS Code.",
+    "flowNotice": {
+      "title": "Průvodce účty GitHub Copilot (kliknutím rozbalit/sbalit)",
+      "desc": "Přepnutí účtu vyžaduje čtení lokálního úložiště ověření ve VS Code a použití systémové služby přihlašovacích údajů pro dešifrování a zpětný zápis; data se zpracovávají pouze lokálně.",
+      "inject": "Přepnutí jedním kliknutím: Tento nástroj načte lokální šifrovací materiál VS Code (DPAPI/Keychain/Secret Service), dešifruje autentizační relaci ve state.vscdb, nahradí token GitHub Copilot a znovu ji zašifruje — vše lokálně na vašem zařízení.",
+      "reason": "Rozsah oprávnění: čtení databáze ověření VS Code (state.vscdb) a volání systémového šifrování (Windows DPAPI / macOS Keychain / Linux Secret Service) pro dešifrování a zpětný zápis.",
+      "storage": "Rozsah čtení: zpracovávají se pouze položky související s relací přihlášení GitHub a veškeré procesy probíhají lokálně."
     }
   },
   "dashboard": {
@@ -984,224 +1219,6 @@
       "filePath": "Umístění souboru",
       "helpText": "Otevřete složku a opravte nebo odstraňte soubor ručně, poté restartujte aplikaci.",
       "openFolder": "Otevřít složku"
-    }
-  },
-  "instances": {
-    "title": "Více instancí",
-    "subtitle": "Izolované profily pro paralelní provoz více účtů.",
-    "defaultName": "Výchozí instance",
-    "search": "Hledat instance",
-    "actions": {
-      "create": "Nová instance",
-      "refresh": "Obnovit",
-      "startAll": "Spustit vše",
-      "restartAll": "Restartovat vše",
-      "stopAll": "Zastavit vše",
-      "start": "Spustit",
-      "stop": "Zastavit",
-      "openFolder": "Otevřít složku",
-      "edit": "Upravit",
-      "openRootDir": "Otvřít složku",
-      "selectPath": "Vybrat cestu",
-      "openWindow": "Otevřít okno"
-    },
-    "bulkConfirm": {
-      "startAll": "Spustit všechny zastavené instance?",
-      "restartAll": "Restartovat všechny běžící instance?",
-      "stopAll": "Zavřít všechny instance?"
-    },
-    "status": {
-      "running": "Běží",
-      "stopped": "Zastaveno",
-      "restarting": "Restartování",
-      "starting": "Spuštění"
-    },
-    "labels": {
-      "path": "Adresář",
-      "args": "Argumenty spuštění",
-      "argsEmpty": "Žádné",
-      "bindAccount": "Propojený účet",
-      "unbound": "Nepropojeno",
-      "quota": "Kvóta",
-      "lastLaunched": "Poslední spuštění",
-      "pendingInit": "Čeká na inicializaci (nejprve jednou spusťte)"
-    },
-    "columns": {
-      "instance": "Instance",
-      "email": "Účet",
-      "quota": "Stav kvóty",
-      "actions": "Akce"
-    },
-    "empty": {
-      "title": "Žádné instance",
-      "desc": "Vytvořte izolovaný konfigurační adresář pro rychlé spuštění více instancí."
-    },
-    "form": {
-      "name": "Název instance",
-      "namePlaceholder": "např. Pracovní účet",
-      "path": "Adresář instance",
-      "pathPlaceholder": "Vybrat adresář",
-      "pathReadOnly": "Cestu nelze při úpravách změnit",
-      "pathAutoHint": "Cesta se automaticky aktualizuje při změně názvu (nebo vyberte ručně)",
-      "copyLogin": "Kopírovat aktuální stav přihlášení",
-      "copyLoginDesc": "Kopírovat konfiguraci a přihlašovací údaje z výchozího adresáře",
-      "copySource": "Kopírovat zdrojovou instanci",
-      "copySourceDesc": "Kopírovat konfiguraci a přihlašovací údaje z vybrané instance",
-      "copySourcePlaceholder": "Vybrat zdrojovou instanci",
-      "copySourceRequired": "Vyberte prosím zdrojovou instanci",
-      "copySourceRunningHint": "Zdrojová instance běží. Doporučuje se ji nejdříve zavřít, aby se předešlo nekonzistenci dat.",
-      "bindInject": "Propojit účet",
-      "followCurrent": "Sledovat aktuální účet",
-      "selectAccount": "Vybrat účet",
-      "bindAccount": "Propojit účet",
-      "unbound": "Nepropojeno",
-      "extraArgs": "Vlastní argumenty spuštění",
-      "extraArgsPlaceholder": "např. --disable-gpu --log-level=2",
-      "extraArgsDesc": "Argumenty oddělujte mezerami, uvozovky jsou podporovány",
-      "nameRequired": "Zadejte prosím název instance",
-      "pathRequired": "Vyberte prosím adresář instance",
-      "bindRequired": "Vyberte prosím účet k propojení",
-      "initMode": "Režim inicializace",
-      "initModeCopy": "Kopírovat ze zdrojové instance (výchozí)",
-      "initModeEmpty": "Prázdná instance (bez kopírování)",
-      "emptyInitHint": "Při volbě bez kopírování se vytvoří pouze prázdná složka. Před svázáním účtu je nutné instanci jednou spustit.",
-      "bindAfterInit": "Lze svázat po inicializaci",
-      "bindDisabledHint": "U prázdné instance ji nejprve jednou spusťte pro vytvoření dat a poté účet svažte."
-    },
-    "quota": {
-      "unbound": "Účet není propojen",
-      "accountMissing": "Účet nenalezen",
-      "empty": "Žádná kvóta v mezipaměti"
-    },
-    "messages": {
-      "created": "Instance vytvořena",
-      "updated": "Instance aktualizována",
-      "deleted": "Instance smazána",
-      "started": "Instance spuštěna",
-      "stopped": "Instance zastavena",
-      "startedAll": "Všechny zastavené instance byly spuštěny",
-      "restartedAll": "Běžící instance byly restartovány",
-      "closedAll": "Všechny instance byly zastaveny",
-      "allAlreadyRunning": "Všechny instance již běží",
-      "noneRunning": "Nebyly nalezeny žádné běžící instance",
-      "emptyCreated": "Prázdná instance byla vytvořena. Před svázáním účtu ji nejprve jednou spusťte."
-    },
-    "runningDialog": {
-      "title": "Instance již běží",
-      "desc": "Tato instance je již spuštěna. Můžete se přepnout do okna nebo ji restartovat podle aktuální strategie.",
-      "current": "Aktuální strategie: {{name}}",
-      "pathLabel": "Adresář instance",
-      "go": "Přepnout nyní",
-      "restart": "Zavřít a restartovat"
-    },
-    "restartStrategy": {
-      "button": "Strategie restartu",
-      "title": "Strategie restartu",
-      "desc": "Vyberte metodu pro restartování instance. Každá možnost ovlivňuje rozsah a stabilitu.",
-      "recommended": "Doporučeno",
-      "labels": {
-        "principle": "Technický princip",
-        "command": "Příkaz",
-        "pros": "Plusy",
-        "cons": "Mínusy"
-      },
-      "safe": {
-        "title": "Bezpečný restart (Doporučeno)",
-        "principle": "Odešle signál SIGTERM všem procesům Antigravity, požádá aplikaci o uložení dat a ukončení, poté spustí cílovou instanci (v případě potřeby vynutí ukončení).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (všechny procesy Antigravity)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (všechny procesy Antigravity)",
-        "pros": "Nejblíže normálnímu ukončení, menší pravděpodobnost varování o chybách, data jsou v bezpečí.",
-        "cons": "Podporuje pouze globální restart všech instancí."
-      },
-      "force": {
-        "title": "Vynucený restart",
-        "principle": "Identifikuje procesy pomocí --user-data-dir a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
-        "commandMac": "macOS/Linux: pkill -9 -f \"--user-data-dir <dir>\"",
-        "commandWin": "Windows: taskkill /F /PID <pid> (shoda s --user-data-dir)",
-        "pros": "Může přesně restartovat jednu konkrétní instanci.",
-        "cons": "Může způsobit varování o „neočekávaném ukončení“, riziko ztráty neuložených dat."
-      }
-    },
-    "stop": {
-      "title": "Vynutit zastavení instance",
-      "message": "Odešle signál k ukončení (SIGTERM) procesu instance. Neuložená data mohou být ztracena. Pokračovat?"
-    },
-    "delete": {
-      "title": "Smazat instanci",
-      "message": "Smazat instanci {{name}}? Tím se odstraní konfigurace a smaže se složka instance."
-    },
-    "modal": {
-      "createTitle": "Nová instance",
-      "editTitle": "Upravit instanci"
-    },
-    "sort": {
-      "label": "Řazení",
-      "createdAt": "Podle času vytvoření",
-      "lastLaunchedAt": "Podle času spuštění",
-      "ascTooltip": "Aktuálně: vzestupně, kliknutím přepnete na sestupně",
-      "descTooltip": "Aktuálně: sestupně, kliknutím přepnete na vzestupně",
-      "toggleDirection": "Přepnout směr řazení"
-    },
-    "initGuide": {
-      "title": "Instance ještě není inicializovaná",
-      "desc": "Toto je prázdná instance. Zatím byl vytvořen pouze adresář a data instance ještě nebyla vygenerována.",
-      "tip": "Nejprve instanci jednou spusťte. Po dokončení inicializace můžete svázat účet.",
-      "startNow": "Spustit nyní"
-    }
-  },
-  "appPath": {
-    "missing": {
-      "title": "Cesta k aplikaci nebyla nalezena",
-      "desc": "Nepodařilo se najít cestu k aplikaci {{app}}. Pro pokračování ji nyní nastavte.",
-      "action": "Nastavit nyní"
-    }
-  },
-  "githubCopilot": {
-    "title": "Správa účtů GitHub Copilot",
-    "instances": {
-      "unsupported": {
-        "desc": "Více instancí GitHub Copilot je aktuálně dostupné pouze na macOS."
-      }
-    },
-    "empty": {
-      "description": "Klikněte na „Přidat účet“"
-    },
-    "addModal": {
-      "title": "Přidat účet GitHub Copilot"
-    },
-    "oauth": {
-      "desc": "Klikněte níže a dokončete autorizaci GitHub Copilot v prohlížeči."
-    },
-    "token": {
-      "desc": "Vložte access token GitHub Copilot nebo exportovaná data JSON."
-    },
-    "import": {
-      "localDesc": "Importovat účty GitHub Copilot z místně přihlášených relací."
-    },
-    "sort": {
-      "weekly": "Týdenní kvóta",
-      "hourly": "5hodinová kvóta",
-      "weeklyReset": "Čas týdenního resetu",
-      "hourlyReset": "Čas resetu 5 hodin",
-      "premium": "Podle využití prémiových požadavků"
-    },
-    "columns": {
-      "hourly": "Kvóta 5h",
-      "weekly": "Kvóta týdn.",
-      "premium": "Prémiové požadavky"
-    },
-    "flowNotice": {
-      "title": "Průvodce účty GitHub Copilot (kliknutím rozbalit/sbalit)",
-      "desc": "Přepnutí účtu vyžaduje čtení lokálního úložiště ověření ve VS Code a použití systémové služby přihlašovacích údajů pro dešifrování a zpětný zápis; data se zpracovávají pouze lokálně.",
-      "reason": "Rozsah oprávnění: čtení databáze ověření VS Code (state.vscdb) a volání systémového šifrování (Windows DPAPI / macOS Keychain / Linux Secret Service) pro dešifrování a zpětný zápis.",
-      "storage": "Rozsah čtení: zpracovávají se pouze položky související s relací přihlášení GitHub a veškeré procesy probíhají lokálně.",
-      "inject": "Přepnutí jedním kliknutím: Tento nástroj načte lokální šifrovací materiál VS Code (DPAPI/Keychain/Secret Service), dešifruje autentizační relaci ve state.vscdb, nahradí token GitHub Copilot a znovu ji zašifruje — vše lokálně na vašem zařízení."
-    },
-    "injectToVSCode": "Přepnout do VS Code",
-    "injectSuccess": "Token byl úspěšně vložen do VS Code. VS Code se spouští.",
-    "injectRequireClose": "Před injektováním prosím zavřete VS Code.",
-    "usage": {
-      "included": "Zahrnuto"
     }
   },
   "quickSettings": {
@@ -1272,10 +1289,6 @@
       "switchFailedBody": "Rychlé přepnutí selhalo: {{error}}"
     }
   },
-  "privacy": {
-    "hideSensitive": "Skrýt e-maily",
-    "showSensitive": "Zobrazit e-maily"
-  },
   "windsurf": {
     "title": "Správa účtů Windsurf",
     "instances": {
@@ -1333,50 +1346,6 @@
       "success": "Přihlášení úspěšné: {{login}}",
       "failed": "Přihlášení se nezdařilo: {{error}}"
     }
-  },
-  "platformLayout": {
-    "title": "Rozložení platforem",
-    "sidebarSelected": "Vybráno v postranním panelu {{count}}/{{max}}",
-    "reset": "Obnovit výchozí",
-    "tip": "Přetažením změňte pořadí. V postranním panelu lze zobrazit nejvýše dvě platformy. Pokud je vybrána jen jedna, zobrazí se pouze jedna.",
-    "sidebarToggle": "Zobrazit v postranním panelu",
-    "dashboardToggle": "Zobrazit na nástěnce",
-    "trayToggle": "Zobrazit v systémové liště",
-    "hiddenBadge": "Skryto",
-    "openFromMore": "Spravovat rozložení platforem",
-    "dragHandleLabel": "Přetažením změnit pořadí"
-  },
-  "breakout": {
-    "gameOver": "Konec hry",
-    "gameOverRank": "Místní pořadí #{{rank}}",
-    "startGame": "Spustit hru",
-    "startHint": "Klikni na start nebo stiskni mezerník",
-    "rankTitle": "Místní historické pořadí",
-    "rankCurrent": "Aktuální",
-    "rankNoData": "--",
-    "restart": "Restartovat",
-    "pause": "Pozastavit",
-    "resume": "Pokračovat",
-    "paused": "Pozastaveno",
-    "level": "Úroveň {{level}}",
-    "levelScore": "Skóre úrovně {{score}}",
-    "levelCleared": "Úroveň dokončena",
-    "nextLevel": "Další úroveň",
-    "history": "Historie",
-    "historyShort": "Historie",
-    "historyEmpty": "Zatím bez záznamů",
-    "historyClear": "Vymazat",
-    "historyScoreShort": "Skóre {{score}}",
-    "historyLevelShort": "Lv {{level}}",
-    "historyDurationShort": "Čas {{duration}}",
-    "historyReasonGameOver": "Konec hry",
-    "historyReasonManualExit": "Ruční ukončení",
-    "serveHint": "Stiskněte mezerník pro vystřelení míčku",
-    "ranking": "Místní historie",
-    "rankingShort": "Místní",
-    "rankingEmpty": "Zatím bez místních záznamů",
-    "rankingClear": "Vymazat místní pořadí",
-    "rankingRankShort": "#{{rank}}"
   },
   "kiro": {
     "account": {
@@ -1438,13 +1407,44 @@
     },
     "injectToVSCode": "Přepněte na Kiro"
   },
+  "breakout": {
+    "gameOver": "Konec hry",
+    "gameOverRank": "Místní pořadí #{{rank}}",
+    "startGame": "Spustit hru",
+    "startHint": "Klikni na start nebo stiskni mezerník",
+    "rankTitle": "Místní historické pořadí",
+    "rankCurrent": "Aktuální",
+    "rankNoData": "--",
+    "restart": "Restartovat",
+    "pause": "Pozastavit",
+    "resume": "Pokračovat",
+    "paused": "Pozastaveno",
+    "level": "Úroveň {{level}}",
+    "levelScore": "Skóre úrovně {{score}}",
+    "levelCleared": "Úroveň dokončena",
+    "nextLevel": "Další úroveň",
+    "history": "Historie",
+    "historyShort": "Historie",
+    "historyEmpty": "Zatím bez záznamů",
+    "historyClear": "Vymazat",
+    "historyScoreShort": "Skóre {{score}}",
+    "historyLevelShort": "Lv {{level}}",
+    "historyDurationShort": "Čas {{duration}}",
+    "historyReasonGameOver": "Konec hry",
+    "historyReasonManualExit": "Ruční ukončení",
+    "serveHint": "Stiskněte mezerník pro vystřelení míčku",
+    "ranking": "Místní historie",
+    "rankingShort": "Místní",
+    "rankingEmpty": "Zatím bez místních záznamů",
+    "rankingClear": "Vymazat místní pořadí",
+    "rankingRankShort": "#{{rank}}"
+  },
   "announcement": {
     "title": "Oznámení",
     "empty": "Žádná oznámení",
     "markAllRead": "Označit vše jako přečtené",
     "gotIt": "Rozumím",
     "later": "Později",
-    "clickToClose": "Kliknutím zavřete",
     "new": "Nové",
     "timeAgo": {
       "justNow": "Právě teď",
@@ -1459,7 +1459,266 @@
       "urgent": "🚨 Urgentní"
     },
     "refreshed": "Oznámení aktualizována (celkem {count})",
+    "clickToClose": "Kliknutím zavřete",
     "clickToEnlarge": "Klikněte pro zvětšení",
     "imageLoadFailed": "Obrázek se nepodařilo načíst"
+  },
+  "manual": {
+    "actions": {
+      "collapseAll": "Sbalit vše",
+      "expandAll": "Rozbalit vše",
+      "goAntigravity": "Přejít na Antigravity",
+      "goCodex": "Přejít na Codex",
+      "goDashboard": "Přejít na Dashboard",
+      "goFingerprints": "Přejít na otisky zařízení",
+      "goGitHubCopilot": "Přejít na GitHub Copilot",
+      "goInstances": "Přejít na více instancí",
+      "goKiro": "Přejít na Kiro",
+      "goSettings": "Přejít do nastavení",
+      "goVerification": "Přejít na Wakeup ověření",
+      "goWakeup": "Přejít na Wakeup úlohy",
+      "goWindsurf": "Přejít na Windsurf",
+      "openLayout": "Otevřít rozložení platforem"
+    },
+    "antigravity": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Správa účtů Antigravity zálohujte data."
+      },
+      "keywords": {
+        "0": "Správa účtů Antigravity",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Správa účtů Antigravity přináší.",
+        "1": "Použijte doporučený postup v Správa účtů Antigravity a snižte chyby."
+      },
+      "steps": {
+        "0": "Otevřete stránku Správa účtů Antigravity.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Správa účtů Antigravity.",
+        "2": "Proveďte jednu ruční operaci v Správa účtů Antigravity a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Správa účtů Antigravity v běžném workflow.",
+      "title": "Správa účtů Antigravity"
+    },
+    "blocks": {
+      "cautions": "Časté chyby / upozornění",
+      "outcomes": "S čím tato funkce pomůže",
+      "steps": "Doporučené kroky"
+    },
+    "dashboard": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Dashboard zálohujte data."
+      },
+      "keywords": {
+        "0": "Přehled",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Dashboard přináší.",
+        "1": "Použijte doporučený postup v Dashboard a snižte chyby."
+      },
+      "steps": {
+        "0": "Otevřete stránku Dashboard.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Dashboard.",
+        "2": "Proveďte jednu ruční operaci v Dashboard a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Dashboard v běžném workflow.",
+      "title": "Přehled"
+    },
+    "dataPrivacy": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Import/Export, soukromí a řešení problémů zálohujte data.",
+        "1": "Před spuštěním v Import/Export, soukromí a řešení problémů zkontrolujte filtry a cíle.",
+        "2": "Před sdílením logů odstraňte citlivá data (token, cookie, e-mail)."
+      },
+      "keywords": {
+        "0": "Import/Export, soukromí a řešení problémů",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet",
+        "4": "nastavení",
+        "5": "řešení problémů",
+        "6": "logy",
+        "7": "data"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Import/Export, soukromí a řešení problémů přináší.",
+        "1": "Použijte doporučený postup v Import/Export, soukromí a řešení problémů a snižte chyby.",
+        "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Import/Export, soukromí a řešení problémů.",
+        "3": "Při problému v Import/Export, soukromí a řešení problémů nejdříve zkontrolujte logy a důkazy."
+      },
+      "steps": {
+        "0": "Otevřete stránku Import/Export, soukromí a řešení problémů.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Import/Export, soukromí a řešení problémů.",
+        "2": "Proveďte jednu ruční operaci v Import/Export, soukromí a řešení problémů a ověřte výsledek.",
+        "3": "Pro troubleshooting: Nastavení -> Datový adresář -> Otevřít, pak logs.",
+        "4": "Nejprve zkontrolujte nejnovější app.log nebo app.log.*.",
+        "5": "Při hlášení přiložte čas, platformu, kroky reprodukce a anonymizované logy."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Import/Export, soukromí a řešení problémů v běžném workflow.",
+      "title": "Import/Export, soukromí a řešení problémů"
+    },
+    "empty": {
+      "desc": "Zkuste klíčová slova: instance, přepnutí, nastavení, export.",
+      "title": "Žádný odpovídající obsah"
+    },
+    "fingerprints": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Otisky zařízení zálohujte data."
+      },
+      "keywords": {
+        "0": "Otisky zařízení",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Otisky zařízení přináší.",
+        "1": "Použijte doporučený postup v Otisky zařízení a snižte chyby."
+      },
+      "steps": {
+        "0": "Otevřete stránku Otisky zařízení.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Otisky zařízení.",
+        "2": "Proveďte jednu ruční operaci v Otisky zařízení a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Otisky zařízení v běžném workflow.",
+      "title": "Otisky zařízení"
+    },
+    "instances": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Více instancí (klíčové) zálohujte data.",
+        "1": "Před spuštěním v Více instancí (klíčové) zkontrolujte filtry a cíle."
+      },
+      "keywords": {
+        "0": "Více instancí (klíčové)",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet",
+        "4": "nastavení"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Více instancí (klíčové) přináší.",
+        "1": "Použijte doporučený postup v Více instancí (klíčové) a snižte chyby.",
+        "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Více instancí (klíčové)."
+      },
+      "steps": {
+        "0": "Otevřete stránku Více instancí (klíčové).",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Více instancí (klíčové).",
+        "2": "Proveďte jednu ruční operaci v Více instancí (klíčové) a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Více instancí (klíčové) v běžném workflow.",
+      "title": "Více instancí (klíčové)"
+    },
+    "navTitle": "Uživatelská příručka",
+    "providers": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Codex / GitHub Copilot / Windsurf / Kiro zálohujte data.",
+        "1": "Před spuštěním v Codex / GitHub Copilot / Windsurf / Kiro zkontrolujte filtry a cíle."
+      },
+      "keywords": {
+        "0": "Platformy Codex / GitHub Copilot / Windsurf / Kiro",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet",
+        "4": "nastavení",
+        "5": "řešení problémů"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Codex / GitHub Copilot / Windsurf / Kiro přináší.",
+        "1": "Použijte doporučený postup v Codex / GitHub Copilot / Windsurf / Kiro a snižte chyby.",
+        "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Codex / GitHub Copilot / Windsurf / Kiro."
+      },
+      "steps": {
+        "0": "Otevřete stránku Codex / GitHub Copilot / Windsurf / Kiro.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Codex / GitHub Copilot / Windsurf / Kiro.",
+        "2": "Proveďte jednu ruční operaci v Codex / GitHub Copilot / Windsurf / Kiro a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Codex / GitHub Copilot / Windsurf / Kiro v běžném workflow.",
+      "title": "Platformy Codex / GitHub Copilot / Windsurf / Kiro"
+    },
+    "quickStart": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Rychlý start (5 minut) zálohujte data.",
+        "1": "Před spuštěním v Rychlý start (5 minut) zkontrolujte filtry a cíle."
+      },
+      "keywords": {
+        "0": "Rychlý start (5 minut)",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Rychlý start (5 minut) přináší.",
+        "1": "Použijte doporučený postup v Rychlý start (5 minut) a snižte chyby.",
+        "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Rychlý start (5 minut)."
+      },
+      "steps": {
+        "0": "Otevřete stránku Rychlý start (5 minut).",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Rychlý start (5 minut).",
+        "2": "Proveďte jednu ruční operaci v Rychlý start (5 minut) a ověřte výsledek.",
+        "3": "Pro troubleshooting: Nastavení -> Datový adresář -> Otevřít, pak logs."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Rychlý start (5 minut) v běžném workflow.",
+      "title": "Rychlý start (5 minut)"
+    },
+    "resultCount": "Celkem {{count}} sekcí",
+    "searchAria": "Hledat v příručce",
+    "searchPlaceholder": "Hledat funkce, scénáře nebo klíčová slova (např. instance, inject, wakeup, fingerprint)",
+    "settings": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Nastavení a systémové možnosti zálohujte data.",
+        "1": "Před spuštěním v Nastavení a systémové možnosti zkontrolujte filtry a cíle."
+      },
+      "keywords": {
+        "0": "Nastavení a systémové možnosti",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet",
+        "4": "nastavení",
+        "5": "řešení problémů"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Nastavení a systémové možnosti přináší.",
+        "1": "Použijte doporučený postup v Nastavení a systémové možnosti a snižte chyby.",
+        "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Nastavení a systémové možnosti."
+      },
+      "steps": {
+        "0": "Otevřete stránku Nastavení a systémové možnosti.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Nastavení a systémové možnosti.",
+        "2": "Proveďte jednu ruční operaci v Nastavení a systémové možnosti a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Nastavení a systémové možnosti v běžném workflow.",
+      "title": "Nastavení a systémové možnosti"
+    },
+    "subtitle": "Návod podle pracovních scénářů. Nejprve cíl, potom doporučený postup.",
+    "title": "Uživatelská příručka",
+    "wakeup": {
+      "cautions": {
+        "0": "Před rizikovými nebo hromadnými akcemi v Wakeup úlohy a ověření zálohujte data.",
+        "1": "Před spuštěním v Wakeup úlohy a ověření zkontrolujte filtry a cíle."
+      },
+      "keywords": {
+        "0": "Wakeup úlohy a ověření",
+        "1": "návod",
+        "2": "postup",
+        "3": "účet",
+        "4": "nastavení"
+      },
+      "outcomes": {
+        "0": "Pochopte, co vám Wakeup úlohy a ověření přináší.",
+        "1": "Použijte doporučený postup v Wakeup úlohy a ověření a snižte chyby."
+      },
+      "steps": {
+        "0": "Otevřete stránku Wakeup úlohy a ověření.",
+        "1": "Dokončete základní nastavení a potřebné vazby pro Wakeup úlohy a ověření.",
+        "2": "Proveďte jednu ruční operaci v Wakeup úlohy a ověření a ověřte výsledek."
+      },
+      "summary": "Tato sekce vysvětluje, jak používat Wakeup úlohy a ověření v běžném workflow.",
+      "title": "Wakeup úlohy a ověření"
+    }
   }
 }

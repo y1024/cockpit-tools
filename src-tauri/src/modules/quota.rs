@@ -461,7 +461,9 @@ pub async fn fetch_project_id_with_context(
             .header(reqwest::header::CONTENT_TYPE, "application/json")
             .header(reqwest::header::USER_AGENT, USER_AGENT)
             .header(reqwest::header::ACCEPT_ENCODING, "gzip")
-            .json(&build_load_code_assist_payload(preferred_project_id.as_deref()))
+            .json(&build_load_code_assist_payload(
+                preferred_project_id.as_deref(),
+            ))
             .send()
             .await;
 
@@ -476,11 +478,10 @@ pub async fn fetch_project_id_with_context(
                             Ok(data) => {
                                 let paid_tier_id =
                                     data.paid_tier.as_ref().and_then(|tier| tier.id.clone());
-                                let current_tier_id = data
-                                    .current_tier
-                                    .as_ref()
-                                    .and_then(|tier| tier.id.clone());
-                                subscription_tier = paid_tier_id.clone().or(current_tier_id.clone());
+                                let current_tier_id =
+                                    data.current_tier.as_ref().and_then(|tier| tier.id.clone());
+                                subscription_tier =
+                                    paid_tier_id.clone().or(current_tier_id.clone());
 
                                 if subscription_tier.is_some() {
                                     log_subscription_tier_result(
@@ -705,8 +706,13 @@ pub async fn fetch_quota(
     email: &str,
     skip_cache: bool,
 ) -> crate::error::AppResult<QuotaFetchResult> {
-    fetch_quota_with_context(access_token, email, skip_cache, &QuotaCloudCodeContext::default())
-        .await
+    fetch_quota_with_context(
+        access_token,
+        email,
+        skip_cache,
+        &QuotaCloudCodeContext::default(),
+    )
+    .await
 }
 
 pub async fn fetch_quota_with_context(
@@ -806,7 +812,10 @@ pub async fn fetch_quota_with_context(
                     }
 
                     let text = response.text().await.unwrap_or_default();
-                    return Err(AppError::Unknown(format!("API 错误: {} - {}", status, text)));
+                    return Err(AppError::Unknown(format!(
+                        "API 错误: {} - {}",
+                        status, text
+                    )));
                 }
 
                 let body = response.text().await.map_err(AppError::Network)?;
