@@ -29,11 +29,7 @@ import { useCodexAccountStore } from '../stores/useCodexAccountStore';
 import * as codexService from '../services/codexService';
 import { TagEditModal } from '../components/TagEditModal';
 import { ExportJsonModal } from '../components/ExportJsonModal';
-import {
-  formatCodexLoginProvider,
-  getCodexAuthMetadata,
-  type CodexQuotaErrorInfo,
-} from '../types/codex';
+import { type CodexQuotaErrorInfo } from '../types/codex';
 import { buildCodexAccountPresentation } from '../presentation/platformAccountPresentation';
 
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
@@ -381,58 +377,6 @@ export function CodexAccountsPage() {
     [resolvePresentation],
   );
 
-  const compactAccountIdLabel = t('codex.columns.accountIdCompact', 'Account ID');
-
-  const accountMetaMap = useMemo(() => {
-    const map = new Map<
-      string,
-      {
-        chatgptAccountId: string;
-        signedInWithText: string;
-        userId: string;
-      }
-    >();
-    const noneText = t('common.none', '暂无');
-
-    accounts.forEach((account) => {
-      const metadata = getCodexAuthMetadata(account);
-      const loginProvider =
-        formatCodexLoginProvider(metadata.authProvider) ||
-        t('kiro.account.providerUnknown', 'Unknown');
-      const userId = (metadata.userId || account.user_id || '').trim() || noneText;
-      const signedInWithText = t('codex.account.signInCompact', {
-        provider: loginProvider,
-        defaultValue: t('kiro.account.signedInWith', {
-          provider: loginProvider,
-          defaultValue: 'Signed in with {{provider}}',
-        }),
-      });
-      map.set(account.id, {
-        chatgptAccountId: (metadata.chatgptAccountId || '').trim() || noneText,
-        signedInWithText,
-        userId,
-      });
-    });
-
-    return map;
-  }, [accounts, t]);
-
-  const resolveAccountMeta = useCallback(
-    (account: CodexAccount) =>
-      accountMetaMap.get(account.id) ?? {
-        chatgptAccountId: t('common.none', '暂无'),
-        signedInWithText: t('codex.account.signInCompact', {
-          provider: t('kiro.account.providerUnknown', 'Unknown'),
-          defaultValue: t('kiro.account.signedInWith', {
-            provider: t('kiro.account.providerUnknown', 'Unknown'),
-            defaultValue: 'Signed in with {{provider}}',
-          }),
-        }),
-        userId: t('common.none', '暂无'),
-      },
-    [accountMetaMap, t],
-  );
-
   const tierCounts = useMemo(() => {
     const counts = { all: accounts.length, FREE: 0, PLUS: 0, PRO: 0, TEAM: 0, ENTERPRISE: 0 };
     accounts.forEach((a) => { const tier = resolvePlanKey(a); if (tier in counts) counts[tier as keyof typeof counts] += 1; });
@@ -496,13 +440,7 @@ export function CodexAccountsPage() {
     const allItems = source.map((a) => resolvePresentation(a).quotaItems);
     const firstWithWindows = allItems.find((items) => items.length > 0) ?? [];
     const firstWithSecondary = allItems.find((items) => items.length > 1) ?? [];
-    const firstWithCodeReview = allItems.find((items) => items.some((item) => item.key === 'code_review'));
-    const codeReview = firstWithCodeReview?.find((item) => item.key === 'code_review');
-    return {
-      primary: firstWithWindows[0]?.label ?? '5h',
-      secondary: firstWithSecondary[1]?.label ?? (firstWithWindows.length > 0 ? '—' : 'Weekly'),
-      codeReview: codeReview?.label ?? 'Code Review',
-    };
+    return { primary: firstWithWindows[0]?.label ?? '5h', secondary: firstWithSecondary[1]?.label ?? (firstWithWindows.length > 0 ? '—' : 'Weekly') };
   }, [accounts, filteredAccounts, resolvePresentation]);
 
   const resolveGroupLabel = (groupKey: string) => groupKey === untaggedKey ? t('accounts.defaultGroup', '默认分组') : groupKey;
@@ -512,19 +450,12 @@ export function CodexAccountsPage() {
   const renderGridCards = (items: typeof filteredAccounts, groupKey?: string) =>
     items.map((account) => {
       const presentation = resolvePresentation(account);
-      const meta = resolveAccountMeta(account);
       const isCurrent = currentAccount?.id === account.id;
       const planClass = presentation.planClass || 'unknown';
       const isSelected = selected.has(account.id);
       const quotaItems = presentation.quotaItems;
       const quotaErrorMeta = resolveQuotaErrorMeta(account.quota_error);
       const hasQuotaError = Boolean(quotaErrorMeta.rawMessage);
-      const accountIdLabel = compactAccountIdLabel;
-      const accountIdText =
-        meta.chatgptAccountId && meta.chatgptAccountId !== t('common.none', '暂无')
-          ? meta.chatgptAccountId
-          : meta.userId;
-      const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
       const accountTags = (account.tags || []).map((tag) => tag.trim()).filter(Boolean);
       const visibleTags = accountTags.slice(0, 2);
       const moreTagCount = Math.max(0, accountTags.length - visibleTags.length);
@@ -537,16 +468,11 @@ export function CodexAccountsPage() {
             {hasQuotaError && (<span className="codex-status-pill quota-error" title={quotaErrorMeta.rawMessage}><CircleAlert size={12} />{quotaErrorMeta.statusCode || t('codex.quotaError.badge', '配额异常')}</span>)}
             <span className={`tier-badge ${planClass}`}>{presentation.planLabel}</span>
           </div>
-          <div className="account-sub-line">
-            <span className="codex-login-subline" title={signInLine}>
-              {meta.signedInWithText} | {accountIdLabel}: {maskAccountText(accountIdText)}
-            </span>
-          </div>
           {accountTags.length > 0 && (<div className="card-tags">{visibleTags.map((tag, idx) => (<span key={`${account.id}-${tag}-${idx}`} className="tag-pill">{tag}</span>))}{moreTagCount > 0 && <span className="tag-pill more">+{moreTagCount}</span>}</div>)}
           <div className="codex-quota-section">
             {hasQuotaError && (<div className="quota-error-inline" title={quotaErrorMeta.rawMessage}><CircleAlert size={14} /><span>{quotaErrorMeta.displayText}</span></div>)}
-            {quotaItems.map((item) => {
-              const QuotaIcon = item.key === 'secondary' ? Calendar : item.key === 'code_review' ? BookOpen : Clock;
+            {quotaItems.map((item, index) => {
+              const QuotaIcon = index === 1 ? Calendar : Clock;
               return (<div key={item.key} className="quota-item"><div className="quota-header"><QuotaIcon size={14} /><span className="quota-label">{item.label}</span><span className={`quota-pct ${item.quotaClass}`}>{item.valueText}</span></div>
                 <div className="quota-bar-track"><div className={`quota-bar ${item.quotaClass}`} style={{ width: `${item.percentage}%` }} /></div>
                 {item.resetText && <span className="quota-reset">{item.resetText}</span>}</div>);
@@ -580,30 +506,17 @@ export function CodexAccountsPage() {
   const renderTableRows = (items: typeof filteredAccounts, groupKey?: string) =>
     items.map((account) => {
       const presentation = resolvePresentation(account);
-      const meta = resolveAccountMeta(account);
       const isCurrent = currentAccount?.id === account.id;
       const planClass = presentation.planClass || 'unknown';
-      const primaryWindow = presentation.quotaItems.find((item) => item.key === 'primary') ?? presentation.quotaItems[0];
-      const secondaryWindow = presentation.quotaItems.find((item) => item.key === 'secondary') ?? presentation.quotaItems[1];
-      const codeReviewWindow = presentation.quotaItems.find((item) => item.key === 'code_review');
+      const primaryWindow = presentation.quotaItems[0];
+      const secondaryWindow = presentation.quotaItems[1];
       const quotaErrorMeta = resolveQuotaErrorMeta(account.quota_error);
       const hasQuotaError = Boolean(quotaErrorMeta.rawMessage);
-      const accountIdLabel = compactAccountIdLabel;
-      const accountIdText =
-        meta.chatgptAccountId && meta.chatgptAccountId !== t('common.none', '暂无')
-          ? meta.chatgptAccountId
-          : meta.userId;
-      const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
       return (
         <tr key={groupKey ? `${groupKey}-${account.id}` : account.id} className={isCurrent ? 'current' : ''}>
           <td><input type="checkbox" checked={selected.has(account.id)} onChange={() => toggleSelect(account.id)} /></td>
           <td><div className="account-cell"><div className="account-main-line"><span className="account-email-text" title={maskAccountText(presentation.displayName)}>{maskAccountText(presentation.displayName)}</span>
             {isCurrent && <span className="mini-tag current">{t('codex.current', '当前')}</span>}</div>
-            <div className="account-sub-line codex-account-meta-inline">
-              <span className="codex-login-subline" title={signInLine}>
-                {meta.signedInWithText} | {accountIdLabel}: {maskAccountText(accountIdText)}
-              </span>
-            </div>
             {hasQuotaError && (<div className="account-sub-line"><span className="codex-status-pill quota-error" title={quotaErrorMeta.rawMessage}><CircleAlert size={12} />{quotaErrorMeta.statusCode || t('codex.quotaError.badge', '配额异常')}</span></div>)}</div></td>
           <td><span className={`tier-badge ${planClass}`}>{presentation.planLabel}</span></td>
           <td>{primaryWindow ? (<div className="quota-item"><div className="quota-header"><span className="quota-name">{primaryWindow.label}</span><span className={`quota-value ${primaryWindow.quotaClass}`}>{primaryWindow.valueText}</span></div>
@@ -613,9 +526,6 @@ export function CodexAccountsPage() {
             <div className="quota-progress-track"><div className={`quota-progress-bar ${secondaryWindow.quotaClass}`} style={{ width: `${secondaryWindow.percentage}%` }} /></div>
             {secondaryWindow.resetText && (<div className="quota-footer"><span className="quota-reset">{secondaryWindow.resetText}</span></div>)}</div>) : (<div className="quota-empty">—</div>)}
             {hasQuotaError && (<div className="quota-error-inline table" title={quotaErrorMeta.rawMessage}><CircleAlert size={12} /><span>{quotaErrorMeta.displayText}</span></div>)}</td>
-          <td>{codeReviewWindow ? (<div className="quota-item"><div className="quota-header"><span className="quota-name">{codeReviewWindow.label}</span><span className={`quota-value ${codeReviewWindow.quotaClass}`}>{codeReviewWindow.valueText}</span></div>
-            <div className="quota-progress-track"><div className={`quota-progress-bar ${codeReviewWindow.quotaClass}`} style={{ width: `${codeReviewWindow.percentage}%` }} /></div>
-            {codeReviewWindow.resetText && (<div className="quota-footer"><span className="quota-reset">{codeReviewWindow.resetText}</span></div>)}</div>) : (<div className="quota-empty">—</div>)}</td>
           <td className="sticky-action-cell table-action-cell"><div className="action-buttons">
             <button className="action-btn" onClick={() => openTagModal(account.id)} title={t('accounts.editTags', '编辑标签')}><Tag size={14} /></button>
             <button className={`action-btn ${!isCurrent ? 'success' : ''}`} onClick={() => handleSwitch(account.id)} disabled={!!switching} title={t('codex.switch', '切换')}>
@@ -722,14 +632,14 @@ export function CodexAccountsPage() {
         <div className="account-table-container grouped"><table className="account-table"><thead><tr>
           <th style={{ width: 40 }}><input type="checkbox" checked={selected.size === filteredAccounts.length && filteredAccounts.length > 0} onChange={() => toggleSelectAll(filteredAccounts.map((a) => a.id))} /></th>
           <th style={{ width: 260 }}>{t('common.shared.columns.email', '账号')}</th><th style={{ width: 140 }}>{t('common.shared.columns.plan', '订阅')}</th>
-          <th>{quotaColumnLabels.primary}</th><th>{quotaColumnLabels.secondary}</th><th>{quotaColumnLabels.codeReview}</th><th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th></tr></thead>
-          <tbody>{groupedAccounts.map(([gk, ga]) => (<Fragment key={gk}><tr className="tag-group-row"><td colSpan={7}><div className="tag-group-header"><span className="tag-group-title">{resolveGroupLabel(gk)}</span><span className="tag-group-count">{ga.length}</span></div></td></tr>
+          <th>{quotaColumnLabels.primary}</th><th>{quotaColumnLabels.secondary}</th><th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th></tr></thead>
+          <tbody>{groupedAccounts.map(([gk, ga]) => (<Fragment key={gk}><tr className="tag-group-row"><td colSpan={6}><div className="tag-group-header"><span className="tag-group-title">{resolveGroupLabel(gk)}</span><span className="tag-group-count">{ga.length}</span></div></td></tr>
             {renderTableRows(ga, gk)}</Fragment>))}</tbody></table></div>
       ) : (
         <div className="account-table-container"><table className="account-table"><thead><tr>
           <th style={{ width: 40 }}><input type="checkbox" checked={selected.size === filteredAccounts.length && filteredAccounts.length > 0} onChange={() => toggleSelectAll(filteredAccounts.map((a) => a.id))} /></th>
           <th style={{ width: 260 }}>{t('common.shared.columns.email', '账号')}</th><th style={{ width: 140 }}>{t('common.shared.columns.plan', '订阅')}</th>
-          <th>{quotaColumnLabels.primary}</th><th>{quotaColumnLabels.secondary}</th><th>{quotaColumnLabels.codeReview}</th><th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th></tr></thead>
+          <th>{quotaColumnLabels.primary}</th><th>{quotaColumnLabels.secondary}</th><th className="sticky-action-header table-action-header">{t('common.shared.columns.actions', '操作')}</th></tr></thead>
           <tbody>{renderTableRows(filteredAccounts)}</tbody></table></div>
       )}
 

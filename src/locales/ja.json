@@ -1035,8 +1035,7 @@
       "comingSoon": "マルチインスタンス機能は近日公開",
       "comingSoonDesc": "異なるアカウントで複数のCodex.appインスタンスを同時に実行できます。お楽しみに。",
       "unsupported": {
-        "desc": "Codex のマルチインスタンスは、公式デスクトップ版のメインプロセスに単一インスタンスロックがあるため、現在はサポートされていません。現在サポートされるのは単一インスタンスの起動・終了・再起動（いったん終了してから再度起動）のみです。",
-        "title": "マルチインスタンスは利用不可"
+        "desc": "Codexマルチインスタンスは現在macOSでのみ利用可能です。"
       },
       "quota": {
         "hourly": "5時間",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (すべての Codex プロセス)"
         },
         "force": {
-          "principle": "--user-data-dir でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir に一致するもの)"
+          "principle": "CODEX_HOME でプロセスを一致させて強制終了（SIGKILL / taskkill /F）し、その後ターゲットインスタンスを起動します。",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME に一致するもの)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "OpenCode のスイッチ更新に失敗しました: {{error}}",
     "columns": {
       "hourly": "5時間クォータ",
-      "weekly": "週間クォータ",
-      "accountId": "ChatGPTアカウントID",
-      "workspace": "ワークスペース",
-      "loginProvider": "ログイン方法",
-      "codeReview": "コードレビュー枠",
-      "accountIdCompact": "アカウントID"
+      "weekly": "週間クォータ"
     },
     "filterTags": "タグで絞り込み",
     "filterTagsCount": "タグ",
     "noAvailableTags": "利用可能なタグはありません",
     "clearFilter": "フィルターをクリア",
-    "editTags": "タグを編集",
-    "account": {
-      "signInCompact": "{{provider}} でサインインしました"
-    }
+    "editTags": "タグを編集"
   },
   "githubCopilot": {
     "title": "GitHub Copilot アカウント管理",

@@ -585,43 +585,6 @@
   margin-top: -4px;
 }
 
-.codex-accounts-page .codex-meta-block {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-light);
-}
-
-.codex-accounts-page .codex-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  font-size: 11px;
-}
-
-.codex-accounts-page .codex-meta-line .meta-label {
-  flex-shrink: 0;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.codex-accounts-page .codex-meta-line .meta-value {
-  min-width: 0;
-  color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.codex-accounts-page .codex-meta-line .meta-value.mono {
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
 .codex-accounts-page .tag-pill {
   padding: 2px 8px;
   background: var(--bg-tertiary);
@@ -721,47 +684,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
-}
-
-.codex-accounts-page .codex-account-meta-inline {
-  gap: 4px;
-}
-
-.codex-accounts-page .codex-login-subline {
-  display: block;
-  min-width: 0;
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.codex-accounts-page .codex-account-meta-inline .codex-meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.codex-accounts-page .codex-account-meta-inline .meta-label {
-  color: var(--text-secondary);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.codex-accounts-page .codex-account-meta-inline .meta-value {
-  min-width: 0;
-  color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.codex-accounts-page .codex-account-meta-inline .meta-value.mono {
-  font-family: var(--font-mono);
-  font-size: 12px;
 }
 
 .codex-accounts-page .filter-select {

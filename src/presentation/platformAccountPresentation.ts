@@ -13,7 +13,6 @@ import {
 } from '../utils/account';
 import {
   formatCodexResetTime,
-  getCodexCodeReviewQuotaMetric,
   getCodexPlanDisplayName,
   getCodexQuotaClass,
   getCodexQuotaWindows,
@@ -275,7 +274,7 @@ export function buildCodexAccountPresentation(
 ): UnifiedAccountPresentation {
   const normalizedPlan = getCodexPlanDisplayName(account.plan_type);
   const rawPlan = account.plan_type?.trim();
-  const quotaItems: UnifiedQuotaMetric[] = getCodexQuotaWindows(account.quota).map((window) => ({
+  const quotaItems = getCodexQuotaWindows(account.quota).map((window) => ({
     key: window.id,
     label: window.label,
     percentage: window.percentage,
@@ -284,18 +283,6 @@ export function buildCodexAccountPresentation(
     resetText: window.resetTime ? formatCodexResetTime(window.resetTime, t) : '',
     resetAt: window.resetTime,
   }));
-  const codeReviewMetric = getCodexCodeReviewQuotaMetric(account.quota);
-  if (codeReviewMetric) {
-    quotaItems.push({
-      key: 'code_review',
-      label: 'Code Review',
-      percentage: codeReviewMetric.percentage,
-      quotaClass: getCodexQuotaClass(codeReviewMetric.percentage),
-      valueText: `${codeReviewMetric.percentage}%`,
-      resetText: codeReviewMetric.resetTime ? formatCodexResetTime(codeReviewMetric.resetTime, t) : '',
-      resetAt: codeReviewMetric.resetTime,
-    });
-  }
 
   return {
     id: account.id,

@@ -311,8 +311,6 @@ pub async fn refresh_account_quota(account_id: &str) -> Result<CodexQuota, Strin
         }
     }
 
-    codex_account::log_workspace_claim_probe_for_account(&account, "refresh_quota");
-
     let result = match fetch_quota(&account).await {
         Ok(result) => result,
         Err(e) => {

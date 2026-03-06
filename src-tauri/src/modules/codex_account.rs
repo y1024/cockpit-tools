@@ -13,14 +13,8 @@ static CODEX_QUOTA_ALERT_LAST_SENT: std::sync::LazyLock<Mutex<HashMap<String, i6
     std::sync::LazyLock::new(|| Mutex::new(HashMap::new()));
 const CODEX_QUOTA_ALERT_COOLDOWN_SECONDS: i64 = 300;
 
-/// 获取 Codex 数据目录（优先读取 CODEX_HOME 环境变量）
+/// 获取 Codex 数据目录
 pub fn get_codex_home() -> PathBuf {
-    if let Ok(raw) = std::env::var("CODEX_HOME") {
-        let trimmed = raw.trim().trim_matches('"');
-        if !trimmed.is_empty() {
-            return PathBuf::from(trimmed);
-        }
-    }
     dirs::home_dir().expect("无法获取用户主目录").join(".codex")
 }
 
@@ -75,264 +69,6 @@ fn decode_jwt_payload_value(token: &str) -> Option<serde_json::Value> {
     let payload_bytes = URL_SAFE_NO_PAD.decode(parts[1]).ok()?;
     let payload_str = String::from_utf8(payload_bytes).ok()?;
     serde_json::from_str(&payload_str).ok()
-}
-
-fn sorted_object_keys(value: Option<&serde_json::Value>) -> Vec<String> {
-    let Some(obj) = value.and_then(|v| v.as_object()) else {
-        return Vec::new();
-    };
-    let mut keys: Vec<String> = obj.keys().cloned().collect();
-    keys.sort();
-    keys
-}
-
-fn summarize_claim_value(value: &serde_json::Value) -> String {
-    match value {
-        serde_json::Value::Null => "null".to_string(),
-        serde_json::Value::Bool(_) => "bool".to_string(),
-        serde_json::Value::Number(_) => "number".to_string(),
-        serde_json::Value::String(text) => format!("string(len={})", text.len()),
-        serde_json::Value::Array(items) => {
-            let first_item_keys = items.first().map(|item| sorted_object_keys(Some(item)));
-            format!(
-                "array(len={}, first_item_keys={:?})",
-                items.len(),
-                first_item_keys.unwrap_or_default()
-            )
-        }
-        serde_json::Value::Object(_) => {
-            let keys = sorted_object_keys(Some(value));
-            format!("object(keys={:?})", keys)
-        }
-    }
-}
-
-fn serialize_json_compact(value: &serde_json::Value) -> String {
-    serde_json::to_string(value).unwrap_or_else(|_| "<serialize_failed>".to_string())
-}
-
-fn json_value_to_text(value: Option<&serde_json::Value>) -> Option<String> {
-    match value {
-        Some(serde_json::Value::String(text)) => Some(text.clone()),
-        Some(serde_json::Value::Number(num)) => Some(num.to_string()),
-        Some(serde_json::Value::Bool(flag)) => Some(flag.to_string()),
-        _ => None,
-    }
-}
-
-fn json_value_to_bool(value: Option<&serde_json::Value>) -> Option<bool> {
-    match value {
-        Some(serde_json::Value::Bool(flag)) => Some(*flag),
-        Some(serde_json::Value::Number(num)) => {
-            if num == &serde_json::Number::from(1) {
-                Some(true)
-            } else if num == &serde_json::Number::from(0) {
-                Some(false)
-            } else {
-                None
-            }
-        }
-        Some(serde_json::Value::String(text)) => match text.trim().to_ascii_lowercase().as_str() {
-            "true" => Some(true),
-            "false" => Some(false),
-            _ => None,
-        },
-        _ => None,
-    }
-}
-
-fn format_workspace_entry(
-    container_name: &str,
-    key: &str,
-    index: Option<usize>,
-    entry: &serde_json::Map<String, serde_json::Value>,
-) -> String {
-    let path = if let Some(idx) = index {
-        format!("{}.{}[{}]", container_name, key, idx)
-    } else {
-        format!("{}.{}", container_name, key)
-    };
-
-    let id = json_value_to_text(
-        entry
-            .get("id")
-            .or_else(|| entry.get("organization_id"))
-            .or_else(|| entry.get("workspace_id")),
-    )
-    .unwrap_or_else(|| "-".to_string());
-    let title = json_value_to_text(
-        entry
-            .get("title")
-            .or_else(|| entry.get("name"))
-            .or_else(|| entry.get("display_name"))
-            .or_else(|| entry.get("workspace_name"))
-            .or_else(|| entry.get("organization_name")),
-    )
-    .unwrap_or_else(|| "-".to_string());
-    let role = json_value_to_text(entry.get("role")).unwrap_or_else(|| "-".to_string());
-    let is_default = json_value_to_bool(entry.get("is_default"))
-        .map(|flag| flag.to_string())
-        .unwrap_or_else(|| "-".to_string());
-    let keys = sorted_object_keys(Some(&serde_json::Value::Object(entry.clone())));
-
-    format!(
-        "{}{{id=\"{}\", title=\"{}\", role=\"{}\", is_default={}, keys={:?}}}",
-        path, id, title, role, is_default, keys
-    )
-}
-
-fn collect_workspace_entries(
-    container_name: &str,
-    key: &str,
-    value: &serde_json::Value,
-    entries: &mut Vec<String>,
-) {
-    match value {
-        serde_json::Value::Array(items) => {
-            for (index, item) in items.iter().enumerate() {
-                if let Some(obj) = item.as_object() {
-                    entries.push(format_workspace_entry(container_name, key, Some(index), obj));
-                } else {
-                    entries.push(format!(
-                        "{}.{}[{}]={}",
-                        container_name,
-                        key,
-                        index,
-                        summarize_claim_value(item)
-                    ));
-                }
-            }
-        }
-        serde_json::Value::Object(obj) => {
-            entries.push(format_workspace_entry(container_name, key, None, obj));
-        }
-        _ => {
-            entries.push(format!(
-                "{}.{}={}",
-                container_name,
-                key,
-                summarize_claim_value(value)
-            ));
-        }
-    }
-}
-
-fn describe_claim_scope(scope_name: &str, payload: &serde_json::Value) -> String {
-    const WORKSPACE_KEYS: [&str; 10] = [
-        "organization_id",
-        "chatgpt_organization_id",
-        "chatgpt_org_id",
-        "org_id",
-        "organizations",
-        "organization",
-        "organization_name",
-        "workspaces",
-        "workspace",
-        "workspace_name",
-    ];
-
-    let top_keys = sorted_object_keys(Some(payload));
-    let auth_data = payload.get("https://api.openai.com/auth");
-    let auth_keys = sorted_object_keys(auth_data);
-
-    let mut candidate_values: Vec<String> = Vec::new();
-    let mut workspace_entries: Vec<String> = Vec::new();
-    for (container_name, container) in [("payload", Some(payload)), ("auth_data", auth_data)] {
-        for key in WORKSPACE_KEYS {
-            if let Some(value) = container.and_then(|entry| entry.get(key)) {
-                candidate_values.push(format!(
-                    "{}.{}={}",
-                    container_name,
-                    key,
-                    summarize_claim_value(value)
-                ));
-                collect_workspace_entries(container_name, key, value, &mut workspace_entries);
-            }
-        }
-    }
-
-    format!(
-        "{}: top_keys={:?}, auth_data_keys={:?}, workspace_candidates=[{}], workspace_entries=[{}]",
-        scope_name,
-        top_keys,
-        auth_keys,
-        candidate_values.join("; "),
-        workspace_entries.join("; ")
-    )
-}
-
-fn describe_optional_presence(value: Option<&str>) -> String {
-    value
-        .map(|raw| format!("present(len={})", raw.len()))
-        .unwrap_or_else(|| "none".to_string())
-}
-
-fn log_workspace_claim_probe(
-    scene: &str,
-    email: &str,
-    account_id: Option<&str>,
-    organization_id: Option<&str>,
-    id_token: &str,
-    access_token: &str,
-) {
-    let id_token_payload = decode_jwt_payload_value(id_token);
-    let access_token_payload = decode_jwt_payload_value(access_token);
-
-    let id_token_desc = match id_token_payload.as_ref() {
-        Some(payload) => describe_claim_scope("id_token", payload),
-        None => "id_token: parse_failed".to_string(),
-    };
-    let access_token_desc = match access_token_payload.as_ref() {
-        Some(payload) => describe_claim_scope("access_token", payload),
-        None => "access_token: parse_failed".to_string(),
-    };
-
-    logger::log_info(&format!(
-        "Codex 工作空间字段探测: scene={}, email={}, account_id={}, organization_id={}, {}, {}",
-        scene,
-        email,
-        describe_optional_presence(account_id),
-        describe_optional_presence(organization_id),
-        id_token_desc,
-        access_token_desc
-    ));
-
-    if let Some(payload) = id_token_payload.as_ref() {
-        logger::log_info(&format!(
-            "Codex 工作空间原始Claim: scene={}, token=id_token, payload={}",
-            scene,
-            serialize_json_compact(payload)
-        ));
-    } else {
-        logger::log_warn(&format!(
-            "Codex 工作空间原始Claim: scene={}, token=id_token, payload_parse_failed",
-            scene
-        ));
-    }
-
-    if let Some(payload) = access_token_payload.as_ref() {
-        logger::log_info(&format!(
-            "Codex 工作空间原始Claim: scene={}, token=access_token, payload={}",
-            scene,
-            serialize_json_compact(payload)
-        ));
-    } else {
-        logger::log_warn(&format!(
-            "Codex 工作空间原始Claim: scene={}, token=access_token, payload_parse_failed",
-            scene
-        ));
-    }
-}
-
-pub fn log_workspace_claim_probe_for_account(account: &CodexAccount, scene: &str) {
-    log_workspace_claim_probe(
-        scene,
-        &account.email,
-        account.account_id.as_deref(),
-        account.organization_id.as_deref(),
-        &account.tokens.id_token,
-        &account.tokens.access_token,
-    );
 }
 
 fn normalize_optional_value(value: Option<String>) -> Option<String> {
@@ -561,14 +297,6 @@ fn upsert_account_with_hints(
         extract_chatgpt_organization_id_from_access_token(&tokens.access_token)
             .or(id_token_org_id)
             .or(organization_id_hint),
-    );
-    log_workspace_claim_probe(
-        "upsert",
-        &email,
-        account_id.as_deref(),
-        organization_id.as_deref(),
-        &tokens.id_token,
-        &tokens.access_token,
     );
 
     let mut index = load_account_index();
@@ -819,10 +547,7 @@ pub fn switch_account(account_id: &str) -> Result<CodexAccount, String> {
 pub fn import_from_local() -> Result<CodexAccount, String> {
     let auth_path = get_auth_json_path();
     if !auth_path.exists() {
-        return Err(format!(
-            "未找到本地 auth.json 文件: {}",
-            auth_path.to_string_lossy()
-        ));
+        return Err("未找到 ~/.codex/auth.json 文件".to_string());
     }
 
     let content =

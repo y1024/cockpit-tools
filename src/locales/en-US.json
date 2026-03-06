@@ -1035,8 +1035,7 @@
       "comingSoon": "Multi-Instance Coming Soon",
       "comingSoonDesc": "Run multiple Codex.app instances with different accounts simultaneously, stay tuned.",
       "unsupported": {
-        "desc": "Codex multi-instance is temporarily unsupported because the official desktop package enforces a single-instance lock in its main process. Only single-instance start, stop, and restart (close then reopen) are supported.",
-        "title": "Multi-instance unavailable"
+        "desc": "Codex multi-instance is currently available only on macOS."
       },
       "quota": {
         "hourly": "5h",
@@ -1045,13 +1044,13 @@
       "restartStrategy": {
         "safe": {
           "principle": "Send SIGTERM to the target Codex process so the app can save and exit, then relaunch that instance (force kill if needed).",
-          "commandMac": "macOS: kill -15 <pid> (match --user-data-dir)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (match --user-data-dir)"
+          "commandMac": "macOS: kill -15 <pid> (match CODEX_HOME)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (match CODEX_HOME)"
         },
         "force": {
-          "principle": "Match processes by --user-data-dir and terminate them forcibly (SIGKILL / taskkill /F), then relaunch the target instance.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (match --user-data-dir)"
+          "principle": "Match processes by CODEX_HOME and terminate them forcibly (SIGKILL / taskkill /F), then relaunch the target instance.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (match CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Failed to update OpenCode toggle: {{error}}",
     "columns": {
       "hourly": "5-hour quota",
-      "weekly": "Weekly quota",
-      "accountId": "ChatGPT Account ID",
-      "workspace": "Workspace",
-      "loginProvider": "Login Provider",
-      "codeReview": "Code Review",
-      "accountIdCompact": "Account ID"
+      "weekly": "Weekly quota"
     },
     "filterTags": "Filter Tags",
     "filterTagsCount": "Tags",
     "noAvailableTags": "No tags available",
     "clearFilter": "Clear Filter",
-    "editTags": "Edit Tags",
-    "account": {
-      "signInCompact": "Signed in with {{provider}}"
-    }
+    "editTags": "Edit Tags"
   },
   "githubCopilot": {
     "title": "GitHub Copilot Account Management",

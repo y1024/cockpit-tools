@@ -1035,8 +1035,7 @@
       "comingSoon": "Мульти-инстанс скоро",
       "comingSoonDesc": "Запускайте несколько экземпляров Codex.app с разными аккаунтами одновременно.",
       "unsupported": {
-        "desc": "Многоэкземплярный режим Codex временно не поддерживается, потому что официальный desktop-пакет использует блокировку одного экземпляра в главном процессе. Сейчас поддерживаются только запуск, закрытие и перезапуск одного экземпляра (сначала закрыть, затем открыть снова).",
-        "title": "Многоэкземплярный режим недоступен"
+        "desc": "Мульти-инстанс Codex в настоящее время доступен только на macOS."
       },
       "quota": {
         "hourly": "5ч",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (все процессы Codex)"
         },
         "force": {
-          "principle": "Идентифицирует процессы по --user-data-dir и принудительно завершает их (SIGKILL / taskkill /F), затем запускает целевой инстанс.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (совпадение по --user-data-dir)"
+          "principle": "Идентифицирует процессы по CODEX_HOME и принудительно завершает их (SIGKILL / taskkill /F), затем запускает целевой инстанс.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (совпадение по CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Не удалось обновить переключатель OpenCode: {{error}}",
     "columns": {
       "hourly": "Квота 5ч",
-      "weekly": "Квота нед",
-      "accountId": "ID аккаунта ChatGPT",
-      "workspace": "Рабочее пространство",
-      "loginProvider": "Способ входа",
-      "codeReview": "Лимит проверки кода",
-      "accountIdCompact": "ID аккаунта ChatGPT"
+      "weekly": "Квота нед"
     },
     "filterTags": "Фильтр по тегам",
     "filterTagsCount": "Теги",
     "noAvailableTags": "Нет доступных тегов",
     "clearFilter": "Очистить фильтр",
-    "editTags": "Редактировать теги",
-    "account": {
-      "signInCompact": "Выполнен вход с помощью {{provider}}"
-    }
+    "editTags": "Редактировать теги"
   },
   "githubCopilot": {
     "title": "Управление аккаунтами GitHub Copilot",

@@ -1035,8 +1035,7 @@
       "comingSoon": "Multi-Instancja Wkrótce",
       "comingSoonDesc": "Uruchamiaj wiele instancji Codex.app z różnymi kontami jednocześnie.",
       "unsupported": {
-        "desc": "Tryb wielu instancji Codex jest tymczasowo nieobsługiwany, ponieważ oficjalny pakiet desktopowy wymusza blokadę pojedynczej instancji w procesie głównym. Obecnie obsługiwane jest tylko uruchamianie, zamykanie i ponowne uruchamianie jednej instancji (najpierw zamknij, potem otwórz ponownie).",
-        "title": "Tryb wielu instancji niedostępny"
+        "desc": "Multi-instancja Codex jest obecnie dostępna tylko na macOS."
       },
       "quota": {
         "hourly": "5 godz",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (wszystkie procesy Codex)"
         },
         "force": {
-          "principle": "Identyfikuje procesy poprzez --user-data-dir i zamyka je siłą (SIGKILL / taskkill /F), a następnie uruchamia instancję docelową.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=__MASKA_0__\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (dopasowanie do --user-data-dir)"
+          "principle": "Identyfikuje procesy poprzez CODEX_HOME i zamyka je siłą (SIGKILL / taskkill /F), a następnie uruchamia instancję docelową.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=__MASKA_0__\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (dopasowanie do CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Nie udało się zaktualizować przełącznika OpenCode: {{error}}",
     "columns": {
       "hourly": "Limit 5h",
-      "weekly": "Limit tyg.",
-      "accountId": "ID konta ChatGPT",
-      "workspace": "Obszar roboczy",
-      "loginProvider": "Metoda logowania",
-      "codeReview": "Limit przeglądu kodu",
-      "accountIdCompact": "ID konta ChatGPT"
+      "weekly": "Limit tyg."
     },
     "filterTags": "Filtruj tagi",
     "filterTagsCount": "Tagi",
     "noAvailableTags": "Brak dostępnych tagów",
     "clearFilter": "Wyczyść filtr",
-    "editTags": "Edytuj tagi",
-    "account": {
-      "signInCompact": "Zalogowano się za pomocą {{provider}}"
-    }
+    "editTags": "Edytuj tagi"
   },
   "githubCopilot": {
     "title": "Zarządzanie kontami GitHub Copilot",

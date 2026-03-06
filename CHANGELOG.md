@@ -7,6 +7,20 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.9.17] - 2026-03-06
+
+### Changed
+- **Windows Codex path reset detection is now Store-first and drive-aware**: Path reset now scans `C:\Program Files\WindowsApps\OpenAI.Codex_*\app\Codex.exe` and `<Drive>:\WindowsApps\OpenAI.Codex_*\app\Codex.exe` across drives, selects the highest package version, and falls back to Appx `InstallLocation\app\Codex.exe` when direct scan misses.
+- **Startup auto app-path probing was removed**: The app no longer runs automatic app-path detection during startup; path detection now runs on explicit reset or launch-missing-path flows.
+- **Announcement delivery remains non-intrusive**: New announcements continue to use unread badge indication and no longer force-open the detail modal.
+
+### Fixed
+- **Windows Codex default launch now works with configured path**: Added Windows default-instance launch flow for Codex so launch/switch-triggered start can execute when `codex_app_path` is configured.
+- **Instance actions no longer stay disabled after stop**: After stopping an instance, row actions are re-enabled in-place without requiring page navigation refresh.
+- **Restored macOS Codex multi-instance behavior after 0.9.16 regression**: Reverted the 0.9.16 Codex single-instance restriction impact on macOS, restoring multi-instance launch/control flow to the v0.9.15 behavior baseline.
+- **Restored Codex PID recognition on macOS instance rows**: Brought back instance-home-based process matching so running Codex instances can be identified and displayed with PID correctly.
+
+---
 ## [0.9.16] - 2026-03-05
 
 ### Added

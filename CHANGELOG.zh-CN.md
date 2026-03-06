@@ -7,6 +7,20 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.9.17] - 2026-03-06
+
+### 变更
+- **Windows 下 Codex 路径重置探测改为“商店包优先 + 全盘符扫描”**：重置时优先扫描 `C:\Program Files\WindowsApps\OpenAI.Codex_*\app\Codex.exe` 与 `<盘符>:\WindowsApps\OpenAI.Codex_*\app\Codex.exe`，按最高版本包优先命中；若未命中再回退到 Appx `InstallLocation\app\Codex.exe`。
+- **移除应用启动时自动路径探测**：应用不再在启动阶段自动执行路径探测；路径探测改为仅在用户主动重置或启动链路触发缺路径时执行。
+- **公告触达继续保持非打扰模式**：新公告仍仅通过未读红点提示，不再强制弹出详情弹窗。
+
+### 修复
+- **修复 Windows 下 Codex 默认启动不可用问题**：补齐 Windows 默认实例启动链路，配置 `codex_app_path` 后可正常执行启动与切号后拉起。
+- **修复实例停止后操作按钮仍灰置的问题**：实例关闭后，行内操作按钮会在当前页即时恢复可用，无需切页再返回。
+- **修复 0.9.16 引入的 macOS Codex 多开回归**：回退 0.9.16 对 Codex 单实例限制在 macOS 上带来的影响，恢复到 v0.9.15 的多开启动与控制语义。
+- **修复 macOS 下 Codex 实例 PID 识别缺失**：恢复基于实例目录的进程匹配链路，使运行中的 Codex 实例可正确识别并展示 PID。
+
+---
 ## [0.9.16] - 2026-03-05
 
 ### 新增

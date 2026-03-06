@@ -72,13 +72,7 @@ pub fn update_default_settings(
 }
 
 pub fn get_default_codex_home() -> Result<PathBuf, String> {
-    #[cfg(any(target_os = "macos", target_os = "windows"))]
-    {
-        return Ok(modules::codex_account::get_codex_home());
-    }
-
-    #[allow(unreachable_code)]
-    Err("Codex 多开实例仅支持 macOS 和 Windows".to_string())
+    Ok(modules::codex_account::get_codex_home())
 }
 
 pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
@@ -88,15 +82,8 @@ pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
         return Ok(home.join(".antigravity_cockpit/instances/codex"));
     }
 
-    #[cfg(target_os = "windows")]
-    {
-        let appdata =
-            std::env::var("APPDATA").map_err(|_| "无法获取 APPDATA 环境变量".to_string())?;
-        return Ok(PathBuf::from(appdata).join(".antigravity_cockpit\\instances\\codex"));
-    }
-
     #[allow(unreachable_code)]
-    Err("Codex 多开实例仅支持 macOS 和 Windows".to_string())
+    Err("Codex 多开实例仅支持 macOS".to_string())
 }
 
 pub fn get_instance_defaults() -> Result<InstanceDefaults, String> {

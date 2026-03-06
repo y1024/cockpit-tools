@@ -1035,8 +1035,7 @@
       "comingSoon": "Multi-Instance Bientôt Disponible",
       "comingSoonDesc": "Exécutez plusieurs instances Codex.app avec différents comptes simultanément.",
       "unsupported": {
-        "desc": "Le mode multi-instance de Codex est temporairement indisponible, car le package desktop officiel applique un verrou d’instance unique dans le processus principal. Seuls le démarrage, l’arrêt et le redémarrage d’une instance unique sont pris en charge (fermer puis rouvrir).",
-        "title": "Multi-instance indisponible"
+        "desc": "Le multi-instance Codex n'est actuellement disponible que sur macOS."
       },
       "quota": {
         "hourly": "5h",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows : taskkill /F /PID <pid> (tous les processus Codex)"
         },
         "force": {
-          "principle": "Identifie les processus par --user-data-dir et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
-          "commandMac": "macOS : pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows : taskkill /F /PID <pid> (correspondance --user-data-dir)"
+          "principle": "Identifie les processus par CODEX_HOME et les arrête de force (SIGKILL / taskkill /F), puis lance l'instance cible.",
+          "commandMac": "macOS : pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows : taskkill /F /PID <pid> (correspondance CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Échec de la mise à jour de l'interrupteur OpenCode : {{error}}",
     "columns": {
       "hourly": "Quota 5h",
-      "weekly": "Quota hebdo",
-      "accountId": "ID de compte ChatGPT",
-      "workspace": "Espace de travail",
-      "loginProvider": "Méthode de connexion",
-      "codeReview": "Quota de revue de code",
-      "accountIdCompact": "ID de compte ChatGPT"
+      "weekly": "Quota hebdo"
     },
     "filterTags": "Filtrer les tags",
     "filterTagsCount": "Balises",
     "noAvailableTags": "Aucun tag disponible",
     "clearFilter": "Effacer le filtre",
-    "editTags": "Modifier les tags",
-    "account": {
-      "signInCompact": "Connecté avec {{provider}}"
-    }
+    "editTags": "Modifier les tags"
   },
   "githubCopilot": {
     "title": "Gestion des comptes GitHub Copilot",

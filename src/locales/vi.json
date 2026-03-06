@@ -1035,8 +1035,7 @@
       "comingSoon": "Đa Phiên Bản Sắp Ra Mắt",
       "comingSoonDesc": "Chạy nhiều phiên bản Codex.app với các tài khoản khác nhau cùng lúc.",
       "unsupported": {
-        "desc": "Tính năng đa phiên bản của Codex hiện tạm thời chưa được hỗ trợ vì gói desktop chính thức áp dụng khóa một phiên bản trong tiến trình chính. Hiện chỉ hỗ trợ khởi động, đóng và khởi động lại một phiên bản duy nhất (đóng rồi mở lại).",
-        "title": "Đa phiên bản không khả dụng"
+        "desc": "Đa phiên bản Codex hiện chỉ khả dụng trên macOS."
       },
       "quota": {
         "hourly": "5 giờ",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (tất cả tiến trình Codex)"
         },
         "force": {
-          "principle": "Xác định các tiến trình qua --user-data-dir và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (khớp với --user-data-dir)"
+          "principle": "Xác định các tiến trình qua CODEX_HOME và buộc đóng chúng (SIGKILL / taskkill /F), sau đó bắt đầu phiên bản đích.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (khớp với CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Không thể cập nhật công tắc OpenCode: {{error}}",
     "columns": {
       "hourly": "Hạn mức 5h",
-      "weekly": "Hạn mức tuần",
-      "accountId": "ID tài khoản ChatGPT",
-      "workspace": "Không gian làm việc",
-      "loginProvider": "Phương thức đăng nhập",
-      "codeReview": "Hạn mức rà soát mã",
-      "accountIdCompact": "ID tài khoản ChatGPT"
+      "weekly": "Hạn mức tuần"
     },
     "filterTags": "Lọc thẻ",
     "filterTagsCount": "Thẻ",
     "noAvailableTags": "Không có thẻ nào",
     "clearFilter": "Xóa bộ lọc",
-    "editTags": "Chỉnh sửa thẻ",
-    "account": {
-      "signInCompact": "Đã đăng nhập bằng {{provider}}"
-    }
+    "editTags": "Chỉnh sửa thẻ"
   },
   "githubCopilot": {
     "title": "Quản lý tài khoản GitHub Copilot",

@@ -1035,8 +1035,7 @@
       "comingSoon": "Funkce více instancí již brzy",
       "comingSoonDesc": "Spusťte více instancí Codex.app s různými účty současně, zůstaňte naladěni.",
       "unsupported": {
-        "desc": "Více instancí Codex je dočasně nepodporováno, protože oficiální desktopový balíček v hlavním procesu vynucuje zámek jedné instance. Aktuálně je podporováno pouze spuštění, ukončení a restart jedné instance (nejdřív zavřít, potom znovu otevřít).",
-        "title": "Více instancí není k dispozici"
+        "desc": "Více instancí Codex je aktuálně dostupné pouze na macOS."
       },
       "quota": {
         "hourly": "5 hodin",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (všechny procesy Codex)"
         },
         "force": {
-          "principle": "Identifikuje procesy pomocí --user-data-dir a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (shoda s --user-data-dir)"
+          "principle": "Identifikuje procesy pomocí CODEX_HOME a vynutí jejich ukončení (SIGKILL / taskkill /F), poté spustí cílovou instanci.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (shoda s CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Nepodařilo se aktualizovat přepínač OpenCode: {{error}}",
     "columns": {
       "hourly": "Kvóta 5h",
-      "weekly": "Kvóta týdn.",
-      "accountId": "ID účtu ChatGPT",
-      "workspace": "Pracovní prostor",
-      "loginProvider": "Způsob přihlášení",
-      "codeReview": "Limit revize kódu",
-      "accountIdCompact": "ID účtu ChatGPT"
+      "weekly": "Kvóta týdn."
     },
     "filterTags": "Filtrovat štítky",
     "filterTagsCount": "Štítky",
     "noAvailableTags": "Žádné dostupné štítky",
     "clearFilter": "Vymazat filtr",
-    "editTags": "Upravit štítky",
-    "account": {
-      "signInCompact": "Přihlášen pomocí {{provider}}"
-    }
+    "editTags": "Upravit štítky"
   },
   "githubCopilot": {
     "title": "Správa účtů GitHub Copilot",

@@ -1035,8 +1035,7 @@
       "comingSoon": "멀티 인스턴스 곧 출시",
       "comingSoonDesc": "다른 계정으로 여러 Codex.app 인스턴스를 동시에 실행할 수 있습니다.",
       "unsupported": {
-        "desc": "Codex 다중 인스턴스는 공식 데스크톱 패키지의 메인 프로세스에 단일 인스턴스 잠금이 있어 현재 지원되지 않습니다. 현재는 단일 인스턴스의 시작, 종료, 재시작(먼저 종료 후 다시 열기)만 지원됩니다.",
-        "title": "다중 인스턴스 사용 불가"
+        "desc": "Codex 멀티 인스턴스는 현재 macOS에서만 사용 가능합니다."
       },
       "quota": {
         "hourly": "5시간",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (모든 Codex 프로세스)"
         },
         "force": {
-          "principle": "--user-data-dir으로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir 일치 항목)"
+          "principle": "CODEX_HOME으로 프로세스를 찾아 강제 종료(SIGKILL / taskkill /F)한 다음, 대상 인스턴스를 다시 시작합니다.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME 일치 항목)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "OpenCode 스위치 업데이트 실패: {{error}}",
     "columns": {
       "hourly": "5시간 쿼터",
-      "weekly": "주간 쿼터",
-      "accountId": "ChatGPT 계정 ID",
-      "workspace": "워크스페이스",
-      "loginProvider": "로그인 방식",
-      "codeReview": "코드 리뷰 할당량",
-      "accountIdCompact": "계정 ID"
+      "weekly": "주간 쿼터"
     },
     "filterTags": "태그 필터",
     "filterTagsCount": "태그",
     "noAvailableTags": "사용 가능한 태그가 없습니다",
     "clearFilter": "필터 지우기",
-    "editTags": "태그 편집",
-    "account": {
-      "signInCompact": "{{provider}}(으)로 로그인됨"
-    }
+    "editTags": "태그 편집"
   },
   "githubCopilot": {
     "title": "GitHub Copilot 계정 관리",

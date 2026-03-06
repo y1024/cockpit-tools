@@ -1035,8 +1035,7 @@
       "comingSoon": "Multi-Instanz kommt bald",
       "comingSoonDesc": "Führen Sie mehrere Codex.app-Instanzen mit verschiedenen Konten gleichzeitig aus.",
       "unsupported": {
-        "desc": "Codex-Mehrfachinstanzen werden vorerst nicht unterstützt, da das offizielle Desktop-Paket im Hauptprozess eine Einzelinstanz-Sperre erzwingt. Aktuell werden nur Start, Beenden und Neustart einer einzelnen Instanz unterstützt (zuerst schließen, dann erneut öffnen).",
-        "title": "Mehrfachinstanzen nicht verfügbar"
+        "desc": "Codex Multi-Instanz ist derzeit nur auf macOS verfügbar."
       },
       "quota": {
         "hourly": "5 Std.",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (alle Codex-Prozesse)"
         },
         "force": {
-          "principle": "Sucht Prozesse anhand von --user-data-dir und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit --user-data-dir)"
+          "principle": "Sucht Prozesse anhand von CODEX_HOME und beendet sie gewaltsam (SIGKILL / taskkill /F), startet dann die Zielinstanz.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (Übereinstimmung mit CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "OpenCode-Schalter konnte nicht aktualisiert werden: {{error}}",
     "columns": {
       "hourly": "5-Std-Quote",
-      "weekly": "Wochenquote",
-      "accountId": "ChatGPT-Konto-ID",
-      "workspace": "Arbeitsbereich",
-      "loginProvider": "Anmeldemethode",
-      "codeReview": "Code-Review-Kontingent",
-      "accountIdCompact": "-Konto-ID"
+      "weekly": "Wochenquote"
     },
     "filterTags": "Tags filtern",
     "filterTagsCount": "Schlagworte",
     "noAvailableTags": "Keine verfügbaren Tags",
     "clearFilter": "Filter löschen",
-    "editTags": "Tags bearbeiten",
-    "account": {
-      "signInCompact": "Angemeldet mit {{provider}}"
-    }
+    "editTags": "Tags bearbeiten"
   },
   "githubCopilot": {
     "title": "GitHub Copilot-Konten verwalten",

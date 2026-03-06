@@ -187,7 +187,7 @@ function isAllowedEnglishReuse(key, value) {
   if (/restartStrategy\.force\.command(Mac|Win)$/.test(key)) {
     return true;
   }
-  if (/pkill|--user-data-dir/.test(normalized)) {
+  if (/pkill|CODEX_HOME|--user-data-dir/.test(normalized)) {
     return true;
   }
 

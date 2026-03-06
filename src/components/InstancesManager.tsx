@@ -115,6 +115,7 @@ export function InstancesManager<TAccount extends AccountLike>({
   const [pathAuto, setPathAuto] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [startingInstanceIds, setStartingInstanceIds] = useState<string[]>([]);
+  const [stoppingInstanceIds, setStoppingInstanceIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<InstanceSortField>(() => {
     const keys = resolveInstanceSortStorageKeys(appType);
@@ -129,6 +130,7 @@ export function InstancesManager<TAccount extends AccountLike>({
   const [privacyModeEnabled, setPrivacyModeEnabled] = useState<boolean>(() => isPrivacyModeEnabledByDefault());
 
   const startingInstanceIdSet = useMemo(() => new Set(startingInstanceIds), [startingInstanceIds]);
+  const stoppingInstanceIdSet = useMemo(() => new Set(stoppingInstanceIds), [stoppingInstanceIds]);
 
   const markInstanceStarting = useCallback((instanceId: string) => {
     setStartingInstanceIds((prev) => (prev.includes(instanceId) ? prev : [...prev, instanceId]));
@@ -140,6 +142,14 @@ export function InstancesManager<TAccount extends AccountLike>({
 
   const replaceStartingInstances = useCallback((instanceIds: string[]) => {
     setStartingInstanceIds(Array.from(new Set(instanceIds)));
+  }, []);
+
+  const markInstanceStopping = useCallback((instanceId: string) => {
+    setStoppingInstanceIds((prev) => (prev.includes(instanceId) ? prev : [...prev, instanceId]));
+  }, []);
+
+  const unmarkInstanceStopping = useCallback((instanceId: string) => {
+    setStoppingInstanceIds((prev) => prev.filter((id) => id !== instanceId));
   }, []);
 
   const togglePrivacyMode = useCallback(() => {
@@ -187,6 +197,15 @@ export function InstancesManager<TAccount extends AccountLike>({
       setMessage({ text: String(error), tone: 'error' });
     }
   }, [error]);
+
+  useEffect(() => {
+    if (stoppingInstanceIds.length === 0) return;
+    const runningIds = new Set(instances.filter((item) => item.running).map((item) => item.id));
+    setStoppingInstanceIds((prev) => {
+      const next = prev.filter((id) => runningIds.has(id));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [instances, stoppingInstanceIds.length]);
 
   useEffect(() => {
     if (!formError || !showModal) return;
@@ -530,14 +549,14 @@ export function InstancesManager<TAccount extends AccountLike>({
       // ignore dialog errors
     }
 
-    setActionLoading(instance.id);
+    markInstanceStopping(instance.id);
     try {
       await stopInstance(instance.id);
       setMessage({ text: t('instances.messages.stopped', '实例已关闭') });
     } catch (e) {
       setMessage({ text: String(e), tone: 'error' });
     } finally {
-      setActionLoading(null);
+      unmarkInstanceStopping(instance.id);
     }
   };
 
@@ -1275,7 +1294,8 @@ export function InstancesManager<TAccount extends AccountLike>({
             const { missing: accountMissing } = resolveAccount(instance);
             const accountDisabledByInit = !instance.isDefault && instance.initialized === false;
             const isInstanceStarting = startingInstanceIdSet.has(instance.id);
-            const isInstanceBusy = actionLoading === instance.id || isInstanceStarting;
+            const isInstanceStopping = stoppingInstanceIdSet.has(instance.id);
+            const isInstanceBusy = actionLoading === instance.id || isInstanceStarting || isInstanceStopping;
             return (
               <div
                 className={`instance-item ${openInlineMenuId === instance.id ? 'dropdown-open' : ''}`}

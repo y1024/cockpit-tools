@@ -1035,8 +1035,7 @@
       "comingSoon": "Multi-Instância Em Breve",
       "comingSoonDesc": "Execute várias instâncias do Codex.app com diferentes contas simultaneamente.",
       "unsupported": {
-        "desc": "O modo multi-instância do Codex está temporariamente indisponível porque o pacote oficial de desktop impõe um bloqueio de instância única no processo principal. No momento, só há suporte para iniciar, fechar e reiniciar uma única instância (fechar e abrir novamente).",
-        "title": "Multi-instância indisponível"
+        "desc": "Multi-instância Codex está disponível atualmente apenas no macOS."
       },
       "quota": {
         "hourly": "5h",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (todos os processos Codex)"
         },
         "force": {
-          "principle": "Identifica processos via --user-data-dir e os fecha forçadamente (SIGKILL / taskkill /F), em seguida inicia a instância de destino.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (correspondência com --user-data-dir)"
+          "principle": "Identifica processos via CODEX_HOME e os fecha forçadamente (SIGKILL / taskkill /F), em seguida inicia a instância de destino.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (correspondência com CODEX_HOME)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "Falha ao atualizar o alternador do OpenCode: {{error}}",
     "columns": {
       "hourly": "Cota 5h",
-      "weekly": "Cota sem.",
-      "accountId": "ID da conta ChatGPT",
-      "workspace": "Espaço de trabalho",
-      "loginProvider": "Método de login",
-      "codeReview": "Cota de revisão de código",
-      "accountIdCompact": "ID da conta ChatGPT"
+      "weekly": "Cota sem."
     },
     "filterTags": "Filtrar tags",
     "filterTagsCount": "Etiquetas",
     "noAvailableTags": "Nenhuma tag disponível",
     "clearFilter": "Limpar filtro",
-    "editTags": "Editar tags",
-    "account": {
-      "signInCompact": "Conectado com {{provider}}"
-    }
+    "editTags": "Editar tags"
   },
   "githubCopilot": {
     "title": "Gerenciamento de contas do GitHub Copilot",

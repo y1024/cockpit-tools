@@ -1035,8 +1035,7 @@
       "comingSoon": "Çoklu Örnek Yakında",
       "comingSoonDesc": "Farklı hesaplarla birden fazla Codex.app örneğini aynı anda çalıştırın.",
       "unsupported": {
-        "desc": "Codex çoklu örnek desteği, resmi masaüstü paketinin ana süreçte tek örnek kilidi uygulaması nedeniyle şu anda geçici olarak desteklenmiyor. Şu anda yalnızca tek örneği başlatma, kapatma ve yeniden başlatma (önce kapatıp sonra yeniden açma) desteklenir.",
-        "title": "Çoklu örnek kullanılamıyor"
+        "desc": "Codex çoklu örnek şu anda yalnızca macOS'ta kullanılabilir."
       },
       "quota": {
         "hourly": "5sa",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid> (tüm Codex işlemleri)"
         },
         "force": {
-          "principle": "İşlemleri --user-data-dir aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
-          "commandMac": "macOS: pkill -9 -f \"--user-data-dir=<dir>\"",
-          "commandWin": "Windows: taskkill /F /PID <pid> (--user-data-dir ile eşleşen)"
+          "principle": "İşlemleri CODEX_HOME aracılığıyla tanımlar ve zorla kapatır (SIGKILL / taskkill /F), ardından hedef oturumu başlatır.",
+          "commandMac": "macOS: pkill -9 -f \"CODEX_HOME=<dir>\"",
+          "commandWin": "Windows: taskkill /F /PID <pid> (CODEX_HOME ile eşleşen)"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "OpenCode anahtarı güncellenemedi: {{error}}",
     "columns": {
       "hourly": "5 saatlik kota",
-      "weekly": "Haftalık kota",
-      "accountId": "ChatGPT Hesap Kimliği",
-      "workspace": "Çalışma alanı",
-      "loginProvider": "Giriş yöntemi",
-      "codeReview": "Kod inceleme kotası",
-      "accountIdCompact": "Hesap Kimliği"
+      "weekly": "Haftalık kota"
     },
     "filterTags": "Etiketleri filtrele",
     "filterTagsCount": "Etiketler",
     "noAvailableTags": "Kullanılabilir etiket yok",
     "clearFilter": "Filtreyi temizle",
-    "editTags": "Etiketleri düzenle",
-    "account": {
-      "signInCompact": "{{provider}} ile oturum açıldı"
-    }
+    "editTags": "Etiketleri düzenle"
   },
   "githubCopilot": {
     "title": "GitHub Copilot Hesap Yönetimi",

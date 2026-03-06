@@ -1035,8 +1035,7 @@
       "comingSoon": "多開實例功能即將上線",
       "comingSoonDesc": "支援以不同帳號同時運行多個 Codex.app 實例，敬請期待。",
       "unsupported": {
-        "desc": "Codex 多開實例目前暫不支援：官方桌面版主程序存在單實例鎖限制。當前僅支援單實例啟動、關閉與重啟（先關閉再重新開啟）。",
-        "title": "暫不支援多開實例"
+        "desc": "Codex 多開實例僅支援 macOS，請在 macOS 上使用。"
       },
       "quota": {
         "hourly": "5小時",
@@ -1049,9 +1048,9 @@
           "commandWin": "Windows: taskkill /F /PID <pid>（全體 Codex）"
         },
         "force": {
-          "principle": "通過 --user-data-dir 識別進程並強制關閉（SIGKILL / taskkill /F），隨後啟動目標實例。",
-          "commandMac": "macOS：pkill -9 -f“--user-data-dir=<dir>”",
-          "commandWin": "Windows: taskkill /F /PID <pid>（匹配 --user-data-dir）"
+          "principle": "通過 CODEX_HOME 識別進程並強制關閉（SIGKILL / taskkill /F），隨後啟動目標實例。",
+          "commandMac": "macOS：pkill -9 -f“CODEX_HOME=<dir>”",
+          "commandWin": "Windows: taskkill /F /PID <pid>（匹配 CODEX_HOME）"
         }
       }
     },
@@ -1136,21 +1135,13 @@
     "opencodeSwitchFailed": "更新 OpenCode 開關失敗：{{error}}",
     "columns": {
       "hourly": "5小時配額",
-      "weekly": "週配額",
-      "accountId": "ChatGPT 帳號 ID",
-      "workspace": "工作空間",
-      "loginProvider": "登入方式",
-      "codeReview": "程式碼審查配額",
-      "accountIdCompact": "帳號ID"
+      "weekly": "週配額"
     },
     "filterTags": "標籤篩選",
     "filterTagsCount": "標籤",
     "noAvailableTags": "目前沒有可用標籤",
     "clearFilter": "清除篩選",
-    "editTags": "編輯標籤",
-    "account": {
-      "signInCompact": "{{provider}} 登入"
-    }
+    "editTags": "編輯標籤"
   },
   "githubCopilot": {
     "title": "GitHub Copilot 帳號管理",
