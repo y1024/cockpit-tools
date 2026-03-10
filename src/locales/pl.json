@@ -2042,7 +2042,8 @@
         "cookieRequired": "Najpierw podaj nagłówek Cookie lub cURL.",
         "accountMismatch": "Cookie limitu należy do innego konta (bieżący UIN: {{expectedUin}}, zwrócony UIN: {{resourceUin}}, payerUin: {{payerUin}}). Przełącz się na poprawne konto i skopiuj cookie ponownie.",
         "statusInvalid": "Nieprawidłowy format Status. Użyj liczb oddzielonych przecinkami.",
-        "pageInvalid": "Nieprawidłowe wartości stronicowania. Wprowadź liczby większe od 0."
+        "pageInvalid": "Nieprawidłowe wartości stronicowania. Wprowadź liczby większe od 0.",
+        "fullCurlRequired": "Obsługiwane jest tylko pełne polecenie cURL. W Network dla get-user-resource użyj „Copy as cURL” i wklej bez zmian."
       }
     },
     "extraCredit": {

@@ -2042,7 +2042,8 @@
         "cookieRequired": "Сначала укажите заголовок Cookie или cURL.",
         "accountMismatch": "Cookie квоты принадлежит другому аккаунту (текущий UIN: {{expectedUin}}, возвращенный UIN: {{resourceUin}}, UIN плательщика: {{payerUin}}). Переключитесь на нужный аккаунт и скопируйте cookie еще раз.",
         "statusInvalid": "Неверный формат Status. Используйте числа, разделенные запятыми.",
-        "pageInvalid": "Неверные параметры пагинации. Введите числа больше 0."
+        "pageInvalid": "Неверные параметры пагинации. Введите числа больше 0.",
+        "fullCurlRequired": "Поддерживается только полный cURL-запрос. В Network для get-user-resource выберите «Copy as cURL» и вставьте без изменений."
       }
     },
     "extraCredit": {

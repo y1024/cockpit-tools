@@ -2042,7 +2042,8 @@
         "cookieRequired": "Bitte zuerst einen Cookie-Header oder cURL angeben.",
         "accountMismatch": "Das Kontingent-Cookie gehört zu einem anderen Konto (aktuelle UIN: {{expectedUin}}, zurückgegebene UIN: {{resourceUin}}, payerUin: {{payerUin}}). Bitte wechseln Sie zum richtigen Konto und kopieren Sie das Cookie erneut.",
         "statusInvalid": "Ungültiges Status-Format. Verwenden Sie kommagetrennte Zahlen.",
-        "pageInvalid": "Ungültige Paginierungswerte. Bitte Zahlen größer als 0 eingeben."
+        "pageInvalid": "Ungültige Paginierungswerte. Bitte Zahlen größer als 0 eingeben.",
+        "fullCurlRequired": "Es wird nur ein vollständiger cURL-Befehl unterstützt. Bitte bei get-user-resource im Network „Copy as cURL“ verwenden und unverändert einfügen."
       }
     },
     "extraCredit": {

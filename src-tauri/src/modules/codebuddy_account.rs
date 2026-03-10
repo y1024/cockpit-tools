@@ -215,6 +215,373 @@ fn split_shell_like_args(raw: &str) -> Vec<String> {
     args
 }
 
+#[derive(Debug, Clone)]
+struct ParsedCodebuddyQuotaCurlRequest {
+    request_url: String,
+    request_method: String,
+    request_headers_for_replay: Vec<(String, String)>,
+    request_headers_snapshot: Option<CodebuddyQuotaRequestHeaders>,
+    request_body: Option<String>,
+    normalized_cookie_header: String,
+    user_agent: Option<String>,
+    product_code: Option<String>,
+    status: Option<Vec<i32>>,
+    package_end_time_range_begin: Option<String>,
+    package_end_time_range_end: Option<String>,
+    page_number: Option<i32>,
+    page_size: Option<i32>,
+}
+
+fn normalize_windows_curl_command(raw: &str) -> String {
+    let mut out = String::new();
+    let mut chars = raw.chars().peekable();
+    while let Some(ch) = chars.next() {
+        if ch != '^' {
+            out.push(ch);
+            continue;
+        }
+        match chars.peek().copied() {
+            Some('\r') => {
+                chars.next();
+                if matches!(chars.peek(), Some('\n')) {
+                    chars.next();
+                }
+                if !out.ends_with(' ') {
+                    out.push(' ');
+                }
+            }
+            Some('\n') => {
+                chars.next();
+                if !out.ends_with(' ') {
+                    out.push(' ');
+                }
+            }
+            Some(next) => {
+                out.push(next);
+                chars.next();
+            }
+            None => {}
+        }
+    }
+    out
+}
+
+fn canonicalize_curl_command(raw: &str) -> String {
+    normalize_windows_curl_command(raw)
+        .replace("\\\r\n", " ")
+        .replace("\\\n", " ")
+        .replace("\\\r", " ")
+}
+
+fn is_curl_command(raw: &str) -> bool {
+    let canonical = canonicalize_curl_command(raw);
+    let first = canonical
+        .split_whitespace()
+        .next()
+        .unwrap_or("")
+        .to_ascii_lowercase();
+    first == "curl" || first == "curl.exe"
+}
+
+fn parse_header_kv(raw: &str) -> Option<(String, String)> {
+    let mut parts = raw.splitn(2, ':');
+    let key = parts.next()?.trim();
+    let value = parts.next()?.trim();
+    if key.is_empty() || value.is_empty() {
+        return None;
+    }
+    Some((key.to_string(), value.to_string()))
+}
+
+fn pick_header_value(headers: &[(String, String)], name: &str) -> Option<String> {
+    headers
+        .iter()
+        .rev()
+        .find(|(key, _)| key.eq_ignore_ascii_case(name))
+        .and_then(|(_, value)| normalize_non_empty(Some(value)))
+}
+
+fn parse_body_string_field(data: &Value, keys: &[&str]) -> Option<String> {
+    keys.iter().find_map(|key| {
+        data.get(key).and_then(|value| match value {
+            Value::String(s) => normalize_non_empty(Some(s)),
+            Value::Number(n) => Some(n.to_string()),
+            _ => None,
+        })
+    })
+}
+
+fn parse_body_i32_field(data: &Value, keys: &[&str]) -> Option<i32> {
+    keys.iter().find_map(|key| {
+        data.get(key).and_then(|value| match value {
+            Value::Number(n) => n.as_i64().and_then(|v| i32::try_from(v).ok()),
+            Value::String(s) => s.trim().parse::<i32>().ok(),
+            _ => None,
+        })
+    })
+}
+
+fn parse_body_status_field(data: &Value, keys: &[&str]) -> Option<Vec<i32>> {
+    keys.iter().find_map(|key| {
+        data.get(key).and_then(|value| {
+            let arr = value.as_array()?;
+            let mut parsed = Vec::new();
+            for item in arr {
+                let parsed_item = match item {
+                    Value::Number(n) => n.as_i64().and_then(|v| i32::try_from(v).ok()),
+                    Value::String(s) => s.trim().parse::<i32>().ok(),
+                    _ => None,
+                };
+                if let Some(v) = parsed_item {
+                    parsed.push(v);
+                }
+            }
+            if parsed.is_empty() {
+                None
+            } else {
+                Some(parsed)
+            }
+        })
+    })
+}
+
+fn parse_codebuddy_quota_curl_request(raw: &str) -> Result<ParsedCodebuddyQuotaCurlRequest, String> {
+    if !is_curl_command(raw) {
+        return Err(
+            "仅支持完整 cURL 命令。请在浏览器 Network 中对 get-user-resource 使用“Copy as cURL”后原样粘贴。"
+                .to_string(),
+        );
+    }
+
+    let canonical = canonicalize_curl_command(raw);
+    let tokens = split_shell_like_args(&canonical);
+    if tokens.is_empty() {
+        return Err("cURL 命令为空".to_string());
+    }
+
+    let first = tokens
+        .first()
+        .map(|v| v.to_ascii_lowercase())
+        .unwrap_or_default();
+    if first != "curl" && first != "curl.exe" {
+        return Err("请输入以 curl 开头的完整命令".to_string());
+    }
+
+    let mut url: Option<String> = None;
+    let mut method: Option<String> = None;
+    let mut headers: Vec<(String, String)> = Vec::new();
+    let mut cookie_from_arg: Option<String> = None;
+    let mut data_parts: Vec<String> = Vec::new();
+    let mut idx = 1usize;
+
+    while idx < tokens.len() {
+        let token = tokens[idx].trim().to_string();
+        let lower = token.to_ascii_lowercase();
+
+        if lower == "-x" || lower == "--request" {
+            let value = tokens
+                .get(idx + 1)
+                .and_then(|v| normalize_non_empty(Some(v)))
+                .ok_or_else(|| "cURL 参数 --request 缺少值".to_string())?;
+            method = Some(value.to_ascii_uppercase());
+            idx += 2;
+            continue;
+        }
+
+        if let Some(value) = token.strip_prefix("--request=") {
+            let parsed = normalize_non_empty(Some(value))
+                .ok_or_else(|| "cURL 参数 --request 缺少值".to_string())?;
+            method = Some(parsed.to_ascii_uppercase());
+            idx += 1;
+            continue;
+        }
+
+        if lower == "-h" || lower == "--header" {
+            let header_raw = tokens
+                .get(idx + 1)
+                .and_then(|v| normalize_non_empty(Some(v)))
+                .ok_or_else(|| "cURL 参数 --header 缺少值".to_string())?;
+            if let Some((k, v)) = parse_header_kv(&header_raw) {
+                headers.push((k, v));
+            }
+            idx += 2;
+            continue;
+        }
+
+        if let Some(value) = token.strip_prefix("--header=") {
+            if let Some((k, v)) = parse_header_kv(value) {
+                headers.push((k, v));
+            }
+            idx += 1;
+            continue;
+        }
+
+        if lower == "-b" || lower == "--cookie" {
+            let cookie = tokens
+                .get(idx + 1)
+                .and_then(|v| normalize_non_empty(Some(v)))
+                .ok_or_else(|| "cURL 参数 --cookie 缺少值".to_string())?;
+            cookie_from_arg = Some(cookie);
+            idx += 2;
+            continue;
+        }
+
+        if let Some(value) = token.strip_prefix("--cookie=") {
+            if let Some(cookie) = normalize_non_empty(Some(value)) {
+                cookie_from_arg = Some(cookie);
+            }
+            idx += 1;
+            continue;
+        }
+
+        let is_data_flag = matches!(
+            lower.as_str(),
+            "-d" | "--data" | "--data-raw" | "--data-binary" | "--data-urlencode"
+        );
+        if is_data_flag {
+            let data = tokens
+                .get(idx + 1)
+                .and_then(|v| normalize_non_empty(Some(v)))
+                .ok_or_else(|| format!("cURL 参数 {} 缺少值", token))?;
+            data_parts.push(data);
+            idx += 2;
+            continue;
+        }
+
+        let data_prefixes = [
+            "--data=",
+            "--data-raw=",
+            "--data-binary=",
+            "--data-urlencode=",
+        ];
+        if let Some(prefix) = data_prefixes
+            .iter()
+            .find(|prefix| token.starts_with(**prefix))
+        {
+            let value = token.strip_prefix(prefix).unwrap_or("");
+            if let Some(data) = normalize_non_empty(Some(value)) {
+                data_parts.push(data);
+            }
+            idx += 1;
+            continue;
+        }
+
+        if lower == "--url" {
+            let parsed = tokens
+                .get(idx + 1)
+                .and_then(|v| normalize_non_empty(Some(v)))
+                .ok_or_else(|| "cURL 参数 --url 缺少值".to_string())?;
+            url = Some(parsed);
+            idx += 2;
+            continue;
+        }
+
+        if let Some(value) = token.strip_prefix("--url=") {
+            let parsed =
+                normalize_non_empty(Some(value)).ok_or_else(|| "cURL 参数 --url 缺少值".to_string())?;
+            url = Some(parsed);
+            idx += 1;
+            continue;
+        }
+
+        if token.starts_with('-') {
+            idx += 1;
+            continue;
+        }
+
+        if url.is_none() {
+            url = normalize_non_empty(Some(&token));
+        }
+        idx += 1;
+    }
+
+    let request_url = url.ok_or_else(|| "cURL 命令中未找到请求 URL".to_string())?;
+    let mut request_headers_for_replay = headers.clone();
+    let cookie_from_header = pick_header_value(&request_headers_for_replay, "Cookie");
+    let cookie_raw = cookie_from_arg.or(cookie_from_header).ok_or_else(|| {
+        "cURL 命令缺少 Cookie（需包含 session 与 session_2）".to_string()
+    })?;
+    let normalized_cookie_header = normalize_session_cookie_header(&cookie_raw)?;
+
+    if pick_header_value(&request_headers_for_replay, "Cookie").is_none() {
+        request_headers_for_replay.push(("Cookie".to_string(), cookie_raw));
+    }
+
+    let request_method = method.unwrap_or_else(|| {
+        if data_parts.is_empty() {
+            "GET".to_string()
+        } else {
+            "POST".to_string()
+        }
+    });
+    let request_body = if data_parts.is_empty() {
+        None
+    } else {
+        Some(data_parts.join("&"))
+    };
+
+    let request_headers_snapshot = {
+        let snapshot = CodebuddyQuotaRequestHeaders {
+            accept: pick_header_value(&request_headers_for_replay, "Accept"),
+            accept_language: pick_header_value(&request_headers_for_replay, "Accept-Language"),
+            content_type: pick_header_value(&request_headers_for_replay, "Content-Type"),
+            origin: pick_header_value(&request_headers_for_replay, "Origin"),
+            referer: pick_header_value(&request_headers_for_replay, "Referer"),
+            user_agent: pick_header_value(&request_headers_for_replay, "User-Agent"),
+            sec_fetch_site: pick_header_value(&request_headers_for_replay, "Sec-Fetch-Site"),
+            sec_fetch_mode: pick_header_value(&request_headers_for_replay, "Sec-Fetch-Mode"),
+            sec_fetch_dest: pick_header_value(&request_headers_for_replay, "Sec-Fetch-Dest"),
+        };
+        if snapshot.is_empty() {
+            None
+        } else {
+            Some(snapshot)
+        }
+    };
+    let user_agent = request_headers_snapshot
+        .as_ref()
+        .and_then(|headers| headers.user_agent.clone());
+
+    let mut product_code = None;
+    let mut status = None;
+    let mut package_end_time_range_begin = None;
+    let mut package_end_time_range_end = None;
+    let mut page_number = None;
+    let mut page_size = None;
+    if let Some(body) = request_body.as_deref() {
+        if let Ok(json) = serde_json::from_str::<Value>(body) {
+            product_code = parse_body_string_field(&json, &["ProductCode", "productCode", "product_code"]);
+            status = parse_body_status_field(&json, &["Status", "status"]);
+            package_end_time_range_begin = parse_body_string_field(
+                &json,
+                &["PackageEndTimeRangeBegin", "packageEndTimeRangeBegin", "package_end_time_range_begin"],
+            );
+            package_end_time_range_end = parse_body_string_field(
+                &json,
+                &["PackageEndTimeRangeEnd", "packageEndTimeRangeEnd", "package_end_time_range_end"],
+            );
+            page_number = parse_body_i32_field(&json, &["PageNumber", "pageNumber", "page_number"]);
+            page_size = parse_body_i32_field(&json, &["PageSize", "pageSize", "page_size"]);
+        }
+    }
+
+    Ok(ParsedCodebuddyQuotaCurlRequest {
+        request_url,
+        request_method,
+        request_headers_for_replay,
+        request_headers_snapshot,
+        request_body,
+        normalized_cookie_header,
+        user_agent,
+        product_code,
+        status,
+        package_end_time_range_begin,
+        package_end_time_range_end,
+        page_number,
+        page_size,
+    })
+}
+
 fn extract_cookie_from_header_arg(raw: &str) -> Option<String> {
     let mut parts = raw.splitn(2, ':');
     let key = parts.next()?.trim();
@@ -229,14 +596,11 @@ fn extract_cookie_from_header_arg(raw: &str) -> Option<String> {
 
 fn extract_cookie_blob(raw: &str) -> String {
     let trimmed = raw.trim();
-    if !trimmed.to_lowercase().starts_with("curl ") {
+    if !is_curl_command(trimmed) {
         return trimmed.to_string();
     }
 
-    let canonical = trimmed
-        .replace("\\\r\n", " ")
-        .replace("\\\n", " ")
-        .replace("\\\r", " ");
+    let canonical = canonicalize_curl_command(trimmed);
     let tokens = split_shell_like_args(&canonical);
     if tokens.is_empty() {
         return trimmed.to_string();
@@ -878,12 +1242,13 @@ pub async fn query_quota_with_binding(
     request_headers: Option<CodebuddyQuotaRequestHeaders>,
 ) -> Result<CodebuddyAccount, String> {
     let mut account = load_account(account_id).ok_or_else(|| "账号不存在".to_string())?;
+    let is_manual_curl_replay = request_headers.is_none();
     let inherited_request_headers = account
         .quota_binding
         .as_ref()
         .and_then(|binding| binding.request_headers.clone());
-    let replay_request_headers = request_headers.or(inherited_request_headers);
-    let replay_user_agent = replay_request_headers
+    let mut replay_request_headers = request_headers.or(inherited_request_headers);
+    let mut replay_user_agent = replay_request_headers
         .as_ref()
         .and_then(|headers| headers.user_agent.clone())
         .or_else(|| {
@@ -892,47 +1257,101 @@ pub async fn query_quota_with_binding(
                 .as_ref()
                 .and_then(|binding| normalize_non_empty(binding.user_agent.as_deref()))
         });
-
-    let normalized_cookie_header = match normalize_session_cookie_header(cookie_header) {
-        Ok(value) => value,
-        Err(err) => {
-            mark_quota_query_failure(&mut account, &err);
-            account.last_used = now_ts();
-            let _ = upsert_account_record(account.clone());
-            return Err(err);
-        }
-    };
-    let product_code =
+    let normalized_cookie_header: String;
+    let mut resolved_product_code =
         normalize_non_empty(product_code.as_deref()).unwrap_or("p_tcaca".to_string());
-    let status = normalize_status_list(status);
+    let mut resolved_status = normalize_status_list(status);
 
     let (default_begin, default_end) = build_default_time_range();
-    let package_end_time_range_begin =
+    let mut resolved_package_end_time_range_begin =
         normalize_non_empty(package_end_time_range_begin.as_deref()).unwrap_or(default_begin);
-    let package_end_time_range_end =
+    let mut resolved_package_end_time_range_end =
         normalize_non_empty(package_end_time_range_end.as_deref()).unwrap_or(default_end);
-    let page_number = page_number.unwrap_or(1).clamp(1, 10_000);
-    let page_size = page_size.unwrap_or(100).clamp(1, 200);
+    let mut resolved_page_number = page_number.unwrap_or(1).clamp(1, 10_000);
+    let mut resolved_page_size = page_size.unwrap_or(100).clamp(1, 200);
 
-    let user_resource = match codebuddy_oauth::fetch_user_resource_with_cookie(
-        &normalized_cookie_header,
-        &product_code,
-        &status,
-        &package_end_time_range_begin,
-        &package_end_time_range_end,
-        page_number,
-        page_size,
-        replay_request_headers.as_ref(),
-        replay_user_agent.as_deref(),
-    )
-    .await
-    {
-        Ok(value) => value,
-        Err(err) => {
-            mark_quota_query_failure(&mut account, &err);
-            account.last_used = now_ts();
-            let _ = upsert_account_record(account.clone());
-            return Err(err);
+    let user_resource = if is_manual_curl_replay {
+        let parsed_curl = match parse_codebuddy_quota_curl_request(cookie_header) {
+            Ok(parsed) => parsed,
+            Err(err) => {
+                mark_quota_query_failure(&mut account, &err);
+                account.last_used = now_ts();
+                let _ = upsert_account_record(account.clone());
+                return Err(err);
+            }
+        };
+
+        normalized_cookie_header = parsed_curl.normalized_cookie_header.clone();
+        replay_request_headers = parsed_curl.request_headers_snapshot.clone();
+        replay_user_agent = parsed_curl
+            .user_agent
+            .clone()
+            .or_else(|| replay_user_agent.clone());
+
+        if let Some(v) = parsed_curl.product_code {
+            resolved_product_code = v;
+        }
+        resolved_status = normalize_status_list(parsed_curl.status.or(Some(resolved_status)));
+        if let Some(v) = parsed_curl.package_end_time_range_begin {
+            resolved_package_end_time_range_begin = v;
+        }
+        if let Some(v) = parsed_curl.package_end_time_range_end {
+            resolved_package_end_time_range_end = v;
+        }
+        if let Some(v) = parsed_curl.page_number {
+            resolved_page_number = v.clamp(1, 10_000);
+        }
+        if let Some(v) = parsed_curl.page_size {
+            resolved_page_size = v.clamp(1, 200);
+        }
+
+        match codebuddy_oauth::fetch_user_resource_with_raw_request(
+            &parsed_curl.request_url,
+            &parsed_curl.request_method,
+            &parsed_curl.request_headers_for_replay,
+            parsed_curl.request_body.as_deref(),
+        )
+        .await
+        {
+            Ok(value) => value,
+            Err(err) => {
+                mark_quota_query_failure(&mut account, &err);
+                account.last_used = now_ts();
+                let _ = upsert_account_record(account.clone());
+                return Err(err);
+            }
+        }
+    } else {
+        normalized_cookie_header = match normalize_session_cookie_header(cookie_header) {
+            Ok(value) => value,
+            Err(err) => {
+                mark_quota_query_failure(&mut account, &err);
+                account.last_used = now_ts();
+                let _ = upsert_account_record(account.clone());
+                return Err(err);
+            }
+        };
+
+        match codebuddy_oauth::fetch_user_resource_with_cookie(
+            &normalized_cookie_header,
+            &resolved_product_code,
+            &resolved_status,
+            &resolved_package_end_time_range_begin,
+            &resolved_package_end_time_range_end,
+            resolved_page_number,
+            resolved_page_size,
+            replay_request_headers.as_ref(),
+            replay_user_agent.as_deref(),
+        )
+        .await
+        {
+            Ok(value) => value,
+            Err(err) => {
+                mark_quota_query_failure(&mut account, &err);
+                account.last_used = now_ts();
+                let _ = upsert_account_record(account.clone());
+                return Err(err);
+            }
         }
     };
 
@@ -1036,16 +1455,20 @@ pub async fn query_quota_with_binding(
     account.usage_raw = Some(user_resource);
     account.quota_binding = Some(CodebuddyQuotaBinding {
         cookie_header: normalized_cookie_header,
-        product_code,
-        status,
-        package_end_time_range_begin,
-        package_end_time_range_end,
-        page_number,
-        page_size,
+        product_code: resolved_product_code,
+        status: resolved_status,
+        package_end_time_range_begin: resolved_package_end_time_range_begin,
+        package_end_time_range_end: resolved_package_end_time_range_end,
+        page_number: resolved_page_number,
+        page_size: resolved_page_size,
         updated_at: chrono::Utc::now().timestamp_millis(),
         user_agent: replay_user_agent,
         request_headers: replay_request_headers,
-        source: Some("manual".to_string()),
+        source: Some(if is_manual_curl_replay {
+            "manual_curl".to_string()
+        } else {
+            "manual".to_string()
+        }),
     });
     account.quota_query_last_error = None;
     account.quota_query_last_error_at = None;

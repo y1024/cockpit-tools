@@ -2042,7 +2042,8 @@
         "cookieRequired": "まず Cookie Header または cURL を入力してください。",
         "accountMismatch": "クォータ Cookie が別のアカウントに属しています（現在の UIN：{{expectedUin}}、返却 UIN：{{resourceUin}}、payerUin：{{payerUin}}）。正しいアカウントに切り替えてから Cookie を再度コピーしてください。",
         "statusInvalid": "Status の形式が正しくありません。カンマ区切りの数字を使用してください。",
-        "pageInvalid": "ページング値が無効です。0 より大きい数字を入力してください。"
+        "pageInvalid": "ページング値が無効です。0 より大きい数字を入力してください。",
+        "fullCurlRequired": "完全な cURL コマンドのみ対応しています。Network の get-user-resource で「Copy as cURL」を実行し、そのまま貼り付けてください。"
       }
     },
     "extraCredit": {

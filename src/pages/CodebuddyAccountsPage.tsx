@@ -147,9 +147,8 @@ export function CodebuddyAccountsPage() {
   const quotaQueryHasBinding = !!quotaQueryAccount?.quota_binding;
 
   const openQuotaQueryModal = useCallback((account: CodebuddyAccount) => {
-    const binding = account.quota_binding;
     setQuotaQueryForm({
-      cookieHeader: binding?.cookie_header || '',
+      cookieHeader: '',
     });
     setQuotaQueryModalError(null);
     setQuotaQueryAccountId(account.id);
@@ -215,7 +214,16 @@ export function CodebuddyAccountsPage() {
     if (!quotaQueryAccountId || quotaQuerySubmitting) return;
     const cookieHeader = quotaQueryForm.cookieHeader.trim();
     if (!cookieHeader) {
-      setQuotaQueryModalError(t('codebuddy.quotaQuery.errors.cookieRequired', '请先填写 Cookie Header 或 cURL。'));
+      setQuotaQueryModalError(t('codebuddy.quotaQuery.errors.cookieRequired', '请先粘贴完整 cURL 命令。'));
+      return;
+    }
+    if (!/^\s*curl(?:\.exe)?\b/i.test(cookieHeader)) {
+      setQuotaQueryModalError(
+        t(
+          'codebuddy.quotaQuery.errors.fullCurlRequired',
+          '仅支持完整 cURL 命令。请在浏览器 Network 中对 get-user-resource 使用“Copy as cURL”后原样粘贴。',
+        ),
+      );
       return;
     }
 

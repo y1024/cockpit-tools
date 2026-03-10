@@ -2042,7 +2042,8 @@
         "cookieRequired": "Veuillez dabord fournir un en-tete Cookie ou un cURL.",
         "accountMismatch": "Le cookie de quota appartient a un autre compte (UIN actuel : {{expectedUin}}, UIN renvoye : {{resourceUin}}, UIN payeur : {{payerUin}}). Veuillez passer au bon compte et recopier le cookie.",
         "statusInvalid": "Format de Status invalide. Utilisez des nombres separes par des virgules.",
-        "pageInvalid": "Valeurs de pagination invalides. Veuillez saisir des nombres superieurs a 0."
+        "pageInvalid": "Valeurs de pagination invalides. Veuillez saisir des nombres superieurs a 0.",
+        "fullCurlRequired": "Seule la commande cURL complète est prise en charge. Utilisez « Copy as cURL » sur get-user-resource dans Network et collez-la telle quelle."
       }
     },
     "extraCredit": {

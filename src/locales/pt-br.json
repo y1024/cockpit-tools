@@ -2042,7 +2042,8 @@
         "cookieRequired": "Forneca primeiro um cabecalho Cookie ou cURL.",
         "accountMismatch": "O cookie de cota pertence a outra conta (UIN atual: {{expectedUin}}, UIN retornado: {{resourceUin}}, UIN pagador: {{payerUin}}). Troque para a conta correta e copie o cookie novamente.",
         "statusInvalid": "Formato de Status invalido. Use numeros separados por virgula.",
-        "pageInvalid": "Valores de paginacao invalidos. Informe numeros maiores que 0."
+        "pageInvalid": "Valores de paginacao invalidos. Informe numeros maiores que 0.",
+        "fullCurlRequired": "Apenas o comando cURL completo é suportado. Em Network, use \"Copy as cURL\" em get-user-resource e cole exatamente como está."
       }
     },
     "extraCredit": {

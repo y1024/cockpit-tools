@@ -781,6 +781,103 @@ pub async fn fetch_user_resource_with_cookie(
     Ok(result)
 }
 
+pub async fn fetch_user_resource_with_raw_request(
+    request_url: &str,
+    request_method: &str,
+    request_headers: &[(String, String)],
+    request_body: Option<&str>,
+) -> Result<Value, String> {
+    let client = build_client()?;
+    let method = reqwest::Method::from_bytes(request_method.trim().as_bytes())
+        .map_err(|e| format!("cURL 请求方法无效: {}", e))?;
+    let url = request_url.trim();
+    if url.is_empty() {
+        return Err("cURL 缺少请求 URL".to_string());
+    }
+
+    let mut req = client.request(method, url);
+    for (name_raw, value_raw) in request_headers {
+        let name = name_raw.trim();
+        let value = value_raw.trim();
+        if name.is_empty() || value.is_empty() {
+            continue;
+        }
+        if name.eq_ignore_ascii_case("host") || name.eq_ignore_ascii_case("content-length") {
+            continue;
+        }
+        let header_name = reqwest::header::HeaderName::from_bytes(name.as_bytes())
+            .map_err(|e| format!("cURL 请求头无效（{}）: {}", name, e))?;
+        let header_value = reqwest::header::HeaderValue::from_str(value)
+            .map_err(|e| format!("cURL 请求头值无效（{}）: {}", name, e))?;
+        req = req.header(header_name, header_value);
+    }
+
+    if let Some(body) = request_body {
+        if !body.trim().is_empty() {
+            req = req.body(body.to_string());
+        }
+    }
+
+    let resp = req
+        .send()
+        .await
+        .map_err(|e| format!("重放 cURL 请求 user resource 失败: {}", e))?;
+
+    let status_code = resp.status();
+    let text = resp
+        .text()
+        .await
+        .map_err(|e| format!("读取 user resource（cURL）响应失败: {}", e))?;
+
+    let text_snippet = {
+        let preview = text.replace('\n', "\\n");
+        let max_chars = 600usize;
+        let mut out = String::new();
+        let mut count = 0usize;
+        for ch in preview.chars() {
+            if count >= max_chars {
+                out.push_str("...<truncated>");
+                break;
+            }
+            out.push(ch);
+            count += 1;
+        }
+        out
+    };
+
+    let result: Value = serde_json::from_str(&text).map_err(|e| {
+        format!(
+            "解析 user resource（cURL）响应失败: {}, http={}, body_preview={}",
+            e,
+            status_code.as_u16(),
+            text_snippet
+        )
+    })?;
+
+    if !status_code.is_success() {
+        return Err(format!(
+            "请求 user resource（cURL）失败: http={}, body={}",
+            status_code.as_u16(),
+            text
+        ));
+    }
+
+    let code = result.get("code").and_then(|v| v.as_i64()).unwrap_or(-1);
+    if code != 0 && code != 200 {
+        let msg = result
+            .get("msg")
+            .or_else(|| result.get("message"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("unknown error");
+        return Err(format!(
+            "user resource（cURL）返回失败: code={}, msg={}",
+            code, msg
+        ));
+    }
+
+    Ok(result)
+}
+
 async fn refresh_payload_for_account_inner(
     account: &crate::models::codebuddy::CodebuddyAccount,
     require_user_resource: bool,

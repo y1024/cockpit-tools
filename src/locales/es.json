@@ -2042,7 +2042,8 @@
         "cookieRequired": "Primero proporciona el encabezado Cookie o el cURL.",
         "accountMismatch": "La cookie de cuota pertenece a otra cuenta (UIN actual: {{expectedUin}}, UIN devuelto: {{resourceUin}}, payerUin: {{payerUin}}). Cambia a la cuenta correcta y vuelve a copiar la cookie.",
         "statusInvalid": "Formato de Status no válido. Usa números separados por comas.",
-        "pageInvalid": "Valores de paginación no válidos. Introduce números mayores que 0."
+        "pageInvalid": "Valores de paginación no válidos. Introduce números mayores que 0.",
+        "fullCurlRequired": "Solo se admite el comando cURL completo. Usa \"Copy as cURL\" en get-user-resource dentro de Network y pégalo tal cual."
       }
     },
     "extraCredit": {

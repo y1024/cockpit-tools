@@ -1266,7 +1266,7 @@
     "search": "Search CodeBuddy accounts...",
     "quotaQuery": {
       "title": "Query Quota",
-      "desc": "Paste a Cookie header or full cURL command. We will extract session/session_2 and bind it to this account.",
+      "desc": "Only full cURL commands are supported. We will replay the request as-is and bind it to this account.",
       "button": "Query Quota",
       "submit": "Bind & Query",
       "clearBinding": "Clear Binding",
@@ -1321,7 +1321,7 @@
         "step5": "Paste into the input box below"
       },
       "fields": {
-        "cookieHeader": "Cookie Header / cURL",
+        "cookieHeader": "Full cURL Command",
         "productCode": "ProductCode",
         "status": "Status",
         "beginTime": "Begin Time",
@@ -1333,7 +1333,8 @@
         "cookieHeader": "Paste the cURL command of get-user-resource"
       },
       "errors": {
-        "cookieRequired": "Please provide Cookie header or cURL first.",
+        "cookieRequired": "Please paste a full cURL command first.",
+        "fullCurlRequired": "Only full cURL commands are supported. Please use 'Copy as cURL' on get-user-resource in Network and paste it as-is.",
         "accountMismatch": "The quota cookie belongs to a different account (current UIN: {{expectedUin}}, returned UIN: {{resourceUin}}, payerUin: {{payerUin}}). Please switch to the correct account and copy the cookie again.",
         "statusInvalid": "Invalid Status format. Use comma-separated numbers.",
         "pageInvalid": "Invalid pagination values. Please enter numbers greater than 0."

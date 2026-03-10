@@ -2042,7 +2042,8 @@
         "cookieRequired": "請先填寫 Cookie Header 或 cURL。",
         "accountMismatch": "配額 Cookie 對應帳號與目前帳號不一致（目前 UIN：{{expectedUin}}，返回 UIN：{{resourceUin}}，payerUin：{{payerUin}}）。請切換到正確帳號後重新複製 Cookie。",
         "statusInvalid": "Status 格式無效，請使用逗號分隔的數字。",
-        "pageInvalid": "分頁參數無效，請輸入大於 0 的數字。"
+        "pageInvalid": "分頁參數無效，請輸入大於 0 的數字。",
+        "fullCurlRequired": "僅支援完整 cURL 指令。請在瀏覽器 Network 對 get-user-resource 使用「Copy as cURL」後原樣貼上。"
       }
     },
     "extraCredit": {

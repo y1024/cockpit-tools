@@ -1266,7 +1266,7 @@
     "search": "搜索 CodeBuddy 账号...",
     "quotaQuery": {
       "title": "查询配额",
-      "desc": "粘贴 Cookie Header 或完整 cURL，系统将提取 session/session_2 并绑定到当前账号。",
+      "desc": "仅支持粘贴完整 cURL 命令，系统将按 cURL 原样重放请求并绑定到当前账号。",
       "button": "查询配额",
       "submit": "绑定并查询",
       "clearBinding": "清除绑定",
@@ -1321,7 +1321,7 @@
         "step5": "粘贴到下方输入框"
       },
       "fields": {
-        "cookieHeader": "Cookie 标头 / cURL",
+        "cookieHeader": "完整 cURL 命令",
         "productCode": "产品代码 (ProductCode)",
         "status": "状态值 (Status)",
         "beginTime": "开始时间",
@@ -1333,7 +1333,8 @@
         "cookieHeader": "粘贴 get-user-resource 的 cURL 命令"
       },
       "errors": {
-        "cookieRequired": "请先填写 Cookie Header 或 cURL。",
+        "cookieRequired": "请先粘贴完整 cURL 命令。",
+        "fullCurlRequired": "仅支持完整 cURL 命令。请在浏览器 Network 中对 get-user-resource 使用“Copy as cURL”后原样粘贴。",
         "accountMismatch": "配额 Cookie 对应账号与当前账号不一致（当前 UIN：{{expectedUin}}，返回 UIN：{{resourceUin}}，payerUin：{{payerUin}}）。请切换到正确账号后重新复制 Cookie。",
         "statusInvalid": "Status 格式无效，请使用逗号分隔的数字。",
         "pageInvalid": "分页参数无效，请输入大于 0 的数字。"

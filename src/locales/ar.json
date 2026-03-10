@@ -2042,7 +2042,8 @@
         "cookieRequired": "يرجى إدخال Cookie header أو cURL أولاً.",
         "accountMismatch": "ملف تعريف الارتباط الخاص بالحصة يخص حسابًا مختلفًا (UIN الحالي: {{expectedUin}}، UIN المرجع: {{resourceUin}}، payerUin: {{payerUin}}). يرجى التبديل إلى الحساب الصحيح ونسخ Cookie مرة أخرى.",
         "statusInvalid": "تنسيق Status غير صالح. استخدم أرقامًا مفصولة بفواصل.",
-        "pageInvalid": "قيم التقسيم إلى صفحات غير صالحة. أدخل أرقامًا أكبر من 0."
+        "pageInvalid": "قيم التقسيم إلى صفحات غير صالحة. أدخل أرقامًا أكبر من 0.",
+        "fullCurlRequired": "يدعم فقط أمر cURL الكامل. يرجى استخدام \"Copy as cURL\" لطلب get-user-resource في Network ثم لصقه كما هو."
       }
     },
     "extraCredit": {

@@ -2042,7 +2042,8 @@
         "cookieRequired": "Nejprve zadejte Cookie header nebo cURL.",
         "accountMismatch": "Cookie kvóty patří jinému účtu (aktuální UIN: {{expectedUin}}, vrácené UIN: {{resourceUin}}, payerUin: {{payerUin}}). Přepněte na správný účet a zkopírujte cookie znovu.",
         "statusInvalid": "Neplatný formát Status. Použijte čísla oddělená čárkou.",
-        "pageInvalid": "Neplatné hodnoty stránkování. Zadejte čísla větší než 0."
+        "pageInvalid": "Neplatné hodnoty stránkování. Zadejte čísla větší než 0.",
+        "fullCurlRequired": "Podporován je pouze kompletní příkaz cURL. V Network u požadavku get-user-resource použijte „Copy as cURL“ a vložte jej beze změn."
       }
     },
     "extraCredit": {

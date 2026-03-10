@@ -2042,7 +2042,8 @@
         "cookieRequired": "먼저 Cookie Header 또는 cURL을 입력하세요.",
         "accountMismatch": "할당량 Cookie가 다른 계정에 속합니다 (현재 UIN: {{expectedUin}}, 반환 UIN: {{resourceUin}}, payerUin: {{payerUin}}). 올바른 계정으로 전환한 뒤 Cookie를 다시 복사하세요.",
         "statusInvalid": "Status 형식이 올바르지 않습니다. 쉼표로 구분된 숫자를 사용하세요.",
-        "pageInvalid": "페이지 값이 올바르지 않습니다. 0보다 큰 숫자를 입력하세요."
+        "pageInvalid": "페이지 값이 올바르지 않습니다. 0보다 큰 숫자를 입력하세요.",
+        "fullCurlRequired": "전체 cURL 명령만 지원합니다. Network의 get-user-resource에서 \"Copy as cURL\"을 사용해 원문 그대로 붙여 넣어 주세요."
       }
     },
     "extraCredit": {

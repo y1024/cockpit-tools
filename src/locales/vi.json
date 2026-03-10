@@ -2042,7 +2042,8 @@
         "cookieRequired": "Vui lòng nhập Cookie Header hoặc cURL trước.",
         "accountMismatch": "Cookie hạn ngạch thuộc về tài khoản khác (UIN hiện tại: {{expectedUin}}, UIN trả về: {{resourceUin}}, payerUin: {{payerUin}}). Vui lòng chuyển sang đúng tài khoản rồi sao chép lại Cookie.",
         "statusInvalid": "Định dạng Status không hợp lệ. Hãy dùng các số cách nhau bằng dấu phẩy.",
-        "pageInvalid": "Giá trị phân trang không hợp lệ. Vui lòng nhập số lớn hơn 0."
+        "pageInvalid": "Giá trị phân trang không hợp lệ. Vui lòng nhập số lớn hơn 0.",
+        "fullCurlRequired": "Chỉ hỗ trợ lệnh cURL đầy đủ. Hãy dùng \"Copy as cURL\" cho yêu cầu get-user-resource trong Network và dán nguyên văn."
       }
     },
     "extraCredit": {

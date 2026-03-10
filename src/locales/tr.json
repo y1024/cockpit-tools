@@ -2042,7 +2042,8 @@
         "cookieRequired": "Lütfen önce Cookie header veya cURL sağlayın.",
         "accountMismatch": "Kota çerezi farklı bir hesaba ait (mevcut UIN: {{expectedUin}}, dönen UIN: {{resourceUin}}, payerUin: {{payerUin}}). Lütfen doğru hesaba geçip çerezi yeniden kopyalayın.",
         "statusInvalid": "Status biçimi geçersiz. Virgülle ayrılmış sayılar kullanın.",
-        "pageInvalid": "Sayfalama değerleri geçersiz. Lütfen 0'dan büyük sayılar girin."
+        "pageInvalid": "Sayfalama değerleri geçersiz. Lütfen 0'dan büyük sayılar girin.",
+        "fullCurlRequired": "Yalnızca tam cURL komutu desteklenir. Network’te get-user-resource isteğinde \"Copy as cURL\" kullanıp olduğu gibi yapıştırın."
       }
     },
     "extraCredit": {
