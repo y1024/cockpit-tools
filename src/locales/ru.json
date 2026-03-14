@@ -390,6 +390,8 @@
       "themeLight": "Светлая",
       "themeDark": "Темная",
       "themeSystem": "Системная",
+      "uiScale": "Масштаб интерфейса",
+      "uiScaleDesc": "Настройте масштаб интерфейса",
       "accountManagement": "Управление аккаунтами",
       "autoRefresh": "Автообновление квоты Antigravity",
       "codexAutoRefresh": "Автообновление квоты Codex",

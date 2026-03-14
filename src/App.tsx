@@ -1,6 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { getCurrentWebview } from '@tauri-apps/api/webview';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
@@ -116,6 +117,7 @@ const BreakoutModal = lazy(() =>
 
 interface GeneralConfigTheme {
   theme: string;
+  ui_scale?: number;
 }
 
 interface GeneralConfig extends GeneralConfigTheme {
@@ -893,6 +895,16 @@ function App() {
       }
     };
 
+    const applyUiScale = async (rawScale?: number) => {
+      const scale = typeof rawScale === 'number' && Number.isFinite(rawScale) ? rawScale : 1;
+      const normalizedScale = Math.min(2, Math.max(0.8, scale));
+      try {
+        await getCurrentWebview().setZoom(normalizedScale);
+      } catch (error) {
+        console.error('Failed to apply UI scale:', error);
+      }
+    };
+
     const watchSystemTheme = () => {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = () => applyTheme('system');
@@ -916,6 +928,7 @@ function App() {
       try {
         const config = await invoke<GeneralConfigTheme>('get_general_config');
         applyTheme(config.theme);
+        void applyUiScale(config.ui_scale);
         if (config.theme === 'system') {
           cleanup = watchSystemTheme();
         }

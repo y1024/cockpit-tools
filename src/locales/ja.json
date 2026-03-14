@@ -390,6 +390,8 @@
       "themeLight": "ライト",
       "themeDark": "ダーク",
       "themeSystem": "システム設定に従う",
+      "uiScale": "UIスケール",
+      "uiScaleDesc": "インターフェースの表示倍率を調整",
       "accountManagement": "アカウント管理",
       "autoRefresh": "Antigravity 自動更新クォータ",
       "codexAutoRefresh": "Codex 自動更新クォータ",

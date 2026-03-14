@@ -150,9 +150,26 @@ fn load_account_index() -> CursorAccountIndex {
         return CursorAccountIndex::new();
     }
 
-    match fs::read_to_string(path) {
-        Ok(content) => serde_json::from_str(&content).unwrap_or_else(|_| CursorAccountIndex::new()),
-        Err(_) => CursorAccountIndex::new(),
+    match fs::read_to_string(path.as_path()) {
+        Ok(content) => match serde_json::from_str(&content) {
+            Ok(index) => index,
+            Err(err) => {
+                logger::log_warn(&format!(
+                    "[Cursor Account] 账号索引解析失败，使用空索引兜底: path={}, error={}",
+                    path.display(),
+                    err
+                ));
+                CursorAccountIndex::new()
+            }
+        },
+        Err(err) => {
+            logger::log_warn(&format!(
+                "[Cursor Account] 读取账号索引失败，使用空索引兜底: path={}, error={}",
+                path.display(),
+                err
+            ));
+            CursorAccountIndex::new()
+        }
     }
 }
 
@@ -417,8 +434,70 @@ fn choose_primary_account_index(group: &[usize], accounts: &[CursorAccount]) -> 
         .unwrap_or(group[0])
 }
 
+fn collect_account_ids_from_directory() -> Vec<String> {
+    let accounts_dir = match get_accounts_dir() {
+        Ok(dir) => dir,
+        Err(err) => {
+            logger::log_warn(&format!(
+                "[Cursor Account] 获取账号目录失败，跳过目录补扫: {}",
+                err
+            ));
+            return Vec::new();
+        }
+    };
+
+    let entries = match fs::read_dir(&accounts_dir) {
+        Ok(value) => value,
+        Err(err) => {
+            logger::log_warn(&format!(
+                "[Cursor Account] 读取账号目录失败，跳过目录补扫: path={}, error={}",
+                accounts_dir.display(),
+                err
+            ));
+            return Vec::new();
+        }
+    };
+
+    let mut ids = Vec::new();
+    for entry in entries {
+        let Ok(item) = entry else {
+            continue;
+        };
+        let path = item.path();
+        if !path.is_file() {
+            continue;
+        }
+
+        let is_json = path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .map(|ext| ext.eq_ignore_ascii_case("json"))
+            .unwrap_or(false);
+        if !is_json {
+            continue;
+        }
+
+        let Some(stem) = path.file_stem().and_then(|name| name.to_str()) else {
+            continue;
+        };
+        let Ok(account_id) = normalize_account_id(stem) else {
+            logger::log_warn(&format!(
+                "[Cursor Account] 检测到非法账号文件名，已忽略: file={}",
+                path.display()
+            ));
+            continue;
+        };
+        ids.push(account_id);
+    }
+
+    ids.sort();
+    ids.dedup();
+    ids
+}
+
 fn normalize_account_index(index: &mut CursorAccountIndex) -> Vec<CursorAccount> {
     let mut loaded_accounts = Vec::new();
+    let mut seen_account_ids = HashSet::new();
     let mut seen_summary_ids = HashSet::new();
 
     for summary in &index.accounts {
@@ -426,8 +505,31 @@ fn normalize_account_index(index: &mut CursorAccountIndex) -> Vec<CursorAccount>
             continue;
         }
         if let Some(account) = load_account(&summary.id) {
-            loaded_accounts.push(account);
+            if seen_account_ids.insert(account.id.clone()) {
+                loaded_accounts.push(account);
+            }
         }
+    }
+
+    let mut recovered_count = 0usize;
+    for account_id in collect_account_ids_from_directory() {
+        if seen_account_ids.contains(&account_id) {
+            continue;
+        }
+        if let Some(account) = load_account(&account_id) {
+            if seen_account_ids.insert(account.id.clone()) {
+                if !seen_summary_ids.contains(&account_id) {
+                    recovered_count += 1;
+                }
+                loaded_accounts.push(account);
+            }
+        }
+    }
+    if recovered_count > 0 {
+        logger::log_warn(&format!(
+            "[Cursor Account] 检测到索引缺失，已从账号目录恢复 {} 个账号",
+            recovered_count
+        ));
     }
 
     if loaded_accounts.len() <= 1 {
@@ -538,6 +640,9 @@ fn normalize_account_index(index: &mut CursorAccountIndex) -> Vec<CursorAccount>
 // ---------------------------------------------------------------------------
 
 pub fn list_accounts() -> Vec<CursorAccount> {
+    let _lock = CURSOR_ACCOUNT_INDEX_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     let mut index = load_account_index();
     let accounts = normalize_account_index(&mut index);
     if let Err(err) = save_account_index(&index) {

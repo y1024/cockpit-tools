@@ -390,6 +390,8 @@
       "themeLight": "Açık",
       "themeDark": "Koyu",
       "themeSystem": "Sistem",
+      "uiScale": "Arayüz ölçeği",
+      "uiScaleDesc": "Arayüz ölçeğini ayarlayın",
       "accountManagement": "Hesap Yönetimi",
       "autoRefresh": "Antigravity kota otomatik yenileme",
       "codexAutoRefresh": "Codex kota otomatik yenileme",

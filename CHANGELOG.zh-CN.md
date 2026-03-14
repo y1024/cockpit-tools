@@ -7,6 +7,13 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.14.4] - 2026-03-14
+
+### 修复
+- **Cursor 账号列表在索引缺失或损坏时可自动自愈**：列表读取会从 `cursor_accounts/*.json` 回收账号并重写 `cursor_accounts.json`，避免仅索引文件异常时出现“账号和标签都不显示”。
+- **Cursor 账号列表读取现与写操作共用同一索引锁**：`list_accounts` 与导入/删除/更新链路串行化，降低并发访问索引时的竞态窗口。
+
+---
 ## [0.14.3] - 2026-03-14
 
 ### 修复

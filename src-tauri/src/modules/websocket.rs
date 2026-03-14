@@ -761,6 +761,7 @@ fn handle_set_language(language: &str, source: Option<&str>) -> Result<String, S
         ws_port: current.ws_port,
         language: normalized.clone(),
         theme: current.theme,
+        ui_scale: current.ui_scale,
         auto_refresh_minutes: current.auto_refresh_minutes,
         codex_auto_refresh_minutes: current.codex_auto_refresh_minutes,
         ghcp_auto_refresh_minutes: current.ghcp_auto_refresh_minutes,

@@ -390,6 +390,8 @@
       "themeLight": "Clair",
       "themeDark": "Sombre",
       "themeSystem": "Système",
+      "uiScale": "Échelle de l'interface",
+      "uiScaleDesc": "Ajuster l'échelle de l'interface",
       "accountManagement": "Gestion des comptes",
       "autoRefresh": "Actualisation automatique du quota Antigravity",
       "codexAutoRefresh": "Actualisation automatique du quota Codex",

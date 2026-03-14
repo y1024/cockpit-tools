@@ -390,6 +390,8 @@
       "themeLight": "Sáng (Light)",
       "themeDark": "Tối (Dark)",
       "themeSystem": "Theo hệ thống",
+      "uiScale": "Tỷ lệ giao diện",
+      "uiScaleDesc": "Điều chỉnh tỷ lệ giao diện",
       "accountManagement": "Quản lý tài khoản",
       "autoRefresh": "Tự động làm mới hạn mức Antigravity",
       "codexAutoRefresh": "Tự động làm mới hạn mức Codex",

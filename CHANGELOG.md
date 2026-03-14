@@ -7,6 +7,13 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.14.4] - 2026-03-14
+
+### Fixed
+- **Cursor account list now self-heals from local account files when index is missing or corrupted**: listing now recovers accounts from `cursor_accounts/*.json`, rewrites `cursor_accounts.json`, and keeps accounts/tags visible instead of showing an empty list when only the index file is damaged.
+- **Cursor account list now uses the same index lock as write operations**: `list_accounts` is serialized with import/delete/update paths to reduce race windows during concurrent index access.
+
+---
 ## [0.14.3] - 2026-03-14
 
 ### Fixed

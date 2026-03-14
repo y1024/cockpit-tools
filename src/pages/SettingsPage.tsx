@@ -4,6 +4,7 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { open } from '@tauri-apps/plugin-dialog';
 import { invoke } from '@tauri-apps/api/core';
 import { getVersion } from '@tauri-apps/api/app';
+import { getCurrentWebview } from '@tauri-apps/api/webview';
 import { changeLanguage, getCurrentLanguage, normalizeLanguage } from '../i18n';
 import * as accountService from '../services/accountService';
 import { usePlatformRuntimeSupport } from '../hooks/usePlatformRuntimeSupport';
@@ -29,6 +30,7 @@ interface NetworkConfig {
 interface GeneralConfig {
   language: string;
   theme: string;
+  ui_scale: number;
   auto_refresh_minutes: number;
   codex_auto_refresh_minutes: number;
   ghcp_auto_refresh_minutes: number;
@@ -92,6 +94,7 @@ type AppPathTarget =
   | 'trae';
 const REFRESH_PRESET_VALUES = ['-1', '2', '5', '10', '15'];
 const THRESHOLD_PRESET_VALUES = ['0', '20', '40', '60'];
+const UI_SCALE_OPTIONS = ['0.9', '1', '1.1', '1.25', '1.5'] as const;
 const FALLBACK_PLATFORM_SETTINGS_ORDER: Record<PlatformId, number> = {
   antigravity: 0,
   codex: 1,
@@ -152,6 +155,7 @@ export function SettingsPage() {
   // General Settings States
   const [language, setLanguage] = useState(getCurrentLanguage());
   const [theme, setTheme] = useState('system');
+  const [uiScale, setUiScale] = useState('1');
   const [autoRefresh, setAutoRefresh] = useState('5');
   const [codexAutoRefresh, setCodexAutoRefresh] = useState('10');
   const [ghcpAutoRefresh, setGhcpAutoRefresh] = useState('10');
@@ -330,6 +334,13 @@ export function SettingsPage() {
     if (!generalLoaded) {
       return;
     }
+    void applyUiScale(uiScale);
+  }, [generalLoaded, uiScale]);
+
+  useEffect(() => {
+    if (!generalLoaded) {
+      return;
+    }
 
     if (generalSaveTimerRef.current) {
       window.clearTimeout(generalSaveTimerRef.current);
@@ -360,6 +371,10 @@ export function SettingsPage() {
     const traeAutoRefreshNum = parseInt(traeAutoRefresh, 10) || -1;
     const cursorAutoRefreshNum = parseInt(cursorAutoRefresh, 10) || -1;
     const geminiAutoRefreshNum = parseInt(geminiAutoRefresh, 10) || -1;
+    const parsedUiScale = Number.parseFloat(uiScale);
+    const normalizedUiScale = Number.isFinite(parsedUiScale)
+      ? Math.min(2, Math.max(0.8, parsedUiScale))
+      : 1;
     const parsedAutoSwitchThreshold = Number.parseInt(autoSwitchThreshold, 10);
     const parsedQuotaAlertThreshold = Number.parseInt(quotaAlertThreshold, 10);
     const parsedCodexQuotaAlertThreshold = Number.parseInt(codexQuotaAlertThreshold, 10);
@@ -382,6 +397,7 @@ export function SettingsPage() {
         await invoke('save_general_config', {
           language,
           theme,
+          uiScale: normalizedUiScale,
           autoRefreshMinutes: autoRefreshNum,
           codexAutoRefreshMinutes: codexAutoRefreshNum,
           ghcpAutoRefreshMinutes: ghcpAutoRefreshNum,
@@ -475,6 +491,7 @@ export function SettingsPage() {
     generalLoaded,
     language,
     theme,
+    uiScale,
     opencodeAppPath,
     antigravityAppPath,
     codexAppPath,
@@ -631,6 +648,16 @@ export function SettingsPage() {
     }
   };
 
+  const applyUiScale = async (rawScale: string) => {
+    const parsed = Number.parseFloat(rawScale);
+    const normalized = Number.isFinite(parsed) ? Math.min(2, Math.max(0.8, parsed)) : 1;
+    try {
+      await getCurrentWebview().setZoom(normalized);
+    } catch (error) {
+      console.error('应用界面缩放失败:', error);
+    }
+  };
+
   useEffect(() => {
     if (theme !== 'system') {
       return;
@@ -659,6 +686,7 @@ export function SettingsPage() {
       const config = await invoke<GeneralConfig>('get_general_config');
       setLanguage(normalizeLanguage(config.language));
       setTheme(config.theme);
+      setUiScale(String(config.ui_scale ?? 1));
       setAutoRefresh(String(config.auto_refresh_minutes));
       setCodexAutoRefresh(String(config.codex_auto_refresh_minutes ?? 10));
       setGhcpAutoRefresh(String(config.ghcp_auto_refresh_minutes ?? 10));
@@ -979,6 +1007,24 @@ export function SettingsPage() {
                     <option value="light">{t('settings.general.themeLight')}</option>
                     <option value="dark">{t('settings.general.themeDark')}</option>
                     <option value="system">{t('settings.general.themeSystem')}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="settings-row">
+                <div className="row-label">
+                  <div className="row-title">{t('settings.general.uiScale')}</div>
+                  <div className="row-desc">{t('settings.general.uiScaleDesc')}</div>
+                </div>
+                <div className="row-control">
+                  <select
+                    className="settings-select"
+                    value={uiScale}
+                    onChange={(e) => setUiScale(e.target.value)}
+                  >
+                    {UI_SCALE_OPTIONS.map((value) => (
+                      <option key={value} value={value}>{`${Math.round(Number.parseFloat(value) * 100)}%`}</option>
+                    ))}
                   </select>
                 </div>
               </div>

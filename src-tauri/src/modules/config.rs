@@ -50,6 +50,9 @@ pub struct UserConfig {
     /// 应用主题
     #[serde(default = "default_theme")]
     pub theme: String,
+    /// 界面缩放比例
+    #[serde(default = "default_ui_scale")]
+    pub ui_scale: f64,
     /// 自动刷新间隔（分钟），-1 表示禁用
     #[serde(default = "default_auto_refresh")]
     pub auto_refresh_minutes: i32,
@@ -254,6 +257,9 @@ fn default_language() -> String {
 fn default_theme() -> String {
     "system".to_string()
 }
+fn default_ui_scale() -> f64 {
+    1.0
+}
 fn default_auto_refresh() -> i32 {
     10
 } // 默认 10 分钟
@@ -418,6 +424,7 @@ impl Default for UserConfig {
             ws_port: DEFAULT_WS_PORT,
             language: default_language(),
             theme: default_theme(),
+            ui_scale: default_ui_scale(),
             auto_refresh_minutes: default_auto_refresh(),
             codex_auto_refresh_minutes: default_codex_auto_refresh(),
             ghcp_auto_refresh_minutes: default_ghcp_auto_refresh(),

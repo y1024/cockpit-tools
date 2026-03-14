@@ -390,6 +390,8 @@
       "themeLight": "Hell",
       "themeDark": "Dunkel",
       "themeSystem": "System",
+      "uiScale": "UI-Skalierung",
+      "uiScaleDesc": "UI-Skalierung anpassen",
       "accountManagement": "Kontoverwaltung",
       "autoRefresh": "Antigravity-Quote automatisch aktualisieren",
       "codexAutoRefresh": "Codex-Quote automatisch aktualisieren",

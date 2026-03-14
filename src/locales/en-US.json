@@ -390,6 +390,8 @@
       "themeLight": "Light",
       "themeDark": "Dark",
       "themeSystem": "System",
+      "uiScale": "UI Scale",
+      "uiScaleDesc": "Adjust interface scale",
       "accountManagement": "Account Management",
       "autoRefresh": "Antigravity Auto Refresh Quota",
       "codexAutoRefresh": "Codex Auto Refresh Quota",

@@ -390,6 +390,8 @@
       "themeLight": "라이트",
       "themeDark": "다크",
       "themeSystem": "시스템 설정",
+      "uiScale": "UI 배율",
+      "uiScaleDesc": "인터페이스 배율 조정",
       "accountManagement": "계정 관리",
       "autoRefresh": "Antigravity 자동 새로고침 할당량",
       "codexAutoRefresh": "Codex 자동 새로고침 할당량",

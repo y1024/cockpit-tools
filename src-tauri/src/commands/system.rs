@@ -27,6 +27,8 @@ pub struct GeneralConfig {
     pub language: String,
     /// 应用主题: "light", "dark", "system"
     pub theme: String,
+    /// 界面缩放比例（WebView Zoom）
+    pub ui_scale: f64,
     /// 自动刷新间隔（分钟），-1 表示禁用
     pub auto_refresh_minutes: i32,
     /// Codex 自动刷新间隔（分钟），-1 表示禁用
@@ -133,6 +135,17 @@ pub struct GeneralConfig {
     pub trae_quota_alert_threshold: i32,
 }
 
+const DEFAULT_UI_SCALE: f64 = 1.0;
+const MIN_UI_SCALE: f64 = 0.8;
+const MAX_UI_SCALE: f64 = 2.0;
+
+fn sanitize_ui_scale(raw: f64) -> f64 {
+    if !raw.is_finite() {
+        return DEFAULT_UI_SCALE;
+    }
+    raw.clamp(MIN_UI_SCALE, MAX_UI_SCALE)
+}
+
 #[tauri::command]
 pub async fn open_data_folder() -> Result<(), String> {
     let path = modules::account::get_data_dir()?;
@@ -208,6 +221,7 @@ pub fn save_network_config(ws_enabled: bool, ws_port: u16) -> Result<bool, Strin
         // 保留其他设置不变
         language: current.language,
         theme: current.theme,
+        ui_scale: current.ui_scale,
         auto_refresh_minutes: current.auto_refresh_minutes,
         codex_auto_refresh_minutes: current.codex_auto_refresh_minutes,
         ghcp_auto_refresh_minutes: current.ghcp_auto_refresh_minutes,
@@ -285,6 +299,7 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
     Ok(GeneralConfig {
         language: user_config.language,
         theme: user_config.theme,
+        ui_scale: user_config.ui_scale,
         auto_refresh_minutes: user_config.auto_refresh_minutes,
         codex_auto_refresh_minutes: user_config.codex_auto_refresh_minutes,
         ghcp_auto_refresh_minutes: user_config.ghcp_auto_refresh_minutes,
@@ -346,6 +361,7 @@ pub fn save_general_config(
     app: tauri::AppHandle,
     language: String,
     theme: String,
+    ui_scale: Option<f64>,
     auto_refresh_minutes: i32,
     codex_auto_refresh_minutes: i32,
     ghcp_auto_refresh_minutes: Option<i32>,
@@ -404,6 +420,7 @@ pub fn save_general_config(
     let normalized_antigravity_path = antigravity_app_path.trim().to_string();
     let normalized_codex_path = codex_app_path.trim().to_string();
     let normalized_vscode_path = vscode_app_path.trim().to_string();
+    let normalized_ui_scale = sanitize_ui_scale(ui_scale.unwrap_or(current.ui_scale));
     let normalized_windsurf_path = windsurf_app_path
         .map(|value| value.trim().to_string())
         .unwrap_or_else(|| current.windsurf_app_path.clone());
@@ -452,6 +469,7 @@ pub fn save_general_config(
         // 更新通用设置
         language: normalized_language.clone(),
         theme,
+        ui_scale: normalized_ui_scale,
         auto_refresh_minutes,
         codex_auto_refresh_minutes,
         ghcp_auto_refresh_minutes: ghcp_auto_refresh_minutes
