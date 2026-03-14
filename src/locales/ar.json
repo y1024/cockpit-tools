@@ -1999,17 +1999,12 @@
     "nickname": "الاسم المستعار",
     "enterprise": "المؤسسة",
     "usage": "حالة الاستخدام",
+    "creditsBalance": "رصيد النقاط",
     "usageNormal": "طبيعي",
     "oauthWaiting": "بانتظار التفويض...",
     "oauthDesc": "انقر الزر أدناه لفتح صفحة تفويض CodeBuddy في متصفحك.",
     "oauthDescWebview": "انقر الزر أدناه لفتح صفحة تفويض CodeBuddy في WebView المدمج.",
     "oauthFeature": {
-      "webview": {
-        "title": "موصى به: أكمل تفويض IDE وربط الحصة في مسار واحد",
-        "item1": "بعد تسجيل الدخول عبر WebView المدمج المتخفي، سيتم ربط بيانات دخول IDE تلقائيًا.",
-        "item2": "سيتم التقاط معلمات استعلام الحصة وربطها تلقائيًا في الوقت نفسه.",
-        "item3": "الأفضل لإعداد الحساب لأول مرة، مع توفر عرض/تحديث الحصة فورًا."
-      },
       "oauth": {
         "title": "تسجيل دخول IDE فقط",
         "item1": "أضف الحساب بعد إكمال OAuth في المتصفح، ثم استخدمه للتبديل داخل IDE.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "يتم عرض شريط خطوات أفقي أعلى WebView لتحديد المرحلة المتوقفة.",
     "oauthFlow": {
       "prepare": "تحضير رابط OAuth",
-      "quota": "التقاط Cookie في WebView وربط استعلام الحصة",
       "authorize": "فتح رابط التفويض وتأكيده",
       "bind": "استطلاع نتيجة التفويض وربط الحساب",
       "retryPrepare": "إعادة إنشاء رابط OAuth",
-      "retryQuota": "إعادة التقاط Cookie واستعلام الحصة",
       "retryAuthorize": "طلب رابط التفويض مرة أخرى",
       "retryBind": "إعادة محاولة استطلاع التفويض",
       "error": "خطأ في المسار: {{error}}"
@@ -2043,22 +2036,8 @@
     },
     "search": "ابحث في حسابات CodeBuddy...",
     "quotaQuery": {
-      "title": "استعلام الحصة",
-      "desc": "ألصق ترويسة Cookie أو أمر cURL كامل. سنستخرج session/session_2 ونربطه بهذا الحساب.",
-      "button": "استعلام الحصة",
-      "submit": "ربط واستعلام",
-      "clearBinding": "مسح الربط",
-      "clearBindingConfirm": "هل تريد مسح ربط استعلام الحصة لهذا الحساب؟ سيتوقف التحديث التلقائي للحصة بعد المسح.",
-      "clearBindingSuccess": "تم مسح ربط استعلام الحصة.",
-      "clearBindingFailed": "فشل مسح ربط الحصة: {{error}}",
-      "success": "تم استعلام الحصة بنجاح. تم حفظ الربط.",
-      "failed": "فشل استعلام الحصة: {{error}}",
-      "failedCompact": "فشل الاستعلام",
       "failedRefreshCompact": "فشل تحديث الحصة",
-      "failedReasonLabel": "السبب: {{reason}}",
-      "failedReasonAt": "وقت الفشل: {{time}}",
       "sectionTitle": "استعلام الحصة",
-      "webOnlyHint": "يرجى عرض الحصة في صفحة الويب",
       "empty": "لا توجد معلومات ربط لاستعلام الحصة بعد",
       "packageUnknown": "باقة غير معروفة",
       "quotaLabel": "الحصة المتبقية",
@@ -2067,56 +2046,9 @@
       "cycleUnknown": "معلومات الدورة غير متاحة",
       "expireAt": "ينتهي في: {{time}}",
       "expireUnknown": "وقت الانتهاء: غير متاح",
-      "noQuota": "لم يتم الاستعلام",
-      "bindTarget": "الحساب المرتبط: {{email}}",
-      "coreHint": "تستخدم المعلمات الأخرى القيم الافتراضية: ProductCode=p_tcaca، Status=0,3، والنطاق الزمني=من الآن إلى +100 سنة.",
-      "webview": {
-        "tab": "تسجيل الدخول عبر WebView",
-        "desc": "سجّل الدخول إلى CodeBuddy في المتصفح المدمج. سيتم جلب معلومات الحصة تلقائيًا بعد تسجيل الدخول.",
-        "open": "فتح في WebView",
-        "openIncognito": "فتح في WebView المتخفي",
-        "waiting": "بانتظار تسجيل الدخول في المتصفح...",
-        "hint": "يرجى تسجيل الدخول إلى CodeBuddy في نافذة المتصفح المنبثقة. سيتم جلب الحصة وإغلاق النافذة تلقائيًا.",
-        "success": "نجح استعلام الحصة عبر WebView",
-        "failed": "فشل استعلام WebView: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "فتح WebView",
-        "login": "تسجيل الدخول إلى CodeBuddy",
-        "fetch": "جلب بيانات الحصة",
-        "bind": "ربط النتيجة بالحساب",
-        "retryOpen": "إعادة فتح WebView",
-        "retryLogin": "إعادة محاولة تسجيل الدخول",
-        "retryFetch": "إعادة جلب الحصة",
-        "retryBind": "إعادة محاولة الربط",
-        "error": "خطأ في المسار: {{error}}"
-      },
-      "manual": {
-        "tab": "لصق يدوي",
-        "step1": "افتح الرابط أدناه في متصفحك ثم سجّل الدخول",
-        "step2": "اضغط F12 لفتح أدوات المطور ثم انتقل إلى تبويب Network",
-        "step3": "حدّث الصفحة وابحث عن طلب get-user-resource",
-        "step4": "انقر بزر الفأرة الأيمن على الطلب → Copy → Copy as cURL (bash)",
-        "step5": "ألصقه في مربع الإدخال أدناه"
-      },
-      "fields": {
-        "cookieHeader": "ترويسة Cookie / cURL",
-        "productCode": "رمز المنتج",
-        "status": "الحالة",
-        "beginTime": "وقت البدء",
-        "endTime": "وقت الانتهاء",
-        "pageNumber": "رقم الصفحة",
-        "pageSize": "حجم الصفحة"
-      },
-      "placeholders": {
-        "cookieHeader": "ألصق أمر cURL الخاص بـ get-user-resource"
-      },
-      "errors": {
-        "cookieRequired": "يرجى إدخال Cookie header أو cURL أولاً.",
-        "accountMismatch": "ملف تعريف الارتباط الخاص بالحصة يخص حسابًا مختلفًا (UIN الحالي: {{expectedUin}}، UIN المرجع: {{resourceUin}}، payerUin: {{payerUin}}). يرجى التبديل إلى الحساب الصحيح ونسخ Cookie مرة أخرى.",
-        "statusInvalid": "تنسيق Status غير صالح. استخدم أرقامًا مفصولة بفواصل.",
-        "pageInvalid": "قيم التقسيم إلى صفحات غير صالحة. أدخل أرقامًا أكبر من 0.",
-        "fullCurlRequired": "يدعم فقط أمر cURL الكامل. يرجى استخدام \"Copy as cURL (bash)\" لطلب get-user-resource في Network ثم لصقه كما هو."
+      "packageTitle": {
+        "base": "حزمة التجربة الأساسية",
+        "activity": "حزمة هدية النشاط"
       }
     },
     "extraCredit": {
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "فشل توجيه WebView: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "أدخل رابطًا للتنقل داخل WebView هذا",
     "oauthWebviewInlineGo": "انتقال",
-    "oauthQuotaFailurePrompt": "فشل ربط الحصة.\nانقر موافق لإعادة محاولة التقاط Cookie وتحديث الحصة؛ وانقر إلغاء للتخطي (الحساب فقط).",
-    "oauthQuotaFailureTitle": "فشل ربط الحصة",
-    "oauthQuotaFailureRetry": "إعادة المحاولة",
-    "oauthQuotaFailureSkip": "تخطي",
     "oauthSuccessClosePrompt": "تمت إضافة الحساب بنجاح. هل تريد إغلاق WebView الآن؟\nاختر \"إغلاق WebView\" للإغلاق الآن، أو \"لاحقًا\" للإبقاء عليه مفتوحًا.",
     "oauthSuccessCloseTitle": "تمت إضافة الحساب",
     "oauthSuccessCloseNowLabel": "إغلاق WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ تمت إضافة الحساب. سيبقى WebView مفتوحًا.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 سجّل الدخول إلى CodeBuddy",
-        "quotaBind": "2 التقاط Cookie في WebView وربط استعلام الحصة",
-        "quotaComplete": "3 تم (إغلاق يدوي)",
         "prepare": "1 تحضير رابط OAuth",
         "authorize": "2 فتح رابط التفويض وتأكيده",
         "bind": "3 استطلاع نتيجة التفويض وربط الحساب",
-        "quota": "4 التقاط Cookie في WebView وربط استعلام الحصة",
         "complete": "5 تم (إغلاق يدوي)"
       },
       "status": {

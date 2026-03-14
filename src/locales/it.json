@@ -1999,17 +1999,12 @@
     "nickname": "Nickname",
     "enterprise": "Enterprise",
     "usage": "Stato utilizzo",
+    "creditsBalance": "Saldo crediti",
     "usageNormal": "Stato normale",
     "oauthWaiting": "In attesa di autorizzazione...",
     "oauthDesc": "Fai clic sul pulsante qui sotto per aprire la pagina di autorizzazione CodeBuddy nel browser.",
     "oauthDescWebview": "Fai clic sul pulsante qui sotto per aprire la pagina di autorizzazione CodeBuddy nella WebView integrata.",
     "oauthFeature": {
-      "webview": {
-        "title": "Consigliato: completa auth IDE e collegamento quota in un unico flusso",
-        "item1": "Dopo laccesso tramite WebView integrata in incognito, i dati di accesso IDE vengono collegati automaticamente.",
-        "item2": "Anche i parametri di query della quota vengono catturati e collegati automaticamente.",
-        "item3": "Ideale per la prima configurazione dellaccount, con visualizzazione e aggiornamento quota disponibili subito."
-      },
       "oauth": {
         "title": "Solo accesso IDE",
         "item1": "Aggiungi laccount dopo aver completato OAuth nel browser, poi usalo per il cambio account nellIDE.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "Nella parte alta della WebView viene mostrata una barra di avanzamento orizzontale per individuare i passaggi bloccati.",
     "oauthFlow": {
       "prepare": "Prepara il link OAuth",
-      "quota": "Cattura il Cookie nella WebView e collega la query quota",
       "authorize": "Apri il link di autorizzazione e conferma",
       "bind": "Controlla il risultato auth e collega laccount",
       "retryPrepare": "Rigenera il link OAuth",
-      "retryQuota": "Ricattura il Cookie e interroga la quota",
       "retryAuthorize": "Richiedi di nuovo il link di autorizzazione",
       "retryBind": "Riprova il controllo auth",
       "error": "Errore del flusso: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "Cerca account CodeBuddy...",
     "quotaQuery": {
-      "title": "Interroga quota",
-      "desc": "Incolla un header Cookie o un comando cURL completo. Estraiamo session/session_2 e lo colleghiamo a questo account.",
-      "button": "Interroga quota",
-      "submit": "Collega e interroga",
-      "clearBinding": "Cancella collegamento",
-      "clearBindingConfirm": "Cancellare il collegamento della query quota per questo account? Dopo la rimozione laggiornamento automatico della quota verra interrotto.",
-      "clearBindingSuccess": "Collegamento della query quota cancellato.",
-      "clearBindingFailed": "Impossibile cancellare il collegamento quota: {{error}}",
-      "success": "Quota interrogata con successo. Il collegamento e stato salvato.",
-      "failed": "Interrogazione quota non riuscita: {{error}}",
-      "failedCompact": "Interrogazione non riuscita",
       "failedRefreshCompact": "Aggiornamento quota non riuscito",
-      "failedReasonLabel": "Motivo: {{reason}}",
-      "failedReasonAt": "Fallito alle: {{time}}",
       "sectionTitle": "Interrogazione quota",
       "empty": "Nessuna informazione di query quota collegata",
       "packageUnknown": "Pacchetto sconosciuto",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Informazioni sul ciclo non disponibili",
       "expireAt": "Scade il: {{time}}",
       "expireUnknown": "Scadenza: N/D",
-      "noQuota": "Non interrogata",
-      "bindTarget": "Account collegato: {{email}}",
-      "coreHint": "Gli altri parametri usano i valori predefiniti: ProductCode=p_tcaca, Status=0,3, intervallo temporale = ora fino a +100 anni.",
-      "webview": {
-        "tab": "Accesso WebView",
-        "desc": "Accedi a CodeBuddy nel browser integrato. Le informazioni della quota verranno recuperate automaticamente dopo il login.",
-        "open": "Apri in WebView",
-        "openIncognito": "Apri in WebView in incognito",
-        "waiting": "In attesa del login nel browser...",
-        "hint": "Accedi a CodeBuddy nella finestra del browser aperta. La quota verra recuperata e la finestra si chiudera automaticamente.",
-        "success": "Query quota via WebView completata",
-        "failed": "Query WebView non riuscita: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "Apri WebView",
-        "login": "Accedi a CodeBuddy",
-        "fetch": "Recupera dati quota",
-        "bind": "Collega il risultato allaccount",
-        "retryOpen": "Riapri WebView",
-        "retryLogin": "Riprova il login",
-        "retryFetch": "Recupera di nuovo la quota",
-        "retryBind": "Riprova il collegamento",
-        "error": "Errore del flusso: {{error}}"
-      },
-      "manual": {
-        "tab": "Incolla manualmente",
-        "step1": "Apri il link qui sotto nel browser ed effettua il login",
-        "step2": "Premi F12 per aprire DevTools e passa alla scheda Network",
-        "step3": "Ricarica la pagina e trova la richiesta get-user-resource",
-        "step4": "Fai clic destro sulla richiesta -> Copy -> Copy as cURL (bash)",
-        "step5": "Incollala nel campo qui sotto"
-      },
-      "fields": {
-        "cookieHeader": "Header Cookie / cURL",
-        "productCode": "Codice prodotto (ProductCode)",
-        "status": "Valore stato (Status)",
-        "beginTime": "Ora inizio",
-        "endTime": "Ora fine",
-        "pageNumber": "Numero pagina (PageNumber)",
-        "pageSize": "Dimensione pagina (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "Incolla il comando cURL di get-user-resource"
-      },
-      "errors": {
-        "cookieRequired": "Fornisci prima un header Cookie o un cURL.",
-        "accountMismatch": "Il cookie quota appartiene a un altro account (UIN attuale: {{expectedUin}}, UIN restituito: {{resourceUin}}, UIN pagatore: {{payerUin}}). Passa allaccount corretto e copia di nuovo il cookie.",
-        "statusInvalid": "Formato Status non valido. Usa numeri separati da virgole.",
-        "pageInvalid": "Valori di paginazione non validi. Inserisci numeri maggiori di 0.",
-        "fullCurlRequired": "È supportato solo il comando cURL completo. Usa \"Copy as cURL (bash)\" su get-user-resource in Network e incollalo senza modifiche."
-      },
-      "webOnlyHint": "Visualizza la quota nella pagina web"
+      "packageTitle": {
+        "base": "Pacchetto esperienza base",
+        "activity": "Pacchetto regalo attività"
+      }
     },
     "extraCredit": {
       "title": "Pacchetto crediti"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "Impossibile navigare nella WebView: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "Inserisci un URL da aprire in questa WebView",
     "oauthWebviewInlineGo": "Vai",
-    "oauthQuotaFailurePrompt": "Collegamento quota non riuscito.\nPremi OK per riprovare la cattura del Cookie e aggiornare la quota; premi Annulla per saltare (solo account).",
-    "oauthQuotaFailureTitle": "Collegamento quota non riuscito",
-    "oauthQuotaFailureRetry": "Riprova",
-    "oauthQuotaFailureSkip": "Salta",
     "oauthSuccessClosePrompt": "Account aggiunto con successo. Chiudere ora questa WebView?\nScegli \"Chiudi WebView\" per chiuderla ora, oppure \"Dopo\" per lasciarla aperta.",
     "oauthSuccessCloseTitle": "Account aggiunto",
     "oauthSuccessCloseNowLabel": "Chiudi WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Account aggiunto. Questa WebView restera aperta.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 Accedi a CodeBuddy",
-        "quotaBind": "2 Cattura il Cookie nella WebView e collega la query quota",
-        "quotaComplete": "3 Completato (chiudi manualmente)",
         "prepare": "1 Prepara il link OAuth",
         "authorize": "2 Apri il link di autorizzazione e conferma",
         "bind": "3 Controlla il risultato auth e collega laccount",
-        "quota": "4 Cattura il Cookie nella WebView e collega la query quota",
         "complete": "5 Completato (chiudi manualmente)"
       },
       "status": {

@@ -7,6 +7,22 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [0.15.0] - 2026-03-14
+
+### 新增
+- **CodeBuddy/CodeBuddy CN 资源包配额已支持在应用内直接展示**：账号卡片与表格现可按资源包展示额度数值、进度条和刷新/到期时间（含加量包），不再依赖“仅网页查看”。
+- **CodeBuddy CN Token 导入现在会立即补全配额元数据**：Token 导入时会同步拉取 dosage/payment/user-resource 并落盘到配额与用量字段，创建账号后即可展示。
+
+### 变更
+- **配额刷新链路改为使用 IDE Access Token，不再依赖 Cookie 绑定**：后端刷新改为调用 `/v2/billing/meter/get-user-resource`（Bearer Token + 身份请求头），并将刷新失败写入账号状态供前端展示。
+- **前后端已移除手动配额绑定旧链路**：CodeBuddy 与 CodeBuddy CN 均删除 cURL 重放绑定、清除绑定命令，以及对应的 service/type 入口。
+- **多语言文案已按新配额模型统一更新**：移除过时的 Cookie 绑定流程文案，网络范围描述统一为“资源包配额刷新”，并为基础体验包/活动赠送包补齐所有支持语言键。
+- **配额接口压缩响应兼容性提升**：`reqwest` 现启用 `brotli`/`deflate`/`zstd`，提升计费接口压缩响应解析稳定性。
+
+### 修复
+- **配额摘要与推荐逻辑不再依赖旧绑定状态**：资源摘要在 `quota_binding` 缺失时不再直接返回 `null`，避免 token 刷新后推荐逻辑退化为仅按回退规则排序。
+
+---
 ## [0.14.0] - 2026-03-13
 
 ### 新增

@@ -1999,17 +1999,12 @@
     "nickname": "Apelido",
     "enterprise": "Empresa",
     "usage": "Status de uso",
+    "creditsBalance": "Saldo de créditos",
     "usageNormal": "Estado normal",
     "oauthWaiting": "Aguardando autorizacao...",
     "oauthDesc": "Clique no botao abaixo para abrir a pagina de autorizacao do CodeBuddy no navegador.",
     "oauthDescWebview": "Clique no botao abaixo para abrir a pagina de autorizacao do CodeBuddy na WebView incorporada.",
     "oauthFeature": {
-      "webview": {
-        "title": "Recomendado: concluir auth do IDE e vinculacao de cota em um unico fluxo",
-        "item1": "Depois de entrar pela WebView incorporada em modo anonimo, os dados de login do IDE sao vinculados automaticamente.",
-        "item2": "Os parametros de consulta de cota tambem sao capturados e vinculados automaticamente.",
-        "item3": "Melhor para configurar a conta pela primeira vez, com visualizacao e atualizacao de cota disponiveis imediatamente."
-      },
       "oauth": {
         "title": "Somente login do IDE",
         "item1": "Adicione a conta apos concluir o OAuth no navegador e use-a para alternancia no IDE.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "Uma barra horizontal de etapas e mostrada no topo da WebView para localizar pontos travados.",
     "oauthFlow": {
       "prepare": "Preparar link OAuth",
-      "quota": "Capturar Cookie na WebView e vincular consulta de cota",
       "authorize": "Abrir link de autorizacao e confirmar",
       "bind": "Verificar resultado da autenticacao e vincular conta",
       "retryPrepare": "Gerar novamente o link OAuth",
-      "retryQuota": "Capturar o Cookie novamente e consultar a cota",
       "retryAuthorize": "Solicitar novamente o link de autorizacao",
       "retryBind": "Tentar novamente a verificacao da autenticacao",
       "error": "Erro do fluxo: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "Pesquisar contas do CodeBuddy...",
     "quotaQuery": {
-      "title": "Consultar cota",
-      "desc": "Cole um cabeçalho Cookie ou um comando cURL completo. Vamos extrair session/session_2 e vinculá-lo a esta conta.",
-      "button": "Consultar cota",
-      "submit": "Vincular e consultar",
-      "clearBinding": "Limpar vinculacao",
-      "clearBindingConfirm": "Limpar a vinculacao de consulta de cota desta conta? A atualizacao automatica da cota sera interrompida apos a limpeza.",
-      "clearBindingSuccess": "Vinculacao de consulta de cota removida.",
-      "clearBindingFailed": "Falha ao limpar a vinculacao da cota: {{error}}",
-      "success": "Cota consultada com sucesso. A vinculacao foi salva.",
-      "failed": "Falha na consulta da cota: {{error}}",
-      "failedCompact": "Falha na consulta",
       "failedRefreshCompact": "Falha na atualizacao da cota",
-      "failedReasonLabel": "Motivo: {{reason}}",
-      "failedReasonAt": "Falhou em: {{time}}",
       "sectionTitle": "Consulta de cota",
       "empty": "Ainda nao ha informacoes vinculadas de consulta de cota",
       "packageUnknown": "Pacote desconhecido",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Informacoes do ciclo indisponiveis",
       "expireAt": "Expira em: {{time}}",
       "expireUnknown": "Expiracao: N/A",
-      "noQuota": "Nao consultado",
-      "bindTarget": "Conta vinculada: {{email}}",
-      "coreHint": "Os outros parametros usam os valores padrao: ProductCode=p_tcaca, Status=0,3, intervalo de tempo = agora ate +100 anos.",
-      "webview": {
-        "tab": "Login pela WebView",
-        "desc": "Entre no CodeBuddy pelo navegador integrado. As informacoes de cota serao obtidas automaticamente apos o login.",
-        "open": "Abrir na WebView",
-        "openIncognito": "Abrir na WebView anonima",
-        "waiting": "Aguardando login no navegador...",
-        "hint": "Faça login no CodeBuddy na janela do navegador aberta. A cota sera obtida e a janela sera fechada automaticamente.",
-        "success": "Consulta de cota pela WebView concluida",
-        "failed": "Falha na consulta pela WebView: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "Abrir WebView",
-        "login": "Entrar no CodeBuddy",
-        "fetch": "Buscar dados de cota",
-        "bind": "Vincular resultado a conta",
-        "retryOpen": "Reabrir WebView",
-        "retryLogin": "Tentar login novamente",
-        "retryFetch": "Buscar cota novamente",
-        "retryBind": "Tentar vinculacao novamente",
-        "error": "Erro do fluxo: {{error}}"
-      },
-      "manual": {
-        "tab": "Colar manualmente",
-        "step1": "Abra o link abaixo no navegador e faça login",
-        "step2": "Pressione F12 para abrir o DevTools e mude para a aba Network",
-        "step3": "Atualize a pagina e encontre a requisicao get-user-resource",
-        "step4": "Clique com o botao direito na requisicao -> Copy -> Copy as cURL (bash)",
-        "step5": "Cole no campo abaixo"
-      },
-      "fields": {
-        "cookieHeader": "Cabecalho Cookie / cURL",
-        "productCode": "Codigo do produto (ProductCode)",
-        "status": "Valor de status (Status)",
-        "beginTime": "Hora inicial",
-        "endTime": "Hora final",
-        "pageNumber": "Numero da pagina (PageNumber)",
-        "pageSize": "Tamanho da pagina (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "Cole o comando cURL de get-user-resource"
-      },
-      "errors": {
-        "cookieRequired": "Forneca primeiro um cabecalho Cookie ou cURL.",
-        "accountMismatch": "O cookie de cota pertence a outra conta (UIN atual: {{expectedUin}}, UIN retornado: {{resourceUin}}, UIN pagador: {{payerUin}}). Troque para a conta correta e copie o cookie novamente.",
-        "statusInvalid": "Formato de Status invalido. Use numeros separados por virgula.",
-        "pageInvalid": "Valores de paginacao invalidos. Informe numeros maiores que 0.",
-        "fullCurlRequired": "Apenas o comando cURL completo é suportado. Em Network, use \"Copy as cURL (bash)\" em get-user-resource e cole exatamente como está."
-      },
-      "webOnlyHint": "Veja a cota na página da web"
+      "packageTitle": {
+        "base": "Pacote de experiência básica",
+        "activity": "Pacote de bônus de atividade"
+      }
     },
     "extraCredit": {
       "title": "Pacote de creditos"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "Falha ao navegar na WebView: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "Digite uma URL para abrir nesta WebView",
     "oauthWebviewInlineGo": "Ir",
-    "oauthQuotaFailurePrompt": "Falha na vinculacao da cota.\nClique em OK para tentar novamente a captura do Cookie e atualizar a cota; clique em Cancelar para ignorar (somente conta).",
-    "oauthQuotaFailureTitle": "Falha na vinculacao da cota",
-    "oauthQuotaFailureRetry": "Tentar novamente",
-    "oauthQuotaFailureSkip": "Ignorar",
     "oauthSuccessClosePrompt": "Conta adicionada com sucesso. Fechar esta WebView agora?\nEscolha \"Fechar WebView\" para fechar agora, ou \"Depois\" para mantê-la aberta.",
     "oauthSuccessCloseTitle": "Conta adicionada",
     "oauthSuccessCloseNowLabel": "Fechar WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Conta adicionada. Esta WebView permanecera aberta.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 Faça login no CodeBuddy",
-        "quotaBind": "2 Capturar Cookie na WebView e vincular consulta de cota",
-        "quotaComplete": "3 Concluído (fechar manualmente)",
         "prepare": "1 Preparar link OAuth",
         "authorize": "2 Abrir link de autorizacao e confirmar",
         "bind": "3 Verificar resultado da autenticacao e vincular conta",
-        "quota": "4 Capturar Cookie na WebView e vincular consulta de cota",
         "complete": "5 Concluído (fechar manualmente)"
       },
       "status": {

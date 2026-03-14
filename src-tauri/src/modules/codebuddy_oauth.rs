@@ -1,9 +1,7 @@
 use serde_json::{json, Value};
 use std::sync::{Arc, Mutex};
 
-use crate::models::codebuddy::{
-    CodebuddyOAuthCompletePayload, CodebuddyOAuthStartResponse, CodebuddyQuotaRequestHeaders,
-};
+use crate::models::codebuddy::{CodebuddyOAuthCompletePayload, CodebuddyOAuthStartResponse};
 use crate::modules::logger;
 
 const CODEBUDDY_API_ENDPOINT: &str = "https://www.codebuddy.ai";
@@ -46,6 +44,33 @@ fn build_client() -> Result<reqwest::Client, String> {
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|e| format!("创建 HTTP 客户端失败: {}", e))
+}
+
+fn normalize_product_code(value: Option<&str>) -> String {
+    value
+        .map(|v| v.trim())
+        .filter(|v| !v.is_empty())
+        .unwrap_or("p_tcaca")
+        .to_string()
+}
+
+fn normalize_user_resource_status(status: &[i32]) -> Vec<i32> {
+    let mut normalized: Vec<i32> = status.iter().copied().filter(|v| *v >= 0).collect();
+    if normalized.is_empty() {
+        return vec![0, 3];
+    }
+    normalized.sort_unstable();
+    normalized.dedup();
+    normalized
+}
+
+fn build_default_user_resource_time_range() -> (String, String) {
+    let now = chrono::Local::now();
+    let begin = now.format("%Y-%m-%d %H:%M:%S").to_string();
+    let end = (now + chrono::Duration::days(365 * 101))
+        .format("%Y-%m-%d %H:%M:%S")
+        .to_string();
+    (begin, end)
 }
 
 fn clear_pending_login(login_id: &str) -> Result<(), String> {
@@ -257,7 +282,6 @@ pub async fn complete_login(login_id: &str) -> Result<CodebuddyOAuthCompletePayl
                                     auth_raw,
                                     profile_raw,
                                     usage_raw: None,
-                                    quota_binding: None,
                                     status: Some("normal".to_string()),
                                     status_reason: None,
                                 });
@@ -509,19 +533,20 @@ pub async fn fetch_payment_type(
     Ok(body)
 }
 
-pub async fn fetch_user_resource_with_cookie(
-    cookie_header: &str,
+pub async fn fetch_user_resource_with_access_token(
+    access_token: &str,
+    uid: Option<&str>,
+    enterprise_id: Option<&str>,
+    domain: Option<&str>,
     product_code: &str,
     status: &[i32],
     package_end_time_range_begin: &str,
     package_end_time_range_end: &str,
     page_number: i32,
     page_size: i32,
-    request_headers: Option<&CodebuddyQuotaRequestHeaders>,
-    user_agent_fallback: Option<&str>,
 ) -> Result<Value, String> {
     let client = build_client()?;
-    let url = format!("{}/billing/meter/get-user-resource", CODEBUDDY_API_ENDPOINT);
+    let url = format!("{}/v2/billing/meter/get-user-resource", CODEBUDDY_API_ENDPOINT);
 
     let body = json!({
         "PageNumber": page_number,
@@ -532,212 +557,116 @@ pub async fn fetch_user_resource_with_cookie(
         "PackageEndTimeRangeEnd": package_end_time_range_end
     });
 
-    let accept = request_headers
-        .and_then(|h| h.accept.as_deref())
-        .unwrap_or("application/json, text/plain, */*");
-    let accept_language = request_headers
-        .and_then(|h| h.accept_language.as_deref())
-        .unwrap_or("zh-CN,zh;q=0.9");
-    let content_type = request_headers
-        .and_then(|h| h.content_type.as_deref())
-        .unwrap_or("application/json");
-    let origin = request_headers
-        .and_then(|h| h.origin.as_deref())
-        .unwrap_or(CODEBUDDY_API_ENDPOINT);
-    let referer = request_headers
-        .and_then(|h| h.referer.as_deref())
-        .map(|s| s.to_string())
-        .unwrap_or_else(|| format!("{}/profile/usage", CODEBUDDY_API_ENDPOINT));
-    let sec_fetch_site = request_headers
-        .and_then(|h| h.sec_fetch_site.as_deref())
-        .unwrap_or("same-origin");
-    let sec_fetch_mode = request_headers
-        .and_then(|h| h.sec_fetch_mode.as_deref())
-        .unwrap_or("cors");
-    let sec_fetch_dest = request_headers
-        .and_then(|h| h.sec_fetch_dest.as_deref())
-        .unwrap_or("empty");
-    let effective_ua = request_headers
-        .and_then(|h| h.user_agent.as_deref())
-        .or(user_agent_fallback)
-        .unwrap_or(
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
-        );
-
-    let resp = client
+    let mut req = client
         .post(&url)
-        .header("Accept", accept)
-        .header("Accept-Language", accept_language)
-        .header("Content-Type", content_type)
-        .header("Origin", origin)
-        .header("Referer", referer)
-        .header("Sec-Fetch-Site", sec_fetch_site)
-        .header("Sec-Fetch-Mode", sec_fetch_mode)
-        .header("Sec-Fetch-Dest", sec_fetch_dest)
-        .header("User-Agent", effective_ua)
-        .header("Cookie", cookie_header)
-        .json(&body)
-        .send()
-        .await
-        .map_err(|e| format!("请求 user resource（Cookie）失败: {}", e))?;
+        .header("Accept", "application/json, text/plain, */*")
+        .header("Accept-Language", "zh-CN,zh;q=0.9")
+        .header("Authorization", format!("Bearer {}", access_token))
+        .header("Content-Type", "application/json");
 
-    let status_code = resp.status();
-
-    let text = resp
-        .text()
-        .await
-        .map_err(|e| format!("读取 user resource（Cookie）响应失败: {}", e))?;
-
-    let text_snippet = {
-        let preview = text.replace('\n', "\\n");
-        let max_chars = 600usize;
-        let mut out = String::new();
-        let mut count = 0usize;
-        for ch in preview.chars() {
-            if count >= max_chars {
-                out.push_str("...<truncated>");
-                break;
-            }
-            out.push(ch);
-            count += 1;
-        }
-        out
-    };
-
-    let result: Value = serde_json::from_str(&text).map_err(|e| {
-        format!(
-            "解析 user resource（Cookie）响应失败: {}, http={}, body_preview={}",
-            e,
-            status_code.as_u16(),
-            text_snippet
-        )
-    })?;
-
-    if !status_code.is_success() {
-        return Err(format!(
-            "请求 user resource（Cookie）失败: http={}, body={}",
-            status_code.as_u16(),
-            text
-        ));
+    if let Some(u) = uid {
+        req = req.header("X-User-Id", u);
     }
-
-    let code = result.get("code").and_then(|v| v.as_i64()).unwrap_or(-1);
-    if code != 0 && code != 200 {
-        let msg = result
-            .get("msg")
-            .or_else(|| result.get("message"))
-            .and_then(|v| v.as_str())
-            .unwrap_or("unknown error");
-        return Err(format!(
-            "user resource（Cookie）返回失败: code={}, msg={}",
-            code, msg
-        ));
+    if let Some(eid) = enterprise_id {
+        req = req.header("X-Enterprise-Id", eid);
+        req = req.header("X-Tenant-Id", eid);
     }
-
-    Ok(result)
-}
-
-pub async fn fetch_user_resource_with_raw_request(
-    request_url: &str,
-    request_method: &str,
-    request_headers: &[(String, String)],
-    request_body: Option<&str>,
-) -> Result<Value, String> {
-    let client = build_client()?;
-    let method = reqwest::Method::from_bytes(request_method.trim().as_bytes())
-        .map_err(|e| format!("cURL 请求方法无效: {}", e))?;
-    let url = request_url.trim();
-    if url.is_empty() {
-        return Err("cURL 缺少请求 URL".to_string());
-    }
-
-    let mut req = client.request(method, url);
-    for (name_raw, value_raw) in request_headers {
-        let name = name_raw.trim();
-        let value = value_raw.trim();
-        if name.is_empty() || value.is_empty() {
-            continue;
-        }
-        if name.eq_ignore_ascii_case("host") || name.eq_ignore_ascii_case("content-length") {
-            continue;
-        }
-        let header_name = reqwest::header::HeaderName::from_bytes(name.as_bytes())
-            .map_err(|e| format!("cURL 请求头无效（{}）: {}", name, e))?;
-        let header_value = reqwest::header::HeaderValue::from_str(value)
-            .map_err(|e| format!("cURL 请求头值无效（{}）: {}", name, e))?;
-        req = req.header(header_name, header_value);
-    }
-
-    if let Some(body) = request_body {
-        if !body.trim().is_empty() {
-            req = req.body(body.to_string());
-        }
+    if let Some(d) = domain {
+        req = req.header("X-Domain", d);
     }
 
     let resp = req
+        .json(&body)
         .send()
         .await
-        .map_err(|e| format!("重放 cURL 请求 user resource 失败: {}", e))?;
+        .map_err(|e| format!("请求 user resource（Token）失败: {}", e))?;
 
     let status_code = resp.status();
-    let text = resp
-        .text()
-        .await
-        .map_err(|e| format!("读取 user resource（cURL）响应失败: {}", e))?;
+    let content_type = resp
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("")
+        .to_string();
+    let content_encoding = resp
+        .headers()
+        .get(reqwest::header::CONTENT_ENCODING)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("")
+        .to_string();
 
-    let text_snippet = {
-        let preview = text.replace('\n', "\\n");
-        let max_chars = 600usize;
-        let mut out = String::new();
-        let mut count = 0usize;
-        for ch in preview.chars() {
-            if count >= max_chars {
-                out.push_str("...<truncated>");
-                break;
-            }
-            out.push(ch);
-            count += 1;
-        }
-        out
-    };
-
-    let result: Value = serde_json::from_str(&text).map_err(|e| {
+    let body: Value = resp.json().await.map_err(|e| {
         format!(
-            "解析 user resource（cURL）响应失败: {}, http={}, body_preview={}",
+            "解析 user resource（Token）响应失败: {} (http={}, url={}, has_uid={}, has_enterprise_id={}, content_type={}, content_encoding={})",
             e,
             status_code.as_u16(),
-            text_snippet
+            url,
+            uid.is_some(),
+            enterprise_id.is_some(),
+            content_type,
+            content_encoding
         )
     })?;
 
     if !status_code.is_success() {
-        return Err(format!(
-            "请求 user resource（cURL）失败: http={}, body={}",
-            status_code.as_u16(),
-            text
-        ));
-    }
-
-    let code = result.get("code").and_then(|v| v.as_i64()).unwrap_or(-1);
-    if code != 0 && code != 200 {
-        let msg = result
-            .get("msg")
-            .or_else(|| result.get("message"))
+        let message = body
+            .get("message")
+            .or_else(|| body.get("msg"))
             .and_then(|v| v.as_str())
             .unwrap_or("unknown error");
         return Err(format!(
-            "user resource（cURL）返回失败: code={}, msg={}",
-            code, msg
+            "请求 user resource（Token）失败 (http={}): {}",
+            status_code.as_u16(),
+            message
         ));
     }
 
-    Ok(result)
+    if let Some(code) = body.get("code").and_then(|v| v.as_i64()) {
+        if code != 0 && code != 200 {
+            let message = body
+                .get("message")
+                .or_else(|| body.get("msg"))
+                .and_then(|v| v.as_str())
+                .unwrap_or("unknown error");
+            return Err(format!(
+                "请求 user resource（Token）失败 (code={}): {}",
+                code, message
+            ));
+        }
+    }
+
+    Ok(body)
+}
+
+async fn fetch_user_resource_with_access_token_default(
+    access_token: &str,
+    uid: Option<&str>,
+    enterprise_id: Option<&str>,
+    domain: Option<&str>,
+) -> Result<Value, String> {
+    let product_code = normalize_product_code(None);
+    let status = normalize_user_resource_status(&[]);
+    let (package_end_time_range_begin, package_end_time_range_end) =
+        build_default_user_resource_time_range();
+    fetch_user_resource_with_access_token(
+        access_token,
+        uid,
+        enterprise_id,
+        domain,
+        product_code.as_str(),
+        &status,
+        package_end_time_range_begin.as_str(),
+        package_end_time_range_end.as_str(),
+        1,
+        100,
+    )
+    .await
 }
 
 async fn refresh_payload_for_account_inner(
     account: &crate::models::codebuddy::CodebuddyAccount,
     require_user_resource: bool,
-) -> Result<CodebuddyOAuthCompletePayload, String> {
+) -> Result<(CodebuddyOAuthCompletePayload, Option<String>), String> {
     let mut new_access_token = account.access_token.clone();
     let mut new_refresh_token = account.refresh_token.clone();
     let mut new_expires_at = account.expires_at;
@@ -799,43 +728,37 @@ async fn refresh_payload_for_account_inner(
     .await
     .ok();
 
-    let user_resource = if let Some(binding) = account.quota_binding.as_ref() {
-        match fetch_user_resource_with_cookie(
-            binding.cookie_header.as_str(),
-            binding.product_code.as_str(),
-            &binding.status,
-            binding.package_end_time_range_begin.as_str(),
-            binding.package_end_time_range_end.as_str(),
-            binding.page_number,
-            binding.page_size,
-            binding.request_headers.as_ref(),
-            binding.user_agent.as_deref(),
-        )
-        .await
-        {
-            Ok(payload) => Some(payload),
-            Err(err) => {
-                if require_user_resource {
-                    return Err(format!("使用绑定参数刷新 user_resource 失败: {}", err));
-                }
-                logger::log_warn(&format!(
-                    "[CodeBuddy] 使用绑定参数刷新 user_resource 失败: {}",
-                    err
-                ));
-                None
+    let mut quota_refresh_error: Option<String> = None;
+    logger::log_info(&format!(
+        "[CodeBuddy][IDE Token] 尝试刷新 user_resource: has_uid={}, has_enterprise_id={}, has_domain={}",
+        account.uid.is_some(),
+        account.enterprise_id.is_some(),
+        new_domain.is_some()
+    ));
+    let user_resource = match fetch_user_resource_with_access_token_default(
+        new_access_token.as_str(),
+        account.uid.as_deref(),
+        account.enterprise_id.as_deref(),
+        new_domain.as_deref(),
+    )
+    .await
+    {
+        Ok(payload) => {
+            logger::log_info("[CodeBuddy][IDE Token] 刷新 user_resource 成功");
+            Some(payload)
+        }
+        Err(err) => {
+            logger::log_warn(&format!(
+                "[CodeBuddy][IDE Token] 刷新 user_resource 失败: {}",
+                err
+            ));
+            quota_refresh_error = Some(err.clone());
+            if require_user_resource {
+                return Err("使用 IDE token 刷新 user_resource 失败，无法获取资源包配额"
+                    .to_string());
             }
+            None
         }
-    } else {
-        if require_user_resource {
-            return Err(
-                "未配置查询配额绑定参数，无法刷新 user_resource（需要 session/session_2）"
-                    .to_string(),
-            );
-        }
-        logger::log_warn(
-            "[CodeBuddy] 未配置查询配额绑定参数，跳过 user_resource 刷新（请先完成一次配额绑定）",
-        );
-        None
     };
 
     let dosage_data = dosage.as_ref().and_then(|v| v.get("data"));
@@ -885,35 +808,37 @@ async fn refresh_payload_for_account_inner(
         Some(Value::Object(combined_quota))
     };
 
-    Ok(CodebuddyOAuthCompletePayload {
-        email: account.email.clone(),
-        uid: account.uid.clone(),
-        nickname: account.nickname.clone(),
-        enterprise_id: account.enterprise_id.clone(),
-        enterprise_name: account.enterprise_name.clone(),
-        access_token: new_access_token,
-        refresh_token: new_refresh_token,
-        token_type: account.token_type.clone(),
-        expires_at: new_expires_at,
-        domain: new_domain,
-        plan_type: account.plan_type.clone(),
-        dosage_notify_code,
-        dosage_notify_zh,
-        dosage_notify_en,
-        payment_type,
-        quota_raw,
-        auth_raw: account.auth_raw.clone(),
-        profile_raw: account.profile_raw.clone(),
-        usage_raw: user_resource.or_else(|| account.usage_raw.clone()),
-        quota_binding: account.quota_binding.clone(),
-        status: account.status.clone(),
-        status_reason: account.status_reason.clone(),
-    })
+    Ok((
+        CodebuddyOAuthCompletePayload {
+            email: account.email.clone(),
+            uid: account.uid.clone(),
+            nickname: account.nickname.clone(),
+            enterprise_id: account.enterprise_id.clone(),
+            enterprise_name: account.enterprise_name.clone(),
+            access_token: new_access_token,
+            refresh_token: new_refresh_token,
+            token_type: account.token_type.clone(),
+            expires_at: new_expires_at,
+            domain: new_domain,
+            plan_type: account.plan_type.clone(),
+            dosage_notify_code,
+            dosage_notify_zh,
+            dosage_notify_en,
+            payment_type,
+            quota_raw,
+            auth_raw: account.auth_raw.clone(),
+            profile_raw: account.profile_raw.clone(),
+            usage_raw: user_resource.or_else(|| account.usage_raw.clone()),
+            status: account.status.clone(),
+            status_reason: account.status_reason.clone(),
+        },
+        quota_refresh_error,
+    ))
 }
 
 pub async fn refresh_payload_for_account(
     account: &crate::models::codebuddy::CodebuddyAccount,
-) -> Result<CodebuddyOAuthCompletePayload, String> {
+) -> Result<(CodebuddyOAuthCompletePayload, Option<String>), String> {
     refresh_payload_for_account_inner(account, false).await
 }
 
@@ -1013,7 +938,6 @@ pub async fn build_payload_from_token(
         auth_raw: None,
         profile_raw: Some(account_data),
         usage_raw: None,
-        quota_binding: None,
         status: Some("normal".to_string()),
         status_reason: None,
     })

@@ -1999,17 +1999,12 @@
     "nickname": "ニックネーム",
     "enterprise": "企業",
     "usage": "使用状況",
+    "creditsBalance": "クレジット残高",
     "usageNormal": "正常",
     "oauthWaiting": "認証完了を待機中...",
     "oauthDesc": "下のボタンをクリックすると、ブラウザで CodeBuddy の認証ページを開きます。",
     "oauthDescWebview": "下のボタンをクリックすると、内蔵 WebView で CodeBuddy の認証ページを開きます。",
     "oauthFeature": {
-      "webview": {
-        "title": "推奨：IDE 認証とクォータ紐付けを一度に完了",
-        "item1": "内蔵シークレット WebView でログインすると、IDE ログイン情報が自動で紐付けられます。",
-        "item2": "同時にクォータ照会に必要なパラメータも自動取得され、追加の手動紐付けは不要です。",
-        "item3": "初回アカウント追加に向いており、完了後すぐにクォータを表示・更新できます。"
-      },
       "oauth": {
         "title": "IDE ログイン情報のみを認証",
         "item1": "ブラウザで OAuth を完了すると、アカウントを追加して IDE 切り替えに利用できます。",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "WebView 上部に横向きのステップバーを表示し、停止した段階を特定しやすくします。",
     "oauthFlow": {
       "prepare": "認証リンクを準備",
-      "quota": "WebView で Cookie を取得してクォータ照会を紐付け",
       "authorize": "認証リンクを開いて承認",
       "bind": "認証結果をポーリングしてアカウントに紐付け",
       "retryPrepare": "認証リンクを再生成",
-      "retryQuota": "Cookie を再取得してクォータを照会",
       "retryAuthorize": "認証リンクを再要求",
       "retryBind": "認証ポーリングを再試行",
       "error": "フローエラー：{{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "CodeBuddy アカウントを検索...",
     "quotaQuery": {
-      "title": "クォータ照会",
-      "desc": "Cookie Header または完全な cURL を貼り付けると、session/session_2 を抽出して現在のアカウントに紐付けます。",
-      "button": "クォータ照会",
-      "submit": "紐付けて照会",
-      "clearBinding": "紐付けを解除",
-      "clearBindingConfirm": "このアカウントのクォータ照会紐付けを解除しますか？解除するとクォータの自動更新が停止します。",
-      "clearBindingSuccess": "クォータ照会の紐付けを解除しました。",
-      "clearBindingFailed": "クォータ紐付けの解除に失敗しました：{{error}}",
-      "success": "クォータ照会に成功し、照会パラメータを保存しました。",
-      "failed": "クォータ照会に失敗しました：{{error}}",
-      "failedCompact": "照会失敗",
       "failedRefreshCompact": "クォータ更新失敗",
-      "failedReasonLabel": "理由：{{reason}}",
-      "failedReasonAt": "失敗時刻：{{time}}",
       "sectionTitle": "クォータ照会",
       "empty": "まだクォータ照会情報が紐付けられていません",
       "packageUnknown": "プラン情報不明",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "期間情報なし",
       "expireAt": "有効期限：{{time}}",
       "expireUnknown": "有効期限：なし",
-      "noQuota": "未照会",
-      "bindTarget": "紐付けアカウント：{{email}}",
-      "coreHint": "その他のパラメータには既定値を使用します：ProductCode=p_tcaca、Status=0,3、時間範囲=現在から +100 年。",
-      "webview": {
-        "tab": "WebView ログイン",
-        "desc": "内蔵ブラウザで CodeBuddy にログインすると、ログイン後にクォータ情報を自動取得します。",
-        "open": "WebView で開く",
-        "openIncognito": "シークレット WebView で開く",
-        "waiting": "ブラウザでのログイン待ち...",
-        "hint": "ポップアップしたブラウザウィンドウで CodeBuddy にログインしてください。ログイン後にクォータを取得し、自動でウィンドウを閉じます。",
-        "success": "WebView クォータ照会に成功しました",
-        "failed": "WebView 照会に失敗しました：{{error}}"
-      },
-      "webviewFlow": {
-        "open": "WebView を開く",
-        "login": "CodeBuddy にログイン",
-        "fetch": "クォータ情報を取得",
-        "bind": "結果をアカウントに紐付け",
-        "retryOpen": "WebView を再度開く",
-        "retryLogin": "ログインを再試行",
-        "retryFetch": "クォータを再取得",
-        "retryBind": "紐付けを再試行",
-        "error": "フローエラー：{{error}}"
-      },
-      "manual": {
-        "tab": "手動貼り付け",
-        "step1": "下のリンクをブラウザで開いてログイン",
-        "step2": "F12 を押して DevTools を開き、Network タブに切り替える",
-        "step3": "ページを再読み込みし、get-user-resource リクエストを探す",
-        "step4": "リクエストを右クリック → Copy → Copy as cURL (bash)",
-        "step5": "下の入力欄に貼り付ける"
-      },
-      "fields": {
-        "cookieHeader": "Cookie ヘッダー / cURL",
-        "productCode": "製品コード (ProductCode)",
-        "status": "状態値 (Status)",
-        "beginTime": "開始時刻",
-        "endTime": "終了時刻",
-        "pageNumber": "ページ番号 (PageNumber)",
-        "pageSize": "ページサイズ (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "get-user-resource の cURL コマンドを貼り付けてください"
-      },
-      "errors": {
-        "cookieRequired": "まず Cookie Header または cURL を入力してください。",
-        "accountMismatch": "クォータ Cookie が別のアカウントに属しています（現在の UIN：{{expectedUin}}、返却 UIN：{{resourceUin}}、payerUin：{{payerUin}}）。正しいアカウントに切り替えてから Cookie を再度コピーしてください。",
-        "statusInvalid": "Status の形式が正しくありません。カンマ区切りの数字を使用してください。",
-        "pageInvalid": "ページング値が無効です。0 より大きい数字を入力してください。",
-        "fullCurlRequired": "完全な cURL コマンドのみ対応しています。Network の get-user-resource で「Copy as cURL (bash)」を実行し、そのまま貼り付けてください。"
-      },
-      "webOnlyHint": "配額はWebページで確認してください"
+      "packageTitle": {
+        "base": "基本体験パッケージ",
+        "activity": "アクティビティ特典パッケージ"
+      }
     },
     "extraCredit": {
       "title": "追加クレジット"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "WebView の移動に失敗しました：{{error}}",
     "oauthWebviewInlineUrlPlaceholder": "この WebView 内で移動する URL を入力",
     "oauthWebviewInlineGo": "移動",
-    "oauthQuotaFailurePrompt": "クォータの紐付けに失敗しました。\n「OK」をクリックすると Cookie 取得とクォータ更新を再試行し、「キャンセル」をクリックするとスキップします（アカウント追加のみ）。",
-    "oauthQuotaFailureTitle": "クォータ紐付け失敗",
-    "oauthQuotaFailureRetry": "再試行",
-    "oauthQuotaFailureSkip": "スキップ",
     "oauthSuccessClosePrompt": "アカウントの追加が完了しました。今すぐこの WebView を閉じますか？\n「WebView を閉じる」を選ぶとすぐ閉じ、「後で」を選ぶと開いたままにします。",
     "oauthSuccessCloseTitle": "アカウント追加完了",
     "oauthSuccessCloseNowLabel": "WebView を閉じる",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ アカウント追加が完了しました。この WebView は開いたままです。",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 CodeBuddy にサインイン",
-        "quotaBind": "2 WebView で Cookie を取得してクォータ照会を紐付け",
-        "quotaComplete": "3 完了（手動で閉じる）",
         "prepare": "1 認証リンクを準備",
         "authorize": "2 認証リンクを開いて承認",
         "bind": "3 認証結果をポーリングしてアカウントに紐付け",
-        "quota": "4 WebView で Cookie を取得してクォータ照会を紐付け",
         "complete": "5 完了（手動で閉じる）"
       },
       "status": {

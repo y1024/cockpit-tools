@@ -1999,17 +1999,12 @@
     "nickname": "Apodo",
     "enterprise": "Empresa",
     "usage": "Estado de uso",
+    "creditsBalance": "Saldo de créditos",
     "usageNormal": "Estándar",
     "oauthWaiting": "Esperando a que termine la autorización...",
     "oauthDesc": "Haz clic en el botón de abajo para abrir la página de autorización de CodeBuddy en tu navegador.",
     "oauthDescWebview": "Haz clic en el botón de abajo para abrir la página de autorización de CodeBuddy en el WebView integrado.",
     "oauthFeature": {
-      "webview": {
-        "title": "Recomendado: completar inicio IDE + vinculación de cuota en un solo flujo",
-        "item1": "Después de iniciar sesión en el WebView integrado en modo incógnito, los datos de inicio de sesión del IDE se vinculan automáticamente.",
-        "item2": "Los parámetros necesarios para consultar la cuota también se capturan automáticamente al mismo tiempo.",
-        "item3": "Ideal para agregar una cuenta por primera vez; la cuota se puede ver y actualizar de inmediato."
-      },
       "oauth": {
         "title": "Solo autorizar datos de inicio de sesión del IDE",
         "item1": "Tras completar OAuth en el navegador, puedes agregar la cuenta y usarla para cambiar en el IDE.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "En la parte superior del WebView se muestra una barra horizontal de pasos para ubicar mejor la fase bloqueada.",
     "oauthFlow": {
       "prepare": "Preparar enlace de autorización",
-      "quota": "Capturar Cookie en WebView y vincular la consulta de cuota",
       "authorize": "Abrir el enlace de autorización y confirmar",
       "bind": "Sondear el resultado de la autorización y vincular la cuenta",
       "retryPrepare": "Regenerar enlace de autorización",
-      "retryQuota": "Volver a capturar Cookie y consultar la cuota",
       "retryAuthorize": "Solicitar de nuevo el enlace de autorización",
       "retryBind": "Reintentar el sondeo de autorización",
       "error": "Error de flujo: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "Buscar cuentas de CodeBuddy...",
     "quotaQuery": {
-      "title": "Consultar cuota",
-      "desc": "Pega un encabezado Cookie o un comando cURL completo. Extraeremos session/session_2 y lo vincularemos a esta cuenta.",
-      "button": "Consultar cuota",
-      "submit": "Vincular y consultar",
-      "clearBinding": "Borrar vínculo",
-      "clearBindingConfirm": "¿Borrar la vinculación de consulta de cuota de esta cuenta? Después de borrarla se detendrá la actualización automática de la cuota.",
-      "clearBindingSuccess": "Se borró la vinculación de consulta de cuota.",
-      "clearBindingFailed": "No se pudo borrar la vinculación de cuota: {{error}}",
-      "success": "La cuota se consultó correctamente y la vinculación quedó guardada.",
-      "failed": "La consulta de cuota falló: {{error}}",
-      "failedCompact": "Consulta fallida",
       "failedRefreshCompact": "Fallo al actualizar la cuota",
-      "failedReasonLabel": "Motivo: {{reason}}",
-      "failedReasonAt": "Falló el: {{time}}",
       "sectionTitle": "Consulta de cuota",
       "empty": "Todavía no hay información de consulta de cuota vinculada",
       "packageUnknown": "Paquete desconocido",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Información de ciclo no disponible",
       "expireAt": "Vence el: {{time}}",
       "expireUnknown": "Vencimiento: no disponible",
-      "noQuota": "Sin consultar",
-      "bindTarget": "Cuenta vinculada: {{email}}",
-      "coreHint": "Los demás parámetros usarán los valores predeterminados: ProductCode=p_tcaca, Status=0,3, rango temporal=ahora hasta +100 años.",
-      "webview": {
-        "tab": "Inicio de sesión WebView",
-        "desc": "Inicia sesión en CodeBuddy en el navegador integrado. Después del inicio de sesión, la información de cuota se obtendrá automáticamente.",
-        "open": "Abrir en WebView",
-        "openIncognito": "Abrir en WebView incógnito",
-        "waiting": "Esperando el inicio de sesión en el navegador...",
-        "hint": "Inicia sesión en CodeBuddy en la ventana emergente del navegador. Luego se obtendrá la cuota automáticamente y se cerrará la ventana.",
-        "success": "La consulta de cuota por WebView se realizó correctamente",
-        "failed": "La consulta por WebView falló: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "Abrir WebView",
-        "login": "Iniciar sesión en CodeBuddy",
-        "fetch": "Obtener información de cuota",
-        "bind": "Vincular el resultado a la cuenta",
-        "retryOpen": "Volver a abrir WebView",
-        "retryLogin": "Reintentar inicio de sesión",
-        "retryFetch": "Volver a obtener la cuota",
-        "retryBind": "Reintentar la vinculación",
-        "error": "Error de flujo: {{error}}"
-      },
-      "manual": {
-        "tab": "Pegado manual",
-        "step1": "Abre el enlace de abajo en tu navegador e inicia sesión",
-        "step2": "Pulsa F12 para abrir DevTools y cambia a la pestaña Network",
-        "step3": "Recarga la página y busca la solicitud get-user-resource",
-        "step4": "Haz clic derecho en la solicitud → Copy → Copy as cURL (bash)",
-        "step5": "Pégalo en el cuadro de entrada de abajo"
-      },
-      "fields": {
-        "cookieHeader": "Encabezado Cookie / cURL",
-        "productCode": "Código de producto (ProductCode)",
-        "status": "Valor de estado (Status)",
-        "beginTime": "Hora de inicio",
-        "endTime": "Hora de fin",
-        "pageNumber": "Número de página (PageNumber)",
-        "pageSize": "Tamaño de página (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "Pega el comando cURL de get-user-resource"
-      },
-      "errors": {
-        "cookieRequired": "Primero proporciona el encabezado Cookie o el cURL.",
-        "accountMismatch": "La cookie de cuota pertenece a otra cuenta (UIN actual: {{expectedUin}}, UIN devuelto: {{resourceUin}}, payerUin: {{payerUin}}). Cambia a la cuenta correcta y vuelve a copiar la cookie.",
-        "statusInvalid": "Formato de Status no válido. Usa números separados por comas.",
-        "pageInvalid": "Valores de paginación no válidos. Introduce números mayores que 0.",
-        "fullCurlRequired": "Solo se admite el comando cURL completo. Usa \"Copy as cURL (bash)\" en get-user-resource dentro de Network y pégalo tal cual."
-      },
-      "webOnlyHint": "Consulta la cuota en la página web"
+      "packageTitle": {
+        "base": "Paquete de experiencia básica",
+        "activity": "Paquete de regalo de actividad"
+      }
     },
     "extraCredit": {
       "title": "Paquete adicional"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "No se pudo navegar el WebView: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "Introduce una URL para navegar dentro de este WebView",
     "oauthWebviewInlineGo": "Ir",
-    "oauthQuotaFailurePrompt": "La vinculación de cuota falló.\nHaz clic en \"Aceptar\" para reintentar la captura de Cookie y la actualización de cuota; haz clic en \"Cancelar\" para omitir (solo agregar la cuenta).",
-    "oauthQuotaFailureTitle": "Falló la vinculación de cuota",
-    "oauthQuotaFailureRetry": "Reintentar",
-    "oauthQuotaFailureSkip": "Omitir",
     "oauthSuccessClosePrompt": "La cuenta se agregó correctamente. ¿Cerrar este WebView ahora?\nElige \"Cerrar WebView\" para cerrar ahora, o \"Más tarde\" para mantenerlo abierto.",
     "oauthSuccessCloseTitle": "Cuenta agregada",
     "oauthSuccessCloseNowLabel": "Cerrar WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Cuenta agregada. Este WebView permanecerá abierto.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 Inicia sesión en CodeBuddy",
-        "quotaBind": "2 Capturar Cookie en WebView y vincular la consulta de cuota",
-        "quotaComplete": "3 Completado (cerrar manualmente)",
         "prepare": "1 Preparar enlace de autorización",
         "authorize": "2 Abrir el enlace de autorización y confirmar",
         "bind": "3 Sondear el resultado de la autorización y vincular la cuenta",
-        "quota": "4 Capturar Cookie en WebView y vincular la consulta de cuota",
         "complete": "5 Completado (cerrar manualmente)"
       },
       "status": {

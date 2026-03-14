@@ -8,62 +8,27 @@
   align-items: center;
 }
 
-.codebuddy-accounts-page .quota-query-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
 .codebuddy-accounts-page .quota-query-failed-inline {
   font-size: 11px;
   line-height: 1;
-}
-
-.codebuddy-accounts-page .quota-query-btn {
-  border: 1px solid var(--border);
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.codebuddy-accounts-page .quota-query-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
 }
 
 .codebuddy-accounts-page .codebuddy-extra-credit {
   gap: 6px;
 }
 
-.codebuddy-accounts-page .codebuddy-official-quota-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+.codebuddy-accounts-page .codebuddy-official-quota-list {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
-.codebuddy-accounts-page .codebuddy-official-quota-card {
-  border: 1px solid var(--border);
-  background: var(--bg-secondary);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  gap: 8px;
-}
-
-.codebuddy-accounts-page .codebuddy-official-extra-card {
-  grid-column: 1 / -1;
-}
-
-.codebuddy-accounts-page .codebuddy-official-quota-card .quota-header {
+.codebuddy-accounts-page .codebuddy-official-quota-row .quota-header {
   min-width: 0;
+  margin-bottom: 6px;
 }
 
-.codebuddy-accounts-page .codebuddy-official-quota-card .quota-label {
+.codebuddy-accounts-page .codebuddy-official-quota-row .quota-label {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -79,24 +44,10 @@
 .codebuddy-accounts-page .codebuddy-official-quota-meta-wrap {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-}
-
-.codebuddy-accounts-page .codebuddy-official-quota-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 12px;
-  font-family: var(--font-mono);
-}
-
-.codebuddy-accounts-page .codebuddy-official-quota-used {
-  color: var(--text-secondary);
-}
-
-.codebuddy-accounts-page .codebuddy-official-quota-remain {
-  font-weight: 600;
+  margin-top: 6px;
+  align-items: flex-end;
+  text-align: right;
+  width: 100%;
 }
 
 .codebuddy-accounts-page .codebuddy-table-usage {
@@ -104,6 +55,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  width: 100%;
+}
+
+.codebuddy-accounts-page .codebuddy-table-usage .codebuddy-official-quota-list {
+  width: 100%;
 }
 
 .codebuddy-accounts-page .quota-error-detail {
@@ -246,10 +202,6 @@
 }
 
 @media (max-width: 720px) {
-  .codebuddy-accounts-page .codebuddy-official-quota-grid {
-    grid-template-columns: 1fr;
-  }
-
   .codebuddy-accounts-page .codebuddy-quota-grid {
     grid-template-columns: 1fr;
   }

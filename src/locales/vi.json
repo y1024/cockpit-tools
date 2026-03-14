@@ -1999,17 +1999,12 @@
     "nickname": "Biệt danh",
     "enterprise": "Doanh nghiệp",
     "usage": "Trạng thái sử dụng",
+    "creditsBalance": "Số dư tín dụng",
     "usageNormal": "Bình thường",
     "oauthWaiting": "Đang chờ hoàn tất ủy quyền...",
     "oauthDesc": "Bấm nút bên dưới để mở trang ủy quyền CodeBuddy trong trình duyệt.",
     "oauthDescWebview": "Bấm nút bên dưới để mở trang ủy quyền CodeBuddy trong WebView tích hợp.",
     "oauthFeature": {
-      "webview": {
-        "title": "Khuyến nghị: hoàn tất xác thực IDE + liên kết hạn ngạch trong một lần",
-        "item1": "Sau khi đăng nhập trong WebView ẩn danh tích hợp, thông tin đăng nhập IDE sẽ được liên kết tự động.",
-        "item2": "Đồng thời tự động thu thập tham số cần cho truy vấn hạn ngạch, không cần liên kết thủ công thêm.",
-        "item3": "Phù hợp khi thêm tài khoản lần đầu, sau đó có thể xem và làm mới hạn ngạch ngay."
-      },
       "oauth": {
         "title": "Chỉ ủy quyền thông tin đăng nhập IDE",
         "item1": "Sau khi hoàn tất OAuth trong trình duyệt, bạn có thể thêm tài khoản và dùng để chuyển IDE.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "Thanh bước ngang sẽ hiển thị ở đầu WebView để dễ xác định bước bị kẹt.",
     "oauthFlow": {
       "prepare": "Chuẩn bị liên kết ủy quyền",
-      "quota": "Lấy Cookie trong WebView và liên kết truy vấn hạn ngạch",
       "authorize": "Mở liên kết ủy quyền và xác nhận",
       "bind": "Thăm dò kết quả ủy quyền và liên kết tài khoản",
       "retryPrepare": "Tạo lại liên kết ủy quyền",
-      "retryQuota": "Thu thập lại Cookie và truy vấn hạn ngạch",
       "retryAuthorize": "Yêu cầu lại liên kết ủy quyền",
       "retryBind": "Thử lại thăm dò ủy quyền",
       "error": "Lỗi quy trình: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "Tìm kiếm tài khoản CodeBuddy...",
     "quotaQuery": {
-      "title": "Truy vấn hạn ngạch",
-      "desc": "Dán Cookie Header hoặc cURL đầy đủ. Hệ thống sẽ trích xuất session/session_2 và liên kết với tài khoản hiện tại.",
-      "button": "Truy vấn hạn ngạch",
-      "submit": "Liên kết và truy vấn",
-      "clearBinding": "Xóa liên kết",
-      "clearBindingConfirm": "Xóa liên kết truy vấn hạn ngạch của tài khoản này? Sau khi xóa sẽ dừng tự động làm mới hạn ngạch.",
-      "clearBindingSuccess": "Đã xóa liên kết truy vấn hạn ngạch.",
-      "clearBindingFailed": "Xóa liên kết hạn ngạch thất bại: {{error}}",
-      "success": "Truy vấn hạn ngạch thành công, tham số truy vấn đã được liên kết.",
-      "failed": "Truy vấn hạn ngạch thất bại: {{error}}",
-      "failedCompact": "Truy vấn thất bại",
       "failedRefreshCompact": "Làm mới hạn ngạch thất bại",
-      "failedReasonLabel": "Nguyên nhân: {{reason}}",
-      "failedReasonAt": "Thời điểm thất bại: {{time}}",
       "sectionTitle": "Truy vấn hạn ngạch",
       "empty": "Chưa có thông tin truy vấn hạn ngạch được liên kết",
       "packageUnknown": "Không rõ gói",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Chưa có thông tin chu kỳ",
       "expireAt": "Hết hạn lúc: {{time}}",
       "expireUnknown": "Hết hạn: chưa có",
-      "noQuota": "Chưa truy vấn",
-      "bindTarget": "Tài khoản liên kết: {{email}}",
-      "coreHint": "Các tham số khác sẽ dùng giá trị mặc định: ProductCode=p_tcaca, Status=0,3, khoảng thời gian=từ hiện tại đến +100 năm.",
-      "webview": {
-        "tab": "Đăng nhập WebView",
-        "desc": "Đăng nhập CodeBuddy trong trình duyệt tích hợp, sau đó hệ thống sẽ tự động lấy thông tin hạn ngạch.",
-        "open": "Mở trong WebView",
-        "openIncognito": "Mở trong WebView ẩn danh",
-        "waiting": "Đang chờ đăng nhập trình duyệt...",
-        "hint": "Vui lòng đăng nhập CodeBuddy trong cửa sổ trình duyệt bật lên. Sau khi đăng nhập, hệ thống sẽ tự động lấy hạn ngạch và đóng cửa sổ.",
-        "success": "Truy vấn hạn ngạch WebView thành công",
-        "failed": "Truy vấn WebView thất bại: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "Mở WebView",
-        "login": "Đăng nhập CodeBuddy",
-        "fetch": "Lấy thông tin hạn ngạch",
-        "bind": "Liên kết kết quả với tài khoản",
-        "retryOpen": "Mở lại WebView",
-        "retryLogin": "Thử đăng nhập lại",
-        "retryFetch": "Lấy lại hạn ngạch",
-        "retryBind": "Thử liên kết lại",
-        "error": "Lỗi quy trình: {{error}}"
-      },
-      "manual": {
-        "tab": "Dán thủ công",
-        "step1": "Mở liên kết bên dưới trong trình duyệt và đăng nhập",
-        "step2": "Nhấn F12 để mở DevTools, chuyển sang thẻ Network",
-        "step3": "Tải lại trang và tìm request get-user-resource",
-        "step4": "Nhấp phải request → Copy → Copy as cURL (bash)",
-        "step5": "Dán vào ô nhập bên dưới"
-      },
-      "fields": {
-        "cookieHeader": "Tiêu đề Cookie / cURL",
-        "productCode": "Mã sản phẩm (ProductCode)",
-        "status": "Giá trị trạng thái (Status)",
-        "beginTime": "Thời gian bắt đầu",
-        "endTime": "Thời gian kết thúc",
-        "pageNumber": "Số trang (PageNumber)",
-        "pageSize": "Kích thước trang (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "Dán lệnh cURL của get-user-resource"
-      },
-      "errors": {
-        "cookieRequired": "Vui lòng nhập Cookie Header hoặc cURL trước.",
-        "accountMismatch": "Cookie hạn ngạch thuộc về tài khoản khác (UIN hiện tại: {{expectedUin}}, UIN trả về: {{resourceUin}}, payerUin: {{payerUin}}). Vui lòng chuyển sang đúng tài khoản rồi sao chép lại Cookie.",
-        "statusInvalid": "Định dạng Status không hợp lệ. Hãy dùng các số cách nhau bằng dấu phẩy.",
-        "pageInvalid": "Giá trị phân trang không hợp lệ. Vui lòng nhập số lớn hơn 0.",
-        "fullCurlRequired": "Chỉ hỗ trợ lệnh cURL đầy đủ. Hãy dùng \"Copy as cURL (bash)\" cho yêu cầu get-user-resource trong Network và dán nguyên văn."
-      },
-      "webOnlyHint": "Vui lòng xem hạn mức trên trang web"
+      "packageTitle": {
+        "base": "Gói trải nghiệm cơ bản",
+        "activity": "Gói quà tặng sự kiện"
+      }
     },
     "extraCredit": {
       "title": "Gói cộng thêm"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "Điều hướng WebView thất bại: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "Nhập URL để điều hướng ngay trong WebView này",
     "oauthWebviewInlineGo": "Đi",
-    "oauthQuotaFailurePrompt": "Liên kết hạn ngạch thất bại.\nBấm \"OK\" để thử lại việc lấy Cookie và làm mới hạn ngạch; bấm \"Cancel\" để bỏ qua (chỉ thêm tài khoản).",
-    "oauthQuotaFailureTitle": "Liên kết hạn ngạch thất bại",
-    "oauthQuotaFailureRetry": "Thử lại",
-    "oauthQuotaFailureSkip": "Bỏ qua",
     "oauthSuccessClosePrompt": "Đã thêm tài khoản thành công. Đóng WebView này ngay bây giờ?\nChọn \"Đóng WebView\" để đóng ngay hoặc \"Để sau\" để giữ nguyên cửa sổ.",
     "oauthSuccessCloseTitle": "Đã thêm tài khoản",
     "oauthSuccessCloseNowLabel": "Đóng WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Đã thêm tài khoản. WebView này sẽ vẫn mở.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 Đăng nhập vào CodeBuddy",
-        "quotaBind": "2 Lấy Cookie trong WebView và liên kết truy vấn hạn ngạch",
-        "quotaComplete": "3 Hoàn tất (đóng thủ công)",
         "prepare": "1 Chuẩn bị liên kết ủy quyền",
         "authorize": "2 Mở liên kết ủy quyền và xác nhận",
         "bind": "3 Thăm dò kết quả ủy quyền và liên kết tài khoản",
-        "quota": "4 Lấy Cookie trong WebView và liên kết truy vấn hạn ngạch",
         "complete": "5 Hoàn tất (đóng thủ công)"
       },
       "status": {

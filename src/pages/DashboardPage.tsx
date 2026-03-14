@@ -2124,7 +2124,6 @@ export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTri
           ? (usage.dosageNotifyZh || usage.dosageNotifyCode)
           : (usage.dosageNotifyEn || usage.dosageNotifyCode);
     const usageStatusClass = !usage.dosageNotifyCode ? '' : (usage.isNormal ? 'high' : 'critical');
-
     return (
       <div className="account-mini-card">
         <div className="account-mini-header">

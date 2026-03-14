@@ -1999,17 +1999,12 @@
     "nickname": "Spitzname",
     "enterprise": "Unternehmen",
     "usage": "Nutzungsstatus",
+    "creditsBalance": "Guthaben",
     "usageNormal": "Standard",
     "oauthWaiting": "Warte auf Abschluss der Autorisierung...",
     "oauthDesc": "Klicken Sie auf die Schaltfläche unten, um die CodeBuddy-Autorisierungsseite im Browser zu öffnen.",
     "oauthDescWebview": "Klicken Sie auf die Schaltfläche unten, um die CodeBuddy-Autorisierungsseite im integrierten WebView zu öffnen.",
     "oauthFeature": {
-      "webview": {
-        "title": "Empfohlen: IDE-Anmeldung und Kontingentbindung in einem Ablauf abschließen",
-        "item1": "Nach der Anmeldung im integrierten Inkognito-WebView werden die IDE-Anmeldedaten automatisch gebunden.",
-        "item2": "Die für die Kontingentabfrage nötigen Parameter werden gleichzeitig automatisch erfasst.",
-        "item3": "Ideal für das erste Hinzufügen eines Kontos; Kontingente lassen sich danach sofort anzeigen und aktualisieren."
-      },
       "oauth": {
         "title": "Nur IDE-Anmeldedaten autorisieren",
         "item1": "Nach Abschluss von OAuth im Browser kann das Konto hinzugefügt und für den IDE-Wechsel genutzt werden.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "Oben im WebView wird eine horizontale Schrittleiste angezeigt, damit blockierte Schritte leichter zu finden sind.",
     "oauthFlow": {
       "prepare": "Autorisierungslink vorbereiten",
-      "quota": "Cookie im WebView erfassen und Kontingentabfrage binden",
       "authorize": "Autorisierungslink öffnen und bestätigen",
       "bind": "Autorisierungsergebnis abfragen und Konto binden",
       "retryPrepare": "Autorisierungslink neu erzeugen",
-      "retryQuota": "Cookie erneut erfassen und Kontingent abfragen",
       "retryAuthorize": "Autorisierungslink erneut anfordern",
       "retryBind": "Autorisierungsabfrage wiederholen",
       "error": "Ablauffehler: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "CodeBuddy-Konten durchsuchen...",
     "quotaQuery": {
-      "title": "Kontingent abfragen",
-      "desc": "Fügen Sie einen Cookie-Header oder einen vollständigen cURL-Befehl ein. Wir extrahieren session/session_2 und binden ihn an dieses Konto.",
-      "button": "Kontingent abfragen",
-      "submit": "Binden und abfragen",
-      "clearBinding": "Bindung entfernen",
-      "clearBindingConfirm": "Soll die Kontingentabfrage-Bindung für dieses Konto entfernt werden? Danach stoppt die automatische Kontingentaktualisierung.",
-      "clearBindingSuccess": "Kontingentabfrage-Bindung wurde entfernt.",
-      "clearBindingFailed": "Entfernen der Kontingentbindung fehlgeschlagen: {{error}}",
-      "success": "Kontingent erfolgreich abgefragt. Die Bindung wurde gespeichert.",
-      "failed": "Kontingentabfrage fehlgeschlagen: {{error}}",
-      "failedCompact": "Abfrage fehlgeschlagen",
       "failedRefreshCompact": "Kontingentaktualisierung fehlgeschlagen",
-      "failedReasonLabel": "Grund: {{reason}}",
-      "failedReasonAt": "Fehlgeschlagen am: {{time}}",
       "sectionTitle": "Kontingentabfrage",
       "empty": "Noch keine gebundene Kontingentabfrage vorhanden",
       "packageUnknown": "Unbekanntes Paket",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Keine Zeitraum-Information verfügbar",
       "expireAt": "Läuft ab am: {{time}}",
       "expireUnknown": "Ablaufzeit: keine Angabe",
-      "noQuota": "Nicht abgefragt",
-      "bindTarget": "Gebundenes Konto: {{email}}",
-      "coreHint": "Andere Parameter verwenden Standardwerte: ProductCode=p_tcaca, Status=0,3, Zeitbereich=jetzt bis +100 Jahre.",
-      "webview": {
-        "tab": "WebView-Anmeldung",
-        "desc": "Melden Sie sich im integrierten Browser bei CodeBuddy an. Danach werden die Kontingentdaten automatisch abgerufen.",
-        "open": "Im WebView öffnen",
-        "openIncognito": "Im Inkognito-WebView öffnen",
-        "waiting": "Warte auf Browser-Anmeldung...",
-        "hint": "Bitte melden Sie sich im geöffneten Browserfenster bei CodeBuddy an. Danach werden die Kontingentdaten automatisch abgerufen und das Fenster geschlossen.",
-        "success": "Kontingentabfrage per WebView erfolgreich",
-        "failed": "WebView-Abfrage fehlgeschlagen: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "WebView öffnen",
-        "login": "Bei CodeBuddy anmelden",
-        "fetch": "Kontingentdaten abrufen",
-        "bind": "Ergebnis an Konto binden",
-        "retryOpen": "WebView erneut öffnen",
-        "retryLogin": "Anmeldung erneut versuchen",
-        "retryFetch": "Kontingent erneut abrufen",
-        "retryBind": "Bindung erneut versuchen",
-        "error": "Ablauffehler: {{error}}"
-      },
-      "manual": {
-        "tab": "Manuell einfügen",
-        "step1": "Öffnen Sie den unten stehenden Link im Browser und melden Sie sich an",
-        "step2": "Drücken Sie F12, öffnen Sie die DevTools und wechseln Sie zum Tab Network",
-        "step3": "Aktualisieren Sie die Seite und suchen Sie die Anfrage get-user-resource",
-        "step4": "Rechtsklick auf die Anfrage → Copy → Copy as cURL (bash)",
-        "step5": "Fügen Sie den Inhalt in das Eingabefeld unten ein"
-      },
-      "fields": {
-        "cookieHeader": "Cookie-Header / cURL",
-        "productCode": "Produktcode (ProductCode)",
-        "status": "Statuswert (Status)",
-        "beginTime": "Startzeit",
-        "endTime": "Endzeit",
-        "pageNumber": "Seitennummer (PageNumber)",
-        "pageSize": "Seitengröße (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "cURL-Befehl von get-user-resource einfügen"
-      },
-      "errors": {
-        "cookieRequired": "Bitte zuerst einen Cookie-Header oder cURL angeben.",
-        "accountMismatch": "Das Kontingent-Cookie gehört zu einem anderen Konto (aktuelle UIN: {{expectedUin}}, zurückgegebene UIN: {{resourceUin}}, payerUin: {{payerUin}}). Bitte wechseln Sie zum richtigen Konto und kopieren Sie das Cookie erneut.",
-        "statusInvalid": "Ungültiges Status-Format. Verwenden Sie kommagetrennte Zahlen.",
-        "pageInvalid": "Ungültige Paginierungswerte. Bitte Zahlen größer als 0 eingeben.",
-        "fullCurlRequired": "Es wird nur ein vollständiger cURL-Befehl unterstützt. Bitte bei get-user-resource im Network „Copy as cURL (bash)“ verwenden und unverändert einfügen."
-      },
-      "webOnlyHint": "Bitte die Quote auf der Webseite ansehen"
+      "packageTitle": {
+        "base": "Basis-Erlebnispaket",
+        "activity": "Aktions-Geschenkpaket"
+      }
     },
     "extraCredit": {
       "title": "Zusatzpaket"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "WebView-Navigation fehlgeschlagen: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "URL eingeben, um innerhalb dieses WebViews zu navigieren",
     "oauthWebviewInlineGo": "Los",
-    "oauthQuotaFailurePrompt": "Kontingentbindung fehlgeschlagen.\nKlicken Sie auf „OK“, um die Cookie-Erfassung und Aktualisierung erneut zu versuchen, oder auf „Abbrechen“, um zu überspringen (nur Konto hinzufügen).",
-    "oauthQuotaFailureTitle": "Kontingentbindung fehlgeschlagen",
-    "oauthQuotaFailureRetry": "Erneut versuchen",
-    "oauthQuotaFailureSkip": "Überspringen",
     "oauthSuccessClosePrompt": "Konto erfolgreich hinzugefügt. Dieses WebView jetzt schließen?\nMit „WebView schließen“ wird sofort geschlossen, mit „Später“ bleibt es geöffnet.",
     "oauthSuccessCloseTitle": "Konto hinzugefügt",
     "oauthSuccessCloseNowLabel": "WebView schließen",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Konto hinzugefügt. Dieses WebView bleibt geöffnet.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 Bei CodeBuddy anmelden",
-        "quotaBind": "2 Cookie im WebView erfassen und Kontingentabfrage binden",
-        "quotaComplete": "3 Abgeschlossen (manuell schließen)",
         "prepare": "1 Autorisierungslink vorbereiten",
         "authorize": "2 Autorisierungslink öffnen und bestätigen",
         "bind": "3 Autorisierungsergebnis abfragen und Konto binden",
-        "quota": "4 Cookie im WebView erfassen und Kontingentabfrage binden",
         "complete": "5 Abgeschlossen (manuell schließen)"
       },
       "status": {

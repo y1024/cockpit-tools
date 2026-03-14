@@ -1999,17 +1999,12 @@
     "nickname": "닉네임",
     "enterprise": "기업",
     "usage": "사용 상태",
+    "creditsBalance": "크레딧 잔액",
     "usageNormal": "정상",
     "oauthWaiting": "인증 완료를 기다리는 중...",
     "oauthDesc": "아래 버튼을 클릭하면 브라우저에서 CodeBuddy 인증 페이지를 엽니다.",
     "oauthDescWebview": "아래 버튼을 클릭하면 내장 WebView에서 CodeBuddy 인증 페이지를 엽니다.",
     "oauthFeature": {
-      "webview": {
-        "title": "권장: IDE 인증 + 할당량 바인딩을 한 번에 완료",
-        "item1": "내장 시크릿 WebView에서 로그인하면 IDE 로그인 정보가 자동으로 바인딩됩니다.",
-        "item2": "동시에 할당량 조회에 필요한 파라미터도 자동 수집되어 추가 수동 바인딩이 필요 없습니다.",
-        "item3": "처음 계정을 추가할 때 적합하며, 완료 후 바로 할당량을 확인하고 새로고침할 수 있습니다."
-      },
       "oauth": {
         "title": "IDE 로그인 정보만 인증",
         "item1": "브라우저에서 OAuth를 완료하면 계정을 추가해 IDE 전환에 사용할 수 있습니다.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "WebView 상단에 가로 단계 표시줄이 표시되어 멈춘 단계를 쉽게 찾을 수 있습니다.",
     "oauthFlow": {
       "prepare": "인증 링크 준비",
-      "quota": "WebView에서 Cookie를 가져와 할당량 조회 바인딩",
       "authorize": "인증 링크를 열고 승인",
       "bind": "인증 결과를 폴링해 계정 바인딩",
       "retryPrepare": "인증 링크 다시 생성",
-      "retryQuota": "Cookie를 다시 수집하고 할당량 조회",
       "retryAuthorize": "인증 링크 다시 요청",
       "retryBind": "인증 폴링 다시 시도",
       "error": "흐름 오류: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "CodeBuddy 계정 검색...",
     "quotaQuery": {
-      "title": "할당량 조회",
-      "desc": "Cookie Header 또는 전체 cURL을 붙여 넣으면 session/session_2를 추출해 현재 계정에 바인딩합니다.",
-      "button": "할당량 조회",
-      "submit": "바인딩 후 조회",
-      "clearBinding": "바인딩 해제",
-      "clearBindingConfirm": "이 계정의 할당량 조회 바인딩을 해제하시겠습니까? 해제 후에는 할당량 자동 새로고침이 중지됩니다.",
-      "clearBindingSuccess": "할당량 조회 바인딩을 해제했습니다.",
-      "clearBindingFailed": "할당량 바인딩 해제 실패: {{error}}",
-      "success": "할당량 조회에 성공했고 조회 파라미터가 저장되었습니다.",
-      "failed": "할당량 조회 실패: {{error}}",
-      "failedCompact": "조회 실패",
       "failedRefreshCompact": "할당량 새로고침 실패",
-      "failedReasonLabel": "원인: {{reason}}",
-      "failedReasonAt": "실패 시각: {{time}}",
       "sectionTitle": "할당량 조회",
       "empty": "아직 바인딩된 할당량 조회 정보가 없습니다",
       "packageUnknown": "플랜 정보 알 수 없음",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "주기 정보 없음",
       "expireAt": "만료 시간: {{time}}",
       "expireUnknown": "만료 시간: 없음",
-      "noQuota": "조회 안 함",
-      "bindTarget": "바인딩된 계정: {{email}}",
-      "coreHint": "다른 파라미터는 기본값을 사용합니다: ProductCode=p_tcaca, Status=0,3, 시간 범위=현재부터 +100년.",
-      "webview": {
-        "tab": "WebView 로그인",
-        "desc": "내장 브라우저에서 CodeBuddy에 로그인하면 로그인 후 할당량 정보를 자동으로 가져옵니다.",
-        "open": "WebView에서 열기",
-        "openIncognito": "시크릿 WebView에서 열기",
-        "waiting": "브라우저 로그인 대기 중...",
-        "hint": "팝업 브라우저 창에서 CodeBuddy에 로그인하세요. 로그인 후 할당량을 자동으로 가져오고 창이 닫힙니다.",
-        "success": "WebView 할당량 조회 성공",
-        "failed": "WebView 조회 실패: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "WebView 열기",
-        "login": "CodeBuddy 로그인",
-        "fetch": "할당량 정보 가져오기",
-        "bind": "결과를 계정에 바인딩",
-        "retryOpen": "WebView 다시 열기",
-        "retryLogin": "로그인 다시 시도",
-        "retryFetch": "할당량 다시 가져오기",
-        "retryBind": "바인딩 다시 시도",
-        "error": "흐름 오류: {{error}}"
-      },
-      "manual": {
-        "tab": "수동 붙여넣기",
-        "step1": "아래 링크를 브라우저에서 열고 로그인",
-        "step2": "F12를 눌러 DevTools를 열고 Network 탭으로 전환",
-        "step3": "페이지를 새로고침하고 get-user-resource 요청 찾기",
-        "step4": "요청을 우클릭 → Copy → Copy as cURL (bash)",
-        "step5": "아래 입력창에 붙여넣기"
-      },
-      "fields": {
-        "cookieHeader": "쿠키 헤더 / cURL",
-        "productCode": "상품 코드 (ProductCode)",
-        "status": "상태 값 (Status)",
-        "beginTime": "시작 시간",
-        "endTime": "종료 시간",
-        "pageNumber": "페이지 번호 (PageNumber)",
-        "pageSize": "페이지 크기 (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "get-user-resource의 cURL 명령을 붙여 넣으세요"
-      },
-      "errors": {
-        "cookieRequired": "먼저 Cookie Header 또는 cURL을 입력하세요.",
-        "accountMismatch": "할당량 Cookie가 다른 계정에 속합니다 (현재 UIN: {{expectedUin}}, 반환 UIN: {{resourceUin}}, payerUin: {{payerUin}}). 올바른 계정으로 전환한 뒤 Cookie를 다시 복사하세요.",
-        "statusInvalid": "Status 형식이 올바르지 않습니다. 쉼표로 구분된 숫자를 사용하세요.",
-        "pageInvalid": "페이지 값이 올바르지 않습니다. 0보다 큰 숫자를 입력하세요.",
-        "fullCurlRequired": "전체 cURL 명령만 지원합니다. Network의 get-user-resource에서 \"Copy as cURL (bash)\"을 사용해 원문 그대로 붙여 넣어 주세요."
-      },
-      "webOnlyHint": "할당량은 웹페이지에서 확인하세요"
+      "packageTitle": {
+        "base": "기본 체험 패키지",
+        "activity": "활동 증정 패키지"
+      }
     },
     "extraCredit": {
       "title": "추가 크레딧"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "WebView 이동 실패: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "이 WebView 안에서 이동할 URL 입력",
     "oauthWebviewInlineGo": "이동",
-    "oauthQuotaFailurePrompt": "할당량 바인딩에 실패했습니다.\n\"확인\"을 클릭하면 Cookie 수집 및 할당량 새로고침을 다시 시도하고, \"취소\"를 클릭하면 건너뜁니다(계정만 추가).",
-    "oauthQuotaFailureTitle": "할당량 바인딩 실패",
-    "oauthQuotaFailureRetry": "재시도",
-    "oauthQuotaFailureSkip": "건너뛰기",
     "oauthSuccessClosePrompt": "계정 추가가 완료되었습니다. 지금 이 WebView를 닫을까요?\n\"WebView 닫기\"를 선택하면 바로 닫고, \"나중에\"를 선택하면 그대로 유지합니다.",
     "oauthSuccessCloseTitle": "계정 추가 완료",
     "oauthSuccessCloseNowLabel": "WebView 닫기",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ 계정 추가가 완료되었습니다. 이 WebView는 계속 열려 있습니다.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 CodeBuddy에 로그인",
-        "quotaBind": "2 WebView에서 Cookie를 가져와 할당량 조회 바인딩",
-        "quotaComplete": "3 완료(수동으로 닫기)",
         "prepare": "1 인증 링크 준비",
         "authorize": "2 인증 링크를 열고 승인",
         "bind": "3 인증 결과를 폴링해 계정 바인딩",
-        "quota": "4 WebView에서 Cookie를 가져와 할당량 조회 바인딩",
         "complete": "5 완료(수동으로 닫기)"
       },
       "status": {

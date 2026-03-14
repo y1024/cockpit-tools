@@ -1,15 +1,3 @@
-export interface CodebuddyQuotaBinding {
-  cookie_header: string;
-  product_code: string;
-  status: number[];
-  package_end_time_range_begin: string;
-  package_end_time_range_end: string;
-  page_number: number;
-  page_size: number;
-  updated_at: number;
-  source?: string | null;
-}
-
 export interface CodebuddyAccount {
   id: string;
   email: string;
@@ -35,7 +23,6 @@ export interface CodebuddyAccount {
   auth_raw?: unknown;
   profile_raw?: unknown;
   usage_raw?: unknown;
-  quota_binding?: CodebuddyQuotaBinding | null;
 
   status?: string | null;
   status_reason?: string | null;
@@ -212,6 +199,18 @@ export function getCodebuddyUsage(account: CodebuddyAccount): CodebuddyUsage {
   };
 }
 
+/**
+ * Align with official account menu:
+ * aggregate active package `CycleCapacityRemainPrecise` as credits balance.
+ */
+export function getCodebuddyCreditsBalance(account: CodebuddyAccount): number | null {
+  const active = extractResourceAccounts(account).filter((item) => isActiveResource(item));
+  if (active.length === 0) return null;
+  const balance = active.reduce((sum, item) => sum + parseCycleRemain(item), 0);
+  if (!Number.isFinite(balance)) return null;
+  return Math.max(0, balance);
+}
+
 export function getCodebuddyAccountStatus(account: CodebuddyAccount): string {
   return account.status || 'unknown';
 }
@@ -248,6 +247,12 @@ export interface CodebuddyOfficialQuotaModel {
   resources: CodebuddyOfficialQuotaResource[];
   extra: CodebuddyOfficialQuotaResource;
   updatedAt: number | null;
+}
+
+function getAccountQuotaUpdatedAtMs(account: CodebuddyAccount): number | null {
+  const lastUsed = account.last_used;
+  if (typeof lastUsed !== 'number' || !Number.isFinite(lastUsed) || lastUsed <= 0) return null;
+  return Math.trunc(lastUsed * 1000);
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -379,7 +384,7 @@ function toOfficialQuotaResource(raw: Record<string, unknown>): CodebuddyOfficia
  * extra is aggregated from extra packages.
  */
 export function getCodebuddyOfficialQuotaModel(account: CodebuddyAccount): CodebuddyOfficialQuotaModel {
-  const updatedAt = account.quota_binding?.updated_at ?? null;
+  const updatedAt = getAccountQuotaUpdatedAtMs(account);
   const empty: CodebuddyOfficialQuotaResource = {
     packageCode: CB_PACKAGE_CODE.extra,
     packageName: null,
@@ -432,9 +437,6 @@ export function getCodebuddyOfficialQuotaModel(account: CodebuddyAccount): Codeb
  * Extra credit packages are excluded (use `getCodebuddyExtraCreditSummary` instead).
  */
 export function getCodebuddyResourceSummary(account: CodebuddyAccount): CodebuddyResourceSummary | null {
-  const boundCookie = account.quota_binding?.cookie_header?.trim();
-  if (!boundCookie) return null;
-
   const all = extractResourceAccounts(account);
   if (all.length === 0) return null;
 
@@ -468,7 +470,7 @@ export function getCodebuddyResourceSummary(account: CodebuddyAccount): Codebudd
   const remain = remainAgg;
   const used = usedAgg;
   const remainPercent = total && total > 0 ? Math.max(0, Math.min(100, (remain / total) * 100)) : null;
-  const boundUpdatedAt = account.quota_binding?.updated_at ?? null;
+  const boundUpdatedAt = getAccountQuotaUpdatedAtMs(account);
 
   return {
     packageName: typeof primaryPkg.PackageName === 'string' ? primaryPkg.PackageName : null,

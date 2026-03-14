@@ -1999,17 +1999,12 @@
     "nickname": "暱稱",
     "enterprise": "企業",
     "usage": "用量狀態",
+    "creditsBalance": "積分餘額",
     "usageNormal": "正常",
     "oauthWaiting": "等待授權完成...",
     "oauthDesc": "點擊下方按鈕將在瀏覽器中開啟 CodeBuddy 授權頁面。",
     "oauthDescWebview": "點擊下方按鈕將在內建 WebView 中開啟 CodeBuddy 授權頁面。",
     "oauthFeature": {
-      "webview": {
-        "title": "推薦：一次完成 IDE 授權與配額綁定",
-        "item1": "在內建無痕 WebView 中登入後，系統會自動綁定 IDE 登入資訊。",
-        "item2": "同時自動擷取配額查詢所需參數，無需額外手動綁定。",
-        "item3": "適合首次新增帳號，完成後即可直接查看與刷新配額。"
-      },
       "oauth": {
         "title": "僅授權 IDE 登入資訊",
         "item1": "在瀏覽器完成 OAuth 後即可新增帳號並用於 IDE 切換。",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "WebView 頂部會顯示橫向步驟條，便於定位卡住的步驟。",
     "oauthFlow": {
       "prepare": "準備授權連結",
-      "quota": "WebView 取得 Cookie 並綁定配額查詢",
       "authorize": "開啟授權連結並確認授權",
       "bind": "輪詢授權結果並綁定帳號",
       "retryPrepare": "重新產生授權連結",
-      "retryQuota": "重新擷取 Cookie 並查詢配額",
       "retryAuthorize": "重新請求授權連結",
       "retryBind": "重新輪詢授權結果",
       "error": "流程異常：{{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "搜尋 CodeBuddy 帳號...",
     "quotaQuery": {
-      "title": "查詢配額",
-      "desc": "貼上 Cookie Header 或完整 cURL，系統將提取 session/session_2 並綁定到目前帳號。",
-      "button": "查詢配額",
-      "submit": "綁定並查詢",
-      "clearBinding": "清除綁定",
-      "clearBindingConfirm": "確認清除目前帳號的配額查詢綁定參數？清除後將停止自動刷新配額。",
-      "clearBindingSuccess": "已清除配額查詢綁定參數。",
-      "clearBindingFailed": "清除配額綁定失敗：{{error}}",
-      "success": "配額查詢成功，已綁定查詢參數。",
-      "failed": "配額查詢失敗：{{error}}",
-      "failedCompact": "查詢失敗",
       "failedRefreshCompact": "刷新配額失敗",
-      "failedReasonLabel": "原因：{{reason}}",
-      "failedReasonAt": "失敗時間：{{time}}",
       "sectionTitle": "配額查詢",
       "empty": "暫無綁定的配額查詢資訊",
       "packageUnknown": "套餐資訊未知",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "週期資訊暫無",
       "expireAt": "到期時間：{{time}}",
       "expireUnknown": "到期時間：暫無",
-      "noQuota": "未查詢",
-      "bindTarget": "綁定帳號：{{email}}",
-      "coreHint": "其他參數將使用系統預設值：ProductCode=p_tcaca、Status=0,3、時間範圍=目前時間到 +100 年。",
-      "webview": {
-        "tab": "WebView 登入",
-        "desc": "在內建瀏覽器中登入 CodeBuddy，登入後將自動取得配額資訊。",
-        "open": "在 WebView 中開啟",
-        "openIncognito": "在無痕 WebView 中開啟",
-        "waiting": "等待瀏覽器登入...",
-        "hint": "請在彈出的瀏覽器視窗中登入 CodeBuddy，登入後將自動取得配額並關閉視窗。",
-        "success": "WebView 配額查詢成功",
-        "failed": "WebView 查詢失敗：{{error}}"
-      },
-      "webviewFlow": {
-        "open": "開啟 WebView",
-        "login": "登入 CodeBuddy",
-        "fetch": "抓取配額資訊",
-        "bind": "將查詢結果綁定到帳號",
-        "retryOpen": "重新開啟 WebView",
-        "retryLogin": "重新登入",
-        "retryFetch": "重新抓取配額資訊",
-        "retryBind": "重新綁定",
-        "error": "流程異常：{{error}}"
-      },
-      "manual": {
-        "tab": "手動貼上",
-        "step1": "在瀏覽器中開啟下方連結並登入",
-        "step2": "按 F12 開啟開發者工具，切換到 Network（網路）面板",
-        "step3": "重新整理頁面，找到 get-user-resource 請求",
-        "step4": "右鍵該請求 → Copy → Copy as cURL (bash)",
-        "step5": "貼到下方輸入框"
-      },
-      "fields": {
-        "cookieHeader": "Cookie 標頭 / cURL",
-        "productCode": "產品代碼 (ProductCode)",
-        "status": "狀態值 (Status)",
-        "beginTime": "開始時間",
-        "endTime": "結束時間",
-        "pageNumber": "頁碼 (PageNumber)",
-        "pageSize": "每頁數量 (PageSize)"
-      },
-      "placeholders": {
-        "cookieHeader": "貼上 get-user-resource 的 cURL 命令"
-      },
-      "errors": {
-        "cookieRequired": "請先填寫 Cookie Header 或 cURL。",
-        "accountMismatch": "配額 Cookie 對應帳號與目前帳號不一致（目前 UIN：{{expectedUin}}，返回 UIN：{{resourceUin}}，payerUin：{{payerUin}}）。請切換到正確帳號後重新複製 Cookie。",
-        "statusInvalid": "Status 格式無效，請使用逗號分隔的數字。",
-        "pageInvalid": "分頁參數無效，請輸入大於 0 的數字。",
-        "fullCurlRequired": "僅支援完整 cURL 指令。請在瀏覽器 Network 對 get-user-resource 使用「Copy as cURL (bash)」後原樣貼上。"
-      },
-      "webOnlyHint": "配額請在網頁中查看"
+      "packageTitle": {
+        "base": "基礎體驗包",
+        "activity": "活動贈送包"
+      }
     },
     "extraCredit": {
       "title": "加量包"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "WebView 跳轉失敗：{{error}}",
     "oauthWebviewInlineUrlPlaceholder": "在此輸入網址並在目前 WebView 跳轉",
     "oauthWebviewInlineGo": "跳轉",
-    "oauthQuotaFailurePrompt": "配額綁定失敗。\n點擊「確定」重試 Cookie 擷取並刷新配額；點擊「取消」跳過（僅新增帳號）。",
-    "oauthQuotaFailureTitle": "配額綁定失敗",
-    "oauthQuotaFailureRetry": "重試",
-    "oauthQuotaFailureSkip": "跳過",
     "oauthSuccessClosePrompt": "帳號新增完成，是否關閉 WebView？\n點擊「關閉 WebView」將立即關閉；點擊「稍後再說」則保持目前頁面開啟。",
     "oauthSuccessCloseTitle": "帳號新增完成",
     "oauthSuccessCloseNowLabel": "關閉 WebView",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ 帳號新增完成，已保持目前頁面開啟。",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 登入 CodeBuddy",
-        "quotaBind": "2 WebView 取得 Cookie 並綁定配額查詢",
-        "quotaComplete": "3 完成（手動關閉）",
         "prepare": "1 準備授權連結",
         "authorize": "2 開啟授權連結並確認授權",
         "bind": "3 輪詢授權結果並綁定帳號",
-        "quota": "4 WebView 取得 Cookie 並綁定配額查詢",
         "complete": "5 完成（手動關閉）"
       },
       "status": {

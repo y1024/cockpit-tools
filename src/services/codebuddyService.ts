@@ -9,17 +9,6 @@ export interface CodebuddyOAuthLoginStartResponse {
   intervalSeconds: number;
 }
 
-export interface CodebuddyQuotaQueryPayload extends Record<string, unknown> {
-  accountId: string;
-  cookieHeader: string;
-  productCode?: string;
-  status?: number[];
-  packageEndTimeRangeBegin?: string;
-  packageEndTimeRangeEnd?: string;
-  pageNumber?: number;
-  pageSize?: number;
-}
-
 export async function listCodebuddyAccounts(): Promise<CodebuddyAccount[]> {
   return await invoke('list_codebuddy_accounts');
 }
@@ -78,14 +67,4 @@ export async function getCodebuddyAccountsIndexPath(): Promise<string> {
 
 export async function injectCodebuddyToVSCode(accountId: string): Promise<string> {
   return await invoke('inject_codebuddy_to_vscode', { accountId });
-}
-
-export async function queryCodebuddyQuotaWithBinding(
-  payload: CodebuddyQuotaQueryPayload,
-): Promise<CodebuddyAccount> {
-  return await invoke('query_codebuddy_quota_with_binding', payload);
-}
-
-export async function clearCodebuddyQuotaBinding(accountId: string): Promise<CodebuddyAccount> {
-  return await invoke('clear_codebuddy_quota_binding', { accountId });
 }

@@ -1999,17 +1999,12 @@
     "nickname": "Takma ad",
     "enterprise": "Kurumsal",
     "usage": "Kullanım durumu",
+    "creditsBalance": "Kredi bakiyesi",
     "usageNormal": "Normal",
     "oauthWaiting": "Yetkilendirme bekleniyor...",
     "oauthDesc": "Tarayıcınızda CodeBuddy yetkilendirme sayfasını açmak için aşağıdaki düğmeye tıklayın.",
     "oauthDescWebview": "Yerleşik WebView'da CodeBuddy yetkilendirme sayfasını açmak için aşağıdaki düğmeye tıklayın.",
     "oauthFeature": {
-      "webview": {
-        "title": "Önerilen: IDE yetkilendirme + kota bağlamayı tek akışta tamamlayın",
-        "item1": "Yerleşik gizli WebView ile giriş yaptıktan sonra IDE oturum verileri otomatik bağlanır.",
-        "item2": "Kota sorgu parametreleri de aynı anda otomatik yakalanır ve bağlanır.",
-        "item3": "İlk hesap kurulumu için en uygunudur; kota görüntüleme/yenileme hemen kullanılabilir."
-      },
       "oauth": {
         "title": "Yalnızca IDE girişi",
         "item1": "Tarayıcıda OAuth tamamlandıktan sonra hesabı ekleyin ve IDE geçişi için kullanın.",
@@ -2026,11 +2021,9 @@
     "oauthWebviewProgressHint": "Takılan aşamayı bulmak için WebView üstünde yatay adım çubuğu gösterilir.",
     "oauthFlow": {
       "prepare": "OAuth bağlantısını hazırla",
-      "quota": "WebView'da Cookie yakala ve kota sorgusunu bağla",
       "authorize": "Yetkilendirme bağlantısını aç ve onayla",
       "bind": "Yetkilendirme sonucunu yokla ve hesabı bağla",
       "retryPrepare": "OAuth bağlantısını yeniden oluştur",
-      "retryQuota": "Cookie'yi tekrar yakala ve kotayı sorgula",
       "retryAuthorize": "Yetkilendirme bağlantısını yeniden iste",
       "retryBind": "Yetki yoklamasını yeniden dene",
       "error": "Akış hatası: {{error}}"
@@ -2043,20 +2036,7 @@
     },
     "search": "CodeBuddy hesaplarını ara...",
     "quotaQuery": {
-      "title": "Kota Sorgula",
-      "desc": "Cookie header veya tam cURL komutunu yapıştırın. session/session_2 çıkarılıp bu hesaba bağlanır.",
-      "button": "Kota Sorgula",
-      "submit": "Bağla ve Sorgula",
-      "clearBinding": "Bağlamayı Temizle",
-      "clearBindingConfirm": "Bu hesap için kota sorgu bağlaması temizlensin mi? Temizledikten sonra kota otomatik yenileme durur.",
-      "clearBindingSuccess": "Kota sorgu bağlaması temizlendi.",
-      "clearBindingFailed": "Kota bağlaması temizlenemedi: {{error}}",
-      "success": "Kota başarıyla sorgulandı. Bağlama kaydedildi.",
-      "failed": "Kota sorgusu başarısız: {{error}}",
-      "failedCompact": "Sorgu başarısız",
       "failedRefreshCompact": "Kota yenileme başarısız",
-      "failedReasonLabel": "Neden: {{reason}}",
-      "failedReasonAt": "Hata zamanı: {{time}}",
       "sectionTitle": "Kota Sorgusu",
       "empty": "Henüz bağlı kota sorgu bilgisi yok",
       "packageUnknown": "Bilinmeyen paket",
@@ -2066,58 +2046,10 @@
       "cycleUnknown": "Döngü bilgisi yok",
       "expireAt": "Bitiş: {{time}}",
       "expireUnknown": "Bitiş: Yok",
-      "noQuota": "Sorgulanmadı",
-      "bindTarget": "Bağlı hesap: {{email}}",
-      "coreHint": "Diğer parametreler varsayılanı kullanır: ProductCode=p_tcaca, Status=0,3, zaman aralığı=şimdi ile +100 yıl.",
-      "webview": {
-        "tab": "WebView Girişi",
-        "desc": "Yerleşik tarayıcıda CodeBuddy'ye giriş yapın. Giriş sonrası kota bilgisi otomatik alınır.",
-        "open": "WebView'da aç",
-        "openIncognito": "Gizli WebView'da aç",
-        "waiting": "Tarayıcı girişi bekleniyor...",
-        "hint": "Açılan tarayıcı penceresinde CodeBuddy'ye giriş yapın. Kota otomatik alınır ve pencere otomatik kapanır.",
-        "success": "WebView kota sorgusu başarılı",
-        "failed": "WebView sorgusu başarısız: {{error}}"
-      },
-      "webviewFlow": {
-        "open": "WebView aç",
-        "login": "CodeBuddy'ye giriş yap",
-        "fetch": "Kota verisini çek",
-        "bind": "Sonucu hesaba bağla",
-        "retryOpen": "WebView'ı yeniden aç",
-        "retryLogin": "Girişi yeniden dene",
-        "retryFetch": "Kotayı yeniden çek",
-        "retryBind": "Bağlamayı yeniden dene",
-        "error": "Akış hatası: {{error}}"
-      },
-      "manual": {
-        "tab": "Elle Yapıştır",
-        "step1": "Aşağıdaki bağlantıyı tarayıcıda açıp giriş yapın",
-        "step2": "F12 ile Geliştirici Araçları'nı açın, Network sekmesine geçin",
-        "step3": "Sayfayı yenileyin, get-user-resource isteğini bulun",
-        "step4": "İsteğe sağ tıklayın → Copy → Copy as cURL (bash)",
-        "step5": "Aşağıdaki giriş kutusuna yapıştırın"
-      },
-      "fields": {
-        "cookieHeader": "Cookie Başlığı / cURL",
-        "productCode": "Ürün Kodu",
-        "status": "Durum",
-        "beginTime": "Başlangıç Zamanı",
-        "endTime": "Bitiş Zamanı",
-        "pageNumber": "Sayfa Numarası",
-        "pageSize": "Sayfa Boyutu"
-      },
-      "placeholders": {
-        "cookieHeader": "get-user-resource cURL komutunu yapıştırın"
-      },
-      "errors": {
-        "cookieRequired": "Lütfen önce Cookie header veya cURL sağlayın.",
-        "accountMismatch": "Kota çerezi farklı bir hesaba ait (mevcut UIN: {{expectedUin}}, dönen UIN: {{resourceUin}}, payerUin: {{payerUin}}). Lütfen doğru hesaba geçip çerezi yeniden kopyalayın.",
-        "statusInvalid": "Status biçimi geçersiz. Virgülle ayrılmış sayılar kullanın.",
-        "pageInvalid": "Sayfalama değerleri geçersiz. Lütfen 0'dan büyük sayılar girin.",
-        "fullCurlRequired": "Yalnızca tam cURL komutu desteklenir. Network’te get-user-resource isteğinde \"Copy as cURL (bash)\" kullanıp olduğu gibi yapıştırın."
-      },
-      "webOnlyHint": "Kotayı web sayfasında görüntüleyin"
+      "packageTitle": {
+        "base": "Temel deneyim paketi",
+        "activity": "Etkinlik hediye paketi"
+      }
     },
     "extraCredit": {
       "title": "Kredi Paketi"
@@ -2129,10 +2061,6 @@
     "oauthGotoWebviewFailed": "WebView yönlendirme başarısız: {{error}}",
     "oauthWebviewInlineUrlPlaceholder": "Bu WebView içinde gitmek için bir URL girin",
     "oauthWebviewInlineGo": "Git",
-    "oauthQuotaFailurePrompt": "Kota bağlama başarısız.\nCookie yakalama ve kota yenilemeyi yeniden denemek için Tamam'a, atlamak için İptal'e tıklayın (yalnızca hesap).",
-    "oauthQuotaFailureTitle": "Kota bağlama başarısız",
-    "oauthQuotaFailureRetry": "Yeniden dene",
-    "oauthQuotaFailureSkip": "Atla",
     "oauthSuccessClosePrompt": "Hesap başarıyla eklendi. Bu WebView şimdi kapatılsın mı?\nHemen kapatmak için \"WebView'ı Kapat\", açık bırakmak için \"Daha Sonra\" seçin.",
     "oauthSuccessCloseTitle": "Hesap Eklendi",
     "oauthSuccessCloseNowLabel": "WebView'ı Kapat",
@@ -2141,13 +2069,9 @@
     "oauthSuccessCloseLaterStatus": "✅ Hesap eklendi. Bu WebView açık kalacak.",
     "oauthWebviewOverlay": {
       "steps": {
-        "quotaAuthorize": "1 CodeBuddy'ye giriş yap",
-        "quotaBind": "2 WebView'da Cookie yakala ve kota sorgusunu bağla",
-        "quotaComplete": "3 Tamamlandı (elle kapat)",
         "prepare": "1 OAuth bağlantısını hazırla",
         "authorize": "2 Yetkilendirme bağlantısını aç ve onayla",
         "bind": "3 Yetkilendirme sonucunu yokla ve hesabı bağla",
-        "quota": "4 WebView'da Cookie yakala ve kota sorgusunu bağla",
         "complete": "5 Tamamlandı (elle kapat)"
       },
       "status": {

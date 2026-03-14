@@ -7,6 +7,22 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.15.0] - 2026-03-14
+
+### Added
+- **CodeBuddy/CodeBuddy CN resource-package quota is now shown directly in app**: account cards and tables now render per-package quota amount, progress, and refresh/expiry time (including extra credits) without requiring web-only viewing.
+- **CodeBuddy CN Token import now hydrates quota metadata immediately**: Token import now pulls dosage/payment/user-resource payloads and persists them into quota and usage fields during account creation.
+
+### Changed
+- **Quota refresh now uses IDE access tokens instead of Cookie binding**: backend refresh now calls `/v2/billing/meter/get-user-resource` with Bearer token and identity headers, and writes refresh errors into account state for UI visibility.
+- **Legacy manual quota-binding flow is removed across backend and frontend**: removed cURL replay binding, binding-clear commands, and related service/type paths for both CodeBuddy and CodeBuddy CN.
+- **Localization copy is aligned with the new quota model across all locales**: removed obsolete Cookie-binding flow text, updated network-scope wording to resource-package quota refresh, and added package-title keys for base/activity packages in all supported languages.
+- **HTTP decoding compatibility for quota APIs is expanded**: `reqwest` now enables `brotli`/`deflate`/`zstd` features to handle compressed billing responses more reliably.
+
+### Fixed
+- **Quota summary and recommendation no longer depend on legacy binding state**: resource summary no longer returns `null` when `quota_binding` is absent, preventing fallback-only recommendation behavior after token refresh.
+
+---
 ## [0.14.0] - 2026-03-13
 
 ### Added
