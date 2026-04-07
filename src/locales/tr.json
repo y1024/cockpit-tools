@@ -162,6 +162,13 @@
       "updated": {
         "label": "{{relative}} önce güncellendi"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Genel sağ üst reklam alanı",
+      "badge": "REKLAM",
+      "title": "Sağ üst reklam alanı",
+      "desc": "Bu alan tüm sayfalarda sağ üstte sabitlenir ve kampanya ya da marka reklamları için uygundur.",
+      "action": "Ayrıntıları görüntüle"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Orijinal Düzen",
       "sideNavLayoutClassic": "Klasik Düzen",
       "antigravityDualSwitchNoRestart": "Yeniden başlatmadan çift geçiş",
-      "antigravityDualSwitchNoRestartDesc": "Hesap değiştirirken yerel hesap verisi yazımı ve eklentinin kesintisiz geçişi tek akışta yürütülür; Antigravity yeniden başlatılmaz."
+      "antigravityDualSwitchNoRestartDesc": "Hesap değiştirirken yerel hesap verisi yazımı ve eklentinin kesintisiz geçişi tek akışta yürütülür; Antigravity yeniden başlatılmaz.",
+      "appAutoLaunch": "Oturum açıldığında Cockpit Tools'u başlat",
+      "appAutoLaunchDesc": "Sistem oturumundan sonra uygulamayı otomatik başlat",
+      "startupWakeupDisabled": "Devre dışı",
+      "startupWakeupImmediate": "Hemen uyandır",
+      "startupWakeupDelayed": "Gecikmeli uyandır",
+      "antigravityStartupWakeup": "Başlangıçtan sonra Antigravity uyandırmayı çalıştır",
+      "antigravityStartupWakeupDesc": "Uygulama açıldıktan sonra etkin Antigravity uyandırma görevlerini bir kez çalıştır",
+      "codexStartupWakeup": "Başlangıçtan sonra Codex uyandırmayı çalıştır",
+      "codexStartupWakeupDesc": "Uygulama açıldıktan sonra etkin Codex uyandırma görevlerini bir kez çalıştır",
+      "currentAccountRefreshTitle": "Mevcut hesap yenileme",
+      "currentAccountRefreshItemDesc": "Yalnızca mevcut hesap yenilenir. Varsayılan 1 dakikadır.",
+      "autoSwitchAccountScope": "Otomatik hesap geçiş kapsamı",
+      "autoSwitchAccountScopeDesc": "İzleme ve geçiş yalnızca bu kapsam içindeki hesaplarda yapılır.",
+      "autoSwitchAccountScopeAll": "Tüm hesaplar",
+      "autoSwitchAccountScopeSelected": "Seçili hesaplar",
+      "autoSwitchAccountScopeChoose": "Hesap seç",
+      "autoSwitchAccountScopeManage": "Hesapları yönet",
+      "autoSwitchAccountScopeAllSummary": "Geçerli kapsam: tüm hesaplar (toplam {{total}})",
+      "autoSwitchAccountScopeSummary": "{{total}} hesabın {{selected}} tanesi seçildi",
+      "autoSwitchAccountScopeDialogTitle": "Otomatik geçiş hesap kapsamını seç",
+      "autoSwitchAccountScopeAllHint": "Geçerli kapsam tüm hesaplardır. {{total}} hesap otomatik geçişe dahil olur.",
+      "codexAutoSwitchAccountScope": "Codex otomatik hesap geçiş kapsamı",
+      "codexAutoSwitchAccountScopeDesc": "Mevcut Codex otomatik geçiş durumu: {{status}}. Yalnızca bu kapsam içindeki hesaplar dikkate alınır."
     },
     "network": {
       "apiTitle": "Yerçekimine Karşı Kokpit API'si",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Kota sıfırlama",
       "manual": "Testi Çalıştır",
-      "unknown": "Bilinmiyor"
+      "unknown": "Bilinmiyor",
+      "startup": "Başlangıçtan sonra"
     },
     "taskCard": {
       "accountsCount": "Hesaplar {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Kota sıfırlama tetikleyicileri güncel kota verilerine bağlıdır, bu yüzden sabit zaman önizlemesi yoktur.",
       "triggerQuotaReset": "Kota sıfırlama tetikleyicisi",
-      "noticeSavedEnabledWithQuotaReset": "Görevler kaydedildi. Toplam: {{count}}. Codex otomatik yenileme {{minutes}} dakikaya ayarlandı."
+      "noticeSavedEnabledWithQuotaReset": "Görevler kaydedildi. Toplam: {{count}}. Codex otomatik yenileme {{minutes}} dakikaya ayarlandı.",
+      "runtimeConfigTitle": "Özel çalışma zamanı yolları",
+      "runtimeConfigHint": "Yürütülebilir dosya yolu veya klasör yolu girebilirsiniz. PATH üzerinden otomatik algılama için boş bırakın.",
+      "runtimeConfigCodexCliLabel": "Codex CLI yolu",
+      "runtimeConfigCodexCliPlaceholder": "örn. /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "node yolu",
+      "runtimeConfigNodePlaceholder": "örn. /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Değişiklikten sonra \"CLI’yi yeniden kontrol et\"e tıklayarak hemen kaydedip uygulayın."
     },
     "sessionManager": {
       "title": "Oturum yöneticisi",

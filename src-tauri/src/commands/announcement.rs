@@ -1,5 +1,6 @@
 use crate::modules::announcement;
 use crate::modules::announcement::AnnouncementState;
+use crate::modules::announcement::TopRightAdState;
 
 #[tauri::command]
 pub async fn announcement_get_state() -> Result<AnnouncementState, String> {
@@ -19,4 +20,9 @@ pub async fn announcement_mark_all_as_read() -> Result<(), String> {
 #[tauri::command]
 pub async fn announcement_force_refresh() -> Result<AnnouncementState, String> {
     announcement::force_refresh_announcements().await
+}
+
+#[tauri::command]
+pub async fn announcement_get_top_right_ad() -> Result<TopRightAdState, String> {
+    announcement::get_top_right_ad_state().await
 }

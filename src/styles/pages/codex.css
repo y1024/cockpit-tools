@@ -1694,6 +1694,74 @@
   font-size: 15px;
 }
 
+.codex-wakeup-runtime-config-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  background: rgba(248, 250, 252, 0.88);
+}
+
+.codex-wakeup-runtime-config-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.codex-wakeup-runtime-config-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.codex-wakeup-runtime-config-header p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.codex-wakeup-runtime-config-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.codex-wakeup-runtime-config-grid.single {
+  grid-template-columns: 1fr;
+}
+
+.codex-wakeup-runtime-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.codex-wakeup-runtime-config-field > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.codex-wakeup-runtime-config-tip {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.codex-wakeup-runtime-config-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  background: rgba(254, 242, 242, 0.9);
+  color: #b91c1c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .codex-wakeup-install-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3337,6 +3405,26 @@
   color: #cbd5e1;
 }
 
+[data-theme="dark"] .codex-wakeup-runtime-config-card {
+  border-color: rgba(148, 163, 184, 0.18);
+  background: rgba(30, 41, 59, 0.72);
+}
+
+[data-theme="dark"] .codex-wakeup-runtime-config-header p,
+[data-theme="dark"] .codex-wakeup-runtime-config-field > span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .codex-wakeup-runtime-config-tip {
+  color: #64748b;
+}
+
+[data-theme="dark"] .codex-wakeup-runtime-config-error {
+  border-color: rgba(248, 113, 113, 0.26);
+  background: rgba(127, 29, 29, 0.3);
+  color: #fecaca;
+}
+
 [data-theme="dark"] .codex-wakeup-install-command {
   background: rgba(30, 41, 59, 0.82);
   border-color: rgba(148, 163, 184, 0.16);
@@ -3519,6 +3607,7 @@
   .codex-wakeup-results-metrics,
   .codex-wakeup-history-quota,
   .codex-wakeup-install-grid,
+  .codex-wakeup-runtime-config-grid,
   .wakeup-chip-list.codex-wakeup-account-list {
     grid-template-columns: 1fr;
   }

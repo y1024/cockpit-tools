@@ -55,6 +55,18 @@ pub async fn wakeup_sync_state(
 }
 
 #[tauri::command]
+pub async fn wakeup_run_enabled_tasks(
+    app: AppHandle,
+    trigger_source: Option<String>,
+    official_ls_version_mode: Option<String>,
+) -> Result<u32, String> {
+    modules::wakeup::set_official_ls_version_mode(official_ls_version_mode.as_deref())?;
+    let source = trigger_source.unwrap_or_else(|| "startup".to_string());
+    let started = modules::wakeup_scheduler::run_enabled_tasks_now(&app, &source).await;
+    Ok(started as u32)
+}
+
+#[tauri::command]
 pub fn wakeup_load_history() -> Result<Vec<modules::wakeup_history::WakeupHistoryItem>, String> {
     modules::wakeup_history::load_history()
 }

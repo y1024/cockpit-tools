@@ -162,6 +162,13 @@
       "updated": {
         "label": "{{relative}} 전에 업데이트"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "전역 우측 상단 광고 영역",
+      "badge": "광고",
+      "title": "우측 상단 광고 영역",
+      "desc": "이 영역은 모든 페이지의 우측 상단에 고정되어 캠페인 또는 브랜드 광고 노출에 적합합니다.",
+      "action": "자세히 보기"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "원래 레이아웃",
       "sideNavLayoutClassic": "클래식 레이아웃",
       "antigravityDualSwitchNoRestart": "재시작 없이 이중 전환",
-      "antigravityDualSwitchNoRestartDesc": "계정 전환 시 로컬 계정 데이터 기록과 확장 프로그램의 원활한 전환을 한 번에 수행하며, Antigravity를 재시작하지 않습니다."
+      "antigravityDualSwitchNoRestartDesc": "계정 전환 시 로컬 계정 데이터 기록과 확장 프로그램의 원활한 전환을 한 번에 수행하며, Antigravity를 재시작하지 않습니다.",
+      "appAutoLaunch": "로그인 시 Cockpit Tools 시작",
+      "appAutoLaunchDesc": "시스템 로그인 후 앱을 자동으로 시작합니다",
+      "startupWakeupDisabled": "비활성화",
+      "startupWakeupImmediate": "즉시 깨우기",
+      "startupWakeupDelayed": "지연 후 깨우기",
+      "antigravityStartupWakeup": "시작 후 Antigravity 깨우기 실행",
+      "antigravityStartupWakeupDesc": "앱 시작 후 활성화된 Antigravity 깨우기 작업을 한 번 실행합니다",
+      "codexStartupWakeup": "시작 후 Codex 깨우기 실행",
+      "codexStartupWakeupDesc": "앱 시작 후 활성화된 Codex 깨우기 작업을 한 번 실행합니다",
+      "currentAccountRefreshTitle": "현재 계정 새로고침",
+      "currentAccountRefreshItemDesc": "현재 계정만 새로고침합니다. 기본값은 1분입니다.",
+      "autoSwitchAccountScope": "자동 전환 계정 범위",
+      "autoSwitchAccountScopeDesc": "이 범위 안의 계정만 모니터링 및 전환합니다.",
+      "autoSwitchAccountScopeAll": "모든 계정",
+      "autoSwitchAccountScopeSelected": "선택한 계정",
+      "autoSwitchAccountScopeChoose": "계정 선택",
+      "autoSwitchAccountScopeManage": "계정 관리",
+      "autoSwitchAccountScopeAllSummary": "현재 범위: 모든 계정 (총 {{total}}개)",
+      "autoSwitchAccountScopeSummary": "{{total}}개 중 {{selected}}개 선택됨",
+      "autoSwitchAccountScopeDialogTitle": "자동 전환 계정 범위 선택",
+      "autoSwitchAccountScopeAllHint": "현재 범위는 모든 계정입니다. {{total}}개 계정이 자동 전환에 참여합니다.",
+      "codexAutoSwitchAccountScope": "Codex 자동 전환 계정 범위",
+      "codexAutoSwitchAccountScopeDesc": "현재 Codex 자동 전환 상태: {{status}}. 이 범위의 계정만 고려됩니다."
     },
     "network": {
       "apiTitle": "반중력 조종석 API",
@@ -1176,7 +1206,8 @@
       "crontab": "크론탭",
       "quotaReset": "할당량 재설정",
       "manual": "즉시 테스트",
-      "unknown": "알 수 없음"
+      "unknown": "알 수 없음",
+      "startup": "시작 후"
     },
     "taskCard": {
       "accountsCount": "계정 {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "할당량 초기화 트리거는 최신 할당량 데이터에 의존하므로 고정 시간 미리보기를 제공하지 않습니다.",
       "triggerQuotaReset": "할당량 초기화 트리거",
-      "noticeSavedEnabledWithQuotaReset": "작업이 저장되었습니다. 총 {{count}}개. Codex 자동 새로고침이 {{minutes}}분 간격으로 조정되었습니다."
+      "noticeSavedEnabledWithQuotaReset": "작업이 저장되었습니다. 총 {{count}}개. Codex 자동 새로고침이 {{minutes}}분 간격으로 조정되었습니다.",
+      "runtimeConfigTitle": "사용자 지정 런타임 경로",
+      "runtimeConfigHint": "실행 파일 경로 또는 디렉터리 경로를 입력할 수 있습니다. 비워두면 PATH에서 자동 감지합니다.",
+      "runtimeConfigCodexCliLabel": "Codex CLI 경로",
+      "runtimeConfigCodexCliPlaceholder": "예: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "node 경로",
+      "runtimeConfigNodePlaceholder": "예: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "변경 후 \"CLI 다시 확인\"을 누르면 저장되고 즉시 적용됩니다."
     },
     "sessionManager": {
       "title": "세션 관리",

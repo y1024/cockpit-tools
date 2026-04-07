@@ -418,6 +418,18 @@ pub fn codex_wakeup_get_cli_status() -> Result<codex_wakeup::CodexCliStatus, Str
 }
 
 #[tauri::command]
+pub fn codex_wakeup_update_runtime_config(
+    codex_cli_path: Option<String>,
+    node_path: Option<String>,
+) -> Result<codex_wakeup::CodexCliStatus, String> {
+    codex_wakeup::save_runtime_config(&codex_wakeup::CodexWakeupRuntimeConfig {
+        codex_cli_path,
+        node_path,
+    })?;
+    Ok(codex_wakeup::get_cli_status())
+}
+
+#[tauri::command]
 pub fn codex_wakeup_get_overview() -> Result<codex_wakeup::CodexWakeupOverview, String> {
     codex_wakeup::load_overview()
 }
@@ -498,6 +510,15 @@ pub async fn codex_wakeup_run_task(
     run_id: Option<String>,
 ) -> Result<codex_wakeup::CodexWakeupBatchResult, String> {
     codex_wakeup_scheduler::run_task_now(Some(&app), &task_id, "manual_task", run_id).await
+}
+
+#[tauri::command]
+pub async fn codex_wakeup_run_enabled_tasks(
+    app: AppHandle,
+    trigger_type: Option<String>,
+) -> Result<u32, String> {
+    let trigger = trigger_type.unwrap_or_else(|| "startup".to_string());
+    codex_wakeup_scheduler::run_enabled_tasks_now(Some(&app), &trigger).await
 }
 
 // ─── Codex 账号分组持久化 ────────────────────────────────────────────

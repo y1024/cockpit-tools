@@ -162,6 +162,13 @@
       "updated": {
         "label": "Cập nhật {{relative}} trước"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Vị trí quảng cáo toàn cục góc trên bên phải",
+      "badge": "QUẢNG CÁO",
+      "title": "Vị trí quảng cáo góc trên bên phải",
+      "desc": "Khu vực này được cố định ở góc trên bên phải trên mọi trang, phù hợp cho chiến dịch hoặc quảng cáo thương hiệu.",
+      "action": "Xem chi tiết"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Bố cục gốc",
       "sideNavLayoutClassic": "Bố cục cổ điển",
       "antigravityDualSwitchNoRestart": "Chuyển đôi không cần khởi động lại",
-      "antigravityDualSwitchNoRestartDesc": "Khi chuyển tài khoản, việc ghi dữ liệu cục bộ và chuyển đổi liền mạch qua tiện ích mở rộng được thực hiện trong một luồng, không cần khởi động lại Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Khi chuyển tài khoản, việc ghi dữ liệu cục bộ và chuyển đổi liền mạch qua tiện ích mở rộng được thực hiện trong một luồng, không cần khởi động lại Antigravity.",
+      "appAutoLaunch": "Khởi chạy Cockpit Tools khi đăng nhập",
+      "appAutoLaunchDesc": "Tự động khởi chạy ứng dụng sau khi đăng nhập hệ thống",
+      "startupWakeupDisabled": "Tắt",
+      "startupWakeupImmediate": "Đánh thức ngay",
+      "startupWakeupDelayed": "Đánh thức sau độ trễ",
+      "antigravityStartupWakeup": "Chạy đánh thức Antigravity sau khi khởi động",
+      "antigravityStartupWakeupDesc": "Sau khi ứng dụng khởi động, chạy một lần các tác vụ đánh thức Antigravity đã bật",
+      "codexStartupWakeup": "Chạy đánh thức Codex sau khi khởi động",
+      "codexStartupWakeupDesc": "Sau khi ứng dụng khởi động, chạy một lần các tác vụ đánh thức Codex đã bật",
+      "currentAccountRefreshTitle": "Làm mới tài khoản hiện tại",
+      "currentAccountRefreshItemDesc": "Chỉ làm mới tài khoản hiện tại. Mặc định là 1 phút.",
+      "autoSwitchAccountScope": "Phạm vi chuyển tài khoản tự động",
+      "autoSwitchAccountScopeDesc": "Chỉ theo dõi và chuyển tài khoản trong phạm vi này.",
+      "autoSwitchAccountScopeAll": "Tất cả tài khoản",
+      "autoSwitchAccountScopeSelected": "Tài khoản đã chọn",
+      "autoSwitchAccountScopeChoose": "Chọn tài khoản",
+      "autoSwitchAccountScopeManage": "Quản lý tài khoản",
+      "autoSwitchAccountScopeAllSummary": "Phạm vi hiện tại: tất cả tài khoản (tổng {{total}})",
+      "autoSwitchAccountScopeSummary": "Đã chọn {{selected}} / {{total}} tài khoản",
+      "autoSwitchAccountScopeDialogTitle": "Chọn phạm vi tài khoản để chuyển tự động",
+      "autoSwitchAccountScopeAllHint": "Phạm vi hiện tại là tất cả tài khoản. {{total}} tài khoản sẽ tham gia chuyển tự động.",
+      "codexAutoSwitchAccountScope": "Phạm vi chuyển tự động tài khoản Codex",
+      "codexAutoSwitchAccountScopeDesc": "Trạng thái chuyển tự động Codex hiện tại: {{status}}. Chỉ tài khoản trong phạm vi này mới được xét."
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -1176,7 +1206,8 @@
       "crontab": "crontab",
       "quotaReset": "Đặt lại hạn mức",
       "manual": "Chạy thử",
-      "unknown": "Không xác định"
+      "unknown": "Không xác định",
+      "startup": "Sau khi khởi động"
     },
     "taskCard": {
       "accountsCount": "Tài khoản {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Kích hoạt đặt lại hạn mức phụ thuộc dữ liệu hạn mức mới nhất nên không có xem trước thời gian cố định.",
       "triggerQuotaReset": "Kích hoạt đặt lại hạn mức",
-      "noticeSavedEnabledWithQuotaReset": "Đã lưu tác vụ. Tổng: {{count}}. Làm mới tự động Codex đã được điều chỉnh mỗi {{minutes}} phút."
+      "noticeSavedEnabledWithQuotaReset": "Đã lưu tác vụ. Tổng: {{count}}. Làm mới tự động Codex đã được điều chỉnh mỗi {{minutes}} phút.",
+      "runtimeConfigTitle": "Đường dẫn runtime tùy chỉnh",
+      "runtimeConfigHint": "Bạn có thể nhập đường dẫn tệp thực thi hoặc thư mục. Để trống để tự động phát hiện từ PATH.",
+      "runtimeConfigCodexCliLabel": "Đường dẫn Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "ví dụ: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Đường dẫn node",
+      "runtimeConfigNodePlaceholder": "ví dụ: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Sau khi chỉnh sửa, bấm \"Kiểm tra lại CLI\" để lưu và áp dụng ngay."
     },
     "sessionManager": {
       "title": "Quản lý phiên",

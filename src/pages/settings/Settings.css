@@ -117,6 +117,14 @@
   background: var(--bg-hover);
 }
 
+.settings-row--align-start {
+  align-items: flex-start;
+}
+
+.settings-row--align-start .row-control {
+  align-self: stretch;
+}
+
 .row-label {
   display: flex;
   flex-direction: column;

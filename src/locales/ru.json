@@ -162,6 +162,13 @@
       "updated": {
         "label": "Обновлено {{relative}} назад"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Глобальный рекламный слот в правом верхнем углу",
+      "badge": "РЕКЛАМА",
+      "title": "Рекламный слот в правом верхнем углу",
+      "desc": "Эта область фиксируется в правом верхнем углу на всех страницах и подходит для кампаний или брендовой рекламы.",
+      "action": "Подробнее"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Оригинальный макет",
       "sideNavLayoutClassic": "Классический макет",
       "antigravityDualSwitchNoRestart": "Двойное переключение без перезапуска",
-      "antigravityDualSwitchNoRestartDesc": "При переключении аккаунта локальная запись данных и плавное переключение через расширение выполняются в одном потоке без перезапуска Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "При переключении аккаунта локальная запись данных и плавное переключение через расширение выполняются в одном потоке без перезапуска Antigravity.",
+      "appAutoLaunch": "Запускать Cockpit Tools при входе в систему",
+      "appAutoLaunchDesc": "Автоматически запускать приложение после входа в систему",
+      "startupWakeupDisabled": "Отключено",
+      "startupWakeupImmediate": "Разбудить сразу",
+      "startupWakeupDelayed": "Разбудить с задержкой",
+      "antigravityStartupWakeup": "Выполнять пробуждение Antigravity после запуска",
+      "antigravityStartupWakeupDesc": "После запуска приложения один раз выполнять включенные задачи пробуждения Antigravity",
+      "codexStartupWakeup": "Выполнять пробуждение Codex после запуска",
+      "codexStartupWakeupDesc": "После запуска приложения один раз выполнять включенные задачи пробуждения Codex",
+      "currentAccountRefreshTitle": "Обновление текущего аккаунта",
+      "currentAccountRefreshItemDesc": "Обновляется только текущий аккаунт. Значение по умолчанию — 1 минута.",
+      "autoSwitchAccountScope": "Область автопереключения аккаунтов",
+      "autoSwitchAccountScopeDesc": "Мониторинг и переключение выполняются только в рамках этой области.",
+      "autoSwitchAccountScopeAll": "Все аккаунты",
+      "autoSwitchAccountScopeSelected": "Выбранные аккаунты",
+      "autoSwitchAccountScopeChoose": "Выбрать аккаунты",
+      "autoSwitchAccountScopeManage": "Управлять аккаунтами",
+      "autoSwitchAccountScopeAllSummary": "Текущая область: все аккаунты (всего {{total}})",
+      "autoSwitchAccountScopeSummary": "Выбрано {{selected}} из {{total}} аккаунтов",
+      "autoSwitchAccountScopeDialogTitle": "Выберите область аккаунтов для автопереключения",
+      "autoSwitchAccountScopeAllHint": "Текущая область включает все аккаунты. В автопереключении будут участвовать {{total}} аккаунтов.",
+      "codexAutoSwitchAccountScope": "Область автопереключения аккаунтов Codex",
+      "codexAutoSwitchAccountScopeDesc": "Текущий статус автопереключения Codex: {{status}}. Учитываются только аккаунты в этой области."
     },
     "network": {
       "apiTitle": "API антигравитационной кабины",
@@ -1176,7 +1206,8 @@
       "crontab": "Кронтаб",
       "quotaReset": "Сброс квоты",
       "manual": "Сразу тест",
-      "unknown": "Неизвестно"
+      "unknown": "Неизвестно",
+      "startup": "После запуска"
     },
     "taskCard": {
       "accountsCount": "Аккаунты {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Триггеры сброса квоты зависят от актуальных данных квоты, поэтому предпросмотр фиксированного времени недоступен.",
       "triggerQuotaReset": "Триггер сброса квоты",
-      "noticeSavedEnabledWithQuotaReset": "Задачи сохранены. Всего: {{count}}. Автообновление Codex настроено на каждые {{minutes}} минут."
+      "noticeSavedEnabledWithQuotaReset": "Задачи сохранены. Всего: {{count}}. Автообновление Codex настроено на каждые {{minutes}} минут.",
+      "runtimeConfigTitle": "Пользовательские пути runtime",
+      "runtimeConfigHint": "Можно указать путь к исполняемому файлу или каталогу. Оставьте пустым для автоопределения через PATH.",
+      "runtimeConfigCodexCliLabel": "Путь к Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "например: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Путь к node",
+      "runtimeConfigNodePlaceholder": "например: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "После изменения нажмите «Проверить CLI снова», чтобы сразу сохранить и применить."
     },
     "sessionManager": {
       "title": "Управление сессиями",

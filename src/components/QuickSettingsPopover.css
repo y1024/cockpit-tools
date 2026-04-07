@@ -465,6 +465,20 @@
   background: rgba(239, 68, 68, 0.15);
 }
 
+.qs-modal .settings-account-scope-toolbar {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+.qs-modal .settings-account-scope-select-all,
+.qs-modal .settings-account-scope-count {
+  white-space: normal;
+}
+
+.qs-modal .settings-account-scope-list {
+  max-height: 180px;
+}
+
 @media (max-width: 640px) {
   .qs-row--top {
     flex-direction: column;

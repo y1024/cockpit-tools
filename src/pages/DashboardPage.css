@@ -18,12 +18,15 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .dashboard-title-label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  z-index: 2;
 }
 
 /* Stats Row */

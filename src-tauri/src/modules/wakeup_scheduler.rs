@@ -43,6 +43,7 @@ pub struct ScheduleConfig {
     pub time_window_start: Option<String>,
     pub time_window_end: Option<String>,
     pub fallback_times: Option<Vec<String>>,
+    pub startup_delay_minutes: Option<i32>,
 }
 
 #[derive(Debug, Clone)]
@@ -73,6 +74,7 @@ struct ScheduleConfigNormalized {
     time_window_start: Option<String>,
     time_window_end: Option<String>,
     fallback_times: Vec<String>,
+    startup_delay_minutes: Option<i32>,
 }
 
 #[derive(Default, Debug, Clone)]
@@ -126,6 +128,9 @@ fn normalize_schedule(raw: ScheduleConfig) -> ScheduleConfigNormalized {
         .fallback_times
         .filter(|times| !times.is_empty())
         .unwrap_or_else(|| vec!["07:00".to_string()]);
+    let startup_delay_minutes = raw
+        .startup_delay_minutes
+        .map(|value| value.clamp(0, 24 * 60));
     ScheduleConfigNormalized {
         repeat_mode: raw.repeat_mode,
         daily_times,
@@ -144,6 +149,7 @@ fn normalize_schedule(raw: ScheduleConfig) -> ScheduleConfigNormalized {
         time_window_start: raw.time_window_start,
         time_window_end: raw.time_window_end,
         fallback_times,
+        startup_delay_minutes,
     }
 }
 
@@ -175,6 +181,86 @@ pub fn ensure_started(app: AppHandle) {
             sleep(Duration::from_secs(30)).await;
         }
     });
+}
+
+pub async fn run_enabled_tasks_now(app: &AppHandle, trigger_source: &str) -> usize {
+    let snapshot = {
+        let guard = state().lock().expect("wakeup state lock");
+        guard.clone()
+    };
+
+    if !snapshot.enabled {
+        return 0;
+    }
+
+    let source = {
+        let trimmed = trigger_source.trim();
+        if trimmed.is_empty() {
+            "startup"
+        } else {
+            trimmed
+        }
+    };
+
+    if source == "startup" {
+        let startup_tasks: Vec<(String, i32)> = snapshot
+            .tasks
+            .iter()
+            .filter(|task| task.enabled)
+            .filter_map(|task| {
+                task.schedule
+                    .startup_delay_minutes
+                    .map(|delay| (task.id.clone(), delay.max(0)))
+            })
+            .collect();
+
+        for (task_id, delay_minutes) in startup_tasks.iter() {
+            let app_handle = app.clone();
+            let task_id = task_id.clone();
+            let delay_seconds = (*delay_minutes as u64) * 60;
+            tauri::async_runtime::spawn(async move {
+                if delay_seconds > 0 {
+                    sleep(Duration::from_secs(delay_seconds)).await;
+                }
+                if let Some(task) = resolve_startup_task_to_run(&task_id) {
+                    run_task(&app_handle, &task, "startup").await;
+                }
+            });
+        }
+        return startup_tasks.len();
+    }
+
+    let mut started_count = 0usize;
+    for task in snapshot.tasks.iter() {
+        if !task.enabled || task.schedule.startup_delay_minutes.is_some() {
+            continue;
+        }
+        let running = {
+            let guard = state().lock().expect("wakeup state lock");
+            guard.running_tasks.contains(&task.id)
+        };
+        if running {
+            continue;
+        }
+        run_task(app, task, source).await;
+        started_count += 1;
+    }
+
+    started_count
+}
+
+fn resolve_startup_task_to_run(task_id: &str) -> Option<WakeupTask> {
+    let guard = state().lock().expect("wakeup state lock");
+    if !guard.enabled || guard.running_tasks.contains(task_id) {
+        return None;
+    }
+    guard
+        .tasks
+        .iter()
+        .find(|task| {
+            task.id == task_id && task.enabled && task.schedule.startup_delay_minutes.is_some()
+        })
+        .cloned()
 }
 
 fn parse_time_to_minutes(value: &str) -> Option<i32> {
@@ -627,6 +713,9 @@ async fn run_scheduler_once(app: &AppHandle) {
             continue;
         }
         if snapshot.running_tasks.contains(&task.id) {
+            continue;
+        }
+        if task.schedule.startup_delay_minutes.is_some() {
             continue;
         }
 

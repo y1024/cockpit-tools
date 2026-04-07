@@ -20,7 +20,7 @@ interface CodexWakeupStoreState {
   testing: boolean;
   error: string | null;
   loadAll: () => Promise<void>;
-  refreshRuntime: () => Promise<void>;
+  refreshRuntime: (runtimeConfig?: { codexCliPath?: string; nodePath?: string }) => Promise<void>;
   saveState: (
     enabled: boolean,
     tasks: CodexWakeupTask[],
@@ -83,12 +83,18 @@ export const useCodexWakeupStore = create<CodexWakeupStoreState>((set) => ({
     })();
     return loadAllInFlight;
   },
-  refreshRuntime: async () => {
+  refreshRuntime: async (runtimeConfig) => {
     try {
-      const runtime = await codexWakeupService.getCodexWakeupCliStatus();
+      const runtime = runtimeConfig
+        ? await codexWakeupService.updateCodexWakeupRuntimeConfig(
+            runtimeConfig.codexCliPath,
+            runtimeConfig.nodePath,
+          )
+        : await codexWakeupService.getCodexWakeupCliStatus();
       set({ runtime });
     } catch (error) {
       set({ error: String(error) });
+      throw error;
     }
   },
   saveState: async (enabled, tasks, modelPresets) => {

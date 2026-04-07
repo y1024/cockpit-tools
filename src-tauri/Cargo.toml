@@ -1,6 +1,6 @@
 [package]
 name = "cockpit-tools"
-version = "0.20.18"
+version = "0.20.19"
 description = "Cockpit Tools"
 authors = ["jlcodes"]
 license = "CC-BY-NC-SA-4.0"
@@ -20,6 +20,7 @@ tauri-plugin-opener = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-notification = "2"
+tauri-plugin-autostart = "2"
 tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -59,6 +60,7 @@ md5 = "0.7"
 tiny_http = "0.12"
 urlencoding = "2.1"
 lazy_static = "1.5"
+trash = "5"
 
 # VS Code Copilot token injection (Windows only)
 aes-gcm = "0.10"

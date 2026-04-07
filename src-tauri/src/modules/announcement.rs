@@ -95,16 +95,66 @@ pub struct Announcement {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct TopRightAdLocale {
+    #[serde(default)]
+    pub title: Option<String>,
+    #[serde(default)]
+    pub summary: Option<String>,
+    #[serde(default)]
+    pub badge: Option<String>,
+    #[serde(default)]
+    pub cta_label: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TopRightAd {
+    pub id: String,
+    #[serde(default)]
+    pub priority: i64,
+    #[serde(default)]
+    pub title: String,
+    #[serde(default)]
+    pub summary: String,
+    #[serde(default)]
+    pub badge: Option<String>,
+    #[serde(default)]
+    pub cta_label: Option<String>,
+    #[serde(default)]
+    pub cta_url: Option<String>,
+    #[serde(default = "default_target_versions")]
+    pub target_versions: String,
+    #[serde(default)]
+    pub target_languages: Option<Vec<String>>,
+    #[serde(default)]
+    pub created_at: String,
+    #[serde(default)]
+    pub expires_at: Option<String>,
+    #[serde(default)]
+    pub locales: Option<HashMap<String, TopRightAdLocale>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct AnnouncementResponse {
     #[serde(default)]
     pub version: String,
     #[serde(default)]
     pub announcements: Vec<Announcement>,
+    #[serde(default)]
+    pub top_right_ad: Option<TopRightAd>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct AnnouncementCache {
+    pub time: i64,
+    pub data: AnnouncementResponse,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct AnnouncementCacheLegacy {
     pub time: i64,
     pub data: Vec<Announcement>,
 }
@@ -115,6 +165,12 @@ pub struct AnnouncementState {
     pub announcements: Vec<Announcement>,
     pub unread_ids: Vec<String>,
     pub popup_announcement: Option<Announcement>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TopRightAdState {
+    pub ad: Option<TopRightAd>,
 }
 
 fn default_target_versions() -> String {
@@ -152,15 +208,14 @@ fn get_workspace_announcement_path() -> Option<PathBuf> {
     )
 }
 
-fn parse_announcement_file(path: &Path) -> Result<Vec<Announcement>, String> {
+fn parse_announcement_file(path: &Path) -> Result<AnnouncementResponse, String> {
     let content = fs::read_to_string(path)
         .map_err(|e| format!("读取公告文件失败({}): {}", path.display(), e))?;
-    let parsed: AnnouncementResponse = serde_json::from_str(&content)
-        .map_err(|e| format!("解析公告文件失败({}): {}", path.display(), e))?;
-    Ok(parsed.announcements)
+    serde_json::from_str::<AnnouncementResponse>(&content)
+        .map_err(|e| format!("解析公告文件失败({}): {}", path.display(), e))
 }
 
-fn load_local_announcements() -> Result<Option<Vec<Announcement>>, String> {
+fn load_local_announcements() -> Result<Option<AnnouncementResponse>, String> {
     if !cfg!(debug_assertions) {
         return Ok(None);
     }
@@ -190,15 +245,28 @@ fn load_cache() -> Result<Option<AnnouncementCache>, String> {
     if content.trim().is_empty() {
         return Ok(None);
     }
-    let cache: AnnouncementCache =
-        serde_json::from_str(&content).map_err(|e| format!("解析公告缓存失败: {}", e))?;
-    Ok(Some(cache))
+    if let Ok(cache) = serde_json::from_str::<AnnouncementCache>(&content) {
+        return Ok(Some(cache));
+    }
+
+    if let Ok(legacy) = serde_json::from_str::<AnnouncementCacheLegacy>(&content) {
+        return Ok(Some(AnnouncementCache {
+            time: legacy.time,
+            data: AnnouncementResponse {
+                version: String::new(),
+                announcements: legacy.data,
+                top_right_ad: None,
+            },
+        }));
+    }
+
+    Err("解析公告缓存失败: 不支持的缓存格式".to_string())
 }
 
-fn save_cache(announcements: &[Announcement]) -> Result<(), String> {
+fn save_cache(payload: &AnnouncementResponse) -> Result<(), String> {
     let cache = AnnouncementCache {
         time: Utc::now().timestamp_millis(),
-        data: announcements.to_vec(),
+        data: payload.clone(),
     };
     let content =
         serde_json::to_string_pretty(&cache).map_err(|e| format!("序列化公告缓存失败: {}", e))?;
@@ -407,7 +475,69 @@ fn filter_announcements(
     filtered
 }
 
-async fn fetch_remote_announcements() -> Result<Vec<Announcement>, String> {
+fn apply_localized_top_right_ad(ad: &TopRightAd, locale: &str) -> TopRightAd {
+    let mut localized = ad.clone();
+    if let Some(locales) = &ad.locales {
+        let lower_locale = locale.to_lowercase();
+        let matched_key = locales.keys().find(|key| {
+            let normalized_key = key.to_lowercase();
+            normalized_key == lower_locale || lower_locale.starts_with(&(normalized_key + "-"))
+        });
+
+        if let Some(key) = matched_key {
+            if let Some(localized_data) = locales.get(key) {
+                if let Some(title) = &localized_data.title {
+                    localized.title = title.clone();
+                }
+                if let Some(summary) = &localized_data.summary {
+                    localized.summary = summary.clone();
+                }
+                if let Some(badge) = &localized_data.badge {
+                    localized.badge = Some(badge.clone());
+                }
+                if let Some(cta_label) = &localized_data.cta_label {
+                    localized.cta_label = Some(cta_label.clone());
+                }
+            }
+        }
+    }
+
+    localized
+}
+
+fn filter_top_right_ad(
+    ad: Option<TopRightAd>,
+    current_version: &str,
+    locale: &str,
+) -> Option<TopRightAd> {
+    let mut item = ad?;
+    let target_versions = if item.target_versions.trim().is_empty() {
+        "*"
+    } else {
+        item.target_versions.as_str()
+    };
+    if !match_version(current_version, target_versions) {
+        return None;
+    }
+    if let Some(target_languages) = &item.target_languages {
+        if !is_language_match(locale, target_languages) {
+            return None;
+        }
+    }
+
+    if let Some(expires_at) = &item.expires_at {
+        if let Some(expire_ms) = parse_datetime_millis(expires_at) {
+            if expire_ms < Utc::now().timestamp_millis() {
+                return None;
+            }
+        }
+    }
+
+    item = apply_localized_top_right_ad(&item, locale);
+    Some(item)
+}
+
+async fn fetch_remote_announcements() -> Result<AnnouncementResponse, String> {
     logger::log_info("[Announcement] 从远端拉取公告");
 
     let client = reqwest::Client::builder()
@@ -430,15 +560,13 @@ async fn fetch_remote_announcements() -> Result<Vec<Announcement>, String> {
         return Err(format!("远端公告接口返回异常状态: {}", response.status()));
     }
 
-    let parsed: AnnouncementResponse = response
+    response
         .json()
         .await
-        .map_err(|e| format!("解析远端公告失败: {}", e))?;
-
-    Ok(parsed.announcements)
+        .map_err(|e| format!("解析远端公告失败: {}", e))
 }
 
-async fn load_announcements_raw() -> Result<Vec<Announcement>, String> {
+async fn load_announcements_raw() -> Result<AnnouncementResponse, String> {
     if let Some(local_data) = load_local_announcements()? {
         return Ok(local_data);
     }
@@ -452,11 +580,11 @@ async fn load_announcements_raw() -> Result<Vec<Announcement>, String> {
     }
 
     match fetch_remote_announcements().await {
-        Ok(announcements) => {
-            if let Err(err) = save_cache(&announcements) {
+        Ok(payload) => {
+            if let Err(err) = save_cache(&payload) {
                 logger::log_warn(&format!("[Announcement] 保存公告缓存失败: {}", err));
             }
-            Ok(announcements)
+            Ok(payload)
         }
         Err(err) => {
             logger::log_warn(&format!(
@@ -474,8 +602,8 @@ async fn load_announcements_raw() -> Result<Vec<Announcement>, String> {
 pub async fn get_announcement_state() -> Result<AnnouncementState, String> {
     let current_version = env!("CARGO_PKG_VERSION");
     let locale = config::get_user_config().language.to_lowercase();
-    let raw_announcements = load_announcements_raw().await?;
-    let announcements = filter_announcements(raw_announcements, current_version, &locale);
+    let raw_payload = load_announcements_raw().await?;
+    let announcements = filter_announcements(raw_payload.announcements, current_version, &locale);
     let read_ids = get_read_ids()?;
 
     let unread_ids: Vec<String> = announcements
@@ -496,6 +624,14 @@ pub async fn get_announcement_state() -> Result<AnnouncementState, String> {
     })
 }
 
+pub async fn get_top_right_ad_state() -> Result<TopRightAdState, String> {
+    let current_version = env!("CARGO_PKG_VERSION");
+    let locale = config::get_user_config().language.to_lowercase();
+    let raw_payload = load_announcements_raw().await?;
+    let ad = filter_top_right_ad(raw_payload.top_right_ad, current_version, &locale);
+    Ok(TopRightAdState { ad })
+}
+
 pub async fn mark_announcement_as_read(id: &str) -> Result<(), String> {
     let mut read_ids = get_read_ids()?;
     if !read_ids.iter().any(|item| item == id) {
@@ -508,8 +644,8 @@ pub async fn mark_announcement_as_read(id: &str) -> Result<(), String> {
 pub async fn mark_all_announcements_as_read() -> Result<(), String> {
     let current_version = env!("CARGO_PKG_VERSION");
     let locale = config::get_user_config().language.to_lowercase();
-    let raw_announcements = load_announcements_raw().await?;
-    let announcements = filter_announcements(raw_announcements, current_version, &locale);
+    let raw_payload = load_announcements_raw().await?;
+    let announcements = filter_announcements(raw_payload.announcements, current_version, &locale);
     let ids: Vec<String> = announcements.iter().map(|item| item.id.clone()).collect();
     save_read_ids(&ids)
 }

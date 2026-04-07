@@ -2,6 +2,7 @@ use std::time::Instant;
 
 use serde::{Deserialize, Serialize};
 use tauri::Manager;
+use tauri_plugin_autostart::ManagerExt as _;
 
 use crate::modules;
 use crate::modules::config::{
@@ -85,6 +86,16 @@ pub struct GeneralConfig {
     pub floating_card_show_on_startup: bool,
     /// 悬浮卡片是否默认置顶
     pub floating_card_always_on_top: bool,
+    /// 是否启用应用开机自启动
+    pub app_auto_launch_enabled: bool,
+    /// 是否在应用启动后触发 Antigravity 唤醒
+    pub antigravity_startup_wakeup_enabled: bool,
+    /// Antigravity 启动后唤醒延时（秒）
+    pub antigravity_startup_wakeup_delay_seconds: i32,
+    /// 是否在应用启动后触发 Codex 唤醒
+    pub codex_startup_wakeup_enabled: bool,
+    /// Codex 启动后唤醒延时（秒）
+    pub codex_startup_wakeup_delay_seconds: i32,
     /// 关闭悬浮卡片前是否显示确认弹框
     pub floating_card_confirm_on_close: bool,
     /// OpenCode 启动路径（为空则使用默认路径）
@@ -137,12 +148,20 @@ pub struct GeneralConfig {
     pub auto_switch_scope_mode: String,
     /// 自动切号指定模型分组（分组 ID）
     pub auto_switch_selected_group_ids: Vec<String>,
+    /// 自动切号账号范围模式：all_accounts | selected_accounts
+    pub auto_switch_account_scope_mode: String,
+    /// 自动切号指定账号（账号 ID）
+    pub auto_switch_selected_account_ids: Vec<String>,
     /// 是否启用 Codex 自动切号
     pub codex_auto_switch_enabled: bool,
     /// Codex primary_window 自动切号阈值（百分比）
     pub codex_auto_switch_primary_threshold: i32,
     /// Codex secondary_window 自动切号阈值（百分比）
     pub codex_auto_switch_secondary_threshold: i32,
+    /// Codex 自动切号账号范围模式：all_accounts | selected_accounts
+    pub codex_auto_switch_account_scope_mode: String,
+    /// Codex 自动切号指定账号（账号 ID）
+    pub codex_auto_switch_selected_account_ids: Vec<String>,
     /// 是否启用配额预警通知
     pub quota_alert_enabled: bool,
     /// 配额预警阈值（百分比）
@@ -204,6 +223,52 @@ pub struct GeneralConfig {
 const DEFAULT_UI_SCALE: f64 = 1.0;
 const MIN_UI_SCALE: f64 = 0.8;
 const MAX_UI_SCALE: f64 = 2.0;
+const MAX_STARTUP_WAKEUP_DELAY_SECONDS: i32 = 24 * 60 * 60;
+const AUTO_SWITCH_ACCOUNT_SCOPE_ALL: &str = "all_accounts";
+const AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED: &str = "selected_accounts";
+
+fn sanitize_startup_wakeup_delay_seconds(raw: i32) -> i32 {
+    raw.clamp(0, MAX_STARTUP_WAKEUP_DELAY_SECONDS)
+}
+
+fn normalize_auto_switch_account_scope_mode(raw: &str) -> String {
+    if raw.trim().to_lowercase() == AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED {
+        AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED.to_string()
+    } else {
+        AUTO_SWITCH_ACCOUNT_SCOPE_ALL.to_string()
+    }
+}
+
+fn normalize_auto_switch_selected_account_ids(raw: &[String]) -> Vec<String> {
+    let mut result = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    for item in raw {
+        let normalized = item.trim().to_string();
+        if normalized.is_empty() || !seen.insert(normalized.clone()) {
+            continue;
+        }
+        result.push(normalized);
+    }
+    result
+}
+
+fn get_app_auto_launch_enabled(app: &tauri::AppHandle) -> Result<bool, String> {
+    app.autolaunch()
+        .is_enabled()
+        .map_err(|err| format!("读取应用自启动状态失败: {}", err))
+}
+
+fn apply_app_auto_launch_enabled(app: &tauri::AppHandle, enabled: bool) -> Result<(), String> {
+    if enabled {
+        app.autolaunch()
+            .enable()
+            .map_err(|err| format!("启用应用自启动失败: {}", err))
+    } else {
+        app.autolaunch()
+            .disable()
+            .map_err(|err| format!("停用应用自启动失败: {}", err))
+    }
+}
 
 fn sanitize_ui_scale(raw: f64) -> f64 {
     if !raw.is_finite() {
@@ -357,6 +422,11 @@ pub fn save_network_config(
         hide_dock_icon: current.hide_dock_icon,
         floating_card_show_on_startup: current.floating_card_show_on_startup,
         floating_card_always_on_top: current.floating_card_always_on_top,
+        app_auto_launch_enabled: current.app_auto_launch_enabled,
+        antigravity_startup_wakeup_enabled: current.antigravity_startup_wakeup_enabled,
+        antigravity_startup_wakeup_delay_seconds: current.antigravity_startup_wakeup_delay_seconds,
+        codex_startup_wakeup_enabled: current.codex_startup_wakeup_enabled,
+        codex_startup_wakeup_delay_seconds: current.codex_startup_wakeup_delay_seconds,
         floating_card_confirm_on_close: current.floating_card_confirm_on_close,
         floating_card_position_x: current.floating_card_position_x,
         floating_card_position_y: current.floating_card_position_y,
@@ -386,9 +456,13 @@ pub fn save_network_config(
         auto_switch_threshold: current.auto_switch_threshold,
         auto_switch_scope_mode: current.auto_switch_scope_mode,
         auto_switch_selected_group_ids: current.auto_switch_selected_group_ids,
+        auto_switch_account_scope_mode: current.auto_switch_account_scope_mode,
+        auto_switch_selected_account_ids: current.auto_switch_selected_account_ids,
         codex_auto_switch_enabled: current.codex_auto_switch_enabled,
         codex_auto_switch_primary_threshold: current.codex_auto_switch_primary_threshold,
         codex_auto_switch_secondary_threshold: current.codex_auto_switch_secondary_threshold,
+        codex_auto_switch_account_scope_mode: current.codex_auto_switch_account_scope_mode,
+        codex_auto_switch_selected_account_ids: current.codex_auto_switch_selected_account_ids,
         quota_alert_enabled: current.quota_alert_enabled,
         quota_alert_threshold: current.quota_alert_threshold,
         codex_quota_alert_enabled: current.codex_quota_alert_enabled,
@@ -426,9 +500,20 @@ pub fn save_network_config(
 
 /// 获取通用设置配置
 #[tauri::command]
-pub fn get_general_config() -> Result<GeneralConfig, String> {
+pub fn get_general_config(app: tauri::AppHandle) -> Result<GeneralConfig, String> {
     let started = Instant::now();
-    let user_config = config::get_user_config();
+    let mut user_config = config::get_user_config();
+    let app_auto_launch_enabled =
+        get_app_auto_launch_enabled(&app).unwrap_or(user_config.app_auto_launch_enabled);
+    if app_auto_launch_enabled != user_config.app_auto_launch_enabled {
+        user_config.app_auto_launch_enabled = app_auto_launch_enabled;
+        if let Err(err) = config::save_user_config(&user_config) {
+            modules::logger::log_warn(&format!(
+                "[SystemConfig] 同步应用自启动状态到本地配置失败: {}",
+                err
+            ));
+        }
+    }
 
     let close_behavior_str = match user_config.close_behavior {
         CloseWindowBehavior::Ask => "ask",
@@ -462,6 +547,15 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
         hide_dock_icon: user_config.hide_dock_icon,
         floating_card_show_on_startup: user_config.floating_card_show_on_startup,
         floating_card_always_on_top: user_config.floating_card_always_on_top,
+        app_auto_launch_enabled,
+        antigravity_startup_wakeup_enabled: user_config.antigravity_startup_wakeup_enabled,
+        antigravity_startup_wakeup_delay_seconds: sanitize_startup_wakeup_delay_seconds(
+            user_config.antigravity_startup_wakeup_delay_seconds,
+        ),
+        codex_startup_wakeup_enabled: user_config.codex_startup_wakeup_enabled,
+        codex_startup_wakeup_delay_seconds: sanitize_startup_wakeup_delay_seconds(
+            user_config.codex_startup_wakeup_delay_seconds,
+        ),
         floating_card_confirm_on_close: user_config.floating_card_confirm_on_close,
         opencode_app_path: user_config.opencode_app_path,
         antigravity_app_path: user_config.antigravity_app_path,
@@ -489,9 +583,13 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
         auto_switch_threshold: user_config.auto_switch_threshold,
         auto_switch_scope_mode: user_config.auto_switch_scope_mode,
         auto_switch_selected_group_ids: user_config.auto_switch_selected_group_ids,
+        auto_switch_account_scope_mode: user_config.auto_switch_account_scope_mode,
+        auto_switch_selected_account_ids: user_config.auto_switch_selected_account_ids,
         codex_auto_switch_enabled: user_config.codex_auto_switch_enabled,
         codex_auto_switch_primary_threshold: user_config.codex_auto_switch_primary_threshold,
         codex_auto_switch_secondary_threshold: user_config.codex_auto_switch_secondary_threshold,
+        codex_auto_switch_account_scope_mode: user_config.codex_auto_switch_account_scope_mode,
+        codex_auto_switch_selected_account_ids: user_config.codex_auto_switch_selected_account_ids,
         quota_alert_enabled: user_config.quota_alert_enabled,
         quota_alert_threshold: user_config.quota_alert_threshold,
         codex_quota_alert_enabled: user_config.codex_quota_alert_enabled,
@@ -569,6 +667,11 @@ pub fn save_general_config(
     hide_dock_icon: Option<bool>,
     floating_card_show_on_startup: Option<bool>,
     floating_card_always_on_top: Option<bool>,
+    app_auto_launch_enabled: Option<bool>,
+    antigravity_startup_wakeup_enabled: Option<bool>,
+    antigravity_startup_wakeup_delay_seconds: Option<i32>,
+    codex_startup_wakeup_enabled: Option<bool>,
+    codex_startup_wakeup_delay_seconds: Option<i32>,
     floating_card_confirm_on_close: Option<bool>,
     opencode_app_path: String,
     antigravity_app_path: String,
@@ -595,9 +698,13 @@ pub fn save_general_config(
     auto_switch_threshold: Option<i32>,
     auto_switch_scope_mode: Option<String>,
     auto_switch_selected_group_ids: Option<Vec<String>>,
+    auto_switch_account_scope_mode: Option<String>,
+    auto_switch_selected_account_ids: Option<Vec<String>>,
     codex_auto_switch_enabled: Option<bool>,
     codex_auto_switch_primary_threshold: Option<i32>,
     codex_auto_switch_secondary_threshold: Option<i32>,
+    codex_auto_switch_account_scope_mode: Option<String>,
+    codex_auto_switch_selected_account_ids: Option<Vec<String>>,
     quota_alert_enabled: Option<bool>,
     quota_alert_threshold: Option<i32>,
     codex_quota_alert_enabled: Option<bool>,
@@ -681,6 +788,19 @@ pub fn save_general_config(
         floating_card_show_on_startup.unwrap_or(current.floating_card_show_on_startup);
     let floating_card_always_on_top_value =
         floating_card_always_on_top.unwrap_or(current.floating_card_always_on_top);
+    let app_auto_launch_enabled_value =
+        app_auto_launch_enabled.unwrap_or(current.app_auto_launch_enabled);
+    let antigravity_startup_wakeup_enabled_value = antigravity_startup_wakeup_enabled
+        .unwrap_or(current.antigravity_startup_wakeup_enabled);
+    let antigravity_startup_wakeup_delay_seconds_value = sanitize_startup_wakeup_delay_seconds(
+        antigravity_startup_wakeup_delay_seconds
+            .unwrap_or(current.antigravity_startup_wakeup_delay_seconds),
+    );
+    let codex_startup_wakeup_enabled_value =
+        codex_startup_wakeup_enabled.unwrap_or(current.codex_startup_wakeup_enabled);
+    let codex_startup_wakeup_delay_seconds_value = sanitize_startup_wakeup_delay_seconds(
+        codex_startup_wakeup_delay_seconds.unwrap_or(current.codex_startup_wakeup_delay_seconds),
+    );
     let floating_card_confirm_on_close_value =
         floating_card_confirm_on_close.unwrap_or(current.floating_card_confirm_on_close);
     let next_codex_quota_alert_threshold =
@@ -699,6 +819,7 @@ pub fn save_general_config(
     } else {
         false
     };
+    let current_app_auto_launch_enabled = current.app_auto_launch_enabled;
     #[cfg(target_os = "macos")]
     let hide_dock_icon_changed = current.hide_dock_icon != hide_dock_icon_value;
 
@@ -745,6 +866,11 @@ pub fn save_general_config(
         hide_dock_icon: hide_dock_icon_value,
         floating_card_show_on_startup: floating_card_show_on_startup_value,
         floating_card_always_on_top: floating_card_always_on_top_value,
+        app_auto_launch_enabled: app_auto_launch_enabled_value,
+        antigravity_startup_wakeup_enabled: antigravity_startup_wakeup_enabled_value,
+        antigravity_startup_wakeup_delay_seconds: antigravity_startup_wakeup_delay_seconds_value,
+        codex_startup_wakeup_enabled: codex_startup_wakeup_enabled_value,
+        codex_startup_wakeup_delay_seconds: codex_startup_wakeup_delay_seconds_value,
         floating_card_confirm_on_close: floating_card_confirm_on_close_value,
         floating_card_position_x: current.floating_card_position_x,
         floating_card_position_y: current.floating_card_position_y,
@@ -779,12 +905,32 @@ pub fn save_general_config(
             .unwrap_or(current.auto_switch_scope_mode),
         auto_switch_selected_group_ids: auto_switch_selected_group_ids
             .unwrap_or(current.auto_switch_selected_group_ids),
+        auto_switch_account_scope_mode: normalize_auto_switch_account_scope_mode(
+            auto_switch_account_scope_mode
+                .as_deref()
+                .unwrap_or(current.auto_switch_account_scope_mode.as_str()),
+        ),
+        auto_switch_selected_account_ids: normalize_auto_switch_selected_account_ids(
+            auto_switch_selected_account_ids
+                .as_deref()
+                .unwrap_or(current.auto_switch_selected_account_ids.as_slice()),
+        ),
         codex_auto_switch_enabled: codex_auto_switch_enabled
             .unwrap_or(current.codex_auto_switch_enabled),
         codex_auto_switch_primary_threshold: codex_auto_switch_primary_threshold
             .unwrap_or(current.codex_auto_switch_primary_threshold),
         codex_auto_switch_secondary_threshold: codex_auto_switch_secondary_threshold
             .unwrap_or(current.codex_auto_switch_secondary_threshold),
+        codex_auto_switch_account_scope_mode: normalize_auto_switch_account_scope_mode(
+            codex_auto_switch_account_scope_mode
+                .as_deref()
+                .unwrap_or(current.codex_auto_switch_account_scope_mode.as_str()),
+        ),
+        codex_auto_switch_selected_account_ids: normalize_auto_switch_selected_account_ids(
+            codex_auto_switch_selected_account_ids
+                .as_deref()
+                .unwrap_or(current.codex_auto_switch_selected_account_ids.as_slice()),
+        ),
         quota_alert_enabled: quota_alert_enabled.unwrap_or(current.quota_alert_enabled),
         quota_alert_threshold: quota_alert_threshold.unwrap_or(current.quota_alert_threshold),
         codex_quota_alert_enabled: codex_quota_alert_enabled
@@ -840,6 +986,10 @@ pub fn save_general_config(
     };
 
     config::save_user_config(&new_config)?;
+
+    if current_app_auto_launch_enabled != app_auto_launch_enabled_value {
+        apply_app_auto_launch_enabled(&app, app_auto_launch_enabled_value)?;
+    }
 
     if let Err(err) = modules::floating_card_window::apply_floating_card_always_on_top(&app) {
         modules::logger::log_warn(&format!(

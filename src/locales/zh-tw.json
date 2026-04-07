@@ -162,6 +162,13 @@
       "updated": {
         "label": "更新於 {{relative}}前"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "全域右上角廣告位",
+      "badge": "廣告",
+      "title": "右上角廣告位",
+      "desc": "此區域會固定顯示於所有頁面的右上角，適合投放活動資訊或品牌廣告。",
+      "action": "查看詳情"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "原始佈局",
       "sideNavLayoutClassic": "經典佈局",
       "antigravityDualSwitchNoRestart": "無感雙通道切號（不重啟）",
-      "antigravityDualSwitchNoRestartDesc": "切號時同時執行本地落盤與擴充套件無感切號，不再自動重啟 Antigravity。"
+      "antigravityDualSwitchNoRestartDesc": "切號時同時執行本地落盤與擴充套件無感切號，不再自動重啟 Antigravity。",
+      "appAutoLaunch": "開機時啟動 Cockpit Tools",
+      "appAutoLaunchDesc": "系統登入後自動啟動應用程式",
+      "startupWakeupDisabled": "關閉",
+      "startupWakeupImmediate": "立即喚醒",
+      "startupWakeupDelayed": "延遲喚醒",
+      "antigravityStartupWakeup": "啟動後執行 Antigravity 喚醒",
+      "antigravityStartupWakeupDesc": "應用程式啟動後，執行一次已啟用的 Antigravity 喚醒任務",
+      "codexStartupWakeup": "啟動後執行 Codex 喚醒",
+      "codexStartupWakeupDesc": "應用程式啟動後，執行一次已啟用的 Codex 喚醒任務",
+      "currentAccountRefreshTitle": "當前帳號刷新",
+      "currentAccountRefreshItemDesc": "僅刷新當前帳號，預設 1 分鐘。",
+      "autoSwitchAccountScope": "自動切號帳號範圍",
+      "autoSwitchAccountScopeDesc": "僅在該範圍內監控並切換帳號。",
+      "autoSwitchAccountScopeAll": "全部帳號",
+      "autoSwitchAccountScopeSelected": "指定帳號",
+      "autoSwitchAccountScopeChoose": "選擇帳號",
+      "autoSwitchAccountScopeManage": "管理帳號",
+      "autoSwitchAccountScopeAllSummary": "當前範圍：全部帳號（共 {{total}} 個）",
+      "autoSwitchAccountScopeSummary": "已選擇 {{selected}} / {{total}} 個帳號",
+      "autoSwitchAccountScopeDialogTitle": "選擇自動切號帳號範圍",
+      "autoSwitchAccountScopeAllHint": "當前範圍為全部帳號，共 {{total}} 個帳號將參與自動切號。",
+      "codexAutoSwitchAccountScope": "Codex 自動切號帳號範圍",
+      "codexAutoSwitchAccountScopeDesc": "當前 Codex 自動切號狀態：{{status}}。僅在該範圍內參與切號。"
     },
     "network": {
       "apiTitle": "反重力駕駛艙 API",
@@ -1176,7 +1206,8 @@
       "crontab": "定時任務",
       "quotaReset": "配額重置",
       "manual": "立即測試",
-      "unknown": "未知"
+      "unknown": "未知",
+      "startup": "啟動後"
     },
     "taskCard": {
       "accountsCount": "帳號 {{count}}",
@@ -1603,7 +1634,14 @@
       },
       "nextRunsQuotaResetHint": "配額重置觸發依賴最新配額資料，因此不提供固定時間預覽。",
       "triggerQuotaReset": "配額重置觸發",
-      "noticeSavedEnabledWithQuotaReset": "任務已儲存，共 {{count}} 個。已將 Codex 自動刷新調整為每 {{minutes}} 分鐘。"
+      "noticeSavedEnabledWithQuotaReset": "任務已儲存，共 {{count}} 個。已將 Codex 自動刷新調整為每 {{minutes}} 分鐘。",
+      "runtimeConfigTitle": "自訂執行環境路徑",
+      "runtimeConfigHint": "可填寫可執行檔或資料夾路徑；留空時會依系統 PATH 自動偵測。",
+      "runtimeConfigCodexCliLabel": "Codex CLI 路徑",
+      "runtimeConfigCodexCliPlaceholder": "例如：/opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "node 路徑",
+      "runtimeConfigNodePlaceholder": "例如：/opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "修改後點擊「重新檢測 CLI」會儲存並立即生效。"
     },
     "sessionManager": {
       "title": "會話管理",

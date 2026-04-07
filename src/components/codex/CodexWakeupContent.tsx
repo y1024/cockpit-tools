@@ -58,6 +58,20 @@ import {
   PRIVACY_MODE_CHANGED_EVENT,
 } from '../../utils/privacy';
 
+interface CodexWakeupGeneralConfig {
+  language?: string;
+  theme?: string;
+  auto_refresh_minutes: number;
+  codex_auto_refresh_minutes?: number;
+  close_behavior?: string;
+  opencode_app_path?: string;
+  antigravity_app_path?: string;
+  codex_app_path?: string;
+  vscode_app_path?: string;
+  opencode_sync_on_switch?: boolean;
+  codex_launch_on_switch?: boolean;
+}
+
 interface CodexWakeupContentProps {
   accounts: CodexAccount[];
   onRefreshAccounts: () => Promise<void>;
@@ -80,20 +94,8 @@ interface TaskDraft {
   weeklyTime: string;
   intervalHours: string;
   quotaResetWindow: CodexWakeupQuotaResetWindow;
-}
-
-interface WakeupGeneralConfig {
-  language: string;
-  theme: string;
-  auto_refresh_minutes: number;
-  codex_auto_refresh_minutes: number;
-  close_behavior: string;
-  opencode_app_path?: string;
-  antigravity_app_path?: string;
-  codex_app_path?: string;
-  vscode_app_path?: string;
-  opencode_sync_on_switch?: boolean;
-  codex_launch_on_switch?: boolean;
+  startupDelayMode: 'immediate' | 'delayed';
+  startupDelayMinutes: string;
 }
 
 interface PresetDraft {
@@ -120,6 +122,11 @@ interface WakeupModelSelectionMemory {
   model: string;
   modelDisplayName: string;
   modelReasoningEffort: CodexWakeupReasoningEffort | '';
+}
+
+interface RuntimeConfigDraft {
+  codexCliPath: string;
+  nodePath: string;
 }
 
 interface WakeupQuotaBadge {
@@ -198,6 +205,7 @@ const REASONING_EFFORT_OPTIONS: CodexWakeupReasoningEffort[] = ['low', 'medium',
 const DEFAULT_WAKEUP_MODEL = 'gpt-5.3-codex';
 const DEFAULT_WAKEUP_REASONING_EFFORT: CodexWakeupReasoningEffort = 'medium';
 const QUOTA_RESET_MIN_REFRESH_MINUTES = 2;
+const MAX_STARTUP_DELAY_MINUTES = 1440;
 const CODEX_WAKEUP_MODEL_SELECTION_STORAGE_KEY = 'agtools.codex.wakeup.model_selection';
 const buildWakeupTestScopeId = () =>
   typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
@@ -209,6 +217,13 @@ function createEmptyAccountPickerFilters(): AccountPickerFilters {
     query: '',
     planTypes: [],
     tags: [],
+  };
+}
+
+function createRuntimeConfigDraft(status?: CodexWakeupBatchResult['runtime'] | null): RuntimeConfigDraft {
+  return {
+    codexCliPath: status?.configured_codex_cli_path ?? '',
+    nodePath: status?.configured_node_path ?? '',
   };
 }
 
@@ -275,7 +290,16 @@ function createEmptyTaskDraft(defaultPreset?: CodexWakeupModelPreset | null): Ta
     weeklyTime: '10:00',
     intervalHours: '6',
     quotaResetWindow: 'either',
+    startupDelayMode: 'immediate',
+    startupDelayMinutes: '1',
   };
+}
+
+function normalizeStartupDelayMinutes(value?: number): number {
+  if (typeof value !== 'number' || Number.isNaN(value)) {
+    return 0;
+  }
+  return Math.min(MAX_STARTUP_DELAY_MINUTES, Math.max(0, Math.floor(value)));
 }
 
 function createEmptyPresetDraft(): PresetDraft {
@@ -309,6 +333,7 @@ function resolveTaskPreset(task: CodexWakeupTask, presets: CodexWakeupModelPrese
 
 function buildTaskDraft(task: CodexWakeupTask, presets: CodexWakeupModelPreset[]): TaskDraft {
   const matchedPreset = resolveTaskPreset(task, presets);
+  const startupDelayMinutes = normalizeStartupDelayMinutes(task.schedule.startup_delay_minutes);
   return {
     id: task.id,
     createdAt: task.created_at,
@@ -327,6 +352,8 @@ function buildTaskDraft(task: CodexWakeupTask, presets: CodexWakeupModelPreset[]
     weeklyTime: task.schedule.weekly_time ?? '10:00',
     intervalHours: String(task.schedule.interval_hours ?? 6),
     quotaResetWindow: task.schedule.quota_reset_window ?? 'either',
+    startupDelayMode: startupDelayMinutes > 0 ? 'delayed' : 'immediate',
+    startupDelayMinutes: String(startupDelayMinutes > 0 ? startupDelayMinutes : 1),
   };
 }
 
@@ -401,6 +428,13 @@ function quotaResetWindowLabel(
 
 function scheduleSummary(task: CodexWakeupTask, t: ReturnType<typeof useTranslation>['t']) {
   const schedule = task.schedule;
+  if (schedule.kind === 'startup') {
+    const delayMinutes = normalizeStartupDelayMinutes(schedule.startup_delay_minutes);
+    if (delayMinutes <= 0) {
+      return t('settings.general.startupWakeupImmediate');
+    }
+    return `${t('wakeup.triggerSource.startup')} +${delayMinutes}${t('settings.general.minutes')}`;
+  }
   if (schedule.kind === 'daily') {
     return t('codex.wakeup.scheduleDailySummary', { time: schedule.daily_time || '09:00' });
   }
@@ -426,6 +460,7 @@ function scheduleSummary(task: CodexWakeupTask, t: ReturnType<typeof useTranslat
 function triggerLabel(triggerType: string, t: ReturnType<typeof useTranslation>['t']) {
   if (triggerType === 'scheduled') return t('codex.wakeup.triggerScheduled');
   if (triggerType === 'quota_reset') return t('codex.wakeup.triggerQuotaReset');
+  if (triggerType === 'startup') return t('wakeup.triggerSource.startup');
   if (triggerType === 'manual_task') return t('codex.wakeup.triggerManualTask');
   return t('codex.wakeup.triggerTest');
 }
@@ -764,6 +799,10 @@ function calculatePreviewRuns(taskDraft: TaskDraft, count: number = 5) {
     return runs;
   }
 
+  if (taskDraft.scheduleKind === 'startup') {
+    return runs;
+  }
+
   const intervalHours = Math.max(1, Number(taskDraft.intervalHours) || 1);
   for (let index = 1; index <= count; index += 1) {
     runs.push(new Date(now.getTime() + intervalHours * index * 60 * 60 * 1000));
@@ -949,6 +988,20 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
   const [showRuntimeGuideModal, setShowRuntimeGuideModal] = useState(false);
   const [runtimeGuideRefreshing, setRuntimeGuideRefreshing] = useState(false);
   const [runtimeGuideAutoShown, setRuntimeGuideAutoShown] = useState(false);
+  const [runtimeConfigDraft, setRuntimeConfigDraft] = useState<RuntimeConfigDraft>(() =>
+    createRuntimeConfigDraft(runtime),
+  );
+  const [runtimeConfigDirty, setRuntimeConfigDirty] = useState(false);
+  const [runtimeGuideConfigError, setRuntimeGuideConfigError] = useState<string | null>(null);
+  const runtimeRequiredPaths = runtime?.required_runtime_paths ?? [];
+  const hasExplicitRuntimeRequirements = runtimeRequiredPaths.length > 0;
+  const showCodexCliInput = hasExplicitRuntimeRequirements
+    ? runtimeRequiredPaths.includes('codex_cli_path')
+    : true;
+  const showNodeInput = hasExplicitRuntimeRequirements
+    ? runtimeRequiredPaths.includes('node_path')
+    : true;
+  const showRuntimeConfigCard = showCodexCliInput || showNodeInput;
   const rememberModelSelection = useCallback((selection: WakeupModelSelectionMemory) => {
     setModelSelectionMemory(selection);
     persistWakeupModelSelectionMemory(selection);
@@ -1006,6 +1059,8 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
         setTaskModalError(error);
       } else if (showTestModal) {
         setTestModalError(error);
+      } else if (showRuntimeGuideModal) {
+        setRuntimeGuideConfigError(error);
       } else if (executionSession) {
         setExecutionSession((current) =>
           current ? { ...current, running: false, errorText: error } : current,
@@ -1014,7 +1069,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
         setNotice({ tone: 'error', text: error });
       }
     }
-  }, [error, executionSession, showTaskModal, showTestModal]);
+  }, [error, executionSession, showRuntimeGuideModal, showTaskModal, showTestModal, setTaskModalError, setTestModalError]);
 
   useEffect(() => {
     if (loading || runtime === null) {
@@ -1030,6 +1085,13 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
       setRuntimeGuideAutoShown(true);
     }
   }, [loading, runtime, runtimeGuideAutoShown]);
+
+  useEffect(() => {
+    if (!runtime || runtimeConfigDirty) {
+      return;
+    }
+    setRuntimeConfigDraft(createRuntimeConfigDraft(runtime));
+  }, [runtime, runtimeConfigDirty]);
 
   useEffect(() => {
     if (!resolvedModelSelection.modelPresetId) {
@@ -1207,6 +1269,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
             available: true,
             binary_path: batch.cliPath,
             checked_at: batch.timestamp,
+            required_runtime_paths: [],
             install_hints: [],
           }
         : runtime,
@@ -1493,7 +1556,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
   );
 
   const ensureCodexRefreshIntervalForQuotaReset = useCallback(async () => {
-    const config = await invoke<WakeupGeneralConfig>('get_general_config');
+    const config = await invoke<CodexWakeupGeneralConfig>('get_general_config');
     if (config.codex_auto_refresh_minutes === QUOTA_RESET_MIN_REFRESH_MINUTES) {
       return false;
     }
@@ -1526,7 +1589,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
       return (
         <div className="codex-wakeup-install-grid">
           {commands.map((hint) => (
-            <div key={hint.label} className="codex-wakeup-install-command">
+            <div key={`${hint.label}:${hint.command}`} className="codex-wakeup-install-command">
               <div className="codex-wakeup-install-command-head">
                 <span>{hint.label}</span>
                 <button className="btn btn-secondary" onClick={() => void copyCommand(hint.command)}>
@@ -1677,22 +1740,42 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
   );
 
   const openRuntimeGuideModal = useCallback(() => {
+    setRuntimeGuideConfigError(null);
+    setRuntimeConfigDirty(false);
+    setRuntimeConfigDraft(createRuntimeConfigDraft(runtime));
     setShowRuntimeGuideModal(true);
-  }, []);
+  }, [runtime]);
 
   const closeRuntimeGuideModal = useCallback(() => {
     if (runtimeGuideRefreshing) return;
     setShowRuntimeGuideModal(false);
+    setRuntimeGuideConfigError(null);
   }, [runtimeGuideRefreshing]);
+
+  const handleRuntimeConfigInputChange = useCallback((field: keyof RuntimeConfigDraft, value: string) => {
+    setRuntimeConfigDirty(true);
+    setRuntimeGuideConfigError(null);
+    setRuntimeConfigDraft((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }, []);
 
   const handleRefreshRuntimeGuide = useCallback(async () => {
     setRuntimeGuideRefreshing(true);
+    setRuntimeGuideConfigError(null);
     try {
-      await loadAll();
+      await refreshRuntime({
+        codexCliPath: runtimeConfigDraft.codexCliPath.trim(),
+        nodePath: runtimeConfigDraft.nodePath.trim(),
+      });
+      setRuntimeConfigDirty(false);
+    } catch (error) {
+      setRuntimeGuideConfigError(String(error));
     } finally {
       setRuntimeGuideRefreshing(false);
     }
-  }, [loadAll]);
+  }, [refreshRuntime, runtimeConfigDraft.codexCliPath, runtimeConfigDraft.nodePath]);
 
   const openPresetModal = useCallback(() => {
     setPresetDraft(createEmptyPresetDraft());
@@ -2007,6 +2090,15 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
     const existingTask = taskDraft.id
       ? state.tasks.find((item) => item.id === taskDraft.id)
       : undefined;
+    const startupDelayMinutes =
+      taskDraft.scheduleKind === 'startup'
+        ? taskDraft.startupDelayMode === 'delayed'
+          ? Math.min(
+              MAX_STARTUP_DELAY_MINUTES,
+              Math.max(1, Number(taskDraft.startupDelayMinutes) || 1),
+            )
+          : 0
+        : undefined;
     const nextTask: CodexWakeupTask = {
       id: taskDraft.id ?? crypto.randomUUID(),
       name: trimmedName,
@@ -2027,6 +2119,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
             : undefined,
         quota_reset_window:
           taskDraft.scheduleKind === 'quota_reset' ? taskDraft.quotaResetWindow : undefined,
+        startup_delay_minutes: startupDelayMinutes,
       },
       created_at: existingTask?.created_at ?? taskDraft.createdAt ?? now,
       updated_at: now,
@@ -2337,7 +2430,7 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
               ? `${t('codex.wakeup.historyTitle')} (${historyBatches.length})`
               : t('codex.wakeup.historyTitle')}
           </button>
-          <button className="btn btn-secondary" onClick={() => void refreshRuntime()}>
+          <button className="btn btn-secondary" onClick={() => void refreshRuntime().catch(() => undefined)}>
             <RefreshCw size={16} /> {t('codex.wakeup.refreshRuntime')}
           </button>
         </div>
@@ -2486,6 +2579,56 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
                   <p>{runtime.message || t('codex.wakeup.installSubtitle')}</p>
                 </div>
               </div>
+              {showRuntimeConfigCard && (
+                <section className="codex-wakeup-runtime-config-card">
+                  <div className="codex-wakeup-runtime-config-header">
+                    <h4>{t('codex.wakeup.runtimeConfigTitle')}</h4>
+                    <p>{t('codex.wakeup.runtimeConfigHint')}</p>
+                  </div>
+                  <div
+                    className={`codex-wakeup-runtime-config-grid ${
+                      showCodexCliInput !== showNodeInput ? 'single' : ''
+                    }`}
+                  >
+                    {showCodexCliInput && (
+                      <label className="codex-wakeup-runtime-config-field">
+                        <span>{t('codex.wakeup.runtimeConfigCodexCliLabel')}</span>
+                        <input
+                          type="text"
+                          className="wakeup-input"
+                          value={runtimeConfigDraft.codexCliPath}
+                          onChange={(event) =>
+                            handleRuntimeConfigInputChange('codexCliPath', event.target.value)
+                          }
+                          placeholder={t('codex.wakeup.runtimeConfigCodexCliPlaceholder')}
+                          disabled={runtimeGuideRefreshing}
+                        />
+                      </label>
+                    )}
+                    {showNodeInput && (
+                      <label className="codex-wakeup-runtime-config-field">
+                        <span>{t('codex.wakeup.runtimeConfigNodeLabel')}</span>
+                        <input
+                          type="text"
+                          className="wakeup-input"
+                          value={runtimeConfigDraft.nodePath}
+                          onChange={(event) =>
+                            handleRuntimeConfigInputChange('nodePath', event.target.value)
+                          }
+                          placeholder={t('codex.wakeup.runtimeConfigNodePlaceholder')}
+                          disabled={runtimeGuideRefreshing}
+                        />
+                      </label>
+                    )}
+                  </div>
+                  <p className="codex-wakeup-runtime-config-tip">
+                    {t('codex.wakeup.runtimeConfigApplyHint')}
+                  </p>
+                  {runtimeGuideConfigError && (
+                    <p className="codex-wakeup-runtime-config-error">{runtimeGuideConfigError}</p>
+                  )}
+                </section>
+              )}
               {renderInstallCommands(runtime.install_hints || [])}
               <p className="codex-wakeup-install-footnote">{t('codex.wakeup.installFootnote')}</p>
             </div>
@@ -2783,14 +2926,14 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
               <div className="wakeup-form-group">
                 <label>{t('codex.wakeup.scheduleLabel')}</label>
                 <div className="wakeup-segmented">
-                  {(['daily', 'weekly', 'interval', 'quota_reset'] as CodexWakeupScheduleKind[]).map((kind) => (
+                  {(['daily', 'weekly', 'interval', 'quota_reset', 'startup'] as CodexWakeupScheduleKind[]).map((kind) => (
                     <button
                       type="button"
                       key={kind}
                       className={`wakeup-segment-btn ${taskDraft.scheduleKind === kind ? 'active' : ''}`}
                       onClick={() => setTaskDraft((current) => ({ ...current, scheduleKind: kind }))}
                     >
-                      {t(`codex.wakeup.schedule.${kind}`)}
+                      {kind === 'startup' ? t('wakeup.triggerSource.startup') : t(`codex.wakeup.schedule.${kind}`)}
                     </button>
                   ))}
                 </div>
@@ -2850,6 +2993,56 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
                     value={taskDraft.dailyTime}
                     onChange={(event) => setTaskDraft((current) => ({ ...current, dailyTime: event.target.value }))}
                   />
+                </div>
+              )}
+
+              {taskDraft.scheduleKind === 'startup' && (
+                <div className="wakeup-form-group">
+                  <label>{t('wakeup.triggerSource.startup')}</label>
+                  <div className="wakeup-toggle-group">
+                    <button
+                      type="button"
+                      className={`btn btn-secondary ${taskDraft.startupDelayMode === 'immediate' ? 'is-active' : ''}`}
+                      onClick={() =>
+                        setTaskDraft((current) => ({
+                          ...current,
+                          startupDelayMode: 'immediate',
+                        }))
+                      }
+                    >
+                      {t('settings.general.startupWakeupImmediate')}
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-secondary ${taskDraft.startupDelayMode === 'delayed' ? 'is-active' : ''}`}
+                      onClick={() =>
+                        setTaskDraft((current) => ({
+                          ...current,
+                          startupDelayMode: 'delayed',
+                        }))
+                      }
+                    >
+                      {t('settings.general.startupWakeupDelayed')}
+                    </button>
+                  </div>
+                  {taskDraft.startupDelayMode === 'delayed' && (
+                    <div className="wakeup-inline-row">
+                      <input
+                        type="number"
+                        min={1}
+                        max={MAX_STARTUP_DELAY_MINUTES}
+                        className="wakeup-input wakeup-input-small"
+                        value={taskDraft.startupDelayMinutes}
+                        onChange={(event) =>
+                          setTaskDraft((current) => ({
+                            ...current,
+                            startupDelayMinutes: event.target.value.replace(/[^\d]/g, ''),
+                          }))
+                        }
+                      />
+                      <span>{t('settings.general.minutes')}</span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -2937,7 +3130,14 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
                     <li>
                       {taskDraft.scheduleKind === 'quota_reset'
                         ? t('codex.wakeup.nextRunsQuotaResetHint')
-                        : t('wakeup.form.nextRunsEmpty', '暂无预览')}
+                        : taskDraft.scheduleKind === 'startup'
+                          ? taskDraft.startupDelayMode === 'delayed'
+                            ? `${t('wakeup.triggerSource.startup')} +${Math.min(
+                                MAX_STARTUP_DELAY_MINUTES,
+                                Math.max(1, Number(taskDraft.startupDelayMinutes) || 1),
+                              )}${t('settings.general.minutes')}`
+                            : t('settings.general.startupWakeupImmediate')
+                          : t('wakeup.form.nextRunsEmpty', '暂无预览')}
                     </li>
                   )}
                   {previewRuns.map((date, index) => (
@@ -3088,7 +3288,9 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
                 <ul className="codex-wakeup-history-run-list">
                   {historyBatches.map((batch) => {
                     const badgeClass =
-                      batch.triggerType === 'scheduled' || batch.triggerType === 'quota_reset'
+                      batch.triggerType === 'scheduled' ||
+                      batch.triggerType === 'quota_reset' ||
+                      batch.triggerType === 'startup'
                         ? 'auto'
                         : 'manual';
                     return (

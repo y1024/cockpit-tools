@@ -162,6 +162,13 @@
       "updated": {
         "label": "Aktualizováno před {{relative}}"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Globální reklamní slot vpravo nahoře",
+      "badge": "REKLAMA",
+      "title": "Reklamní slot vpravo nahoře",
+      "desc": "Tato oblast je pevně umístěná vpravo nahoře na všech stránkách pro kampaně nebo brandové reklamy.",
+      "action": "Zobrazit podrobnosti"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Původní rozložení",
       "sideNavLayoutClassic": "Klasické rozložení",
       "antigravityDualSwitchNoRestart": "Duální přepnutí bez restartu",
-      "antigravityDualSwitchNoRestartDesc": "Při přepnutí účtu se v jednom kroku zapíší lokální data účtu a provede plynulé přepnutí rozšíření bez restartu Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Při přepnutí účtu se v jednom kroku zapíší lokální data účtu a provede plynulé přepnutí rozšíření bez restartu Antigravity.",
+      "appAutoLaunch": "Spustit Cockpit Tools po přihlášení",
+      "appAutoLaunchDesc": "Po přihlášení do systému spustit aplikaci automaticky",
+      "startupWakeupDisabled": "Vypnuto",
+      "startupWakeupImmediate": "Probudit okamžitě",
+      "startupWakeupDelayed": "Probudit se zpožděním",
+      "antigravityStartupWakeup": "Spustit probuzení Antigravity po startu",
+      "antigravityStartupWakeupDesc": "Po spuštění aplikace jednou spustit povolené úlohy probuzení Antigravity",
+      "codexStartupWakeup": "Spustit probuzení Codex po startu",
+      "codexStartupWakeupDesc": "Po spuštění aplikace jednou spustit povolené úlohy probuzení Codex",
+      "currentAccountRefreshTitle": "Obnovení aktuálního účtu",
+      "currentAccountRefreshItemDesc": "Obnovuje se pouze aktuální účet. Výchozí hodnota je 1 minuta.",
+      "autoSwitchAccountScope": "Rozsah automatického přepínání účtů",
+      "autoSwitchAccountScopeDesc": "Sledování a přepínání probíhá pouze v tomto rozsahu.",
+      "autoSwitchAccountScopeAll": "Všechny účty",
+      "autoSwitchAccountScopeSelected": "Vybrané účty",
+      "autoSwitchAccountScopeChoose": "Vybrat účty",
+      "autoSwitchAccountScopeManage": "Spravovat účty",
+      "autoSwitchAccountScopeAllSummary": "Aktuální rozsah: všechny účty (celkem {{total}})",
+      "autoSwitchAccountScopeSummary": "Vybráno {{selected}} z {{total}} účtů",
+      "autoSwitchAccountScopeDialogTitle": "Vyberte rozsah účtů pro automatické přepínání",
+      "autoSwitchAccountScopeAllHint": "Aktuální rozsah jsou všechny účty. Do automatického přepínání bude zahrnuto {{total}} účtů.",
+      "codexAutoSwitchAccountScope": "Rozsah automatického přepínání účtů Codex",
+      "codexAutoSwitchAccountScopeDesc": "Aktuální stav automatického přepínání Codex: {{status}}. Zohledněny budou pouze účty v tomto rozsahu."
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Reset kvóty",
       "manual": "Ruční test",
-      "unknown": "Neznámé"
+      "unknown": "Neznámé",
+      "startup": "Po spuštění"
     },
     "taskCard": {
       "accountsCount": "Účty {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Spouštění po resetu kvóty závisí na aktuálních datech kvóty, proto není k dispozici pevný časový náhled.",
       "triggerQuotaReset": "Spouštěč resetu kvóty",
-      "noticeSavedEnabledWithQuotaReset": "Úlohy byly uloženy. Celkem: {{count}}. Automatické obnovování Codex bylo upraveno na každých {{minutes}} minut."
+      "noticeSavedEnabledWithQuotaReset": "Úlohy byly uloženy. Celkem: {{count}}. Automatické obnovování Codex bylo upraveno na každých {{minutes}} minut.",
+      "runtimeConfigTitle": "Vlastní cesty běhového prostředí",
+      "runtimeConfigHint": "Můžete zadat cestu ke spustitelnému souboru nebo adresáři. Nechte prázdné pro automatické zjištění z PATH.",
+      "runtimeConfigCodexCliLabel": "Cesta k Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "např. /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Cesta k node",
+      "runtimeConfigNodePlaceholder": "např. /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Po úpravě klikněte na „Znovu zkontrolovat CLI“ a změny se ihned uloží i použijí."
     },
     "sessionManager": {
       "title": "Správce relací",

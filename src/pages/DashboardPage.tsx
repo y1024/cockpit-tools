@@ -62,7 +62,6 @@ import {
 } from '../types/gemini';
 import { ZedAccount, getZedUsage } from '../types/zed';
 import './DashboardPage.css';
-import { AnnouncementCenter } from '../components/AnnouncementCenter';
 import { RobotIcon } from '../components/icons/RobotIcon';
 import { CodexIcon } from '../components/icons/CodexIcon';
 import { WindsurfIcon } from '../components/icons/WindsurfIcon';
@@ -99,6 +98,7 @@ interface DashboardPageProps {
   onNavigate: (page: Page) => void;
   onOpenPlatformLayout: () => void;
   onEasterEggTriggerClick: () => void;
+  topCenterBanner?: React.ReactNode;
 }
 
 const DASHBOARD_DEFERRED_PREFETCH_DELAY_MS = 1200;
@@ -171,7 +171,12 @@ interface DashboardCardCollapseState {
   workbuddy: boolean;
 }
 
-export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTriggerClick }: DashboardPageProps) {
+export function DashboardPage({
+  onNavigate,
+  onOpenPlatformLayout,
+  onEasterEggTriggerClick,
+  topCenterBanner,
+}: DashboardPageProps) {
   const { t } = useTranslation();
   
   const [tagModalState, setTagModalState] = React.useState<{ accountId: string; platform: PlatformId | 'codebuddy_cn'; tags: string[] } | null>(null);
@@ -2681,11 +2686,11 @@ export function DashboardPage({ onNavigate, onOpenPlatformLayout, onEasterEggTri
            <span>{t('nav.dashboard', '仪表盘')}</span>
            <ManualHelpIconButton className="header-action-btn dashboard-manual-btn dashboard-title-manual-btn" />
          </div>
+         {topCenterBanner}
          <div className="dashboard-top-actions">
            <button className="header-action-btn" onClick={onOpenPlatformLayout}>
              <span>{t('platformLayout.title', '平台布局')}</span>
            </button>
-           <AnnouncementCenter onNavigate={onNavigate} variant="inline" trigger="button" />
          </div>
       </div>
 

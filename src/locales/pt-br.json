@@ -162,6 +162,13 @@
       "updated": {
         "label": "Atualizado há {{relative}}"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Slot global de anúncio no canto superior direito",
+      "badge": "ANÚNCIO",
+      "title": "Slot de anúncio no canto superior direito",
+      "desc": "Esta área fica fixa no canto superior direito de todas as páginas para campanhas ou anúncios da marca.",
+      "action": "Ver detalhes"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Layout original",
       "sideNavLayoutClassic": "Layout clássico",
       "antigravityDualSwitchNoRestart": "Troca dupla sem reiniciar",
-      "antigravityDualSwitchNoRestartDesc": "Ao trocar de conta, a gravação local dos dados e a troca contínua da extensão são executadas em um único fluxo, sem reiniciar o Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Ao trocar de conta, a gravação local dos dados e a troca contínua da extensão são executadas em um único fluxo, sem reiniciar o Antigravity.",
+      "appAutoLaunch": "Iniciar o Cockpit Tools ao entrar no sistema",
+      "appAutoLaunchDesc": "Iniciar o app automaticamente após o login no sistema",
+      "startupWakeupDisabled": "Desativado",
+      "startupWakeupImmediate": "Despertar imediatamente",
+      "startupWakeupDelayed": "Despertar com atraso",
+      "antigravityStartupWakeup": "Executar despertar do Antigravity após iniciar",
+      "antigravityStartupWakeupDesc": "Executar uma vez as tarefas de despertar do Antigravity habilitadas após iniciar o app",
+      "codexStartupWakeup": "Executar despertar do Codex após iniciar",
+      "codexStartupWakeupDesc": "Executar uma vez as tarefas de despertar do Codex habilitadas após iniciar o app",
+      "currentAccountRefreshTitle": "Atualização da conta atual",
+      "currentAccountRefreshItemDesc": "Atualiza apenas a conta atual. O padrão é 1 minuto.",
+      "autoSwitchAccountScope": "Escopo de troca automática de contas",
+      "autoSwitchAccountScopeDesc": "O monitoramento e a troca ocorrem apenas dentro deste escopo.",
+      "autoSwitchAccountScopeAll": "Todas as contas",
+      "autoSwitchAccountScopeSelected": "Contas selecionadas",
+      "autoSwitchAccountScopeChoose": "Escolher contas",
+      "autoSwitchAccountScopeManage": "Gerenciar contas",
+      "autoSwitchAccountScopeAllSummary": "Escopo atual: todas as contas ({{total}} no total)",
+      "autoSwitchAccountScopeSummary": "{{selected}} de {{total}} contas selecionadas",
+      "autoSwitchAccountScopeDialogTitle": "Selecionar escopo de contas para troca automática",
+      "autoSwitchAccountScopeAllHint": "O escopo atual inclui todas as contas. {{total}} conta(s) participarão da troca automática.",
+      "codexAutoSwitchAccountScope": "Escopo de troca automática de contas do Codex",
+      "codexAutoSwitchAccountScopeDesc": "Status atual da troca automática do Codex: {{status}}. Apenas contas dentro deste escopo serão consideradas."
     },
     "network": {
       "apiTitle": "API de cockpit antigravidade",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Reset de cota",
       "manual": "Testar agora",
-      "unknown": "Desconhecido"
+      "unknown": "Desconhecido",
+      "startup": "Após iniciar"
     },
     "taskCard": {
       "accountsCount": "Contas {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Os gatilhos de redefinição de cota dependem de dados recentes de cota, por isso não há prévia de horário fixo.",
       "triggerQuotaReset": "Gatilho de redefinição de cota",
-      "noticeSavedEnabledWithQuotaReset": "Tarefas salvas. Total: {{count}}. A atualização automática do Codex foi ajustada para cada {{minutes}} minutos."
+      "noticeSavedEnabledWithQuotaReset": "Tarefas salvas. Total: {{count}}. A atualização automática do Codex foi ajustada para cada {{minutes}} minutos.",
+      "runtimeConfigTitle": "Caminhos personalizados de runtime",
+      "runtimeConfigHint": "Você pode informar um caminho de executável ou diretório. Deixe em branco para detectar automaticamente pelo PATH.",
+      "runtimeConfigCodexCliLabel": "Caminho do Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "ex.: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Caminho do node",
+      "runtimeConfigNodePlaceholder": "ex.: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Após alterar, clique em \"Verificar CLI novamente\" para salvar e aplicar na hora."
     },
     "sessionManager": {
       "title": "Gerenciador de sessões",

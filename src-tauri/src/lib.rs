@@ -93,6 +93,10 @@ pub fn run() {
                 app.handle()
                     .plugin(tauri_plugin_updater::Builder::new().build())?;
                 app.handle().plugin(tauri_plugin_process::init())?;
+                app.handle().plugin(tauri_plugin_autostart::init(
+                    tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+                    None::<Vec<&'static str>>,
+                ))?;
                 info!("[Updater] Tauri Updater + Process 插件已初始化");
             }
 
@@ -295,6 +299,7 @@ pub fn run() {
             commands::wakeup::fetch_available_models,
             commands::wakeup::wakeup_validate_crontab,
             commands::wakeup::wakeup_sync_state,
+            commands::wakeup::wakeup_run_enabled_tasks,
             commands::wakeup::wakeup_load_history,
             commands::wakeup::wakeup_add_history,
             commands::wakeup::wakeup_clear_history,
@@ -317,6 +322,7 @@ pub fn run() {
             commands::announcement::announcement_mark_as_read,
             commands::announcement::announcement_mark_all_as_read,
             commands::announcement::announcement_force_refresh,
+            commands::announcement::announcement_get_top_right_ad,
             // Group Commands
             commands::group::get_group_settings,
             commands::group::save_group_settings,
@@ -352,6 +358,7 @@ pub fn run() {
             commands::codex::close_codex_oauth_port,
             commands::codex::update_codex_account_tags,
             commands::codex::codex_wakeup_get_cli_status,
+            commands::codex::codex_wakeup_update_runtime_config,
             commands::codex::codex_wakeup_get_overview,
             commands::codex::codex_wakeup_get_state,
             commands::codex::codex_wakeup_save_state,
@@ -361,6 +368,7 @@ pub fn run() {
             commands::codex::codex_wakeup_release_scope,
             commands::codex::codex_wakeup_test,
             commands::codex::codex_wakeup_run_task,
+            commands::codex::codex_wakeup_run_enabled_tasks,
             commands::codex::load_codex_account_groups,
             commands::codex::save_codex_account_groups,
             // GitHub Copilot Commands

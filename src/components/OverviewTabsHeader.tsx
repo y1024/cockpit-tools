@@ -4,6 +4,7 @@ import { AlarmClock, Fingerprint, Layers, ShieldCheck } from 'lucide-react';
 import { Page } from '../types/navigation';
 import { RobotIcon } from './icons/RobotIcon';
 import { ManualHelpIconButton } from './ManualHelpIconButton';
+import { TopCenterPromoBanner } from './TopCenterPromoBanner';
 import { PlatformId } from '../types/platform';
 import {
   findGroupByPlatform,
@@ -34,6 +35,7 @@ export function OverviewTabsHeader({
   title,
   onOpenManual,
 }: OverviewTabsHeaderProps) {
+  void subtitle;
   const { t } = useTranslation();
   const { platformGroups } = usePlatformLayoutStore();
   const currentPlatformId: PlatformId = 'antigravity';
@@ -62,7 +64,6 @@ export function OverviewTabsHeader({
       })),
     [switchablePlatforms, currentGroup, t],
   );
-  const headerTitle = title ?? t('overview.brandTitle');
   const tabs: TabSpec[] = [
     {
       key: 'overview',
@@ -93,14 +94,15 @@ export function OverviewTabsHeader({
 
   return (
     <>
-      <div className="page-header">
-        <div className="platform-header-title">
-          <div className="page-title">{headerTitle}</div>
-          {onOpenManual && (
-            <ManualHelpIconButton className="platform-header-help" onClick={onOpenManual} />
-          )}
+      <div className="page-top-strip">
+        <div className="page-top-strip-left">
+          <span className="page-top-strip-label">
+            {t('settings.general.account', '账号')}
+          </span>
+          <ManualHelpIconButton className="platform-header-help" onClick={onOpenManual} />
         </div>
-        <div className="page-subtitle">{subtitle}</div>
+        <TopCenterPromoBanner />
+        <div className="page-top-strip-right-placeholder" aria-hidden="true" />
       </div>
       <div className="page-tabs-row page-tabs-center page-tabs-row-with-leading">
         <div className="page-tabs-leading">

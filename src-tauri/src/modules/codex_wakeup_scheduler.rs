@@ -120,6 +120,7 @@ fn current_due_at(task: &codex_wakeup::CodexWakeupTask, now: DateTime<Local>) ->
                 .filter(|reset_at| *reset_at <= now.timestamp() && *reset_at > last_run_at)
                 .max()
         }
+        "startup" => None,
         _ => None,
     }
 }
@@ -162,6 +163,7 @@ pub fn calculate_next_run_at(task: &codex_wakeup::CodexWakeupTask) -> Option<i64
             .into_iter()
             .filter(|reset_at| *reset_at > now.timestamp())
             .min(),
+        "startup" => None,
         _ => None,
     }
 }
@@ -220,6 +222,93 @@ pub async fn run_task_now(
 
     unmark_running(&task.id);
     result
+}
+
+pub async fn run_enabled_tasks_now(
+    app: Option<&AppHandle>,
+    trigger_type: &str,
+) -> Result<u32, String> {
+    let state = codex_wakeup::load_state_for_scheduler()?;
+    if !state.enabled {
+        return Ok(0);
+    }
+
+    let normalized_trigger = {
+        let trimmed = trigger_type.trim();
+        if trimmed.is_empty() {
+            "startup"
+        } else {
+            trimmed
+        }
+    };
+
+    if normalized_trigger == "startup" {
+        let app_handle = app.cloned();
+        let startup_tasks: Vec<(String, i32)> = state
+            .tasks
+            .into_iter()
+            .filter(|task| task.enabled && task.schedule.kind == "startup")
+            .map(|task| (task.id, task.schedule.startup_delay_minutes.unwrap_or(0).max(0)))
+            .collect();
+
+        for (task_id, delay_minutes) in &startup_tasks {
+            let task_id = task_id.clone();
+            let app_handle = app_handle.clone();
+            let delay_seconds = (*delay_minutes as u64) * 60;
+            tauri::async_runtime::spawn(async move {
+                if delay_seconds > 0 {
+                    sleep(Duration::from_secs(delay_seconds)).await;
+                }
+
+                let current_state = match codex_wakeup::load_state_for_scheduler() {
+                    Ok(state) => state,
+                    Err(err) => {
+                        logger::log_warn(&format!(
+                            "[CodexWakeup] 读取启动后任务状态失败: task_id={}, error={}",
+                            task_id, err
+                        ));
+                        return;
+                    }
+                };
+                let should_run = current_state.enabled
+                    && current_state.tasks.iter().any(|task| {
+                        task.id == task_id && task.enabled && task.schedule.kind == "startup"
+                    });
+                if !should_run {
+                    return;
+                }
+
+                if let Err(err) = run_task_now(app_handle.as_ref(), &task_id, "startup", None).await {
+                    logger::log_warn(&format!(
+                        "[CodexWakeup] 启动后执行任务失败: task_id={}, error={}",
+                        task_id, err
+                    ));
+                }
+            });
+        }
+        return Ok(startup_tasks.len() as u32);
+    }
+
+    let mut started_count: u32 = 0;
+    for task in state.tasks {
+        if !task.enabled || task.schedule.kind == "startup" {
+            continue;
+        }
+
+        match run_task_now(app, &task.id, normalized_trigger, None).await {
+            Ok(_) => {
+                started_count += 1;
+            }
+            Err(err) => {
+                logger::log_warn(&format!(
+                    "[CodexWakeup] 执行任务失败: task_id={}, error={}",
+                    task.id, err
+                ));
+            }
+        }
+    }
+
+    Ok(started_count)
 }
 
 async fn run_scheduler_once(app: &AppHandle) {

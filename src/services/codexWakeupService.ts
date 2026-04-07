@@ -19,9 +19,12 @@ interface RawCodexCliInstallHint {
 interface RawCodexCliStatus {
   available: boolean;
   binaryPath?: string;
+  configuredCodexCliPath?: string;
+  configuredNodePath?: string;
   version?: string;
   source?: string;
   message?: string;
+  requiredRuntimePaths?: string[];
   checkedAt: number;
   installHints?: RawCodexCliInstallHint[];
 }
@@ -33,6 +36,7 @@ interface RawCodexWakeupSchedule {
   weeklyTime?: string;
   intervalHours?: number;
   quotaResetWindow?: CodexWakeupTask['schedule']['quota_reset_window'];
+  startupDelayMinutes?: number;
 }
 
 interface RawCodexWakeupTask {
@@ -134,9 +138,12 @@ function fromRawCliStatus(raw: RawCodexCliStatus): CodexCliStatus {
   return {
     available: raw.available,
     binary_path: raw.binaryPath,
+    configured_codex_cli_path: raw.configuredCodexCliPath,
+    configured_node_path: raw.configuredNodePath,
     version: raw.version,
     source: raw.source,
     message: raw.message,
+    required_runtime_paths: raw.requiredRuntimePaths ?? [],
     checked_at: raw.checkedAt,
     install_hints: raw.installHints ?? [],
   };
@@ -159,6 +166,7 @@ function toRawTask(task: CodexWakeupTask): RawCodexWakeupTask {
       weeklyTime: task.schedule.weekly_time,
       intervalHours: task.schedule.interval_hours,
       quotaResetWindow: task.schedule.quota_reset_window,
+      startupDelayMinutes: task.schedule.startup_delay_minutes,
     },
     createdAt: task.created_at,
     updatedAt: task.updated_at,
@@ -189,6 +197,7 @@ function fromRawTask(raw: RawCodexWakeupTask): CodexWakeupTask {
       weekly_time: raw.schedule.weeklyTime,
       interval_hours: raw.schedule.intervalHours,
       quota_reset_window: raw.schedule.quotaResetWindow,
+      startup_delay_minutes: raw.schedule.startupDelayMinutes,
     },
     created_at: raw.createdAt,
     updated_at: raw.updatedAt,
@@ -305,6 +314,18 @@ export function fromRawWakeupProgressPayload(
 
 export async function getCodexWakeupCliStatus(): Promise<CodexCliStatus> {
   return fromRawCliStatus(await invoke<RawCodexCliStatus>('codex_wakeup_get_cli_status'));
+}
+
+export async function updateCodexWakeupRuntimeConfig(
+  codexCliPath?: string,
+  nodePath?: string,
+): Promise<CodexCliStatus> {
+  return fromRawCliStatus(
+    await invoke<RawCodexCliStatus>('codex_wakeup_update_runtime_config', {
+      codexCliPath: codexCliPath ?? null,
+      nodePath: nodePath ?? null,
+    }),
+  );
 }
 
 export async function getCodexWakeupOverview(): Promise<CodexWakeupOverview> {

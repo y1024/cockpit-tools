@@ -11,6 +11,7 @@ import { QoderIcon } from '../icons/QoderIcon';
 import { WorkbuddyIcon } from '../icons/WorkbuddyIcon';
 import { ZedIcon } from '../icons/ZedIcon';
 import { ManualHelpIconButton } from '../ManualHelpIconButton';
+import { TopCenterPromoBanner } from '../TopCenterPromoBanner';
 import { PlatformId } from '../../types/platform';
 import {
   findGroupByPlatform,
@@ -140,7 +141,6 @@ export function PlatformOverviewTabsHeader({
       }),
     [switchablePlatforms, currentGroup, t],
   );
-  const headerTitle = `${config.platformLabel} ${t('settings.general.accountManagement', '账号管理')}`;
   const tabOrder: PlatformOverviewTab[] =
     tabs && tabs.length > 0 ? tabs : ['overview', 'instances'];
   const tabLabels: Record<PlatformOverviewTab, TabSpec> = {
@@ -170,25 +170,17 @@ export function PlatformOverviewTabsHeader({
   };
   const tabSpecs: TabSpec[] = tabOrder.map((tab) => tabLabels[tab]);
 
-  const subtitle =
-    active === 'instances'
-      ? t('instances.subtitle', '多实例独立配置，多账号并行运行。')
-      : active === 'sessions'
-        ? t('codex.sessionManager.desc', '同步和清理统一放在这里：顶部可一键同步到所有实例，下面按项目展开查看会话并移到废纸篓。')
-        : active === 'wakeup'
-          ? (platform === 'codex'
-              ? t('codex.wakeup.subtitle', '安排 Codex 唤醒任务、测试链路并查看历史记录。')
-              : t('wakeup.subtitle', 'Manage wakeup tasks with per-task control and a global switch.'))
-          : t('overview.subtitle', '实时监控所有账号的配额状态。');
-
   return (
     <>
-      <div className="page-header">
-        <div className="platform-header-title">
-          <div className="page-title">{headerTitle}</div>
+      <div className="page-top-strip">
+        <div className="page-top-strip-left">
+          <span className="page-top-strip-label">
+            {t('settings.general.account', '账号')}
+          </span>
           <ManualHelpIconButton className="platform-header-help" />
         </div>
-        <div className="page-subtitle">{subtitle}</div>
+        <TopCenterPromoBanner />
+        <div className="page-top-strip-right-placeholder" aria-hidden="true" />
       </div>
       <div className="page-tabs-row page-tabs-center page-tabs-row-with-leading">
         <div className="page-tabs-leading">

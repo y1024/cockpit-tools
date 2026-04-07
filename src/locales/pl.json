@@ -162,6 +162,13 @@
       "updated": {
         "label": "Zaktualizowano {{relative}} temu"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Globalne miejsce reklamowe w prawym górnym rogu",
+      "badge": "REKLAMA",
+      "title": "Miejsce reklamowe w prawym górnym rogu",
+      "desc": "Ten obszar jest przypięty w prawym górnym rogu na wszystkich stronach i nadaje się do kampanii lub reklam marki.",
+      "action": "Zobacz szczegóły"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Układ oryginalny",
       "sideNavLayoutClassic": "Układ klasyczny",
       "antigravityDualSwitchNoRestart": "Podwójne przełączanie bez restartu",
-      "antigravityDualSwitchNoRestartDesc": "Podczas przełączania konta zapis lokalnych danych i płynne przełączenie przez rozszerzenie są wykonywane w jednym przebiegu, bez restartu Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Podczas przełączania konta zapis lokalnych danych i płynne przełączenie przez rozszerzenie są wykonywane w jednym przebiegu, bez restartu Antigravity.",
+      "appAutoLaunch": "Uruchamiaj Cockpit Tools po zalogowaniu",
+      "appAutoLaunchDesc": "Automatycznie uruchamiaj aplikację po zalogowaniu do systemu",
+      "startupWakeupDisabled": "Wyłączone",
+      "startupWakeupImmediate": "Wybudź natychmiast",
+      "startupWakeupDelayed": "Wybudź z opóźnieniem",
+      "antigravityStartupWakeup": "Uruchom wybudzanie Antigravity po starcie",
+      "antigravityStartupWakeupDesc": "Po uruchomieniu aplikacji jednorazowo uruchom włączone zadania wybudzania Antigravity",
+      "codexStartupWakeup": "Uruchom wybudzanie Codex po starcie",
+      "codexStartupWakeupDesc": "Po uruchomieniu aplikacji jednorazowo uruchom włączone zadania wybudzania Codex",
+      "currentAccountRefreshTitle": "Odświeżanie bieżącego konta",
+      "currentAccountRefreshItemDesc": "Odświeżane jest tylko bieżące konto. Domyślnie 1 minuta.",
+      "autoSwitchAccountScope": "Zakres automatycznego przełączania kont",
+      "autoSwitchAccountScopeDesc": "Monitorowanie i przełączanie dotyczy tylko kont w tym zakresie.",
+      "autoSwitchAccountScopeAll": "Wszystkie konta",
+      "autoSwitchAccountScopeSelected": "Wybrane konta",
+      "autoSwitchAccountScopeChoose": "Wybierz konta",
+      "autoSwitchAccountScopeManage": "Zarządzaj kontami",
+      "autoSwitchAccountScopeAllSummary": "Aktualny zakres: wszystkie konta (łącznie {{total}})",
+      "autoSwitchAccountScopeSummary": "Wybrano {{selected}} z {{total}} kont",
+      "autoSwitchAccountScopeDialogTitle": "Wybierz zakres kont do automatycznego przełączania",
+      "autoSwitchAccountScopeAllHint": "Aktualny zakres obejmuje wszystkie konta. {{total}} kont weźmie udział w automatycznym przełączaniu.",
+      "codexAutoSwitchAccountScope": "Zakres automatycznego przełączania kont Codex",
+      "codexAutoSwitchAccountScopeDesc": "Aktualny stan automatycznego przełączania Codex: {{status}}. Uwzględniane będą tylko konta z tego zakresu."
     },
     "network": {
       "apiTitle": "API kokpitu antygrawitacyjnego",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Reset limitu",
       "manual": "Test natychmiastowy",
-      "unknown": "Nieznane"
+      "unknown": "Nieznane",
+      "startup": "Po uruchomieniu"
     },
     "taskCard": {
       "accountsCount": "Konta {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Wyzwalacze po resecie limitu zależą od najnowszych danych limitu, więc podgląd stałej godziny nie jest dostępny.",
       "triggerQuotaReset": "Wyzwalacz resetu limitu",
-      "noticeSavedEnabledWithQuotaReset": "Zadania zapisane. Łącznie: {{count}}. Automatyczne odświeżanie Codex ustawiono na co {{minutes}} min."
+      "noticeSavedEnabledWithQuotaReset": "Zadania zapisane. Łącznie: {{count}}. Automatyczne odświeżanie Codex ustawiono na co {{minutes}} min.",
+      "runtimeConfigTitle": "Własne ścieżki środowiska uruchomieniowego",
+      "runtimeConfigHint": "Możesz podać ścieżkę do pliku wykonywalnego lub katalogu. Pozostaw puste, aby wykryć automatycznie z PATH.",
+      "runtimeConfigCodexCliLabel": "Ścieżka Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "np. /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Ścieżka node",
+      "runtimeConfigNodePlaceholder": "np. /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Po zmianie kliknij „Sprawdź CLI ponownie”, aby zapisać i natychmiast zastosować."
     },
     "sessionManager": {
       "title": "Menedżer sesji",

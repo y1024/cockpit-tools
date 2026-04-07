@@ -162,6 +162,13 @@
       "updated": {
         "label": "Mis à jour il y a {{relative}}"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Emplacement publicitaire global en haut à droite",
+      "badge": "PUB",
+      "title": "Emplacement publicitaire en haut à droite",
+      "desc": "Cette zone est fixée en haut à droite sur toutes les pages pour les campagnes ou publicités de marque.",
+      "action": "Voir les détails"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Disposition originale",
       "sideNavLayoutClassic": "Disposition classique",
       "antigravityDualSwitchNoRestart": "Bascule double sans redémarrage",
-      "antigravityDualSwitchNoRestartDesc": "Lors du changement de compte, les données locales sont écrites et la bascule fluide de l’extension est exécutée dans un seul flux, sans redémarrer Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Lors du changement de compte, les données locales sont écrites et la bascule fluide de l’extension est exécutée dans un seul flux, sans redémarrer Antigravity.",
+      "appAutoLaunch": "Lancer Cockpit Tools à la connexion",
+      "appAutoLaunchDesc": "Démarrer automatiquement l'application après la connexion au système",
+      "startupWakeupDisabled": "Désactivé",
+      "startupWakeupImmediate": "Réveiller immédiatement",
+      "startupWakeupDelayed": "Réveiller avec délai",
+      "antigravityStartupWakeup": "Exécuter le réveil Antigravity au démarrage",
+      "antigravityStartupWakeupDesc": "Exécuter une fois les tâches de réveil Antigravity activées après le démarrage de l'app",
+      "codexStartupWakeup": "Exécuter le réveil Codex au démarrage",
+      "codexStartupWakeupDesc": "Exécuter une fois les tâches de réveil Codex activées après le démarrage de l'app",
+      "currentAccountRefreshTitle": "Actualisation du compte actuel",
+      "currentAccountRefreshItemDesc": "Actualise uniquement le compte actuel. Valeur par défaut : 1 minute.",
+      "autoSwitchAccountScope": "Portée de bascule automatique des comptes",
+      "autoSwitchAccountScopeDesc": "La surveillance et la bascule ne s’appliquent qu’aux comptes de cette portée.",
+      "autoSwitchAccountScopeAll": "Tous les comptes",
+      "autoSwitchAccountScopeSelected": "Comptes sélectionnés",
+      "autoSwitchAccountScopeChoose": "Choisir des comptes",
+      "autoSwitchAccountScopeManage": "Gérer les comptes",
+      "autoSwitchAccountScopeAllSummary": "Portée actuelle : tous les comptes ({{total}} au total)",
+      "autoSwitchAccountScopeSummary": "{{selected}} / {{total}} comptes sélectionnés",
+      "autoSwitchAccountScopeDialogTitle": "Choisir la portée des comptes pour la bascule automatique",
+      "autoSwitchAccountScopeAllHint": "La portée actuelle inclut tous les comptes. {{total}} compte(s) participeront à la bascule automatique.",
+      "codexAutoSwitchAccountScope": "Portée de bascule automatique des comptes Codex",
+      "codexAutoSwitchAccountScopeDesc": "État actuel de la bascule automatique Codex : {{status}}. Seuls les comptes de cette portée seront pris en compte."
     },
     "network": {
       "apiTitle": "API du cockpit antigravité",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Réinitialisation de quota",
       "manual": "Tester maintenant",
-      "unknown": "Inconnu"
+      "unknown": "Inconnu",
+      "startup": "Après le démarrage"
     },
     "taskCard": {
       "accountsCount": "Comptes {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Les déclencheurs de réinitialisation du quota dépendent des données de quota récentes, donc aucun aperçu horaire fixe n'est disponible.",
       "triggerQuotaReset": "Déclencheur de réinitialisation du quota",
-      "noticeSavedEnabledWithQuotaReset": "Tâches enregistrées. Total : {{count}}. L'actualisation automatique Codex a été réglée sur {{minutes}} minutes."
+      "noticeSavedEnabledWithQuotaReset": "Tâches enregistrées. Total : {{count}}. L'actualisation automatique Codex a été réglée sur {{minutes}} minutes.",
+      "runtimeConfigTitle": "Chemins d’exécution personnalisés",
+      "runtimeConfigHint": "Vous pouvez renseigner un chemin d’exécutable ou de dossier. Laissez vide pour une détection automatique via PATH.",
+      "runtimeConfigCodexCliLabel": "Chemin de Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "ex. : /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "Chemin de node",
+      "runtimeConfigNodePlaceholder": "ex. : /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Après modification, cliquez sur « Vérifier à nouveau CLI » pour enregistrer et appliquer immédiatement."
     },
     "sessionManager": {
       "title": "Gestion des sessions",

@@ -162,6 +162,13 @@
       "updated": {
         "label": "تم التحديث قبل {{relative}}"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "موضع إعلان عام أعلى اليمين",
+      "badge": "إعلان",
+      "title": "موضع الإعلان أعلى اليمين",
+      "desc": "تُثبَّت هذه المنطقة في أعلى يمين جميع الصفحات لعرض الحملات أو إعلانات العلامة التجارية.",
+      "action": "عرض التفاصيل"
     }
   },
   "floatingCard": {
@@ -627,7 +634,30 @@
       "sideNavLayoutOriginal": "التخطيط الأصلي",
       "sideNavLayoutClassic": "التخطيط الكلاسيكي",
       "antigravityDualSwitchNoRestart": "تبديل ثنائي بدون إعادة تشغيل",
-      "antigravityDualSwitchNoRestartDesc": "عند تبديل الحساب، يتم تنفيذ كتابة بيانات الحساب محليًا والتبديل السلس عبر الإضافة في تدفق واحد، دون إعادة تشغيل Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "عند تبديل الحساب، يتم تنفيذ كتابة بيانات الحساب محليًا والتبديل السلس عبر الإضافة في تدفق واحد، دون إعادة تشغيل Antigravity.",
+      "appAutoLaunch": "تشغيل Cockpit Tools عند تسجيل الدخول",
+      "appAutoLaunchDesc": "تشغيل التطبيق تلقائيًا بعد تسجيل الدخول إلى النظام",
+      "startupWakeupDisabled": "معطل",
+      "startupWakeupImmediate": "تنبيه فوري",
+      "startupWakeupDelayed": "تنبيه بعد تأخير",
+      "antigravityStartupWakeup": "تشغيل إيقاظ Antigravity بعد بدء التشغيل",
+      "antigravityStartupWakeupDesc": "تشغيل مهام إيقاظ Antigravity المفعلة مرة واحدة بعد بدء التطبيق",
+      "codexStartupWakeup": "تشغيل إيقاظ Codex بعد بدء التشغيل",
+      "codexStartupWakeupDesc": "تشغيل مهام إيقاظ Codex المفعلة مرة واحدة بعد بدء التطبيق",
+      "currentAccountRefreshTitle": "تحديث الحساب الحالي",
+      "currentAccountRefreshItemDesc": "تحديث الحساب الحالي فقط. الافتراضي دقيقة واحدة.",
+      "autoSwitchAccountScope": "نطاق التبديل التلقائي للحساب",
+      "autoSwitchAccountScopeDesc": "تتم المراقبة والتبديل فقط ضمن هذا النطاق.",
+      "autoSwitchAccountScopeAll": "كل الحسابات",
+      "autoSwitchAccountScopeSelected": "حسابات محددة",
+      "autoSwitchAccountScopeChoose": "اختيار الحسابات",
+      "autoSwitchAccountScopeManage": "إدارة الحسابات",
+      "autoSwitchAccountScopeAllSummary": "النطاق الحالي: كل الحسابات (الإجمالي {{total}})",
+      "autoSwitchAccountScopeSummary": "تم اختيار {{selected}} من {{total}} حسابًا",
+      "autoSwitchAccountScopeDialogTitle": "اختيار نطاق حسابات التبديل التلقائي",
+      "autoSwitchAccountScopeAllHint": "النطاق الحالي هو كل الحسابات. سيشارك {{total}} حسابًا في التبديل التلقائي.",
+      "codexAutoSwitchAccountScope": "نطاق التبديل التلقائي لحسابات Codex",
+      "codexAutoSwitchAccountScopeDesc": "حالة التبديل التلقائي الحالية لـ Codex: {{status}}. سيتم النظر فقط في الحسابات ضمن هذا النطاق."
     },
     "network": {
       "apiTitle": "واجهة برمجة تطبيقات قمرة القيادة المضادة للجاذبية",
@@ -1222,7 +1252,8 @@
       "crontab": "كرونتاب",
       "quotaReset": "إعادة تعيين الحصة",
       "manual": "اختبار فوري",
-      "unknown": "غير معروف"
+      "unknown": "غير معروف",
+      "startup": "بعد بدء التشغيل"
     },
     "taskCard": {
       "accountsCount": "حسابات {{count}}",
@@ -1640,7 +1671,14 @@
       },
       "nextRunsQuotaResetHint": "تعتمد عمليات التشغيل بعد إعادة تعيين الحصة على أحدث بيانات الحصة، لذا لا تتوفر معاينة بوقت ثابت.",
       "triggerQuotaReset": "تشغيل بعد إعادة تعيين الحصة",
-      "noticeSavedEnabledWithQuotaReset": "تم حفظ المهام. الإجمالي: {{count}}. تم ضبط التحديث التلقائي لـ Codex ليعمل كل {{minutes}} دقيقة."
+      "noticeSavedEnabledWithQuotaReset": "تم حفظ المهام. الإجمالي: {{count}}. تم ضبط التحديث التلقائي لـ Codex ليعمل كل {{minutes}} دقيقة.",
+      "runtimeConfigTitle": "تخصيص مسارات بيئة التشغيل",
+      "runtimeConfigHint": "يمكن إدخال مسار ملف تنفيذي أو مجلد. اتركه فارغًا لاكتشافه تلقائيًا من PATH.",
+      "runtimeConfigCodexCliLabel": "مسار Codex CLI",
+      "runtimeConfigCodexCliPlaceholder": "مثال: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "مسار node",
+      "runtimeConfigNodePlaceholder": "مثال: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "بعد التعديل، انقر \"إعادة فحص CLI\" للحفظ والتطبيق فورًا."
     },
     "sessionManager": {
       "title": "إدارة الجلسات",

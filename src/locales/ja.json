@@ -162,6 +162,13 @@
       "updated": {
         "label": "{{relative}}前に更新"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "全ページ共通の右上広告枠",
+      "badge": "広告",
+      "title": "右上広告枠",
+      "desc": "このエリアは全ページの右上に固定表示され、キャンペーン情報やブランド広告の掲載に適しています。",
+      "action": "詳細を見る"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "元のレイアウト",
       "sideNavLayoutClassic": "クラシックレイアウト",
       "antigravityDualSwitchNoRestart": "再起動なしデュアル切替",
-      "antigravityDualSwitchNoRestartDesc": "切替時にローカルのアカウントデータ書き込みと拡張機能のシームレス切替を1つのフローで実行し、Antigravity を再起動しません。"
+      "antigravityDualSwitchNoRestartDesc": "切替時にローカルのアカウントデータ書き込みと拡張機能のシームレス切替を1つのフローで実行し、Antigravity を再起動しません。",
+      "appAutoLaunch": "ログイン時に Cockpit Tools を起動",
+      "appAutoLaunchDesc": "システムログイン後にアプリを自動起動します",
+      "startupWakeupDisabled": "無効",
+      "startupWakeupImmediate": "すぐに起動",
+      "startupWakeupDelayed": "遅延して起動",
+      "antigravityStartupWakeup": "起動後に Antigravity ウェイクアップを実行",
+      "antigravityStartupWakeupDesc": "アプリ起動後に有効な Antigravity ウェイクアップタスクを一度実行します",
+      "codexStartupWakeup": "起動後に Codex ウェイクアップを実行",
+      "codexStartupWakeupDesc": "アプリ起動後に有効な Codex ウェイクアップタスクを一度実行します",
+      "currentAccountRefreshTitle": "現在アカウントの更新",
+      "currentAccountRefreshItemDesc": "現在のアカウントのみ更新します。デフォルトは1分です。",
+      "autoSwitchAccountScope": "自動切替アカウント範囲",
+      "autoSwitchAccountScopeDesc": "この範囲内のアカウントのみ監視・切替を行います。",
+      "autoSwitchAccountScopeAll": "すべてのアカウント",
+      "autoSwitchAccountScopeSelected": "選択したアカウント",
+      "autoSwitchAccountScopeChoose": "アカウントを選択",
+      "autoSwitchAccountScopeManage": "アカウント管理",
+      "autoSwitchAccountScopeAllSummary": "現在の範囲：すべてのアカウント（合計 {{total}} 件）",
+      "autoSwitchAccountScopeSummary": "{{total}} 件中 {{selected}} 件を選択",
+      "autoSwitchAccountScopeDialogTitle": "自動切替アカウント範囲を選択",
+      "autoSwitchAccountScopeAllHint": "現在の範囲はすべてのアカウントです。{{total}} 件が自動切替対象になります。",
+      "codexAutoSwitchAccountScope": "Codex 自動切替アカウント範囲",
+      "codexAutoSwitchAccountScopeDesc": "現在の Codex 自動切替ステータス：{{status}}。この範囲内のアカウントのみ対象になります。"
     },
     "network": {
       "apiTitle": "反重力コックピット API",
@@ -1176,7 +1206,8 @@
       "crontab": "クロンタブ",
       "quotaReset": "クォータリセット",
       "manual": "すぐにテスト",
-      "unknown": "不明"
+      "unknown": "不明",
+      "startup": "起動後"
     },
     "taskCard": {
       "accountsCount": "アカウント {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "クォータリセット起動は最新のクォータデータに依存するため、固定時刻のプレビューは利用できません。",
       "triggerQuotaReset": "クォータリセット起動",
-      "noticeSavedEnabledWithQuotaReset": "タスクを保存しました。合計: {{count}}。Codex の自動更新は {{minutes}} 分間隔に調整されました。"
+      "noticeSavedEnabledWithQuotaReset": "タスクを保存しました。合計: {{count}}。Codex の自動更新は {{minutes}} 分間隔に調整されました。",
+      "runtimeConfigTitle": "ランタイムパスのカスタム設定",
+      "runtimeConfigHint": "実行ファイルまたはディレクトリのパスを指定できます。空欄の場合は PATH から自動検出します。",
+      "runtimeConfigCodexCliLabel": "Codex CLI パス",
+      "runtimeConfigCodexCliPlaceholder": "例: /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "node パス",
+      "runtimeConfigNodePlaceholder": "例: /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "変更後に「CLI を再チェック」をクリックすると保存され、すぐ反映されます。"
     },
     "sessionManager": {
       "title": "セッション管理",

@@ -162,6 +162,13 @@
       "updated": {
         "label": "Vor {{relative}} aktualisiert"
       }
+    },
+    "topRightAd": {
+      "ariaLabel": "Globaler Anzeigenplatz oben rechts",
+      "badge": "ANZEIGE",
+      "title": "Anzeigenplatz oben rechts",
+      "desc": "Dieser Bereich ist auf allen Seiten oben rechts fixiert und eignet sich für Kampagnen oder Markenanzeigen.",
+      "action": "Details ansehen"
     }
   },
   "nav": {
@@ -581,7 +588,30 @@
       "sideNavLayoutOriginal": "Ursprüngliches Layout",
       "sideNavLayoutClassic": "Klassisches Layout",
       "antigravityDualSwitchNoRestart": "Nahtloser Doppelwechsel (ohne Neustart)",
-      "antigravityDualSwitchNoRestartDesc": "Beim Kontowechsel werden lokale Kontodaten geschrieben und der nahtlose Erweiterungswechsel in einem Ablauf ausgeführt, ohne Antigravity neu zu starten."
+      "antigravityDualSwitchNoRestartDesc": "Beim Kontowechsel werden lokale Kontodaten geschrieben und der nahtlose Erweiterungswechsel in einem Ablauf ausgeführt, ohne Antigravity neu zu starten.",
+      "appAutoLaunch": "Cockpit Tools beim Anmelden starten",
+      "appAutoLaunchDesc": "App nach der Systemanmeldung automatisch starten",
+      "startupWakeupDisabled": "Deaktiviert",
+      "startupWakeupImmediate": "Sofort aufwecken",
+      "startupWakeupDelayed": "Mit Verzögerung aufwecken",
+      "antigravityStartupWakeup": "Antigravity-Wecklauf nach dem Start ausführen",
+      "antigravityStartupWakeupDesc": "Nach dem App-Start aktivierte Antigravity-Weckaufgaben einmal ausführen",
+      "codexStartupWakeup": "Codex-Wecklauf nach dem Start ausführen",
+      "codexStartupWakeupDesc": "Nach dem App-Start aktivierte Codex-Weckaufgaben einmal ausführen",
+      "currentAccountRefreshTitle": "Aktuelles Konto aktualisieren",
+      "currentAccountRefreshItemDesc": "Nur das aktuelle Konto wird aktualisiert. Standard ist 1 Minute.",
+      "autoSwitchAccountScope": "Bereich für automatisches Kontowechseln",
+      "autoSwitchAccountScopeDesc": "Überwachung und Wechsel erfolgen nur innerhalb dieses Bereichs.",
+      "autoSwitchAccountScopeAll": "Alle Konten",
+      "autoSwitchAccountScopeSelected": "Ausgewählte Konten",
+      "autoSwitchAccountScopeChoose": "Konten auswählen",
+      "autoSwitchAccountScopeManage": "Konten verwalten",
+      "autoSwitchAccountScopeAllSummary": "Aktueller Bereich: alle Konten (insgesamt {{total}})",
+      "autoSwitchAccountScopeSummary": "{{selected}} / {{total}} Konten ausgewählt",
+      "autoSwitchAccountScopeDialogTitle": "Bereich für automatisches Kontowechseln auswählen",
+      "autoSwitchAccountScopeAllHint": "Der aktuelle Bereich umfasst alle Konten. {{total}} Konto/Konten nehmen am automatischen Wechsel teil.",
+      "codexAutoSwitchAccountScope": "Codex-Bereich für automatisches Kontowechseln",
+      "codexAutoSwitchAccountScopeDesc": "Aktueller Codex-Auto-Wechsel-Status: {{status}}. Es werden nur Konten in diesem Bereich berücksichtigt."
     },
     "network": {
       "apiTitle": "Antigravity-Cockpit-API",
@@ -1176,7 +1206,8 @@
       "crontab": "Crontab",
       "quotaReset": "Quoten-Reset",
       "manual": "Jetzt testen",
-      "unknown": "Unbekannt"
+      "unknown": "Unbekannt",
+      "startup": "Nach dem Start"
     },
     "taskCard": {
       "accountsCount": "Konten {{count}}",
@@ -1594,7 +1625,14 @@
       },
       "nextRunsQuotaResetHint": "Auslöser nach Kontingent-Reset hängen von aktuellen Kontingentdaten ab, daher ist keine feste Zeitvorschau verfügbar.",
       "triggerQuotaReset": "Kontingent-Reset-Auslöser",
-      "noticeSavedEnabledWithQuotaReset": "Aufgaben gespeichert. Gesamt: {{count}}. Die automatische Codex-Aktualisierung wurde auf alle {{minutes}} Minuten angepasst."
+      "noticeSavedEnabledWithQuotaReset": "Aufgaben gespeichert. Gesamt: {{count}}. Die automatische Codex-Aktualisierung wurde auf alle {{minutes}} Minuten angepasst.",
+      "runtimeConfigTitle": "Benutzerdefinierte Laufzeitpfade",
+      "runtimeConfigHint": "Sie können einen ausführbaren Pfad oder einen Verzeichnispfad angeben. Leer lassen für automatische Erkennung über PATH.",
+      "runtimeConfigCodexCliLabel": "Codex-CLI-Pfad",
+      "runtimeConfigCodexCliPlaceholder": "z. B. /opt/homebrew/bin/codex",
+      "runtimeConfigNodeLabel": "node-Pfad",
+      "runtimeConfigNodePlaceholder": "z. B. /opt/homebrew/bin/node",
+      "runtimeConfigApplyHint": "Klicken Sie nach Änderungen auf „CLI erneut prüfen“, um sie zu speichern und sofort anzuwenden."
     },
     "sessionManager": {
       "title": "Sitzungsverwaltung",

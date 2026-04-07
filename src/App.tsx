@@ -6,6 +6,7 @@ import { getCurrentWebview } from '@tauri-apps/api/webview';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { useTranslation } from 'react-i18next';
 import { FileText, FolderOpen, RefreshCw, X } from 'lucide-react';
 import { SideNav } from './components/layout/SideNav';
@@ -31,6 +32,7 @@ import { useWorkbuddyAccountStore } from './stores/useWorkbuddyAccountStore';
 import { useZedAccountStore } from './stores/useZedAccountStore';
 import { useSideNavLayoutStore } from './stores/useSideNavLayoutStore';
 import { usePlatformLayoutStore } from './stores/usePlatformLayoutStore';
+import { useTopRightAdStore } from './stores/useTopRightAdStore';
 import type { UpdateCheckResult, UpdateInfo } from './components/UpdateNotification';
 import type { Update as UpdaterUpdate } from '@tauri-apps/plugin-updater';
 import { parseUpdaterReleaseNotes, resolveUpdaterDownloadUrl } from './utils/updaterReleaseNotes';
@@ -436,7 +438,24 @@ function MainApp() {
   const updateDownloadOwnerRef = useRef<'none' | 'shared' | 'silent'>('none');
   const updateCheckRequestIdRef = useRef(0);
   const { showModal, closeModal } = useGlobalModal();
+  const topRightAdState = useTopRightAdStore((state) => state.state);
+  const fetchTopRightAdState = useTopRightAdStore((state) => state.fetchState);
   const trayRefreshInFlightRef = useRef(false);
+  const openPlatformLayoutModal = useCallback(() => {
+    setPlatformLayoutRequestedGroupId(null);
+    setShowPlatformLayoutModal(true);
+  }, []);
+  const handleTopRightAdClick = useCallback(async () => {
+    const target = topRightAdState.ad?.ctaUrl?.trim();
+    if (!target || !/^https?:\/\//i.test(target)) {
+      return;
+    }
+    try {
+      await openUrl(target);
+    } catch {
+      window.open(target, '_blank', 'noopener,noreferrer');
+    }
+  }, [topRightAdState.ad?.ctaUrl]);
   const openBreakout = useCallback(() => {
     setHasBreakoutSession(true);
     setShowBreakout(true);
@@ -480,6 +499,20 @@ function MainApp() {
   
   // 启用自动刷新 hook
   useAutoRefresh();
+
+  useEffect(() => {
+    void fetchTopRightAdState();
+  }, [fetchTopRightAdState]);
+
+  useEffect(() => {
+    const handleLanguageChanged = () => {
+      void fetchTopRightAdState();
+    };
+    window.addEventListener('general-language-updated', handleLanguageChanged);
+    return () => {
+      window.removeEventListener('general-language-updated', handleLanguageChanged);
+    };
+  }, [fetchTopRightAdState]);
 
   useEffect(() => {
     if (sideNavLayoutMode !== 'classic' || sideNavClassicFirstSyncDone) {
@@ -1282,7 +1315,10 @@ function MainApp() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     const syncWakeupStateOnStartup = async () => {
+      let officialLsVersionMode = loadWakeupOfficialLsVersionMode();
       try {
         // 一次性迁移：升级到该版本后先将唤醒总开关置为关闭，用户仍可手动再开启
         if (localStorage.getItem(WAKEUP_FORCE_DISABLE_MIGRATION_KEY) !== '1') {
@@ -1292,13 +1328,40 @@ function MainApp() {
         const enabled = localStorage.getItem(WAKEUP_ENABLED_KEY) === 'true';
         const tasksRaw = localStorage.getItem(TASKS_STORAGE_KEY);
         const tasks = tasksRaw ? JSON.parse(tasksRaw) : [];
-        const officialLsVersionMode = loadWakeupOfficialLsVersionMode();
+        officialLsVersionMode = loadWakeupOfficialLsVersionMode();
         await invoke('wakeup_sync_state', { enabled, tasks, officialLsVersionMode });
       } catch (error) {
         console.error('唤醒任务状态同步失败:', error);
       }
+
+      if (cancelled) {
+        return;
+      }
+
+      try {
+        await invoke('wakeup_run_enabled_tasks', {
+          triggerSource: 'startup',
+          officialLsVersionMode,
+        });
+      } catch (error) {
+        console.error('执行 Antigravity 启动后唤醒失败:', error);
+      }
+
+      if (cancelled) {
+        return;
+      }
+
+      try {
+        await invoke('codex_wakeup_run_enabled_tasks', { triggerType: 'startup' });
+      } catch (error) {
+        console.error('执行 Codex 启动后唤醒失败:', error);
+      }
     };
-    syncWakeupStateOnStartup();
+    void syncWakeupStateOnStartup();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Check for updates on startup
@@ -2744,9 +2807,9 @@ function MainApp() {
       )}
       
       {/* 顶部固定拖拽区域 */}
-      <div 
+      <div
         className="drag-region"
-        data-tauri-drag-region 
+        data-tauri-drag-region
         onMouseDown={handleDragStart}
       />
 
@@ -2754,10 +2817,7 @@ function MainApp() {
       <SideNav
         page={page}
         setPage={setPage}
-        onOpenPlatformLayout={() => {
-          setPlatformLayoutRequestedGroupId(null);
-          setShowPlatformLayoutModal(true);
-        }}
+        onOpenPlatformLayout={openPlatformLayoutModal}
         easterEggClickCount={easterEggClickCount}
         onEasterEggTriggerClick={handleBreakoutEntryTriggerClick}
         hasBreakoutSession={hasBreakoutSession}
@@ -2800,11 +2860,32 @@ function MainApp() {
           {page === 'dashboard' && (
             <DashboardPage
               onNavigate={setPage}
-              onOpenPlatformLayout={() => {
-                setPlatformLayoutRequestedGroupId(null);
-                setShowPlatformLayoutModal(true);
-              }}
+              onOpenPlatformLayout={openPlatformLayoutModal}
               onEasterEggTriggerClick={handleBreakoutEntryTriggerClick}
+              topCenterBanner={
+                topRightAdState.ad ? (
+                  <div
+                    className="global-promo-center"
+                    role="complementary"
+                    aria-label={t('common.topRightAd.ariaLabel', '全局右上角广告位')}
+                  >
+                    <div className="global-promo-slot">
+                      <span className="global-ad-slot-badge">
+                        {topRightAdState.ad.badge || t('common.topRightAd.badge', '广告')}
+                      </span>
+                      <div className="global-promo-main">
+                        <strong className="global-ad-slot-title">{topRightAdState.ad.title}</strong>
+                        <p className="global-promo-desc">{topRightAdState.ad.summary}</p>
+                      </div>
+                      {topRightAdState.ad.ctaUrl ? (
+                        <button className="global-ad-slot-action" onClick={handleTopRightAdClick}>
+                          {topRightAdState.ad.ctaLabel || t('common.topRightAd.action', '查看详情')}
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null
+              }
             />
           )}
           {page === 'overview' && <AccountsPage onNavigate={setPage} />}
@@ -2828,10 +2909,7 @@ function MainApp() {
           {page === 'manual' && (
             <ManualPage
               onNavigate={setPage}
-              onOpenPlatformLayout={() => {
-                setPlatformLayoutRequestedGroupId(null);
-                setShowPlatformLayoutModal(true);
-              }}
+              onOpenPlatformLayout={openPlatformLayoutModal}
             />
           )}
           {page === 'settings' && <SettingsPage />}

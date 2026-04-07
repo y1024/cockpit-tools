@@ -7,7 +7,7 @@ use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION};
 #[cfg(target_os = "macos")]
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -26,6 +26,9 @@ const CODEX_CONFIG_FILE_NAME: &str = "config.toml";
 const CODEX_CONFIG_BASE_URL_KEY: &str = "openai_base_url";
 #[cfg(target_os = "macos")]
 const CODEX_KEYCHAIN_SERVICE: &str = "Codex Auth";
+const CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_ALL: &str = "all_accounts";
+const CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED: &str = "selected_accounts";
+const DISK_FULL_ERROR_CODE: &str = "DISK_FULL";
 
 fn is_auth_mode_apikey(value: Option<&str>) -> bool {
     matches!(
@@ -828,7 +831,7 @@ fn load_account_index_checked() -> Result<CodexAccountIndex, String> {
 pub fn save_account_index(index: &CodexAccountIndex) -> Result<(), String> {
     let path = get_accounts_storage_path();
     let content = serde_json::to_string_pretty(index).map_err(|e| format!("序列化失败: {}", e))?;
-    fs::write(&path, content).map_err(|e| format!("写入文件失败: {}", e))?;
+    write_string_atomic(&path, &content).map_err(|e| format!("写入账号索引失败: {}", e))?;
     Ok(())
 }
 
@@ -948,7 +951,7 @@ pub fn save_account(account: &CodexAccount) -> Result<(), String> {
     let path = get_accounts_dir().join(format!("{}.json", &account.id));
     let content =
         serde_json::to_string_pretty(account).map_err(|e| format!("序列化失败: {}", e))?;
-    fs::write(&path, content).map_err(|e| format!("写入文件失败: {}", e))?;
+    write_string_atomic(&path, &content).map_err(|e| format!("写入账号详情失败: {}", e))?;
     Ok(())
 }
 
@@ -1452,31 +1455,83 @@ fn write_codex_keychain_to_dir(_base_dir: &Path, _account: &CodexAccount) -> Res
     Ok(())
 }
 
-fn write_string_atomic(path: &Path, content: &str) -> Result<(), String> {
-    use std::time::{SystemTime, UNIX_EPOCH};
+fn is_disk_full_io_error(error: &std::io::Error) -> bool {
+    matches!(error.raw_os_error(), Some(28) | Some(112))
+}
 
-    let parent = path.parent().ok_or("无法定位目标目录")?;
-    fs::create_dir_all(parent).map_err(|e| format!("创建目录失败: {}", e))?;
+fn is_disk_full_error_message(message: &str) -> bool {
+    let lower = message.to_ascii_lowercase();
+    lower.contains("disk_full:")
+        || lower.contains("os error 28")
+        || lower.contains("os error 112")
+        || lower.contains("no space left on device")
+        || lower.contains("not enough space on the disk")
+        || lower.contains("磁盘空间不足")
+}
+
+fn format_io_error(action: &str, path: &Path, error: &std::io::Error) -> String {
+    if is_disk_full_io_error(error) {
+        return format!(
+            "{}:{}失败: path={}, 磁盘空间不足，请清理磁盘后重试",
+            DISK_FULL_ERROR_CODE,
+            action,
+            path.display()
+        );
+    }
+    format!("{}失败: path={}, error={}", action, path.display(), error)
+}
+
+fn build_temp_file_path(parent: &Path, target: &Path, suffix: &str) -> PathBuf {
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     let unique = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_nanos();
-    let temp_path = parent.join(format!(
-        ".{}.tmp.{}.{}",
-        path.file_name()
+    parent.join(format!(
+        ".{}.tmp.{}.{}.{}",
+        target
+            .file_name()
             .and_then(|item| item.to_str())
-            .unwrap_or("auth"),
+            .unwrap_or("file"),
         std::process::id(),
-        unique
-    ));
+        unique,
+        suffix
+    ))
+}
 
-    fs::write(&temp_path, content).map_err(|e| format!("写入临时文件失败: {}", e))?;
+fn write_string_atomic(path: &Path, content: &str) -> Result<(), String> {
+    let parent = path.parent().ok_or("无法定位目标目录")?;
+    fs::create_dir_all(parent).map_err(|e| format_io_error("创建目录", parent, &e))?;
+    let temp_path = build_temp_file_path(parent, path, "atomic");
+    fs::write(&temp_path, content).map_err(|e| format_io_error("写入临时文件", &temp_path, &e))?;
     if let Err(err) = fs::rename(&temp_path, path) {
         let _ = fs::remove_file(&temp_path);
-        return Err(format!("替换文件失败: {}", err));
+        return Err(format_io_error("替换文件", path, &err));
     }
 
+    Ok(())
+}
+
+fn ensure_directory_writable_for_import(path: &Path) -> Result<(), String> {
+    fs::create_dir_all(path).map_err(|e| format_io_error("创建导入目录", path, &e))?;
+    let probe_path = build_temp_file_path(path, path, "import-probe");
+    fs::write(&probe_path, b"probe")
+        .map_err(|e| format_io_error("导入前磁盘写入预检", &probe_path, &e))?;
+    fs::remove_file(&probe_path)
+        .map_err(|e| format!("导入预检清理失败: path={}, error={}", probe_path.display(), e))?;
+    Ok(())
+}
+
+fn ensure_storage_writable_for_import() -> Result<(), String> {
+    let accounts_dir = get_accounts_dir();
+    ensure_directory_writable_for_import(&accounts_dir)?;
+
+    let index_path = get_accounts_storage_path();
+    let index_dir = index_path
+        .parent()
+        .ok_or_else(|| format!("无法定位索引目录: {}", index_path.display()))?;
+    ensure_directory_writable_for_import(index_dir)?;
     Ok(())
 }
 
@@ -1636,6 +1691,8 @@ fn import_account_struct(account: CodexAccount) -> Result<CodexAccount, String> 
 
 /// 从 JSON 字符串导入账号
 pub fn import_from_json(json_content: &str) -> Result<Vec<CodexAccount>, String> {
+    ensure_storage_writable_for_import()?;
+
     // 尝试解析为 auth.json 格式
     if let Ok(auth_file) = serde_json::from_str::<CodexAuthFile>(json_content) {
         let fallback_api_key = extract_api_key_from_auth_file(&auth_file);
@@ -1971,6 +2028,7 @@ pub fn import_from_files(file_paths: Vec<String>) -> Result<CodexFileImportResul
     if file_paths.is_empty() {
         return Err("未选择任何文件".to_string());
     }
+    ensure_storage_writable_for_import()?;
 
     logger::log_info(&format!(
         "Codex: 开始从 {} 个文件导入账号...",
@@ -2064,6 +2122,19 @@ pub fn import_from_files(file_paths: Vec<String>) -> Result<CodexFileImportResul
                 imported.push(account);
             }
             Err(e) => {
+                if is_disk_full_error_message(&e) {
+                    logger::log_error(&format!(
+                        "Codex 导入因磁盘空间不足终止: label={}, imported={}, error={}",
+                        label,
+                        imported.len(),
+                        e
+                    ));
+                    return Err(format!(
+                        "磁盘空间不足，已终止导入（已成功 {} 个）。{}",
+                        imported.len(),
+                        e
+                    ));
+                }
                 logger::log_error(&format!("Codex 导入失败 {}: {}", label, e));
                 failed.push(CodexFileImportFailure {
                     email: label,
@@ -2208,6 +2279,49 @@ fn normalize_quota_alert_threshold(raw: i32) -> i32 {
 
 fn normalize_auto_switch_threshold(raw: i32) -> i32 {
     raw.clamp(0, 100)
+}
+
+fn normalize_auto_switch_account_scope_mode(raw: &str) -> String {
+    let normalized = raw.trim().to_lowercase();
+    if normalized == CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED {
+        CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED.to_string()
+    } else {
+        CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_ALL.to_string()
+    }
+}
+
+fn normalize_auto_switch_selected_account_ids(raw: &[String]) -> Vec<String> {
+    let mut result = Vec::new();
+    let mut seen = HashSet::new();
+    for item in raw {
+        let normalized = item.trim().to_string();
+        if normalized.is_empty() || !seen.insert(normalized.clone()) {
+            continue;
+        }
+        result.push(normalized);
+    }
+    result
+}
+
+fn resolve_monitored_auto_switch_account_ids(
+    scope_mode: &str,
+    selected_account_ids: &[String],
+    accounts: &[CodexAccount],
+) -> HashSet<String> {
+    if scope_mode != CODEX_AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED {
+        return accounts.iter().map(|account| account.id.clone()).collect();
+    }
+
+    let selected = normalize_auto_switch_selected_account_ids(selected_account_ids);
+    if selected.is_empty() {
+        return HashSet::new();
+    }
+
+    let existing: HashSet<&str> = accounts.iter().map(|account| account.id.as_str()).collect();
+    selected
+        .into_iter()
+        .filter(|account_id| existing.contains(account_id.as_str()))
+        .collect()
 }
 
 fn format_codex_quota_metric_label(window_minutes: Option<i64>, fallback: &str) -> String {
@@ -2481,12 +2595,33 @@ pub fn pick_auto_switch_target_if_needed() -> Result<Option<CodexAccount>, Strin
             normalize_auto_switch_threshold(cfg.codex_auto_switch_primary_threshold);
         let secondary_threshold =
             normalize_auto_switch_threshold(cfg.codex_auto_switch_secondary_threshold);
+        let account_scope_mode =
+            normalize_auto_switch_account_scope_mode(&cfg.codex_auto_switch_account_scope_mode);
 
         let accounts = list_accounts();
+        let monitored_account_ids = resolve_monitored_auto_switch_account_ids(
+            &account_scope_mode,
+            &cfg.codex_auto_switch_selected_account_ids,
+            &accounts,
+        );
+        if monitored_account_ids.is_empty() {
+            logger::log_warn(&format!(
+                "[AutoSwitch][Codex] 可监控账号范围为空(scope={})，跳过自动切号",
+                account_scope_mode
+            ));
+            return Ok(None);
+        }
         let current_id = match resolve_current_account_id(&accounts) {
             Some(id) => id,
             None => return Ok(None),
         };
+        if !monitored_account_ids.contains(&current_id) {
+            logger::log_info(&format!(
+                "[AutoSwitch][Codex] 当前账号不在监控范围内(current_id={}, scope={})，跳过自动切号",
+                current_id, account_scope_mode
+            ));
+            return Ok(None);
+        }
 
         let current = match accounts.iter().find(|account| account.id == current_id) {
             Some(account) => account,
@@ -2507,6 +2642,7 @@ pub fn pick_auto_switch_target_if_needed() -> Result<Option<CodexAccount>, Strin
 
         let candidates: Vec<CodexSwitchCandidate> = accounts
             .iter()
+            .filter(|account| monitored_account_ids.contains(&account.id))
             .filter(|account| account.id != current_id)
             .filter_map(|account| {
                 build_switch_candidate(account, primary_threshold, secondary_threshold)

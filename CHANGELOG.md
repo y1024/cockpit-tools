@@ -7,6 +7,20 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.20.19] - 2026-04-07
+
+### Changed
+- **All platforms now support a dedicated current-account refresh interval with matching Quick Settings entry points (default: 1 minute)**: each platform can tune current-account refresh cadence independently without changing that platform's full quota auto-refresh interval.
+- **Wakeup tasks now support an `After startup` trigger with optional delay for both Antigravity and Codex**: enabled startup tasks are dispatched automatically after app launch, while regular scheduler loops skip startup-only tasks.
+- **Codex wakeup runtime setup now supports explicit `codex` / `node` path configuration with required-path hints**: when auto-detection fails, users can provide executable or directory paths in the runtime guide and recheck/apply immediately.
+- **Auto-switch scope now supports selecting specific accounts (not only model groups)**: Antigravity and Codex can now limit auto-switch monitoring and candidate selection to selected account IDs from Settings and Quick Settings.
+- **System settings now include app auto-launch control with native autostart sync**: desktop config now reads and applies real OS autostart status through the autostart plugin instead of frontend-only state.
+
+### Fixed
+- **Codex account import now fails fast on disk-full conditions with clear progress feedback**: import now performs a writable precheck and returns explicit disk-space errors instead of partial silent failures.
+- **Instance directory deletion now consistently moves directories to recycle/trash across platforms**: deletion now uses unified trash semantics instead of mixed platform-specific removal paths.
+
+---
 ## [0.20.18] - 2026-04-04
 
 ### Changed

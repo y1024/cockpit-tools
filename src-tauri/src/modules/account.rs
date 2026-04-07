@@ -973,6 +973,8 @@ fn normalize_quota_alert_threshold(raw: i32) -> i32 {
 
 const AUTO_SWITCH_SCOPE_ANY_GROUP: &str = "any_group";
 const AUTO_SWITCH_SCOPE_SELECTED_GROUPS: &str = "selected_groups";
+const AUTO_SWITCH_ACCOUNT_SCOPE_ALL: &str = "all_accounts";
+const AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED: &str = "selected_accounts";
 const AUTO_SWITCH_POLICY_AVG_QUOTA_DESC_LAST_USED_ASC: &str = "avg_quota_desc_then_last_used_asc";
 const AUTO_SWITCH_RULE_CURRENT_DISABLED: &str = "current_disabled";
 const AUTO_SWITCH_RULE_CURRENT_QUOTA_FORBIDDEN: &str = "current_quota_forbidden";
@@ -1076,6 +1078,49 @@ fn normalize_auto_switch_selected_group_ids(raw: &[String]) -> Vec<String> {
         result.push(normalized);
     }
     result
+}
+
+fn normalize_auto_switch_account_scope_mode(raw: &str) -> String {
+    let normalized = raw.trim().to_lowercase();
+    if normalized == AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED {
+        AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED.to_string()
+    } else {
+        AUTO_SWITCH_ACCOUNT_SCOPE_ALL.to_string()
+    }
+}
+
+fn normalize_auto_switch_selected_account_ids(raw: &[String]) -> Vec<String> {
+    let mut result = Vec::new();
+    let mut seen = HashSet::new();
+    for item in raw {
+        let normalized = item.trim().to_string();
+        if normalized.is_empty() || !seen.insert(normalized.clone()) {
+            continue;
+        }
+        result.push(normalized);
+    }
+    result
+}
+
+fn resolve_monitored_auto_switch_account_ids(
+    scope_mode: &str,
+    selected_account_ids: &[String],
+    accounts: &[Account],
+) -> HashSet<String> {
+    if scope_mode != AUTO_SWITCH_ACCOUNT_SCOPE_SELECTED {
+        return accounts.iter().map(|account| account.id.clone()).collect();
+    }
+
+    let selected = normalize_auto_switch_selected_account_ids(selected_account_ids);
+    if selected.is_empty() {
+        return HashSet::new();
+    }
+
+    let existing: HashSet<&str> = accounts.iter().map(|account| account.id.as_str()).collect();
+    selected
+        .into_iter()
+        .filter(|account_id| existing.contains(account_id.as_str()))
+        .collect()
 }
 
 fn resolve_monitored_auto_switch_groups(
@@ -1555,6 +1600,8 @@ async fn run_auto_switch_if_needed_inner() -> Result<Option<Account>, String> {
 
     let threshold = normalize_auto_switch_threshold(cfg.auto_switch_threshold);
     let scope_mode = normalize_auto_switch_scope_mode(&cfg.auto_switch_scope_mode);
+    let account_scope_mode =
+        normalize_auto_switch_account_scope_mode(&cfg.auto_switch_account_scope_mode);
     let all_groups = default_auto_switch_groups();
     let monitored_groups = resolve_monitored_auto_switch_groups(
         &scope_mode,
@@ -1571,6 +1618,26 @@ async fn run_auto_switch_if_needed_inner() -> Result<Option<Account>, String> {
     };
 
     let accounts = list_accounts()?;
+    let monitored_account_ids = resolve_monitored_auto_switch_account_ids(
+        &account_scope_mode,
+        &cfg.auto_switch_selected_account_ids,
+        &accounts,
+    );
+    if monitored_account_ids.is_empty() {
+        modules::logger::log_warn(&format!(
+            "[AutoSwitch] 可监控账号范围为空(scope={})，跳过自动切号",
+            account_scope_mode
+        ));
+        return Ok(None);
+    }
+    if !monitored_account_ids.contains(&current_id) {
+        modules::logger::log_info(&format!(
+            "[AutoSwitch] 当前账号不在监控范围内(current_id={}, scope={})，跳过自动切号",
+            current_id, account_scope_mode
+        ));
+        return Ok(None);
+    }
+
     let current = match accounts.iter().find(|a| a.id == current_id) {
         Some(acc) => acc,
         None => return Ok(None),
@@ -1584,6 +1651,7 @@ async fn run_auto_switch_if_needed_inner() -> Result<Option<Account>, String> {
 
     let mut candidates: Vec<Account> = accounts
         .into_iter()
+        .filter(|a| monitored_account_ids.contains(&a.id))
         .filter(|a| can_be_auto_switch_candidate(a, &current_id, threshold, &monitored_groups))
         .collect();
 

@@ -6,14 +6,17 @@ export interface CodexCliInstallHint {
 export interface CodexCliStatus {
   available: boolean;
   binary_path?: string;
+  configured_codex_cli_path?: string;
+  configured_node_path?: string;
   version?: string;
   source?: string;
   message?: string;
+  required_runtime_paths: string[];
   checked_at: number;
   install_hints: CodexCliInstallHint[];
 }
 
-export type CodexWakeupScheduleKind = 'daily' | 'weekly' | 'interval' | 'quota_reset';
+export type CodexWakeupScheduleKind = 'daily' | 'weekly' | 'interval' | 'quota_reset' | 'startup';
 export type CodexWakeupQuotaResetWindow = 'either' | 'primary_window' | 'secondary_window';
 export type CodexWakeupReasoningEffort = 'low' | 'medium' | 'high' | 'xhigh';
 
@@ -24,6 +27,7 @@ export interface CodexWakeupSchedule {
   weekly_time?: string;
   interval_hours?: number;
   quota_reset_window?: CodexWakeupQuotaResetWindow;
+  startup_delay_minutes?: number;
 }
 
 export interface CodexWakeupTask {

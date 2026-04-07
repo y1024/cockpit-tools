@@ -13,6 +13,10 @@ import { useWorkbuddyAccountStore } from '../stores/useWorkbuddyAccountStore';
 import { useQoderAccountStore } from '../stores/useQoderAccountStore';
 import { useTraeAccountStore } from '../stores/useTraeAccountStore';
 import { useZedAccountStore } from '../stores/useZedAccountStore';
+import {
+  CURRENT_ACCOUNT_REFRESH_PLATFORMS,
+  loadCurrentAccountRefreshMinutesMap,
+} from '../utils/currentAccountRefresh';
 
 interface GeneralConfig {
   language: string;
@@ -67,48 +71,92 @@ export function useAutoRefresh() {
   const fetchCodexAccounts = useCodexAccountStore((state) => state.fetchAccounts);
   const fetchCurrentCodexAccount = useCodexAccountStore((state) => state.fetchCurrentAccount);
   const refreshAllGhcpTokens = useGitHubCopilotAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentGhcpAccountId = useGitHubCopilotAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshGhcpToken = useGitHubCopilotAccountStore((state) => state.refreshToken);
   const refreshAllWindsurfTokens = useWindsurfAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentWindsurfAccountId = useWindsurfAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshWindsurfToken = useWindsurfAccountStore((state) => state.refreshToken);
   const refreshAllKiroTokens = useKiroAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentKiroAccountId = useKiroAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshKiroToken = useKiroAccountStore((state) => state.refreshToken);
   const refreshAllCursorTokens = useCursorAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentCursorAccountId = useCursorAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshCursorToken = useCursorAccountStore((state) => state.refreshToken);
   const refreshAllGeminiTokens = useGeminiAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentGeminiAccountId = useGeminiAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshGeminiToken = useGeminiAccountStore((state) => state.refreshToken);
   const refreshAllCodebuddyTokens = useCodebuddyAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentCodebuddyAccountId = useCodebuddyAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshCodebuddyToken = useCodebuddyAccountStore((state) => state.refreshToken);
   const refreshAllCodebuddyCnTokens = useCodebuddyCnAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentCodebuddyCnAccountId = useCodebuddyCnAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshCodebuddyCnToken = useCodebuddyCnAccountStore((state) => state.refreshToken);
   const refreshAllWorkbuddyTokens = useWorkbuddyAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentWorkbuddyAccountId = useWorkbuddyAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshWorkbuddyToken = useWorkbuddyAccountStore((state) => state.refreshToken);
   const refreshAllQoderTokens = useQoderAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentQoderAccountId = useQoderAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshQoderToken = useQoderAccountStore((state) => state.refreshToken);
   const refreshAllTraeTokens = useTraeAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentTraeAccountId = useTraeAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshTraeToken = useTraeAccountStore((state) => state.refreshToken);
   const refreshAllZedTokens = useZedAccountStore((state) => state.refreshAllTokens);
+  const fetchCurrentZedAccountId = useZedAccountStore((state) => state.fetchCurrentAccountId);
+  const refreshZedToken = useZedAccountStore((state) => state.refreshToken);
 
   const agIntervalRef = useRef<number | null>(null);
-  const autoSwitchIntervalRef = useRef<number | null>(null);
+  const agCurrentIntervalRef = useRef<number | null>(null);
   const codexIntervalRef = useRef<number | null>(null);
   const codexCurrentRefreshIntervalRef = useRef<number | null>(null);
   const ghcpIntervalRef = useRef<number | null>(null);
+  const ghcpCurrentIntervalRef = useRef<number | null>(null);
   const windsurfIntervalRef = useRef<number | null>(null);
+  const windsurfCurrentIntervalRef = useRef<number | null>(null);
   const kiroIntervalRef = useRef<number | null>(null);
+  const kiroCurrentIntervalRef = useRef<number | null>(null);
   const cursorIntervalRef = useRef<number | null>(null);
+  const cursorCurrentIntervalRef = useRef<number | null>(null);
   const geminiIntervalRef = useRef<number | null>(null);
+  const geminiCurrentIntervalRef = useRef<number | null>(null);
   const codebuddyIntervalRef = useRef<number | null>(null);
+  const codebuddyCurrentIntervalRef = useRef<number | null>(null);
   const codebuddyCnIntervalRef = useRef<number | null>(null);
+  const codebuddyCnCurrentIntervalRef = useRef<number | null>(null);
   const workbuddyIntervalRef = useRef<number | null>(null);
+  const workbuddyCurrentIntervalRef = useRef<number | null>(null);
   const qoderIntervalRef = useRef<number | null>(null);
+  const qoderCurrentIntervalRef = useRef<number | null>(null);
   const traeIntervalRef = useRef<number | null>(null);
+  const traeCurrentIntervalRef = useRef<number | null>(null);
   const zedIntervalRef = useRef<number | null>(null);
+  const zedCurrentIntervalRef = useRef<number | null>(null);
 
   const agRefreshingRef = useRef(false);
+  const agCurrentRefreshingRef = useRef(false);
   const codexRefreshingRef = useRef(false);
   const codexCurrentRefreshingRef = useRef(false);
   const ghcpRefreshingRef = useRef(false);
+  const ghcpCurrentRefreshingRef = useRef(false);
   const windsurfRefreshingRef = useRef(false);
+  const windsurfCurrentRefreshingRef = useRef(false);
   const kiroRefreshingRef = useRef(false);
+  const kiroCurrentRefreshingRef = useRef(false);
   const cursorRefreshingRef = useRef(false);
+  const cursorCurrentRefreshingRef = useRef(false);
   const geminiRefreshingRef = useRef(false);
+  const geminiCurrentRefreshingRef = useRef(false);
   const codebuddyRefreshingRef = useRef(false);
+  const codebuddyCurrentRefreshingRef = useRef(false);
   const codebuddyCnRefreshingRef = useRef(false);
+  const codebuddyCnCurrentRefreshingRef = useRef(false);
   const workbuddyRefreshingRef = useRef(false);
+  const workbuddyCurrentRefreshingRef = useRef(false);
   const qoderRefreshingRef = useRef(false);
+  const qoderCurrentRefreshingRef = useRef(false);
   const traeRefreshingRef = useRef(false);
+  const traeCurrentRefreshingRef = useRef(false);
   const zedRefreshingRef = useRef(false);
-  const autoSwitchRefreshingRef = useRef(false);
+  const zedCurrentRefreshingRef = useRef(false);
 
   const setupRunningRef = useRef(false);
   const setupPendingRef = useRef(false);
@@ -118,6 +166,10 @@ export function useAutoRefresh() {
     if (agIntervalRef.current) {
       window.clearInterval(agIntervalRef.current);
       agIntervalRef.current = null;
+    }
+    if (agCurrentIntervalRef.current) {
+      window.clearInterval(agCurrentIntervalRef.current);
+      agCurrentIntervalRef.current = null;
     }
     if (codexIntervalRef.current) {
       window.clearInterval(codexIntervalRef.current);
@@ -131,49 +183,89 @@ export function useAutoRefresh() {
       window.clearInterval(ghcpIntervalRef.current);
       ghcpIntervalRef.current = null;
     }
-    if (autoSwitchIntervalRef.current) {
-      window.clearInterval(autoSwitchIntervalRef.current);
-      autoSwitchIntervalRef.current = null;
+    if (ghcpCurrentIntervalRef.current) {
+      window.clearInterval(ghcpCurrentIntervalRef.current);
+      ghcpCurrentIntervalRef.current = null;
     }
     if (windsurfIntervalRef.current) {
       window.clearInterval(windsurfIntervalRef.current);
       windsurfIntervalRef.current = null;
     }
+    if (windsurfCurrentIntervalRef.current) {
+      window.clearInterval(windsurfCurrentIntervalRef.current);
+      windsurfCurrentIntervalRef.current = null;
+    }
     if (kiroIntervalRef.current) {
       window.clearInterval(kiroIntervalRef.current);
       kiroIntervalRef.current = null;
+    }
+    if (kiroCurrentIntervalRef.current) {
+      window.clearInterval(kiroCurrentIntervalRef.current);
+      kiroCurrentIntervalRef.current = null;
     }
     if (cursorIntervalRef.current) {
       window.clearInterval(cursorIntervalRef.current);
       cursorIntervalRef.current = null;
     }
+    if (cursorCurrentIntervalRef.current) {
+      window.clearInterval(cursorCurrentIntervalRef.current);
+      cursorCurrentIntervalRef.current = null;
+    }
     if (geminiIntervalRef.current) {
       window.clearInterval(geminiIntervalRef.current);
       geminiIntervalRef.current = null;
+    }
+    if (geminiCurrentIntervalRef.current) {
+      window.clearInterval(geminiCurrentIntervalRef.current);
+      geminiCurrentIntervalRef.current = null;
     }
     if (codebuddyIntervalRef.current) {
       window.clearInterval(codebuddyIntervalRef.current);
       codebuddyIntervalRef.current = null;
     }
+    if (codebuddyCurrentIntervalRef.current) {
+      window.clearInterval(codebuddyCurrentIntervalRef.current);
+      codebuddyCurrentIntervalRef.current = null;
+    }
     if (codebuddyCnIntervalRef.current) {
       window.clearInterval(codebuddyCnIntervalRef.current);
       codebuddyCnIntervalRef.current = null;
+    }
+    if (codebuddyCnCurrentIntervalRef.current) {
+      window.clearInterval(codebuddyCnCurrentIntervalRef.current);
+      codebuddyCnCurrentIntervalRef.current = null;
     }
     if (workbuddyIntervalRef.current) {
       window.clearInterval(workbuddyIntervalRef.current);
       workbuddyIntervalRef.current = null;
     }
+    if (workbuddyCurrentIntervalRef.current) {
+      window.clearInterval(workbuddyCurrentIntervalRef.current);
+      workbuddyCurrentIntervalRef.current = null;
+    }
     if (qoderIntervalRef.current) {
       window.clearInterval(qoderIntervalRef.current);
       qoderIntervalRef.current = null;
+    }
+    if (qoderCurrentIntervalRef.current) {
+      window.clearInterval(qoderCurrentIntervalRef.current);
+      qoderCurrentIntervalRef.current = null;
     }
     if (traeIntervalRef.current) {
       window.clearInterval(traeIntervalRef.current);
       traeIntervalRef.current = null;
     }
+    if (traeCurrentIntervalRef.current) {
+      window.clearInterval(traeCurrentIntervalRef.current);
+      traeCurrentIntervalRef.current = null;
+    }
     if (zedIntervalRef.current) {
       window.clearInterval(zedIntervalRef.current);
       zedIntervalRef.current = null;
+    }
+    if (zedCurrentIntervalRef.current) {
+      window.clearInterval(zedCurrentIntervalRef.current);
+      zedCurrentIntervalRef.current = null;
     }
   }, []);
 
@@ -336,34 +428,84 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] Codex 已禁用');
           }
 
-          // Codex 自动切号或预警开启时，额外每 60 秒刷新当前账号（不影响原有 Codex 自动刷新规则）
-          if (config.codex_auto_switch_enabled || config.codex_quota_alert_enabled) {
-            const reasons = [
-              config.codex_auto_switch_enabled ? 'auto_switch' : null,
-              config.codex_quota_alert_enabled ? 'quota_alert' : null,
-            ]
-              .filter(Boolean)
-              .join('+');
-            console.log(`[AutoRefresh] Codex ${reasons} 已启用: 每 60 秒刷新当前账号`);
-            codexCurrentRefreshIntervalRef.current = window.setInterval(async () => {
-              if (codexCurrentRefreshingRef.current) {
+          const currentRefreshMinutesMap = loadCurrentAccountRefreshMinutesMap();
+          const scheduleCurrentRefresh = (
+            label: string,
+            intervalRef: { current: number | null },
+            refreshingRef: { current: boolean },
+            minutes: number,
+            run: () => Promise<void>,
+          ) => {
+            const refreshMs = minutes * 60 * 1000;
+            console.log(`[AutoRefresh] ${label} 当前账号刷新: 每 ${minutes} 分钟`);
+            intervalRef.current = window.setInterval(async () => {
+              if (refreshingRef.current) {
                 return;
               }
-              codexCurrentRefreshingRef.current = true;
-
+              refreshingRef.current = true;
               try {
-                await invoke('refresh_current_codex_quota');
-                await fetchCodexAccounts();
-                await fetchCurrentCodexAccount();
-              } catch (e) {
-                console.error('[AutoRefresh] Codex 自动切号/预警-当前账号刷新失败:', e);
+                await run();
+              } catch (error) {
+                console.error(`[AutoRefresh] ${label} 当前账号刷新失败:`, error);
               } finally {
-                codexCurrentRefreshingRef.current = false;
+                refreshingRef.current = false;
               }
-            }, 60 * 1000);
-          } else {
-            console.log('[AutoRefresh] Codex 自动切号/预警未启用，跳过 60 秒当前账号刷新');
-          }
+            }, refreshMs);
+          };
+
+          const runProviderCurrentRefresh = async (
+            fetchCurrentProviderAccountId: () => Promise<string | null>,
+            refreshProviderToken: (accountId: string) => Promise<void>,
+          ) => {
+            const accountId = await fetchCurrentProviderAccountId();
+            if (!accountId) {
+              return;
+            }
+            await refreshProviderToken(accountId);
+          };
+
+          scheduleCurrentRefresh(
+            'Antigravity',
+            agCurrentIntervalRef,
+            agCurrentRefreshingRef,
+            currentRefreshMinutesMap.antigravity,
+            async () => {
+              if (agRefreshingRef.current) {
+                return;
+              }
+              await syncCurrentFromClient();
+              if (!useAccountStore.getState().currentAccount?.id) {
+                await fetchCurrentAccount();
+              }
+              if (!useAccountStore.getState().currentAccount?.id) {
+                return;
+              }
+              await invoke('refresh_current_quota');
+              await fetchAccounts();
+              await fetchCurrentAccount();
+            },
+          );
+
+          scheduleCurrentRefresh(
+            'Codex',
+            codexCurrentRefreshIntervalRef,
+            codexCurrentRefreshingRef,
+            currentRefreshMinutesMap.codex,
+            async () => {
+              if (codexRefreshingRef.current) {
+                return;
+              }
+              if (!useCodexAccountStore.getState().currentAccount?.id) {
+                await fetchCurrentCodexAccount();
+              }
+              if (!useCodexAccountStore.getState().currentAccount?.id) {
+                return;
+              }
+              await invoke('refresh_current_codex_quota');
+              await fetchCodexAccounts();
+              await fetchCurrentCodexAccount();
+            },
+          );
 
           if (config.ghcp_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] GitHub Copilot 已启用: 每 ${config.ghcp_auto_refresh_minutes} 分钟`);
@@ -388,6 +530,19 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] GitHub Copilot 已禁用');
           }
 
+          scheduleCurrentRefresh(
+            'GitHub Copilot',
+            ghcpCurrentIntervalRef,
+            ghcpCurrentRefreshingRef,
+            currentRefreshMinutesMap.ghcp,
+            async () => {
+              if (ghcpRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentGhcpAccountId, refreshGhcpToken);
+            },
+          );
+
           if (config.windsurf_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Windsurf 已启用: 每 ${config.windsurf_auto_refresh_minutes} 分钟`);
             const windsurfMs = config.windsurf_auto_refresh_minutes * 60 * 1000;
@@ -410,6 +565,22 @@ export function useAutoRefresh() {
           } else {
             console.log('[AutoRefresh] Windsurf 已禁用');
           }
+
+          scheduleCurrentRefresh(
+            'Windsurf',
+            windsurfCurrentIntervalRef,
+            windsurfCurrentRefreshingRef,
+            currentRefreshMinutesMap.windsurf,
+            async () => {
+              if (windsurfRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(
+                fetchCurrentWindsurfAccountId,
+                refreshWindsurfToken,
+              );
+            },
+          );
 
           if (config.kiro_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Kiro 已启用: 每 ${config.kiro_auto_refresh_minutes} 分钟`);
@@ -434,6 +605,19 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] Kiro 已禁用');
           }
 
+          scheduleCurrentRefresh(
+            'Kiro',
+            kiroCurrentIntervalRef,
+            kiroCurrentRefreshingRef,
+            currentRefreshMinutesMap.kiro,
+            async () => {
+              if (kiroRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentKiroAccountId, refreshKiroToken);
+            },
+          );
+
           if (config.cursor_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Cursor 已启用: 每 ${config.cursor_auto_refresh_minutes} 分钟`);
             const cursorMs = config.cursor_auto_refresh_minutes * 60 * 1000;
@@ -456,6 +640,19 @@ export function useAutoRefresh() {
           } else {
             console.log('[AutoRefresh] Cursor 已禁用');
           }
+
+          scheduleCurrentRefresh(
+            'Cursor',
+            cursorCurrentIntervalRef,
+            cursorCurrentRefreshingRef,
+            currentRefreshMinutesMap.cursor,
+            async () => {
+              if (cursorRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentCursorAccountId, refreshCursorToken);
+            },
+          );
 
           if (config.gemini_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Gemini 已启用: 每 ${config.gemini_auto_refresh_minutes} 分钟`);
@@ -480,6 +677,19 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] Gemini 已禁用');
           }
 
+          scheduleCurrentRefresh(
+            'Gemini',
+            geminiCurrentIntervalRef,
+            geminiCurrentRefreshingRef,
+            currentRefreshMinutesMap.gemini,
+            async () => {
+              if (geminiRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentGeminiAccountId, refreshGeminiToken);
+            },
+          );
+
           if (config.codebuddy_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] CodeBuddy 已启用: 每 ${config.codebuddy_auto_refresh_minutes} 分钟`);
             const codebuddyMs = config.codebuddy_auto_refresh_minutes * 60 * 1000;
@@ -502,6 +712,22 @@ export function useAutoRefresh() {
           } else {
             console.log('[AutoRefresh] CodeBuddy 已禁用');
           }
+
+          scheduleCurrentRefresh(
+            'CodeBuddy',
+            codebuddyCurrentIntervalRef,
+            codebuddyCurrentRefreshingRef,
+            currentRefreshMinutesMap.codebuddy,
+            async () => {
+              if (codebuddyRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(
+                fetchCurrentCodebuddyAccountId,
+                refreshCodebuddyToken,
+              );
+            },
+          );
 
           if (config.codebuddy_cn_auto_refresh_minutes > 0) {
             console.log(
@@ -528,6 +754,22 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] CodeBuddy CN 已禁用');
           }
 
+          scheduleCurrentRefresh(
+            'CodeBuddy CN',
+            codebuddyCnCurrentIntervalRef,
+            codebuddyCnCurrentRefreshingRef,
+            currentRefreshMinutesMap.codebuddy_cn,
+            async () => {
+              if (codebuddyCnRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(
+                fetchCurrentCodebuddyCnAccountId,
+                refreshCodebuddyCnToken,
+              );
+            },
+          );
+
           if (config.workbuddy_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] WorkBuddy 已启用: 每 ${config.workbuddy_auto_refresh_minutes} 分钟`);
             const workbuddyMs = config.workbuddy_auto_refresh_minutes * 60 * 1000;
@@ -550,6 +792,22 @@ export function useAutoRefresh() {
           } else {
             console.log('[AutoRefresh] WorkBuddy 已禁用');
           }
+
+          scheduleCurrentRefresh(
+            'WorkBuddy',
+            workbuddyCurrentIntervalRef,
+            workbuddyCurrentRefreshingRef,
+            currentRefreshMinutesMap.workbuddy,
+            async () => {
+              if (workbuddyRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(
+                fetchCurrentWorkbuddyAccountId,
+                refreshWorkbuddyToken,
+              );
+            },
+          );
 
           if (config.qoder_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Qoder 已启用: 每 ${config.qoder_auto_refresh_minutes} 分钟`);
@@ -574,6 +832,19 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] Qoder 已禁用');
           }
 
+          scheduleCurrentRefresh(
+            'Qoder',
+            qoderCurrentIntervalRef,
+            qoderCurrentRefreshingRef,
+            currentRefreshMinutesMap.qoder,
+            async () => {
+              if (qoderRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentQoderAccountId, refreshQoderToken);
+            },
+          );
+
           if (config.trae_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Trae 已启用: 每 ${config.trae_auto_refresh_minutes} 分钟`);
             const traeMs = config.trae_auto_refresh_minutes * 60 * 1000;
@@ -596,6 +867,19 @@ export function useAutoRefresh() {
           } else {
             console.log('[AutoRefresh] Trae 已禁用');
           }
+
+          scheduleCurrentRefresh(
+            'Trae',
+            traeCurrentIntervalRef,
+            traeCurrentRefreshingRef,
+            currentRefreshMinutesMap.trae,
+            async () => {
+              if (traeRefreshingRef.current) {
+                return;
+              }
+              await runProviderCurrentRefresh(fetchCurrentTraeAccountId, refreshTraeToken);
+            },
+          );
 
           if (config.zed_auto_refresh_minutes > 0) {
             console.log(`[AutoRefresh] Zed 已启用: 每 ${config.zed_auto_refresh_minutes} 分钟`);
@@ -620,36 +904,22 @@ export function useAutoRefresh() {
             console.log('[AutoRefresh] Zed 已禁用');
           }
 
-          // 自动切号开启时，额外每 60 秒刷新当前账号（不影响原有配额自动刷新规则）
-          if (config.auto_switch_enabled) {
-            console.log('[AutoRefresh] 自动切号已启用: 每 60 秒刷新当前账号');
-            autoSwitchIntervalRef.current = window.setInterval(async () => {
-              if (autoSwitchRefreshingRef.current) {
+          scheduleCurrentRefresh(
+            'Zed',
+            zedCurrentIntervalRef,
+            zedCurrentRefreshingRef,
+            currentRefreshMinutesMap.zed,
+            async () => {
+              if (zedRefreshingRef.current) {
                 return;
               }
-              autoSwitchRefreshingRef.current = true;
-
-              try {
-                await syncCurrentFromClient();
-                await invoke('refresh_current_quota');
-                await fetchAccounts();
-                await fetchCurrentAccount();
-              } catch (e) {
-                console.error('[AutoRefresh] 自动切号-当前账号刷新失败:', e);
-              } finally {
-                autoSwitchRefreshingRef.current = false;
-              }
-            }, 60 * 1000);
-          } else {
-            console.log('[AutoRefresh] 自动切号未启用，跳过 60 秒当前账号刷新');
-          }
+              await runProviderCurrentRefresh(fetchCurrentZedAccountId, refreshZedToken);
+            },
+          );
 
           const enabledPlatforms = [
             config.auto_refresh_minutes > 0 ? `antigravity=${config.auto_refresh_minutes}` : null,
             config.codex_auto_refresh_minutes > 0 ? `codex=${config.codex_auto_refresh_minutes}` : null,
-            config.codex_auto_switch_enabled || config.codex_quota_alert_enabled
-              ? 'codex_current=60s'
-              : null,
             config.ghcp_auto_refresh_minutes > 0 ? `ghcp=${config.ghcp_auto_refresh_minutes}` : null,
             config.windsurf_auto_refresh_minutes > 0 ? `windsurf=${config.windsurf_auto_refresh_minutes}` : null,
             config.kiro_auto_refresh_minutes > 0 ? `kiro=${config.kiro_auto_refresh_minutes}` : null,
@@ -665,7 +935,9 @@ export function useAutoRefresh() {
             config.qoder_auto_refresh_minutes > 0 ? `qoder=${config.qoder_auto_refresh_minutes}` : null,
             config.trae_auto_refresh_minutes > 0 ? `trae=${config.trae_auto_refresh_minutes}` : null,
             config.zed_auto_refresh_minutes > 0 ? `zed=${config.zed_auto_refresh_minutes}` : null,
-            config.auto_switch_enabled ? 'auto_switch=60s' : null,
+            `current=${CURRENT_ACCOUNT_REFRESH_PLATFORMS.map(
+              (platform) => `${platform}:${currentRefreshMinutesMap[platform]}`,
+            ).join('|')}`,
           ].filter(Boolean).join(', ');
           console.log(
             `[StartupPerf][AutoRefresh] setupAutoRefresh completed in ${(performance.now() - setupStartedAt).toFixed(2)}ms; enabled=${enabledPlatforms || 'none'}`,
@@ -687,7 +959,18 @@ export function useAutoRefresh() {
   }, [
     clearAllIntervals,
     fetchCodexAccounts,
+    fetchCurrentCodebuddyAccountId,
+    fetchCurrentCodebuddyCnAccountId,
     fetchCurrentCodexAccount,
+    fetchCurrentCursorAccountId,
+    fetchCurrentGeminiAccountId,
+    fetchCurrentGhcpAccountId,
+    fetchCurrentKiroAccountId,
+    fetchCurrentQoderAccountId,
+    fetchCurrentTraeAccountId,
+    fetchCurrentWindsurfAccountId,
+    fetchCurrentWorkbuddyAccountId,
+    fetchCurrentZedAccountId,
     fetchAccounts,
     fetchCurrentAccount,
     refreshAllCodexQuotas,
@@ -703,6 +986,17 @@ export function useAutoRefresh() {
     refreshAllZedTokens,
     refreshAllQuotas,
     refreshAllWindsurfTokens,
+    refreshCodebuddyCnToken,
+    refreshCodebuddyToken,
+    refreshCursorToken,
+    refreshGeminiToken,
+    refreshGhcpToken,
+    refreshKiroToken,
+    refreshQoderToken,
+    refreshTraeToken,
+    refreshWindsurfToken,
+    refreshWorkbuddyToken,
+    refreshZedToken,
     syncCurrentFromClient,
   ]);
 
