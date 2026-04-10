@@ -21,6 +21,12 @@ pub fn get_current_codex_account() -> Result<Option<CodexAccount>, String> {
     Ok(codex_account::get_current_account())
 }
 
+#[tauri::command]
+pub fn get_codex_config_toml_path() -> Result<String, String> {
+    let path = codex_account::get_codex_home().join("config.toml");
+    Ok(path.to_string_lossy().to_string())
+}
+
 /// 刷新账号资料（团队名/结构）
 #[tauri::command]
 pub async fn refresh_codex_account_profile(account_id: String) -> Result<CodexAccount, String> {
@@ -524,6 +530,7 @@ pub async fn codex_wakeup_run_enabled_tasks(
 // ─── Codex 账号分组持久化 ────────────────────────────────────────────
 
 const CODEX_GROUPS_FILE: &str = "codex_account_groups.json";
+const CODEX_MODEL_PROVIDERS_FILE: &str = "codex_model_providers.json";
 
 #[tauri::command]
 pub async fn load_codex_account_groups() -> Result<String, String> {
@@ -544,4 +551,28 @@ pub async fn save_codex_account_groups(data: String) -> Result<(), String> {
     }
     let path = dir.join(CODEX_GROUPS_FILE);
     std::fs::write(&path, data).map_err(|e| format!("Failed to write codex groups: {}", e))
+}
+
+#[tauri::command]
+pub async fn load_codex_model_providers() -> Result<String, String> {
+    let home = dirs::home_dir().ok_or("Cannot find home directory")?;
+    let path = home
+        .join(".antigravity_cockpit")
+        .join(CODEX_MODEL_PROVIDERS_FILE);
+    if !path.exists() {
+        return Ok("[]".to_string());
+    }
+    std::fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read codex model providers: {}", e))
+}
+
+#[tauri::command]
+pub async fn save_codex_model_providers(data: String) -> Result<(), String> {
+    let home = dirs::home_dir().ok_or("Cannot find home directory")?;
+    let dir = home.join(".antigravity_cockpit");
+    if !dir.exists() {
+        std::fs::create_dir_all(&dir).map_err(|e| format!("Failed to create dir: {}", e))?;
+    }
+    let path = dir.join(CODEX_MODEL_PROVIDERS_FILE);
+    std::fs::write(&path, data).map_err(|e| format!("Failed to write codex model providers: {}", e))
 }

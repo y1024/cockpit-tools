@@ -22,6 +22,19 @@ fn startup_triggered_flag() -> &'static Mutex<bool> {
     STARTUP_TRIGGERED.get_or_init(|| Mutex::new(false))
 }
 
+fn lock_or_recover<'a, T>(mutex: &'a Mutex<T>, label: &str) -> std::sync::MutexGuard<'a, T> {
+    match mutex.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            logger::log_warn(&format!(
+                "[CodexWakeup] 检测到锁中毒，继续使用恢复数据: {}",
+                label
+            ));
+            err.into_inner()
+        }
+    }
+}
+
 fn parse_time_to_minutes(value: &str) -> Option<i32> {
     let parts: Vec<&str> = value.trim().split(':').collect();
     if parts.len() != 2 {
@@ -174,16 +187,12 @@ pub fn calculate_next_run_at(task: &codex_wakeup::CodexWakeupTask) -> Option<i64
 }
 
 fn mark_running(task_id: &str) -> bool {
-    let mut guard = running_tasks()
-        .lock()
-        .expect("codex wakeup running tasks lock");
+    let mut guard = lock_or_recover(running_tasks(), "codex wakeup running tasks lock");
     guard.insert(task_id.to_string())
 }
 
 fn unmark_running(task_id: &str) {
-    let mut guard = running_tasks()
-        .lock()
-        .expect("codex wakeup running tasks lock");
+    let mut guard = lock_or_recover(running_tasks(), "codex wakeup running tasks lock");
     guard.remove(task_id);
 }
 
@@ -333,9 +342,10 @@ pub fn trigger_startup_tasks_if_needed(app: AppHandle) {
     }
 
     let should_trigger = {
-        let mut startup_triggered = startup_triggered_flag()
-            .lock()
-            .expect("codex wakeup startup trigger lock");
+        let mut startup_triggered = lock_or_recover(
+            startup_triggered_flag(),
+            "codex wakeup startup trigger lock",
+        );
         if *startup_triggered {
             false
         } else {
@@ -407,9 +417,7 @@ async fn run_scheduler_once(app: &AppHandle) {
 }
 
 pub fn ensure_started(app: AppHandle) {
-    let mut started = started_flag()
-        .lock()
-        .expect("codex wakeup scheduler started lock");
+    let mut started = lock_or_recover(started_flag(), "codex wakeup scheduler started lock");
     if *started {
         return;
     }

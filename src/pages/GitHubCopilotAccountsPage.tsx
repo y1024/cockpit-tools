@@ -40,6 +40,10 @@ import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../components/MultiSelectFilterDropdown';
 import type { GitHubCopilotAccount } from '../types/githubCopilot';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+} from '../utils/accountValidityFilter';
 
 const GHCP_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.github_copilot.flow_notice_collapsed';
 const GHCP_CURRENT_ACCOUNT_ID_KEY = 'agtools.github_copilot.current_account_id';
@@ -196,9 +200,12 @@ export function GitHubCopilotAccountsPage() {
     return null;
   }, []);
 
+  const isAbnormalAccount = useCallback((_account: GitHubCopilotAccount) => false, []);
+
   const tierCounts = useMemo(() => {
     const counts = {
       all: accounts.length,
+      VALID: 0,
       FREE: 0,
       PRO: 0,
       BUSINESS: 0,
@@ -206,19 +213,23 @@ export function GitHubCopilotAccountsPage() {
     };
     accounts.forEach((account) => {
       const tier = resolvePlanKey(account);
+      if (!isAbnormalAccount(account)) {
+        counts.VALID += 1;
+      }
       if (tier in counts) {
         counts[tier as keyof typeof counts] += 1;
       }
     });
     return counts;
-  }, [accounts, resolvePlanKey]);
+  }, [accounts, isAbnormalAccount, resolvePlanKey]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(() => [
     { value: 'FREE', label: `FREE (${tierCounts.FREE})` },
     { value: 'PRO', label: `PRO (${tierCounts.PRO})` },
     { value: 'BUSINESS', label: `BUSINESS (${tierCounts.BUSINESS})` },
     { value: 'ENTERPRISE', label: `ENTERPRISE (${tierCounts.ENTERPRISE})` },
-  ], [tierCounts]);
+    buildValidAccountsFilterOption(t, tierCounts.VALID),
+  ], [t, tierCounts]);
 
   const normalizeTag = (tag: string) => tag.trim().toLowerCase();
 
@@ -277,8 +288,13 @@ export function GitHubCopilotAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -292,7 +308,7 @@ export function GitHubCopilotAccountsPage() {
     result.sort(compareAccountsBySort);
 
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

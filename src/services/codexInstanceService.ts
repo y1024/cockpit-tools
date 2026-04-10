@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { createPlatformInstanceService } from './platform/createPlatformInstanceService';
 import type {
+  CodexSessionVisibilityRepairSummary,
   CodexInstanceThreadSyncSummary,
   CodexSessionRecord,
   CodexSessionTrashSummary,
@@ -20,6 +21,10 @@ export const openInstanceWindow = service.openInstanceWindow;
 
 export async function syncThreadsAcrossInstances(): Promise<CodexInstanceThreadSyncSummary> {
   return await invoke('codex_sync_threads_across_instances');
+}
+
+export async function repairSessionVisibilityAcrossInstances(): Promise<CodexSessionVisibilityRepairSummary> {
+  return await invoke('codex_repair_session_visibility_across_instances');
 }
 
 export async function listSessionsAcrossInstances(): Promise<CodexSessionRecord[]> {

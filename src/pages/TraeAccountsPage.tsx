@@ -48,6 +48,11 @@ import {
   TRAE_PRODUCT_TYPE,
 } from '../types/trae';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter';
 
 const TRAE_CURRENT_ACCOUNT_ID_KEY = 'agtools.trae.current_account_id';
 const TRAE_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.trae.flow_notice_collapsed';
@@ -258,21 +263,32 @@ export function TraeAccountsPage() {
   const accounts = store.accounts;
   const loading = store.loading;
 
+  const isAbnormalAccount = useCallback(
+    (account: TraeAccount) => (account.status || '').toLowerCase() === 'error',
+    [],
+  );
+
   const tierSummary = useMemo(() => {
     const counts = new Map<string, number>();
     accounts.forEach((account) => {
       const plan = getTraePlanBadge(account);
       counts.set(plan, (counts.get(plan) ?? 0) + 1);
     });
+    const validCount = accounts.reduce(
+      (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+      0,
+    );
 
     return {
       all: accounts.length,
+      validCount,
       entries: Array.from(counts.entries()).sort(([left], [right]) => left.localeCompare(right)),
     };
-  }, [accounts]);
+  }, [accounts, isAbnormalAccount]);
 
   useEffect(() => {
     const allowed = new Set(tierSummary.entries.map(([plan]) => plan));
+    allowed.add(VALID_ACCOUNTS_FILTER_VALUE);
     setFilterTypes((prev) => {
       const next = prev.filter((value) => allowed.has(value));
       return next.length === prev.length ? prev : next;
@@ -280,12 +296,14 @@ export function TraeAccountsPage() {
   }, [tierSummary.entries]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(
-    () =>
-      tierSummary.entries.map(([plan, count]) => ({
+    () => [
+      ...tierSummary.entries.map(([plan, count]) => ({
         value: plan,
         label: `${plan} (${count})`,
       })),
-    [tierSummary.entries],
+      buildValidAccountsFilterOption(t, tierSummary.validCount),
+    ],
+    [t, tierSummary.entries, tierSummary.validCount],
   );
 
   const compareAccountsBySort = useCallback(
@@ -339,8 +357,13 @@ export function TraeAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(getTraePlanBadge(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(getTraePlanBadge(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -352,7 +375,7 @@ export function TraeAccountsPage() {
 
     result.sort(compareAccountsBySort);
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

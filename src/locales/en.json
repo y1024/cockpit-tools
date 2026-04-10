@@ -52,7 +52,8 @@
         "free": "FREE ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "BUSINESS ({{count}})",
-        "individual": "INDIVIDUAL ({{count}})"
+        "individual": "INDIVIDUAL ({{count}})",
+        "validAccounts": "Valid accounts ({{count}})"
       },
       "filterLabel": "Filter",
       "import": {
@@ -520,6 +521,7 @@
       "refreshIntervalLimited": "Quota reset wakeup enabled, minimum refresh interval is 2 minutes",
       "currentAccountRefreshTitle": "Current Account Refresh",
       "currentAccountRefreshItemDesc": "Refresh current account only. Default is 1 minute.",
+      "currentAccountRefreshRequiresAutoRefresh": "Enable \"Quota Auto Refresh\" first to configure current account refresh.",
       "closeBehavior": "Close behavior",
       "closeBehaviorDesc": "Choose the default action when closing the window",
       "closeBehaviorAsk": "Ask every time",
@@ -1144,7 +1146,10 @@
       "actions": {
         "selectAllAccounts": "Select all",
         "clearSelectedAccounts": "Clear selection",
-        "runCheckNow": "Check now"
+        "runCheckNow": "Check now",
+        "retryFiltered": "Retry current filter ({{count}})",
+        "retryMissingModel": "This batch is missing model information and cannot be retried.",
+        "retryMissingAccount": "There are no retryable accounts in the current filter."
       },
       "runHint": {
         "title": "Verification notes",
@@ -1441,10 +1446,144 @@
     "api": {
       "baseUrl": "Base URL",
       "baseUrlPlaceholder": "Leave blank to use official default",
+      "addAndSwitchSuccess": "Added and switched: {{email}}",
+      "actions": {
+        "addAndSwitch": "Add and Switch"
+      },
+      "provider": {
+        "label": "Provider",
+        "custom": "Custom",
+        "endpoint": "Provider Endpoint",
+        "hint": "A compatible Base URL has been filled in automatically. You can still edit it manually.",
+        "website": "Website",
+        "apiKeyPage": "API Key Page"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      },
       "validation": {
         "apiKeyCannotBeUrl": "API key cannot be a URL. Please check if the fields are swapped.",
         "baseUrlInvalid": "Invalid Base URL. Please enter a full http:// or https:// URL.",
         "apiKeyEqualsBaseUrl": "API key cannot be the same as Base URL."
+      }
+    },
+    "modelProviders": {
+      "tab": "Model Providers",
+      "desc": "Manage model providers and multiple API keys in one place, then reuse them directly when adding Codex API-key accounts.",
+      "add": "Add Provider",
+      "loadFailed": "Failed to load model providers: {{error}}",
+      "emptyTitle": "No model providers yet",
+      "emptyDesc": "Click \"Add Provider\" in the top right to start.",
+      "baseUrl": "Base URL",
+      "website": "Website",
+      "apiKeyPage": "API Key Page",
+      "apiKeysCount": "{{count}} API Keys",
+      "referencesCount": "{{count}} Linked Accounts",
+      "unnamedKey": "Unnamed Key",
+      "createTitle": "Add Model Provider",
+      "editTitle": "Edit Model Provider",
+      "existingApiKeys": "Existing API Keys",
+      "fields": {
+        "name": "Provider Name",
+        "baseUrl": "Base URL",
+        "website": "Website (Optional)",
+        "apiKeyUrl": "API Key Page (Optional)",
+        "newApiKeyName": "New Key Name (Optional)",
+        "newApiKey": "New API Key"
+      },
+      "validation": {
+        "nameRequired": "Provider name is required.",
+        "baseUrlInvalid": "Invalid Base URL.",
+        "baseUrlExists": "This Base URL already exists.",
+        "providerNotFound": "Provider not found.",
+        "apiKeyRequiredOnCreate": "At least one API Key is required when creating a provider.",
+        "apiKeyRequiredWhenEmpty": "This provider has no API key yet. Please add one first."
+      },
+      "saveSuccess": "Model provider saved.",
+      "deleteBlocked": "This provider is linked to {{count}} account(s) and cannot be deleted.",
+      "confirmDelete": "Delete provider \"{{name}}\"?",
+      "deleteFailed": "Failed to delete provider: {{error}}",
+      "deleteApiKeyFailed": "Failed to delete API Key: {{error}}",
+      "selectSavedProvider": "Saved Providers",
+      "selectSavedApiKey": "Saved API Keys",
+      "noSavedProviders": "No saved providers yet. You can fill in fields directly and it will be saved automatically.",
+      "newProviderName": "Provider Name (Optional, used for auto-save)",
+      "newProviderNamePlaceholder": "If empty, hostname will be used automatically"
+    },
+    "quickSwitch": {
+      "action": "Quick Switch Provider",
+      "inlineAction": "Switch",
+      "title": "Quick Switch Provider",
+      "desc": "Quickly switch this API-key account to a saved provider and API key.",
+      "currentAccount": "Current account: {{name}}",
+      "noProviders": "No saved providers yet. Please add one in Model Providers first.",
+      "providerHasNoKeys": "This provider has no available API key yet. Add one in Model Providers first.",
+      "gotoProviders": "Manage Providers",
+      "apply": "Switch Now",
+      "success": "Switched to provider: {{provider}}",
+      "failed": "Failed to switch provider: {{error}}",
+      "validation": {
+        "providerRequired": "Please select a provider.",
+        "apiKeyRequired": "Please select an API key."
       }
     },
     "local": {
@@ -1691,17 +1830,19 @@
     },
     "sessionManager": {
       "title": "Session Manager",
-      "desc": "Sync and cleanup live here together: use the top action to sync to all instances, then expand each project to review and trash sessions.",
+      "desc": "Sync, visibility repair, and cleanup live here together: use the top actions to sync sessions or repair history visibility, then expand each project to review and trash sessions.",
       "actions": {
         "moveToTrash": "Move to Trash",
         "syncSessions": "Sync Sessions",
+        "repairVisibility": "Repair Visibility",
         "expand": "Expand",
         "collapse": "Collapse"
       },
       "confirm": {
         "title": "Move to Trash",
         "message": "Selected sessions will be moved to Trash from their instances so they can be restored later. Running instances may need a restart before the change appears. Continue?",
-        "syncMessage": "Missing threads and their session data will be synced to all instances. Existing content will not be written again, and target instance files will be backed up before any write occurs. Continue?"
+        "syncMessage": "Missing threads and their session data will be synced to all instances. Existing content will not be written again, and target instance files will be backed up before any write occurs. Continue?",
+        "repairVisibilityMessage": "This will repair provider metadata in rollout files and state_5.sqlite using each instance's root config.toml model_provider (defaulting to openai when missing). Files that will be changed are backed up before writing. Running instances may need a restart before the change appears. Continue?"
       },
       "empty": {
         "title": "No sessions to manage",
@@ -1933,7 +2074,10 @@
     },
     "codex": {
       "title": "Codex Settings",
-      "appPath": "Launch Path"
+      "appPath": "Launch Path",
+      "configToml": "Codex Config File",
+      "openConfigToml": "Open File",
+      "openConfigHint": "Quickly open the active Codex config.toml file."
     },
     "githubCopilot": {
       "title": "GitHub Copilot Settings",
@@ -1993,7 +2137,8 @@
       "loadFailed": "Failed to load config: {{error}}",
       "saveFailed": "Failed to save config: {{error}}",
       "pickPathFailed": "Failed to pick path: {{error}}",
-      "resetPathFailed": "Failed to reset path: {{error}}"
+      "resetPathFailed": "Failed to reset path: {{error}}",
+      "openCodexConfigFailed": "Failed to open Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Qoder Settings",

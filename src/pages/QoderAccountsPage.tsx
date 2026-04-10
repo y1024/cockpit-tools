@@ -58,6 +58,11 @@ import {
   consumeQueuedExternalProviderImportForPlatform,
   EXTERNAL_PROVIDER_IMPORT_EVENT,
 } from '../utils/externalProviderImport';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter';
 
 const QODER_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.qoder.flow_notice_collapsed';
 const QODER_VIEW_MODE_KEY = 'agtools.qoder.accounts_view_mode';
@@ -433,6 +438,8 @@ export function QoderAccountsPage() {
     return () => document.removeEventListener('mousedown', onPointerDown);
   }, [showTagFilter]);
 
+  const isAbnormalAccount = useCallback((_account: QoderAccount) => false, []);
+
   const tierSummary = useMemo(() => {
     const counts = new Map<string, number>();
     counts.set('UNKNOWN', 0);
@@ -445,9 +452,13 @@ export function QoderAccountsPage() {
       .sort((a, b) => a[0].localeCompare(b[0]));
     return {
       all: accounts.length,
+      valid: accounts.reduce(
+        (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+        0,
+      ),
       entries,
     };
-  }, [accounts]);
+  }, [accounts, isAbnormalAccount]);
 
   const allFilterLabel = useMemo(() => {
     const text = t('common.shared.filter.all', {
@@ -459,16 +470,19 @@ export function QoderAccountsPage() {
   }, [t, tierSummary.all]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(
-    () =>
-      tierSummary.entries.map(([plan, count]) => ({
+    () => [
+      ...tierSummary.entries.map(([plan, count]) => ({
         value: plan,
         label: `${plan} (${count})`,
       })),
-    [tierSummary.entries],
+      buildValidAccountsFilterOption(t, tierSummary.valid),
+    ],
+    [t, tierSummary.entries, tierSummary.valid],
   );
 
   useEffect(() => {
     const allowed = new Set(tierSummary.entries.map(([plan]) => plan));
+    allowed.add(VALID_ACCOUNTS_FILTER_VALUE);
     setFilterTypes((prev) => {
       const next = prev.filter((value) => allowed.has(value));
       return next.length === prev.length ? prev : next;
@@ -523,8 +537,13 @@ export function QoderAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(getQoderPlanBadge(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(getQoderPlanBadge(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -536,7 +555,7 @@ export function QoderAccountsPage() {
 
     result.sort(compareAccountsBySort);
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, searchQuery, tagFilter]);
 
   const groupedAccounts = useMemo(() => {
     if (!groupByTag) return [] as Array<[string, QoderAccount[]]>;

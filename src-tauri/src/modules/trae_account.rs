@@ -3,10 +3,10 @@ use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
 use cbc::cipher::block_padding::Pkcs7;
 use cbc::cipher::{BlockDecryptMut, BlockEncryptMut, KeyIvInit};
 use rand::RngCore;
-use reqwest::Method;
+use reqwest::{Method, Url};
 use serde_json::{Map, Value};
 use sha2::{Digest, Sha512};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
@@ -60,18 +60,26 @@ const BYTE_CRYPTO_AES_B: [u8; BYTE_CRYPTO_SHA512_LEN] = [
 type Aes128CbcEnc = cbc::Encryptor<Aes128>;
 type Aes128CbcDec = cbc::Decryptor<Aes128>;
 
-const TRAE_EXCHANGE_TOKEN_URL: &str =
-    "https://www.trae.ai/cloudide/api/v3/trae/oauth/ExchangeToken";
-const TRAE_GET_USER_INFO_URL: &str = "https://www.trae.ai/cloudide/api/v3/trae/GetUserInfo";
-const TRAE_CHECK_LOGIN_URL: &str = "https://www.trae.ai/cloudide/api/v3/trae/CheckLogin";
-const TRAE_PAY_STATUS_URL: &str = "https://www.trae.ai/trae/api/v1/pay/ide_user_pay_status";
-const TRAE_ENT_USAGE_URL: &str = "https://www.trae.ai/trae/api/v1/pay/ide_user_ent_usage";
+const TRAE_DEFAULT_API_ORIGIN: &str = "https://www.trae.ai";
+const TRAE_EXCHANGE_TOKEN_PATH: &str = "/cloudide/api/v3/trae/oauth/ExchangeToken";
+const TRAE_GET_USER_INFO_PATH: &str = "/cloudide/api/v3/trae/GetUserInfo";
+const TRAE_CHECK_LOGIN_PATH: &str = "/cloudide/api/v3/trae/CheckLogin";
+const TRAE_PAY_STATUS_PATH: &str = "/trae/api/v1/pay/ide_user_pay_status";
+const TRAE_ENT_USAGE_PATH: &str = "/trae/api/v1/pay/ide_user_ent_usage";
 const TRAE_AUTH_CLIENT_ID: &str = "ono9krqynydwx5";
 const TRAE_EXCHANGE_CLIENT_SECRET: &str = "-";
 const TRAE_IDE_VERSION: &str = "1.0.0";
 
 lazy_static::lazy_static! {
     static ref TRAE_ACCOUNT_INDEX_LOCK: Mutex<()> = Mutex::new(());
+}
+
+#[derive(Clone, Debug, Default)]
+struct TraeRefreshRoutingContext {
+    login_host: String,
+    login_region: Option<String>,
+    store_region: Option<String>,
+    ai_region: Option<String>,
 }
 
 fn now_ts() -> i64 {
@@ -108,6 +116,60 @@ fn normalize_timestamp(raw: Option<i64>) -> Option<i64> {
         return Some(value / 1000);
     }
     Some(value)
+}
+
+fn ensure_https_url(raw: &str) -> Result<Url, String> {
+    let normalized = normalize_non_empty(Some(raw)).ok_or_else(|| "Trae 域名为空".to_string())?;
+    let with_scheme = if normalized.starts_with("http://") || normalized.starts_with("https://") {
+        normalized
+    } else {
+        format!("https://{}", normalized.trim_start_matches('/'))
+    };
+    Url::parse(with_scheme.as_str()).map_err(|e| format!("解析 Trae 域名失败: {}", e))
+}
+
+fn dedup_keep_order(values: Vec<String>) -> Vec<String> {
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut output = Vec::new();
+    for value in values {
+        if value.is_empty() || seen.contains(value.as_str()) {
+            continue;
+        }
+        seen.insert(value.clone());
+        output.push(value);
+    }
+    output
+}
+
+fn candidate_api_origins(login_host: &str) -> Vec<String> {
+    let mut origins = Vec::new();
+
+    if let Ok(url) = ensure_https_url(login_host) {
+        if let Some(host) = url.host_str() {
+            origins.push(format!("{}://{}", url.scheme(), host));
+            if let Some(stripped) = host.strip_prefix("www.") {
+                origins.push(format!("{}://api.{}", url.scheme(), stripped));
+            }
+        }
+    }
+
+    origins.extend([
+        "https://api.marscode.com".to_string(),
+        "https://api.trae.ai".to_string(),
+        "https://www.trae.ai".to_string(),
+        "https://www.marscode.com".to_string(),
+    ]);
+
+    dedup_keep_order(origins)
+}
+
+fn build_api_urls(login_host: &str, path: &str) -> Vec<String> {
+    dedup_keep_order(
+        candidate_api_origins(login_host)
+            .into_iter()
+            .map(|origin| format!("{}{}", origin.trim_end_matches('/'), path))
+            .collect(),
+    )
 }
 
 fn get_data_dir() -> Result<PathBuf, String> {
@@ -196,7 +258,10 @@ fn load_account_index() -> TraeAccountIndex {
         Ok(content) if content.trim().is_empty() => {
             repair_account_index_from_details("索引文件为空").unwrap_or_else(TraeAccountIndex::new)
         }
-        Ok(content) => match crate::modules::atomic_write::parse_json_with_auto_restore::<TraeAccountIndex>(&path, &content) {
+        Ok(content) => match crate::modules::atomic_write::parse_json_with_auto_restore::<
+            TraeAccountIndex,
+        >(&path, &content)
+        {
             Ok(index) if !index.accounts.is_empty() => index,
             Ok(_) => repair_account_index_from_details("索引账号列表为空")
                 .unwrap_or_else(TraeAccountIndex::new),
@@ -240,7 +305,9 @@ fn load_account_index_checked() -> Result<TraeAccountIndex, String> {
         return Ok(TraeAccountIndex::new());
     }
 
-    match crate::modules::atomic_write::parse_json_with_auto_restore::<TraeAccountIndex>(&path, &content) {
+    match crate::modules::atomic_write::parse_json_with_auto_restore::<TraeAccountIndex>(
+        &path, &content,
+    ) {
         Ok(index) if !index.accounts.is_empty() => Ok(index),
         Ok(index) => {
             if let Some(repaired) = repair_account_index_from_details("索引账号列表为空") {
@@ -2177,6 +2244,133 @@ fn pick_cookie_from_account(account: &TraeAccount) -> Option<String> {
     )
 }
 
+fn normalize_login_region(raw: Option<&str>) -> Option<String> {
+    let value = normalize_non_empty(raw)?;
+    let normalized = match value.trim().to_ascii_lowercase().as_str() {
+        "china-north" => "cn".to_string(),
+        "singapore-central" => "sg".to_string(),
+        "us-east" | "us-east-1" => "us".to_string(),
+        other => other.to_string(),
+    };
+    Some(normalized)
+}
+
+fn build_refresh_routing_context(account: &TraeAccount) -> TraeRefreshRoutingContext {
+    let profile_root = profile_payload_root(account.trae_profile_raw.as_ref());
+    let roots = [
+        account.trae_auth_raw.as_ref(),
+        profile_root,
+        account.trae_server_raw.as_ref(),
+        account.trae_entitlement_raw.as_ref(),
+        account.trae_usage_raw.as_ref(),
+    ];
+
+    let login_host = pick_string_multi(
+        &roots,
+        &[
+            &["loginHost"],
+            &["host"],
+            &["account", "host"],
+            &["callbackQuery", "host"],
+            &["callbackQuery", "consoleHost"],
+            &["data", "host"],
+            &["Result", "loginHost"],
+            &["result", "loginHost"],
+            &["data", "loginHost"],
+            &["exchangeResponse", "Result", "loginHost"],
+        ],
+    )
+    .unwrap_or_else(|| TRAE_DEFAULT_API_ORIGIN.to_string());
+
+    let login_region = normalize_login_region(
+        pick_string_multi(
+            &roots,
+            &[
+                &["loginRegion"],
+                &["callbackQuery", "userRegion"],
+                &["userRegion", "region"],
+                &["userRegion", "_aiRegion"],
+                &["storeRegion"],
+                &["AIRegion"],
+            ],
+        )
+        .as_deref(),
+    );
+
+    let store_region = pick_string_multi(
+        &roots,
+        &[
+            &["storeRegion"],
+            &["account", "storeRegion"],
+            &["userRegion", "region"],
+            &["callbackQuery", "userRegion"],
+            &["AIRegion"],
+        ],
+    )
+    .map(|value| to_store_region(value.as_str()));
+
+    let ai_region = pick_string_multi(
+        &roots,
+        &[
+            &["AIRegion"],
+            &["userRegion", "_aiRegion"],
+            &["userRegion", "region"],
+            &["callbackQuery", "userRegion"],
+            &["loginRegion"],
+        ],
+    )
+    .map(|value| to_store_region(value.as_str()));
+
+    TraeRefreshRoutingContext {
+        login_host,
+        login_region,
+        store_region,
+        ai_region,
+    }
+}
+
+fn build_refresh_api_urls(account: &TraeAccount, path: &str) -> Vec<String> {
+    let context = build_refresh_routing_context(account);
+    build_api_urls(context.login_host.as_str(), path)
+}
+
+fn merge_refresh_routing_context(response: &Value, context: &TraeRefreshRoutingContext) -> Value {
+    let Some(response_obj) = response.as_object() else {
+        return response.clone();
+    };
+
+    let mut merged = response_obj.clone();
+
+    if !context.login_host.is_empty() {
+        merged
+            .entry("loginHost".to_string())
+            .or_insert_with(|| Value::String(context.login_host.clone()));
+        merged
+            .entry("host".to_string())
+            .or_insert_with(|| Value::String(context.login_host.clone()));
+    }
+
+    if let Some(login_region) = context.login_region.as_ref() {
+        merged
+            .entry("loginRegion".to_string())
+            .or_insert_with(|| Value::String(login_region.clone()));
+    }
+
+    if let Some(store_region) = context.store_region.as_ref() {
+        merged
+            .entry("storeRegion".to_string())
+            .or_insert_with(|| Value::String(store_region.clone()));
+    }
+
+    if let Some(ai_region) = context.ai_region.as_ref() {
+        merged
+            .entry("AIRegion".to_string())
+            .or_insert_with(|| Value::String(ai_region.clone()));
+    }
+
+    Value::Object(merged)
+}
+
 fn header_value_or_dash(headers: &reqwest::header::HeaderMap, key: &str) -> String {
     headers
         .get(key)
@@ -2282,6 +2476,38 @@ async fn request_trae_json(
     parse_trae_response_body(response, url).await
 }
 
+async fn request_trae_json_with_candidates(
+    client: &reqwest::Client,
+    method: Method,
+    urls: &[String],
+    access_token: &str,
+    cookie: Option<&str>,
+    body: Option<Value>,
+) -> Result<Value, String> {
+    let mut errors = Vec::new();
+    for url in urls {
+        match request_trae_json(
+            client,
+            method.clone(),
+            url.as_str(),
+            access_token,
+            cookie,
+            body.clone(),
+        )
+        .await
+        {
+            Ok(response) => return Ok(response),
+            Err(err) => errors.push(format!("{} => {}", url, err)),
+        }
+    }
+
+    if errors.is_empty() {
+        return Err("Trae 请求地址为空".to_string());
+    }
+
+    Err(errors.join(" | "))
+}
+
 async fn request_trae_pay_json(
     client: &reqwest::Client,
     method: Method,
@@ -2311,6 +2537,38 @@ async fn request_trae_pay_json(
         .map_err(|e| format!("请求 Trae 接口失败({}): {}", url, e))?;
 
     parse_trae_response_body(response, url).await
+}
+
+async fn request_trae_pay_json_with_candidates(
+    client: &reqwest::Client,
+    method: Method,
+    urls: &[String],
+    access_token: &str,
+    cookie: Option<&str>,
+    body: Option<Value>,
+) -> Result<Value, String> {
+    let mut errors = Vec::new();
+    for url in urls {
+        match request_trae_pay_json(
+            client,
+            method.clone(),
+            url.as_str(),
+            access_token,
+            cookie,
+            body.clone(),
+        )
+        .await
+        {
+            Ok(response) => return Ok(response),
+            Err(err) => errors.push(format!("{} => {}", url, err)),
+        }
+    }
+
+    if errors.is_empty() {
+        return Err("Trae 请求地址为空".to_string());
+    }
+
+    Err(errors.join(" | "))
 }
 
 fn apply_profile_response(account: &mut TraeAccount, response: &Value) {
@@ -2458,8 +2716,13 @@ fn apply_usage_response(account: &mut TraeAccount, response: &Value) {
     }
 }
 
-fn apply_exchange_response(account: &mut TraeAccount, response: &Value) {
-    let exchange_root = extract_response_data(response).unwrap_or(response);
+fn apply_exchange_response(
+    account: &mut TraeAccount,
+    response: &Value,
+    context: &TraeRefreshRoutingContext,
+) {
+    let merged_response = merge_refresh_routing_context(response, context);
+    let exchange_root = extract_response_data(&merged_response).unwrap_or(&merged_response);
 
     let access_token = pick_string(
         Some(exchange_root),
@@ -2496,12 +2759,16 @@ fn apply_exchange_response(account: &mut TraeAccount, response: &Value) {
         account.expires_at = expires_at;
     }
 
-    account.trae_auth_raw = Some(response.clone());
+    account.trae_auth_raw = Some(merged_response);
 }
 
-fn apply_check_login_response(account: &mut TraeAccount, response: &Value) {
-    let root = extract_response_data(response).unwrap_or(response);
-    account.trae_server_raw = Some(response.clone());
+fn apply_check_login_response(
+    account: &mut TraeAccount,
+    response: &Value,
+    context: &TraeRefreshRoutingContext,
+) {
+    let merged_response = merge_refresh_routing_context(response, context);
+    let root = extract_response_data(&merged_response).unwrap_or(&merged_response);
 
     if let Some(status) = normalize_non_empty(
         pick_string(
@@ -2526,6 +2793,8 @@ fn apply_check_login_response(account: &mut TraeAccount, response: &Value) {
     ) {
         account.status_reason = Some(reason);
     }
+
+    account.trae_server_raw = Some(merged_response);
 }
 
 async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, String> {
@@ -2543,6 +2812,15 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
     let mut account = existing.clone();
 
     let cookie = pick_cookie_from_account(&account);
+    let routing_context = build_refresh_routing_context(&account);
+    logger::log_info(&format!(
+        "[Trae Refresh] 使用路由: id={}, host={}, login_region={}, store_region={}, ai_region={}",
+        account.id,
+        routing_context.login_host,
+        routing_context.login_region.as_deref().unwrap_or("-"),
+        routing_context.store_region.as_deref().unwrap_or("-"),
+        routing_context.ai_region.as_deref().unwrap_or("-")
+    ));
 
     let exchange_body = serde_json::json!({
         "ClientID": TRAE_AUTH_CLIENT_ID,
@@ -2553,23 +2831,26 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
         "refresh_token": account.refresh_token.clone().unwrap_or_default(),
         "token": account.access_token.clone(),
     });
-    if let Ok(exchange_response) = request_trae_json(
+    let exchange_urls = build_refresh_api_urls(&account, TRAE_EXCHANGE_TOKEN_PATH);
+    if let Ok(exchange_response) = request_trae_json_with_candidates(
         &client,
         Method::POST,
-        TRAE_EXCHANGE_TOKEN_URL,
+        exchange_urls.as_slice(),
         &account.access_token,
         cookie.as_deref(),
         Some(exchange_body),
     )
     .await
     {
-        apply_exchange_response(&mut account, &exchange_response);
+        let exchange_context = build_refresh_routing_context(&account);
+        apply_exchange_response(&mut account, &exchange_response, &exchange_context);
     }
 
-    match request_trae_json(
+    let profile_urls = build_refresh_api_urls(&account, TRAE_GET_USER_INFO_PATH);
+    match request_trae_json_with_candidates(
         &client,
         Method::POST,
-        TRAE_GET_USER_INFO_URL,
+        profile_urls.as_slice(),
         &account.access_token,
         cookie.as_deref(),
         Some(serde_json::json!({})),
@@ -2580,10 +2861,11 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
         Err(err) => logger::log_warn(&format!("[Trae Refresh] GetUserInfo 失败: {}", err)),
     }
 
-    match request_trae_json(
+    let check_login_urls = build_refresh_api_urls(&account, TRAE_CHECK_LOGIN_PATH);
+    match request_trae_json_with_candidates(
         &client,
         Method::POST,
-        TRAE_CHECK_LOGIN_URL,
+        check_login_urls.as_slice(),
         &account.access_token,
         cookie.as_deref(),
         Some(serde_json::json!({
@@ -2592,14 +2874,18 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
     )
     .await
     {
-        Ok(response) => apply_check_login_response(&mut account, &response),
+        Ok(response) => {
+            let check_login_context = build_refresh_routing_context(&account);
+            apply_check_login_response(&mut account, &response, &check_login_context);
+        }
         Err(err) => logger::log_warn(&format!("[Trae Refresh] CheckLogin 失败: {}", err)),
     }
 
-    let entitlement_response = request_trae_pay_json(
+    let entitlement_urls = build_refresh_api_urls(&account, TRAE_PAY_STATUS_PATH);
+    let entitlement_response = request_trae_pay_json_with_candidates(
         &client,
         Method::POST,
-        TRAE_PAY_STATUS_URL,
+        entitlement_urls.as_slice(),
         &account.access_token,
         cookie.as_deref(),
         Some(serde_json::json!({})),
@@ -2611,10 +2897,11 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
         Err(err) => logger::log_warn(&format!("[Trae Refresh] ide_user_pay_status 失败: {}", err)),
     }
 
-    let usage_response = request_trae_pay_json(
+    let usage_urls = build_refresh_api_urls(&account, TRAE_ENT_USAGE_PATH);
+    let usage_response = request_trae_pay_json_with_candidates(
         &client,
         Method::POST,
-        TRAE_ENT_USAGE_URL,
+        usage_urls.as_slice(),
         &account.access_token,
         cookie.as_deref(),
         Some(serde_json::json!({

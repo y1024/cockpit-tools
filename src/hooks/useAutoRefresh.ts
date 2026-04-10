@@ -434,8 +434,14 @@ export function useAutoRefresh() {
             intervalRef: { current: number | null },
             refreshingRef: { current: boolean },
             minutes: number,
+            enabled: boolean,
             run: () => Promise<void>,
           ) => {
+            if (!enabled) {
+              intervalRef.current = null;
+              console.log(`[AutoRefresh] ${label} 当前账号刷新已禁用（配额自动刷新未开启）`);
+              return;
+            }
             const refreshMs = minutes * 60 * 1000;
             console.log(`[AutoRefresh] ${label} 当前账号刷新: 每 ${minutes} 分钟`);
             intervalRef.current = window.setInterval(async () => {
@@ -469,6 +475,7 @@ export function useAutoRefresh() {
             agCurrentIntervalRef,
             agCurrentRefreshingRef,
             currentRefreshMinutesMap.antigravity,
+            config.auto_refresh_minutes > 0,
             async () => {
               if (agRefreshingRef.current) {
                 return;
@@ -491,6 +498,7 @@ export function useAutoRefresh() {
             codexCurrentRefreshIntervalRef,
             codexCurrentRefreshingRef,
             currentRefreshMinutesMap.codex,
+            config.codex_auto_refresh_minutes > 0,
             async () => {
               if (codexRefreshingRef.current) {
                 return;
@@ -535,6 +543,7 @@ export function useAutoRefresh() {
             ghcpCurrentIntervalRef,
             ghcpCurrentRefreshingRef,
             currentRefreshMinutesMap.ghcp,
+            config.ghcp_auto_refresh_minutes > 0,
             async () => {
               if (ghcpRefreshingRef.current) {
                 return;
@@ -571,6 +580,7 @@ export function useAutoRefresh() {
             windsurfCurrentIntervalRef,
             windsurfCurrentRefreshingRef,
             currentRefreshMinutesMap.windsurf,
+            config.windsurf_auto_refresh_minutes > 0,
             async () => {
               if (windsurfRefreshingRef.current) {
                 return;
@@ -610,6 +620,7 @@ export function useAutoRefresh() {
             kiroCurrentIntervalRef,
             kiroCurrentRefreshingRef,
             currentRefreshMinutesMap.kiro,
+            config.kiro_auto_refresh_minutes > 0,
             async () => {
               if (kiroRefreshingRef.current) {
                 return;
@@ -646,6 +657,7 @@ export function useAutoRefresh() {
             cursorCurrentIntervalRef,
             cursorCurrentRefreshingRef,
             currentRefreshMinutesMap.cursor,
+            config.cursor_auto_refresh_minutes > 0,
             async () => {
               if (cursorRefreshingRef.current) {
                 return;
@@ -682,6 +694,7 @@ export function useAutoRefresh() {
             geminiCurrentIntervalRef,
             geminiCurrentRefreshingRef,
             currentRefreshMinutesMap.gemini,
+            config.gemini_auto_refresh_minutes > 0,
             async () => {
               if (geminiRefreshingRef.current) {
                 return;
@@ -718,6 +731,7 @@ export function useAutoRefresh() {
             codebuddyCurrentIntervalRef,
             codebuddyCurrentRefreshingRef,
             currentRefreshMinutesMap.codebuddy,
+            config.codebuddy_auto_refresh_minutes > 0,
             async () => {
               if (codebuddyRefreshingRef.current) {
                 return;
@@ -759,6 +773,7 @@ export function useAutoRefresh() {
             codebuddyCnCurrentIntervalRef,
             codebuddyCnCurrentRefreshingRef,
             currentRefreshMinutesMap.codebuddy_cn,
+            config.codebuddy_cn_auto_refresh_minutes > 0,
             async () => {
               if (codebuddyCnRefreshingRef.current) {
                 return;
@@ -798,6 +813,7 @@ export function useAutoRefresh() {
             workbuddyCurrentIntervalRef,
             workbuddyCurrentRefreshingRef,
             currentRefreshMinutesMap.workbuddy,
+            config.workbuddy_auto_refresh_minutes > 0,
             async () => {
               if (workbuddyRefreshingRef.current) {
                 return;
@@ -837,6 +853,7 @@ export function useAutoRefresh() {
             qoderCurrentIntervalRef,
             qoderCurrentRefreshingRef,
             currentRefreshMinutesMap.qoder,
+            config.qoder_auto_refresh_minutes > 0,
             async () => {
               if (qoderRefreshingRef.current) {
                 return;
@@ -873,6 +890,7 @@ export function useAutoRefresh() {
             traeCurrentIntervalRef,
             traeCurrentRefreshingRef,
             currentRefreshMinutesMap.trae,
+            config.trae_auto_refresh_minutes > 0,
             async () => {
               if (traeRefreshingRef.current) {
                 return;
@@ -909,6 +927,7 @@ export function useAutoRefresh() {
             zedCurrentIntervalRef,
             zedCurrentRefreshingRef,
             currentRefreshMinutesMap.zed,
+            config.zed_auto_refresh_minutes > 0,
             async () => {
               if (zedRefreshingRef.current) {
                 return;

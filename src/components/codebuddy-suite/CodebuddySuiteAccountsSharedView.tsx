@@ -15,6 +15,7 @@ import { DosageNotifyUsageStatus } from '../platform/DosageNotifyUsageStatus';
 import { CodeBuddyQuotaCategoryList } from '../codebuddy/CodeBuddyQuotaCategoryList';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../MultiSelectFilterDropdown';
 import type { CodebuddySuiteAccountBase, QuotaCategoryGroup, CodebuddyUsage } from '../../types/codebuddy-suite';
+import { buildValidAccountsFilterOption } from '../../utils/accountValidityFilter';
 
 interface CheckinModalProps<TAccount extends CodebuddySuiteAccountBase> {
   accounts: TAccount[];
@@ -155,6 +156,11 @@ export function CodebuddySuiteAccountsSharedView<TAccount extends CodebuddySuite
     }
   }, [platformConfig, t]);
 
+  const isAbnormalAccount = useCallback(
+    (account: TAccount) => !platformConfig.getUsage(account).isNormal,
+    [platformConfig],
+  );
+
   const suitePage = useCodebuddySuitePage({
     accounts,
     currentAccountId,
@@ -163,6 +169,7 @@ export function CodebuddySuiteAccountsSharedView<TAccount extends CodebuddySuite
     tagFilter,
     sortDirection,
     getPlanBadge: platformConfig.getPlanBadge,
+    isAbnormalAccount,
     normalizeTag,
     groupByTag,
   });
@@ -190,8 +197,9 @@ export function CodebuddySuiteAccountsSharedView<TAccount extends CodebuddySuite
         label: `${key} (${tierSummary.dynamicCounts.get(key) ?? 0})`,
       });
     });
+    options.push(buildValidAccountsFilterOption(t, tierSummary.validCount));
     return options;
-  }, [tierSummary.dynamicCounts, tierSummary.extraKeys]);
+  }, [t, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.validCount]);
 
   const exportSelectionCount = getScopedSelectedCount(filteredIds);
 

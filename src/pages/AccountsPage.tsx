@@ -108,6 +108,11 @@ import {
   type AccountFilterType,
 } from '../utils/accountFilters'
 import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter'
+import {
   FEATURE_UNLOCK_CHANGED_EVENT,
   type FeatureUnlockChangedDetail,
   isAntigravitySeamlessSwitchFeatureUnlocked,
@@ -122,6 +127,7 @@ interface AccountsPageProps {
 }
 
 type AntigravitySwitchHistoryItem = accountService.AntigravitySwitchHistoryItem
+type AccountsFilterType = AccountFilterType | typeof VALID_ACCOUNTS_FILTER_VALUE
 
 type ViewMode = 'grid' | 'list' | 'compact'
 
@@ -285,11 +291,11 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
 
   // 筛选
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterTypes, setFilterTypes] = useState<AccountFilterType[]>([])
+  const [filterTypes, setFilterTypes] = useState<AccountsFilterType[]>([])
   const [tagFilter, setTagFilter] = useState<string[]>([])
   const [groupByTag, setGroupByTag] = useState(false)
 
-  const toggleFilterTypeValue = useCallback((value: AccountFilterType) => {
+  const toggleFilterTypeValue = useCallback((value: AccountsFilterType) => {
     setFilterTypes((prev) => {
       if (prev.includes(value)) {
         return prev.filter((item) => item !== value)
@@ -597,6 +603,24 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
 
   const availableTags = useMemo(() => collectAvailableAccountTags(accounts), [accounts])
 
+  const isAbnormalAccount = useCallback(
+    (account: Account): boolean => {
+      const isDisabled = account.disabled
+      const isForbidden = Boolean(account.quota?.is_forbidden)
+      const hasWarning = Boolean(refreshWarnings[account.email])
+      const verificationReason = account.disabled_reason || verificationStatusMap[account.id]
+      const hasVerificationIssue =
+        verificationReason === 'verification_required' || verificationReason === 'tos_violation'
+      return isDisabled || isForbidden || hasWarning || hasVerificationIssue
+    },
+    [refreshWarnings, verificationStatusMap]
+  )
+
+  const validAccountCount = useMemo(
+    () => accounts.reduce((count, account) => (isAbnormalAccount(account) ? count : count + 1), 0),
+    [accounts, isAbnormalAccount]
+  )
+
   // 筛选后的账号
   const filteredAccounts = useMemo(() => {
     let result = [...accounts]
@@ -626,10 +650,19 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
 
     // 类型过滤（多选）
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes)
-      result = result.filter((acc) =>
-        accountMatchesTypeFilters(acc, selectedTypes, verificationStatusMap)
-      )
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes)
+      if (requireValidAccounts) {
+        result = result.filter((acc) => !isAbnormalAccount(acc))
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((acc) =>
+          accountMatchesTypeFilters(
+            acc,
+            selectedTypes as Set<AccountFilterType>,
+            verificationStatusMap
+          )
+        )
+      }
     }
 
     // 标签过滤
@@ -646,6 +679,7 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
     tagFilter,
     accountSortComparator,
     verificationStatusMap,
+    isAbnormalAccount,
     activeGroup,
     accountGroups,
   ])
@@ -693,8 +727,20 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
   )
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(
-    () => buildAccountTierFilterOptions(t, tierCounts),
-    [t, tierCounts.FREE, tierCounts.PRO, tierCounts.TOS_VIOLATION, tierCounts.ULTRA, tierCounts.UNKNOWN, tierCounts.VERIFICATION_REQUIRED]
+    () => [
+      ...buildAccountTierFilterOptions(t, tierCounts),
+      buildValidAccountsFilterOption(t, validAccountCount),
+    ],
+    [
+      t,
+      tierCounts.FREE,
+      tierCounts.PRO,
+      tierCounts.TOS_VIOLATION,
+      tierCounts.ULTRA,
+      tierCounts.UNKNOWN,
+      tierCounts.VERIFICATION_REQUIRED,
+      validAccountCount,
+    ]
   )
 
   const loadFingerprints = async () => {
@@ -2997,7 +3043,7 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
               clearLabel={t('accounts.clearFilter', '清空筛选')}
               emptyLabel={t('common.none', '暂无')}
               ariaLabel={t('accounts.filterLabel', '筛选')}
-              onToggleValue={(value) => toggleFilterTypeValue(value as AccountFilterType)}
+              onToggleValue={(value) => toggleFilterTypeValue(value as AccountsFilterType)}
               onClear={clearFilterTypes}
             />
 

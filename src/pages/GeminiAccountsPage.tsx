@@ -42,6 +42,11 @@ import {
 } from '../types/gemini';
 import type { GeminiAccount } from '../types/gemini';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter';
 
 import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { GeminiOverviewTabsHeader, GeminiTab } from '../components/GeminiOverviewTabsHeader';
@@ -254,6 +259,12 @@ export function GeminiAccountsPage() {
     [],
   );
 
+  const isAbnormalAccount = useCallback(
+    (account: GeminiAccount) =>
+      isGeminiAccountBanned(account) || (account.status || '').toLowerCase() === 'error',
+    [],
+  );
+
   const resolveDisplayEmail = useCallback(
     (account: GeminiAccount) => getGeminiAccountDisplayEmail(account),
     [],
@@ -342,17 +353,23 @@ export function GeminiAccountsPage() {
         displayLabels.set(tier, resolvePlanLabel(account));
       }
     });
+    const validCount = accounts.reduce(
+      (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+      0,
+    );
 
     const extraKeys = Array.from(dynamicCounts.keys())
       .filter((tier) => !(CURSOR_KNOWN_PLAN_FILTERS as readonly string[]).includes(tier))
       .sort((a, b) => a.localeCompare(b));
 
-    return { all: accounts.length, knownCounts, dynamicCounts, extraKeys, displayLabels };
-  }, [accounts, resolvePlanKey, resolvePlanLabel]);
+    return { all: accounts.length, validCount, knownCounts, dynamicCounts, extraKeys, displayLabels };
+  }, [accounts, isAbnormalAccount, resolvePlanKey, resolvePlanLabel]);
 
   useEffect(() => {
     setFilterTypes((prev) => {
-      const next = prev.filter((value) => tierSummary.dynamicCounts.has(value));
+      const next = prev.filter(
+        (value) => value === VALID_ACCOUNTS_FILTER_VALUE || tierSummary.dynamicCounts.has(value),
+      );
       return next.length === prev.length ? prev : next;
     });
   }, [tierSummary.dynamicCounts]);
@@ -380,8 +397,9 @@ export function GeminiAccountsPage() {
         label: resolveFilterLabel(planKey, tierSummary.dynamicCounts.get(planKey) ?? 0),
       });
     });
+    options.push(buildValidAccountsFilterOption(t, tierSummary.validCount));
     return options;
-  }, [resolveFilterLabel, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.FREE_TRIAL, tierSummary.knownCounts.PRO, tierSummary.knownCounts.PRO_PLUS, tierSummary.knownCounts.ULTRA]);
+  }, [resolveFilterLabel, t, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.FREE_TRIAL, tierSummary.knownCounts.PRO, tierSummary.knownCounts.PRO_PLUS, tierSummary.knownCounts.ULTRA, tierSummary.validCount]);
 
   // ─── Filtering & Sorting ──────────────────────────────────────────
 
@@ -418,8 +436,13 @@ export function GeminiAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -433,7 +456,7 @@ export function GeminiAccountsPage() {
     result.sort(compareAccountsBySort);
 
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, resolvePlanKey, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, resolvePlanKey, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);
@@ -485,7 +508,7 @@ export function GeminiAccountsPage() {
       const isSelected = selected.has(account.id);
       const isCurrent = currentAccountId === account.id;
       const isBanned = isGeminiAccountBanned(account);
-      const hasStatusError = (account.status || '').toLowerCase() === 'error';
+      const hasStatusError = !isBanned && (account.status || '').toLowerCase() === 'error';
       const statusReason = account.status_reason ?? null;
       const bannedTitle = statusReason || t('accounts.status.forbidden_tooltip');
       const errorTitle = statusReason || t('accounts.status.refreshFailed');
@@ -581,7 +604,7 @@ export function GeminiAccountsPage() {
       const moreTagCount = Math.max(0, accountTags.length - visibleTags.length);
       const isCurrent = currentAccountId === account.id;
       const isBanned = isGeminiAccountBanned(account);
-      const hasStatusError = (account.status || '').toLowerCase() === 'error';
+      const hasStatusError = !isBanned && (account.status || '').toLowerCase() === 'error';
       const statusReason = account.status_reason ?? null;
       const bannedTitle = statusReason || t('accounts.status.forbidden_tooltip');
       const errorTitle = statusReason || t('accounts.status.refreshFailed');

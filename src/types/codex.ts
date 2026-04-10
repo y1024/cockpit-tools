@@ -91,6 +91,26 @@ export interface CodexInstanceThreadSyncSummary {
   message: string;
 }
 
+export interface CodexSessionVisibilityRepairItem {
+  instanceId: string;
+  instanceName: string;
+  targetProvider: string;
+  changedRolloutFileCount: number;
+  updatedSqliteRowCount: number;
+  backupDir?: string | null;
+  running: boolean;
+}
+
+export interface CodexSessionVisibilityRepairSummary {
+  instanceCount: number;
+  mutatedInstanceCount: number;
+  changedRolloutFileCount: number;
+  updatedSqliteRowCount: number;
+  items: CodexSessionVisibilityRepairItem[];
+  backupDirs: string[];
+  message: string;
+}
+
 export interface CodexSessionLocation {
   instanceId: string;
   instanceName: string;

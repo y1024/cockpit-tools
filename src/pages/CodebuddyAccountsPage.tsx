@@ -25,6 +25,10 @@ import { CodebuddyInstancesContent } from './CodebuddyInstancesPage';
 import { DosageNotifyUsageStatus } from '../components/platform/DosageNotifyUsageStatus';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../components/MultiSelectFilterDropdown';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+} from '../utils/accountValidityFilter';
 
 const CB_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.codebuddy.flow_notice_collapsed';
 const CB_CURRENT_ACCOUNT_ID_KEY = 'agtools.codebuddy.current_account_id';
@@ -159,17 +163,26 @@ export function CodebuddyAccountsPage() {
     }
   }, []);
 
+  const isAbnormalAccount = useCallback(
+    (account: CodebuddyAccount) => !getCodebuddyUsage(account).isNormal,
+    [],
+  );
+
   const tierSummary = useMemo(() => {
     const dynamicCounts = new Map<string, number>();
     accounts.forEach((account) => {
       const tier = resolvePlanKey(account);
       dynamicCounts.set(tier, (dynamicCounts.get(tier) ?? 0) + 1);
     });
+    const validCount = accounts.reduce(
+      (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+      0,
+    );
     const extraKeys = Array.from(dynamicCounts.keys())
       .filter((tier) => !(CB_KNOWN_PLAN_FILTERS as readonly string[]).includes(tier))
       .sort((a, b) => a.localeCompare(b));
-    return { all: accounts.length, dynamicCounts, extraKeys };
-  }, [accounts, resolvePlanKey]);
+    return { all: accounts.length, validCount, dynamicCounts, extraKeys };
+  }, [accounts, isAbnormalAccount, resolvePlanKey]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(() => {
     const options: MultiSelectFilterOption[] = [];
@@ -184,8 +197,9 @@ export function CodebuddyAccountsPage() {
         label: `${key} (${tierSummary.dynamicCounts.get(key) ?? 0})`,
       });
     });
+    options.push(buildValidAccountsFilterOption(t, tierSummary.validCount));
     return options;
-  }, [tierSummary.dynamicCounts, tierSummary.extraKeys]);
+  }, [t, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.validCount]);
 
   const filteredAccounts = useMemo(() => {
     let result = [...accounts];
@@ -197,8 +211,13 @@ export function CodebuddyAccountsPage() {
       );
     }
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
     if (tagFilter.length > 0) {
       const selectedTags = new Set(tagFilter.map(normalizeTag));
@@ -214,7 +233,7 @@ export function CodebuddyAccountsPage() {
       return sortDirection === 'desc' ? diff : -diff;
     });
     return result;
-  }, [accounts, currentAccountId, searchQuery, filterTypes, resolvePlanKey, tagFilter, normalizeTag, sortBy, sortDirection]);
+  }, [accounts, currentAccountId, searchQuery, filterTypes, isAbnormalAccount, resolvePlanKey, tagFilter, normalizeTag, sortBy, sortDirection]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

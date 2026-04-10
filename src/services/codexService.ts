@@ -16,6 +16,11 @@ export async function getCurrentCodexAccount(): Promise<CodexAccount | null> {
   return await invoke('get_current_codex_account');
 }
 
+/** 获取当前 Codex config.toml 路径 */
+export async function getCodexConfigTomlPath(): Promise<string> {
+  return await invoke('get_codex_config_toml_path');
+}
+
 /** 刷新 Codex 账号资料（团队名/结构） */
 export async function refreshCodexAccountProfile(accountId: string): Promise<CodexAccount> {
   return await invoke('refresh_codex_account_profile', { accountId });

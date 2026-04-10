@@ -41,6 +41,10 @@ import {
   type ZedAccount,
 } from '../types/zed';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+} from '../utils/accountValidityFilter';
 import './ZedAccountsPage.css';
 
 type ZedSortKey = 'created_at' | 'token_spend' | 'billing_end';
@@ -94,6 +98,14 @@ function getZedStatusTone(status?: string | null): 'normal' | 'warning' | 'forbi
     return 'normal';
   }
   return 'neutral';
+}
+
+function isZedAccountAbnormal(account: ZedAccount): boolean {
+  if (account.has_overdue_invoices) {
+    return true;
+  }
+  const tone = getZedStatusTone(account.subscription_status);
+  return tone === 'warning' || tone === 'forbidden';
 }
 
 function formatDateTime(timestamp?: number | null, locale = 'zh-CN'): string {
@@ -367,18 +379,26 @@ export function ZedAccountsPage() {
       const key = resolvePlanKey(account);
       counts.set(key, (counts.get(key) ?? 0) + 1);
     });
-    return counts;
+    return {
+      plans: counts,
+      validCount: accounts.reduce(
+        (count, account) => (isZedAccountAbnormal(account) ? count : count + 1),
+        0,
+      ),
+    };
   }, [accounts, resolvePlanKey]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(
-    () =>
-      Array.from(tierCounts.entries())
+    () => [
+      ...Array.from(tierCounts.plans.entries())
         .sort(([left], [right]) => left.localeCompare(right))
         .map(([plan, count]) => ({
           value: plan,
           label: `${plan} (${count})`,
         })),
-    [tierCounts],
+      buildValidAccountsFilterOption(t, tierCounts.validCount),
+    ],
+    [t, tierCounts],
   );
 
   const compareAccountsBySort = useCallback(
@@ -431,8 +451,13 @@ export function ZedAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isZedAccountAbnormal(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
 
     if (tagFilter.length > 0) {

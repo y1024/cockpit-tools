@@ -338,6 +338,7 @@ pub fn run() {
             // Codex Commands
             commands::codex::list_codex_accounts,
             commands::codex::get_current_codex_account,
+            commands::codex::get_codex_config_toml_path,
             commands::codex::refresh_codex_account_profile,
             commands::codex::switch_codex_account,
             commands::codex::delete_codex_account,
@@ -374,6 +375,8 @@ pub fn run() {
             commands::codex::codex_wakeup_run_enabled_tasks,
             commands::codex::load_codex_account_groups,
             commands::codex::save_codex_account_groups,
+            commands::codex::load_codex_model_providers,
+            commands::codex::save_codex_model_providers,
             // GitHub Copilot Commands
             commands::github_copilot::list_github_copilot_accounts,
             commands::github_copilot::delete_github_copilot_account,
@@ -672,6 +675,7 @@ pub fn run() {
             commands::codex_instance::codex_get_instance_defaults,
             commands::codex_instance::codex_list_instances,
             commands::codex_instance::codex_sync_threads_across_instances,
+            commands::codex_instance::codex_repair_session_visibility_across_instances,
             commands::codex_instance::codex_list_sessions_across_instances,
             commands::codex_instance::codex_move_sessions_to_trash_across_instances,
             commands::codex_instance::codex_create_instance,

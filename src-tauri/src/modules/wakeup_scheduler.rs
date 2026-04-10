@@ -122,6 +122,19 @@ fn startup_triggered_flag() -> &'static Mutex<bool> {
     STARTUP_TRIGGERED.get_or_init(|| Mutex::new(false))
 }
 
+fn lock_or_recover<'a, T>(mutex: &'a Mutex<T>, label: &str) -> std::sync::MutexGuard<'a, T> {
+    match mutex.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            modules::logger::log_warn(&format!(
+                "[WakeupTasks] 检测到锁中毒，继续使用恢复数据: {}",
+                label
+            ));
+            err.into_inner()
+        }
+    }
+}
+
 fn tasks_state_path() -> Result<std::path::PathBuf, String> {
     Ok(modules::account::get_data_dir()?.join(WAKEUP_TASKS_FILE))
 }
@@ -149,7 +162,7 @@ fn persist_state(enabled: bool, tasks: &[WakeupTaskInput]) -> Result<(), String>
 }
 
 fn apply_state(enabled: bool, tasks: Vec<WakeupTaskInput>) {
-    let mut guard = state().lock().expect("wakeup state lock");
+    let mut guard = lock_or_recover(state(), "wakeup state lock");
     guard.enabled = enabled;
     guard.tasks = tasks
         .into_iter()
@@ -251,7 +264,7 @@ pub fn sync_state(enabled: bool, tasks: Vec<WakeupTaskInput>) {
 
 pub fn trigger_startup_tasks_if_needed(app: AppHandle) {
     let has_startup_tasks = {
-        let guard = state().lock().expect("wakeup state lock");
+        let guard = lock_or_recover(state(), "wakeup state lock");
         guard.enabled
             && guard
                 .tasks
@@ -263,9 +276,8 @@ pub fn trigger_startup_tasks_if_needed(app: AppHandle) {
     }
 
     let should_trigger = {
-        let mut startup_triggered = startup_triggered_flag()
-            .lock()
-            .expect("wakeup startup trigger lock");
+        let mut startup_triggered =
+            lock_or_recover(startup_triggered_flag(), "wakeup startup trigger lock");
         if *startup_triggered {
             false
         } else {
@@ -289,7 +301,7 @@ pub fn trigger_startup_tasks_if_needed(app: AppHandle) {
 }
 
 pub fn ensure_started(app: AppHandle) {
-    let mut started = started_flag().lock().expect("wakeup started lock");
+    let mut started = lock_or_recover(started_flag(), "wakeup started lock");
     if *started {
         return;
     }
@@ -305,7 +317,7 @@ pub fn ensure_started(app: AppHandle) {
 
 pub async fn run_enabled_tasks_now(app: &AppHandle, trigger_source: &str) -> usize {
     let snapshot = {
-        let guard = state().lock().expect("wakeup state lock");
+        let guard = lock_or_recover(state(), "wakeup state lock");
         guard.clone()
     };
 
@@ -356,7 +368,7 @@ pub async fn run_enabled_tasks_now(app: &AppHandle, trigger_source: &str) -> usi
             continue;
         }
         let running = {
-            let guard = state().lock().expect("wakeup state lock");
+            let guard = lock_or_recover(state(), "wakeup state lock");
             guard.running_tasks.contains(&task.id)
         };
         if running {
@@ -370,7 +382,7 @@ pub async fn run_enabled_tasks_now(app: &AppHandle, trigger_source: &str) -> usi
 }
 
 fn resolve_startup_task_to_run(task_id: &str) -> Option<WakeupTask> {
-    let guard = state().lock().expect("wakeup state lock");
+    let guard = lock_or_recover(state(), "wakeup state lock");
     if !guard.enabled || guard.running_tasks.contains(task_id) {
         return None;
     }
@@ -818,7 +830,7 @@ fn mark_reset_triggered(state: &mut ResetState, model_key: &str, reset_at: &str)
 
 async fn run_scheduler_once(app: &AppHandle) {
     let snapshot = {
-        let guard = state().lock().expect("wakeup state lock");
+        let guard = lock_or_recover(state(), "wakeup state lock");
         guard.clone()
     };
 
@@ -840,7 +852,7 @@ async fn run_scheduler_once(app: &AppHandle) {
         }
 
         if task.schedule.wake_on_reset {
-            handle_quota_reset_task(app, task, now).await;
+            handle_quota_reset_task(app, task, now);
             continue;
         }
 
@@ -865,13 +877,18 @@ async fn run_scheduler_once(app: &AppHandle) {
                 } else {
                     "scheduled"
                 };
-                run_task(app, task, trigger_source).await;
+                let app_handle = app.clone();
+                let task_clone = task.clone();
+                let trigger_source = trigger_source.to_string();
+                tauri::async_runtime::spawn(async move {
+                    run_task(&app_handle, &task_clone, &trigger_source).await;
+                });
             }
         }
     }
 }
 
-async fn handle_quota_reset_task(app: &AppHandle, task: &WakeupTask, now: DateTime<Local>) {
+fn handle_quota_reset_task(app: &AppHandle, task: &WakeupTask, now: DateTime<Local>) {
     if task.schedule.time_window_enabled {
         let in_window = is_in_time_window(
             task.schedule.time_window_start.as_ref(),
@@ -907,7 +924,7 @@ async fn handle_quota_reset_task(app: &AppHandle, task: &WakeupTask, now: DateTi
     }
 
     let models_to_trigger = {
-        let mut state_guard = state().lock().expect("wakeup state lock");
+        let mut state_guard = lock_or_recover(state(), "wakeup state lock");
         let reset_state = state_guard
             .reset_states
             .entry(task.id.clone())
@@ -938,13 +955,12 @@ async fn handle_quota_reset_task(app: &AppHandle, task: &WakeupTask, now: DateTi
     };
 
     if !models_to_trigger.is_empty() {
-        run_task_with_models(
-            app,
-            task,
-            "quota_reset",
-            models_to_trigger.into_iter().collect(),
-        )
-        .await;
+        let app_handle = app.clone();
+        let task_clone = task.clone();
+        let models = models_to_trigger.into_iter().collect::<Vec<_>>();
+        tauri::async_runtime::spawn(async move {
+            run_task_with_models(&app_handle, &task_clone, "quota_reset", models).await;
+        });
     }
 }
 
@@ -989,7 +1005,7 @@ async fn run_task_with_models(
     }
 
     {
-        let mut guard = state().lock().expect("wakeup state lock");
+        let mut guard = lock_or_recover(state(), "wakeup state lock");
         guard.running_tasks.insert(task.id.clone());
     }
 
@@ -1057,7 +1073,7 @@ async fn run_task_with_models(
     }
 
     {
-        let mut guard = state().lock().expect("wakeup state lock");
+        let mut guard = lock_or_recover(state(), "wakeup state lock");
         guard.running_tasks.remove(&task.id);
         let executed_at = chrono::Utc::now().timestamp_millis();
         guard.tasks.iter_mut().for_each(|item| {

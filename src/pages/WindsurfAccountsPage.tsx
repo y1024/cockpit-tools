@@ -48,6 +48,10 @@ import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../components/MultiSelectFilterDropdown';
 import type { WindsurfAccount, WindsurfPlanBadge } from '../types/windsurf';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+} from '../utils/accountValidityFilter';
 
 const WINDSURF_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.windsurf.flow_notice_collapsed';
 const WINDSURF_CURRENT_ACCOUNT_ID_KEY = 'agtools.windsurf.current_account_id';
@@ -288,6 +292,8 @@ export function WindsurfAccountsPage() {
     [resolvePresentation],
   );
 
+  const isAbnormalAccount = useCallback((_account: WindsurfAccount) => false, []);
+
   const formatCreditValue = useCallback(
     (value: number | null | undefined) => {
       if (typeof value !== 'number' || !Number.isFinite(value)) {
@@ -491,24 +497,29 @@ export function WindsurfAccountsPage() {
 
   // ─── Tier filter ────────────────────────────────────────────────────
   const tierCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: accounts.length };
+    const counts: Record<string, number> = { all: accounts.length, VALID: 0 };
     WINDSURF_PLAN_FILTERS.forEach((planKey) => {
       counts[planKey] = 0;
     });
     accounts.forEach((account) => {
+      if (!isAbnormalAccount(account)) {
+        counts.VALID += 1;
+      }
       const tier = resolvePlanKey(account);
       if (tier in counts) counts[tier as keyof typeof counts] += 1;
     });
     return counts;
-  }, [accounts, resolvePlanKey]);
+  }, [accounts, isAbnormalAccount, resolvePlanKey]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(
-    () =>
-      WINDSURF_PLAN_FILTERS.map((planKey) => ({
+    () => [
+      ...WINDSURF_PLAN_FILTERS.map((planKey) => ({
         value: planKey,
         label: `${getWindsurfPlanLabel(planKey)} (${tierCounts[planKey] ?? 0})`,
       })),
-    [tierCounts],
+      buildValidAccountsFilterOption(t, tierCounts.VALID ?? 0),
+    ],
+    [t, tierCounts],
   );
 
   // ─── Filtering & Sorting ────────────────────────────────────────────
@@ -548,8 +559,13 @@ export function WindsurfAccountsPage() {
       result = result.filter((account) => resolvePresentation(account).displayName.toLowerCase().includes(query));
     }
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
     if (tagFilter.length > 0) {
       const selectedTags = new Set(tagFilter.map(normalizeTag));
@@ -557,7 +573,7 @@ export function WindsurfAccountsPage() {
     }
     result.sort(compareAccountsBySort);
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

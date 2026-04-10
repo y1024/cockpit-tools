@@ -259,11 +259,19 @@ export function formatGeminiUsageDollars(cents: number | null | undefined): stri
 export function isGeminiAccountBanned(account: GeminiAccount): boolean {
   const status = (account.status || '').toLowerCase();
   const reason = (account.status_reason || '').toLowerCase();
+  const is403Reason =
+    reason.includes('status=403') ||
+    reason.includes('403 forbidden') ||
+    reason.includes('"code":403') ||
+    reason.includes('"code": 403') ||
+    reason.includes('permission_denied') ||
+    reason.includes('caller does not have permission');
   return (
     status.includes('ban') ||
     status.includes('forbidden') ||
     reason.includes('ban') ||
     reason.includes('forbidden') ||
-    reason.includes('suspend')
+    reason.includes('suspend') ||
+    is403Reason
   );
 }

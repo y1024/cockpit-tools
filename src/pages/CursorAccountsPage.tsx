@@ -37,12 +37,18 @@ import {
   getCursorPlanDisplayName,
   getCursorPlanBadgeClass,
   getCursorAccountDisplayEmail,
+  getCursorOnDemandSummary,
   getCursorUsage,
   formatCursorUsageDollars,
   isCursorAccountBanned,
 } from '../types/cursor';
 import type { CursorAccount } from '../types/cursor';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter';
 
 import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { CursorOverviewTabsHeader, CursorTab } from '../components/CursorOverviewTabsHeader';
@@ -189,6 +195,12 @@ export function CursorAccountsPage() {
     [],
   );
 
+  const isAbnormalAccount = useCallback(
+    (account: CursorAccount) =>
+      isCursorAccountBanned(account) || (account.status || '').toLowerCase() === 'error',
+    [],
+  );
+
   const resolvePlanBadgeClass = useCallback(
     (account: CursorAccount) =>
       getCursorPlanBadgeClass(account.membership_type, account),
@@ -263,41 +275,35 @@ export function CursorAccountsPage() {
   const resolveOnDemandQuota = useCallback(
     (account: CursorAccount) => {
       const usage = getCursorUsage(account);
-      const limitType = (usage.onDemandLimitType || '').toLowerCase();
-      const isTeamLimit = limitType === 'team';
-      const limit = usage.onDemandLimitCents;
-      const individualUsed = usage.onDemandUsedCents ?? 0;
-      const teamUsed = usage.teamOnDemandUsedCents ?? 0;
-      const used = individualUsed > 0 ? individualUsed : (isTeamLimit ? teamUsed : individualUsed);
-      const isFixed = limit != null && limit > 0;
-      const isUnlimited = !isFixed && usage.onDemandEnabled === true && !isTeamLimit;
-      const isDisabled = !isFixed && !isUnlimited;
+      const onDemand = getCursorOnDemandSummary(usage);
 
-      if (isDisabled) {
+      if (onDemand.isDisabled) {
         return {
           percentage: 0,
           quotaClass: 'normal',
-          valueText: used > 0
-            ? formatCursorUsageDollars(used)
+          valueText: onDemand.usedCents > 0
+            ? formatCursorUsageDollars(onDemand.usedCents)
             : t('common.disabled', 'Disabled'),
           costText: null as string | null,
           disabled: true,
         };
       }
 
-      if (isUnlimited) {
+      if (onDemand.isUnlimited) {
         return {
           percentage: 0,
           quotaClass: 'normal',
           valueText: 'Unlimited',
-          costText: formatCursorUsageDollars(used),
+          costText: formatCursorUsageDollars(onDemand.usedCents),
           disabled: false,
         };
       }
 
-      const rawPct = limit && limit > 0 ? (used / limit) * 100 : 0;
+      const rawPct = onDemand.limitCents && onDemand.limitCents > 0
+        ? (onDemand.usedCents / onDemand.limitCents) * 100
+        : 0;
       const fixed = normalizeCursorPercent(rawPct);
-      const costText = `${formatCursorUsageDollars(used)} / ${formatCursorUsageDollars(limit)}`;
+      const costText = `${formatCursorUsageDollars(onDemand.usedCents)} / ${formatCursorUsageDollars(onDemand.limitCents)}`;
       return {
         percentage: fixed.bar,
         quotaClass: getCursorQuotaClass(fixed.display),
@@ -352,17 +358,23 @@ export function CursorAccountsPage() {
         displayLabels.set(tier, resolvePlanLabel(account));
       }
     });
+    const validCount = accounts.reduce(
+      (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+      0,
+    );
 
     const extraKeys = Array.from(dynamicCounts.keys())
       .filter((tier) => !(CURSOR_KNOWN_PLAN_FILTERS as readonly string[]).includes(tier))
       .sort((a, b) => a.localeCompare(b));
 
-    return { all: accounts.length, knownCounts, dynamicCounts, extraKeys, displayLabels };
-  }, [accounts, resolvePlanKey, resolvePlanLabel]);
+    return { all: accounts.length, validCount, knownCounts, dynamicCounts, extraKeys, displayLabels };
+  }, [accounts, isAbnormalAccount, resolvePlanKey, resolvePlanLabel]);
 
   useEffect(() => {
     setFilterTypes((prev) => {
-      const next = prev.filter((value) => tierSummary.dynamicCounts.has(value));
+      const next = prev.filter(
+        (value) => value === VALID_ACCOUNTS_FILTER_VALUE || tierSummary.dynamicCounts.has(value),
+      );
       return next.length === prev.length ? prev : next;
     });
   }, [tierSummary.dynamicCounts]);
@@ -390,8 +402,9 @@ export function CursorAccountsPage() {
         label: resolveFilterLabel(planKey, tierSummary.dynamicCounts.get(planKey) ?? 0),
       });
     });
+    options.push(buildValidAccountsFilterOption(t, tierSummary.validCount));
     return options;
-  }, [resolveFilterLabel, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.FREE_TRIAL, tierSummary.knownCounts.PRO, tierSummary.knownCounts.PRO_PLUS, tierSummary.knownCounts.ULTRA]);
+  }, [resolveFilterLabel, t, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.FREE_TRIAL, tierSummary.knownCounts.PRO, tierSummary.knownCounts.PRO_PLUS, tierSummary.knownCounts.ULTRA, tierSummary.validCount]);
 
   // ─── Filtering & Sorting ──────────────────────────────────────────
 
@@ -445,8 +458,13 @@ export function CursorAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -460,7 +478,7 @@ export function CursorAccountsPage() {
     result.sort(compareAccountsBySort);
 
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, resolvePlanKey, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, resolvePlanKey, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

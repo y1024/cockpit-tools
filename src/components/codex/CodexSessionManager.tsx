@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { confirm as confirmDialog } from '@tauri-apps/plugin-dialog';
-import { ChevronDown, ChevronRight, Folder, RefreshCw, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Eye, Folder, RefreshCw, Trash2 } from 'lucide-react';
 import type { CodexSessionRecord } from '../../types/codex';
 import { useCodexInstanceStore } from '../../stores/useCodexInstanceStore';
 
@@ -74,6 +74,9 @@ export function CodexSessionManager() {
   const instances = useCodexInstanceStore((state) => state.instances);
   const refreshInstances = useCodexInstanceStore((state) => state.refreshInstances);
   const syncThreadsAcrossInstances = useCodexInstanceStore((state) => state.syncThreadsAcrossInstances);
+  const repairSessionVisibilityAcrossInstances = useCodexInstanceStore(
+    (state) => state.repairSessionVisibilityAcrossInstances,
+  );
   const listSessionsAcrossInstances = useCodexInstanceStore((state) => state.listSessionsAcrossInstances);
   const moveSessionsToTrashAcrossInstances = useCodexInstanceStore(
     (state) => state.moveSessionsToTrashAcrossInstances,
@@ -83,6 +86,7 @@ export function CodexSessionManager() {
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [repairingVisibility, setRepairingVisibility] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState<MessageState | null>(null);
   const hasInitializedExpandedGroupsRef = useRef(false);
@@ -206,6 +210,33 @@ export function CodexSessionManager() {
     }
   };
 
+  const handleRepairVisibility = async () => {
+    setMessage(null);
+    const confirmed = await confirmDialog(
+      t(
+        'codex.sessionManager.confirm.repairVisibilityMessage',
+        '会按各实例 config.toml 根级 model_provider（缺失时按 openai）修复 rollout 文件与 state_5.sqlite 中的 provider 元数据，写入前会先备份将要修改的文件。运行中的实例可能需要重启后显示。确认继续？',
+      ),
+      {
+        title: t('codex.sessionManager.actions.repairVisibility', '修复可见性'),
+        okLabel: t('common.confirm', '确认'),
+        cancelLabel: t('common.cancel', '取消'),
+      },
+    );
+    if (!confirmed) return;
+
+    setRepairingVisibility(true);
+    try {
+      const summary = await repairSessionVisibilityAcrossInstances();
+      setMessage({ text: summary.message });
+      await loadSessions();
+    } catch (error) {
+      setMessage({ text: String(error), tone: 'error' });
+    } finally {
+      setRepairingVisibility(false);
+    }
+  };
+
   const handleMoveToTrash = async () => {
     if (selectedIds.length === 0) {
       setMessage({ text: t('codex.sessionManager.messages.pickOne', '请至少选择一条会话'), tone: 'error' });
@@ -243,21 +274,12 @@ export function CodexSessionManager() {
   return (
     <section className="codex-session-manager">
       <div className="codex-session-manager__header">
-        <div>
-          <h3>{t('codex.sessionManager.title', '会话管理')}</h3>
-          <p>
-            {t(
-              'codex.sessionManager.desc',
-              '同步和清理统一放在这里：顶部可一键同步到所有实例，下面按项目展开查看会话并移到废纸篓。',
-            )}
-          </p>
-        </div>
         <div className="codex-session-manager__actions">
           <button
-            className="btn btn-secondary"
+            className="btn btn-secondary codex-session-manager__action-button"
             type="button"
             onClick={() => void handleSyncSessions()}
-            disabled={syncing || deleting || loading || instanceCount < 2}
+            disabled={syncing || repairingVisibility || deleting || loading || instanceCount < 2}
             title={
               instanceCount < 2
                 ? t('codex.sessionManager.messages.syncNeedTwo', '至少需要两个实例才能同步会话')
@@ -268,19 +290,28 @@ export function CodexSessionManager() {
             {t('codex.sessionManager.actions.syncSessions', '同步会话')}
           </button>
           <button
-            className="btn btn-secondary"
+            className="btn btn-secondary codex-session-manager__action-button"
+            type="button"
+            onClick={() => void handleRepairVisibility()}
+            disabled={repairingVisibility || loading || deleting || syncing}
+          >
+            <Eye size={14} />
+            {t('codex.sessionManager.actions.repairVisibility', '修复可见性')}
+          </button>
+          <button
+            className="btn btn-secondary codex-session-manager__action-button"
             type="button"
             onClick={() => void handleRefresh()}
-            disabled={loading || deleting || syncing}
+            disabled={loading || deleting || syncing || repairingVisibility}
           >
             <RefreshCw size={14} className={loading ? 'icon-spin' : undefined} />
             {t('common.refresh', '刷新')}
           </button>
           <button
-            className="btn btn-danger"
+            className="btn btn-danger codex-session-manager__action-button"
             type="button"
             onClick={() => void handleMoveToTrash()}
-            disabled={deleting || loading || syncing || selectedIds.length === 0}
+            disabled={deleting || loading || syncing || repairingVisibility || selectedIds.length === 0}
           >
             <Trash2 size={14} />
             {t('codex.sessionManager.actions.moveToTrash', '移到废纸篓')} ({selectedIds.length})

@@ -42,6 +42,11 @@ import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../components/MultiSelectFilterDropdown';
 import type { KiroAccount } from '../types/kiro';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+  VALID_ACCOUNTS_FILTER_VALUE,
+} from '../utils/accountValidityFilter';
 
 const KIRO_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.kiro.flow_notice_collapsed';
 const KIRO_CURRENT_ACCOUNT_ID_KEY = 'agtools.kiro.current_account_id';
@@ -194,6 +199,14 @@ export function KiroAccountsPage() {
     [resolvePresentation],
   );
 
+  const isAbnormalAccount = useCallback(
+    (account: KiroAccount) => {
+      const presentation = resolvePresentation(account);
+      return presentation.isBanned || presentation.hasStatusError;
+    },
+    [resolvePresentation],
+  );
+
   const resolvePlanBadgeClass = useCallback(
     (account: KiroAccount) => resolvePresentation(account).planClass,
     [resolvePresentation],
@@ -341,17 +354,23 @@ export function KiroAccountsPage() {
         displayLabels.set(tier, resolvePlanLabel(account, tier));
       }
     });
+    const validCount = accounts.reduce(
+      (count, account) => (isAbnormalAccount(account) ? count : count + 1),
+      0,
+    );
 
     const extraKeys = Array.from(dynamicCounts.keys())
       .filter((tier) => !(KIRO_KNOWN_PLAN_FILTERS as readonly string[]).includes(tier))
       .sort((a, b) => a.localeCompare(b));
 
-    return { all: accounts.length, knownCounts, dynamicCounts, extraKeys, displayLabels };
-  }, [accounts, resolvePlanKey, resolvePlanLabel]);
+    return { all: accounts.length, validCount, knownCounts, dynamicCounts, extraKeys, displayLabels };
+  }, [accounts, isAbnormalAccount, resolvePlanKey, resolvePlanLabel]);
 
   useEffect(() => {
     setFilterTypes((prev) => {
-      const next = prev.filter((value) => tierSummary.dynamicCounts.has(value));
+      const next = prev.filter(
+        (value) => value === VALID_ACCOUNTS_FILTER_VALUE || tierSummary.dynamicCounts.has(value),
+      );
       return next.length === prev.length ? prev : next;
     });
   }, [tierSummary.dynamicCounts]);
@@ -378,8 +397,9 @@ export function KiroAccountsPage() {
         label: resolveFilterLabel(planKey, tierSummary.dynamicCounts.get(planKey) ?? 0),
       });
     });
+    options.push(buildValidAccountsFilterOption(t, tierSummary.validCount));
     return options;
-  }, [resolveFilterLabel, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.BUSINESS, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.INDIVIDUAL, tierSummary.knownCounts.PRO]);
+  }, [resolveFilterLabel, t, tierSummary.dynamicCounts, tierSummary.extraKeys, tierSummary.knownCounts.BUSINESS, tierSummary.knownCounts.ENTERPRISE, tierSummary.knownCounts.FREE, tierSummary.knownCounts.INDIVIDUAL, tierSummary.knownCounts.PRO, tierSummary.validCount]);
 
   // ─── Filtering & Sorting ────────────────────────────────────────────
   const compareAccountsBySort = useCallback((a: KiroAccount, b: KiroAccount) => {
@@ -428,8 +448,13 @@ export function KiroAccountsPage() {
     }
 
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((account) => selectedTypes.has(resolvePlanKey(account)));
+      }
     }
 
     if (tagFilter.length > 0) {
@@ -443,7 +468,7 @@ export function KiroAccountsPage() {
     result.sort(compareAccountsBySort);
 
     return result;
-  }, [accounts, compareAccountsBySort, filterTypes, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
+  }, [accounts, compareAccountsBySort, filterTypes, isAbnormalAccount, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);

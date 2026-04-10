@@ -13,6 +13,7 @@ import {
   Check,
   Play,
   RotateCw,
+  Repeat,
   CircleAlert,
   Rows3,
   LayoutGrid,
@@ -22,6 +23,7 @@ import {
   Clock,
   Calendar,
   Tag,
+  Star,
   Eye,
   EyeOff,
   BookOpen,
@@ -60,6 +62,7 @@ import { CodexOverviewTabsHeader, CodexTab } from '../components/CodexOverviewTa
 import { CodexInstancesContent } from './CodexInstancesPage';
 import { CodexSessionManager } from '../components/codex/CodexSessionManager';
 import { CodexWakeupContent } from '../components/codex/CodexWakeupContent';
+import { CodexModelProviderManager } from '../components/codex/CodexModelProviderManager';
 import { QuickSettingsPopover } from '../components/QuickSettingsPopover';
 import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { MultiSelectFilterDropdown, type MultiSelectFilterOption } from '../components/MultiSelectFilterDropdown';
@@ -70,6 +73,22 @@ import {
 } from '../utils/codexPreferences';
 import { emitAccountsChanged } from '../utils/accountSyncEvents';
 import { compareCurrentAccountFirst } from '../utils/currentAccountSort';
+import {
+  CODEX_API_PROVIDER_CUSTOM_ID,
+  CODEX_API_PROVIDER_PRESETS,
+  findCodexApiProviderPresetById,
+  resolveCodexApiProviderPresetId,
+} from '../utils/codexProviderPresets';
+import {
+  findCodexModelProviderByBaseUrl,
+  listCodexModelProviders,
+  type CodexModelProvider,
+  upsertCodexModelProviderFromCredential,
+} from '../services/codexModelProviderService';
+import {
+  buildValidAccountsFilterOption,
+  splitValidityFilterValues,
+} from '../utils/accountValidityFilter';
 
 const CODEX_TOKEN_SINGLE_EXAMPLE = `{
   "tokens": {
@@ -93,6 +112,7 @@ const CODEX_TOKEN_BATCH_EXAMPLE = `[
 ]`;
 const CODEX_USAGE_URL = 'https://platform.openai.com/usage';
 const CODEX_OVERVIEW_LAYOUT_MODE_KEY = 'agtools.codex.accounts.overview_layout_mode';
+const DEFAULT_CODEX_API_PROVIDER_ID = CODEX_API_PROVIDER_CUSTOM_ID;
 
 type CodexOverviewLayoutMode = 'compact' | 'list' | 'grid';
 
@@ -322,13 +342,32 @@ export function CodexAccountsPage() {
   const [switching, setSwitching] = useState<string | null>(null);
   const [apiKeyInput, setApiKeyInput] = useState('');
   const [apiBaseUrlInput, setApiBaseUrlInput] = useState('');
+  const [apiProviderPresetId, setApiProviderPresetId] = useState(
+    DEFAULT_CODEX_API_PROVIDER_ID,
+  );
+  const [managedProviders, setManagedProviders] = useState<CodexModelProvider[]>([]);
+  const [managedProvidersLoading, setManagedProvidersLoading] = useState(false);
+  const [managedProviderId, setManagedProviderId] = useState<string>('');
+  const [managedProviderApiKeyId, setManagedProviderApiKeyId] = useState<string>('');
+  const [newManagedProviderNameInput, setNewManagedProviderNameInput] = useState('');
   const [editingApiKeyNameId, setEditingApiKeyNameId] = useState<string | null>(null);
   const [editingApiKeyNameValue, setEditingApiKeyNameValue] = useState('');
   const [savingApiKeyNameId, setSavingApiKeyNameId] = useState<string | null>(null);
   const [editingApiKeyCredentialsId, setEditingApiKeyCredentialsId] = useState<string | null>(null);
   const [editingApiKeyCredentialsValue, setEditingApiKeyCredentialsValue] = useState('');
   const [editingApiBaseUrlCredentialsValue, setEditingApiBaseUrlCredentialsValue] = useState('');
+  const [editingApiProviderPresetId, setEditingApiProviderPresetId] = useState(
+    DEFAULT_CODEX_API_PROVIDER_ID,
+  );
+  const [editingManagedProviderId, setEditingManagedProviderId] = useState<string>('');
+  const [editingManagedProviderApiKeyId, setEditingManagedProviderApiKeyId] = useState<string>('');
+  const [editingNewManagedProviderNameInput, setEditingNewManagedProviderNameInput] = useState('');
   const [savingApiKeyCredentials, setSavingApiKeyCredentials] = useState(false);
+  const [quickSwitchAccountId, setQuickSwitchAccountId] = useState<string | null>(null);
+  const [quickSwitchProviderId, setQuickSwitchProviderId] = useState<string>('');
+  const [quickSwitchApiKeyId, setQuickSwitchApiKeyId] = useState<string>('');
+  const [quickSwitchSubmitting, setQuickSwitchSubmitting] = useState(false);
+  const [quickSwitchError, setQuickSwitchError] = useState<string | null>(null);
   const [showCodeReviewQuota, setShowCodeReviewQuota] = useState<boolean>(
     isCodexCodeReviewQuotaVisibleByDefault,
   );
@@ -343,8 +382,65 @@ export function CodexAccountsPage() {
   const oauthAttemptSeqRef = useRef(0);
   const inlineRenameDiscardRef = useRef(false);
 
+  const selectedApiProviderPreset = useMemo(
+    () => findCodexApiProviderPresetById(apiProviderPresetId),
+    [apiProviderPresetId],
+  );
+  const selectedEditingApiProviderPreset = useMemo(
+    () => findCodexApiProviderPresetById(editingApiProviderPresetId),
+    [editingApiProviderPresetId],
+  );
+  const selectedManagedProvider = useMemo(
+    () => managedProviders.find((item) => item.id === managedProviderId) ?? null,
+    [managedProviderId, managedProviders],
+  );
+  const selectedManagedProviderApiKey = useMemo(
+    () =>
+      selectedManagedProvider?.apiKeys.find((item) => item.id === managedProviderApiKeyId) ?? null,
+    [managedProviderApiKeyId, selectedManagedProvider],
+  );
+  const selectedEditingManagedProvider = useMemo(
+    () => managedProviders.find((item) => item.id === editingManagedProviderId) ?? null,
+    [editingManagedProviderId, managedProviders],
+  );
+  const selectedEditingManagedProviderApiKey = useMemo(
+    () =>
+      selectedEditingManagedProvider?.apiKeys.find(
+        (item) => item.id === editingManagedProviderApiKeyId,
+      ) ?? null,
+    [editingManagedProviderApiKeyId, selectedEditingManagedProvider],
+  );
+  const quickSwitchAccount = useMemo(
+    () =>
+      quickSwitchAccountId
+        ? accounts.find((item) => item.id === quickSwitchAccountId) ?? null
+        : null,
+    [accounts, quickSwitchAccountId],
+  );
+  const selectedQuickSwitchProvider = useMemo(
+    () => managedProviders.find((item) => item.id === quickSwitchProviderId) ?? null,
+    [managedProviders, quickSwitchProviderId],
+  );
+  const selectedQuickSwitchApiKey = useMemo(
+    () =>
+      selectedQuickSwitchProvider?.apiKeys.find((item) => item.id === quickSwitchApiKeyId) ?? null,
+    [quickSwitchApiKeyId, selectedQuickSwitchProvider],
+  );
+
   const oauthLog = useCallback((...args: unknown[]) => {
     console.info('[CodexOAuth]', ...args);
+  }, []);
+
+  const reloadManagedProviders = useCallback(async () => {
+    setManagedProvidersLoading(true);
+    try {
+      const items = await listCodexModelProviders();
+      setManagedProviders(items);
+    } catch (err) {
+      console.error('[CodexModelProviders] 加载失败', err);
+    } finally {
+      setManagedProvidersLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -359,11 +455,90 @@ export function CodexAccountsPage() {
   }, [fetchAccounts, fetchCurrentAccount]);
 
   useEffect(() => {
+    void reloadManagedProviders();
+  }, [reloadManagedProviders]);
+
+  useEffect(() => {
     if (!showAddModal) {
       setApiKeyInput('');
       setApiBaseUrlInput('');
+      setApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
+      setManagedProviderId('');
+      setManagedProviderApiKeyId('');
+      setNewManagedProviderNameInput('');
     }
   }, [showAddModal]);
+
+  useEffect(() => {
+    const resolvedId = resolveCodexApiProviderPresetId(apiBaseUrlInput);
+    setApiProviderPresetId((prev) => (prev === resolvedId ? prev : resolvedId));
+  }, [apiBaseUrlInput]);
+
+  useEffect(() => {
+    const matched = findCodexModelProviderByBaseUrl(managedProviders, apiBaseUrlInput);
+    setManagedProviderId((prev) => (prev === (matched?.id ?? '') ? prev : matched?.id ?? ''));
+    if (!matched || matched.apiKeys.length === 0) {
+      setManagedProviderApiKeyId('');
+      return;
+    }
+    setManagedProviderApiKeyId((prev) => {
+      if (matched.apiKeys.some((item) => item.id === prev)) return prev;
+      return matched.apiKeys[0]?.id ?? '';
+    });
+  }, [apiBaseUrlInput, managedProviders]);
+
+  useEffect(() => {
+    if (!selectedManagedProviderApiKey) return;
+    setApiKeyInput(selectedManagedProviderApiKey.apiKey);
+  }, [managedProviderApiKeyId, selectedManagedProviderApiKey]);
+
+  useEffect(() => {
+    const resolvedId = resolveCodexApiProviderPresetId(editingApiBaseUrlCredentialsValue);
+    setEditingApiProviderPresetId((prev) => (prev === resolvedId ? prev : resolvedId));
+  }, [editingApiBaseUrlCredentialsValue]);
+
+  useEffect(() => {
+    const matched = findCodexModelProviderByBaseUrl(
+      managedProviders,
+      editingApiBaseUrlCredentialsValue,
+    );
+    setEditingManagedProviderId((prev) => (prev === (matched?.id ?? '') ? prev : matched?.id ?? ''));
+    if (!matched || matched.apiKeys.length === 0) {
+      setEditingManagedProviderApiKeyId('');
+      return;
+    }
+    setEditingManagedProviderApiKeyId((prev) => {
+      if (matched.apiKeys.some((item) => item.id === prev)) return prev;
+      return matched.apiKeys[0]?.id ?? '';
+    });
+  }, [editingApiBaseUrlCredentialsValue, managedProviders]);
+
+  useEffect(() => {
+    if (!selectedEditingManagedProviderApiKey) return;
+    setEditingApiKeyCredentialsValue(selectedEditingManagedProviderApiKey.apiKey);
+  }, [editingManagedProviderApiKeyId, selectedEditingManagedProviderApiKey]);
+
+  useEffect(() => {
+    if (!quickSwitchAccountId) return;
+    if (accounts.some((item) => item.id === quickSwitchAccountId)) return;
+    setQuickSwitchAccountId(null);
+    setQuickSwitchProviderId('');
+    setQuickSwitchApiKeyId('');
+    setQuickSwitchError(null);
+  }, [accounts, quickSwitchAccountId]);
+
+  useEffect(() => {
+    if (!selectedQuickSwitchProvider) {
+      setQuickSwitchApiKeyId('');
+      return;
+    }
+    setQuickSwitchApiKeyId((prev) => {
+      if (selectedQuickSwitchProvider.apiKeys.some((item) => item.id === prev)) {
+        return prev;
+      }
+      return selectedQuickSwitchProvider.apiKeys[0]?.id ?? '';
+    });
+  }, [selectedQuickSwitchProvider]);
 
   useEffect(() => {
     const syncCodeReviewVisibility = () => {
@@ -781,7 +956,176 @@ export function CodexAccountsPage() {
     }
   };
 
-  const handleApiKeyLogin = async () => {
+  const handleSelectApiProviderPreset = useCallback((providerId: string) => {
+    setApiProviderPresetId(providerId);
+    const preset = findCodexApiProviderPresetById(providerId);
+    if (!preset || preset.baseUrls.length === 0) return;
+    setApiBaseUrlInput(preset.baseUrls[0]);
+  }, []);
+
+  const handleSelectManagedProvider = useCallback(
+    (providerId: string) => {
+      setManagedProviderId(providerId);
+      const provider = managedProviders.find((item) => item.id === providerId);
+      if (!provider) return;
+      setApiBaseUrlInput(provider.baseUrl);
+      const firstKey = provider.apiKeys[0];
+      if (firstKey) {
+        setManagedProviderApiKeyId(firstKey.id);
+        setApiKeyInput(firstKey.apiKey);
+      } else {
+        setManagedProviderApiKeyId('');
+      }
+      setNewManagedProviderNameInput(provider.name);
+    },
+    [managedProviders],
+  );
+
+  const handleSelectManagedProviderApiKey = useCallback(
+    (apiKeyId: string) => {
+      setManagedProviderApiKeyId(apiKeyId);
+      const key = selectedManagedProvider?.apiKeys.find((item) => item.id === apiKeyId);
+      if (key) {
+        setApiKeyInput(key.apiKey);
+      }
+    },
+    [selectedManagedProvider],
+  );
+
+  const handleSelectEditingApiProviderPreset = useCallback((providerId: string) => {
+    setEditingApiProviderPresetId(providerId);
+    const preset = findCodexApiProviderPresetById(providerId);
+    if (!preset || preset.baseUrls.length === 0) return;
+    setEditingApiBaseUrlCredentialsValue(preset.baseUrls[0]);
+  }, []);
+
+  const handleSelectEditingManagedProvider = useCallback(
+    (providerId: string) => {
+      setEditingManagedProviderId(providerId);
+      const provider = managedProviders.find((item) => item.id === providerId);
+      if (!provider) return;
+      setEditingApiBaseUrlCredentialsValue(provider.baseUrl);
+      const firstKey = provider.apiKeys[0];
+      if (firstKey) {
+        setEditingManagedProviderApiKeyId(firstKey.id);
+        setEditingApiKeyCredentialsValue(firstKey.apiKey);
+      } else {
+        setEditingManagedProviderApiKeyId('');
+      }
+      setEditingNewManagedProviderNameInput(provider.name);
+    },
+    [managedProviders],
+  );
+
+  const handleSelectEditingManagedProviderApiKey = useCallback(
+    (apiKeyId: string) => {
+      setEditingManagedProviderApiKeyId(apiKeyId);
+      const key = selectedEditingManagedProvider?.apiKeys.find((item) => item.id === apiKeyId);
+      if (key) {
+        setEditingApiKeyCredentialsValue(key.apiKey);
+      }
+    },
+    [selectedEditingManagedProvider],
+  );
+
+  const closeQuickSwitchModal = useCallback(() => {
+    if (quickSwitchSubmitting) return;
+    setQuickSwitchAccountId(null);
+    setQuickSwitchProviderId('');
+    setQuickSwitchApiKeyId('');
+    setQuickSwitchError(null);
+  }, [quickSwitchSubmitting]);
+
+  const openQuickSwitchProviderModal = useCallback(
+    (account: CodexAccount) => {
+      if (!isCodexApiKeyAccount(account)) return;
+      const baseUrl = (account.api_base_url || '').trim();
+      const apiKey = (account.openai_api_key || '').trim();
+      const matchedProvider = findCodexModelProviderByBaseUrl(managedProviders, baseUrl);
+      const fallbackProvider = matchedProvider ?? managedProviders[0] ?? null;
+      const matchedApiKey = matchedProvider?.apiKeys.find((item) => item.apiKey.trim() === apiKey);
+      const fallbackApiKey = matchedApiKey ?? fallbackProvider?.apiKeys[0] ?? null;
+
+      setQuickSwitchAccountId(account.id);
+      setQuickSwitchProviderId(fallbackProvider?.id ?? '');
+      setQuickSwitchApiKeyId(fallbackApiKey?.id ?? '');
+      setQuickSwitchError(null);
+    },
+    [managedProviders],
+  );
+
+  const handleSelectQuickSwitchProvider = useCallback(
+    (providerId: string) => {
+      setQuickSwitchProviderId(providerId);
+      const provider = managedProviders.find((item) => item.id === providerId);
+      setQuickSwitchApiKeyId(provider?.apiKeys[0]?.id ?? '');
+      setQuickSwitchError(null);
+    },
+    [managedProviders],
+  );
+
+  const handleSelectQuickSwitchApiKey = useCallback((apiKeyId: string) => {
+    setQuickSwitchApiKeyId(apiKeyId);
+    setQuickSwitchError(null);
+  }, []);
+
+  const handleSubmitQuickSwitch = useCallback(async () => {
+    if (!quickSwitchAccount) return;
+    if (!selectedQuickSwitchProvider) {
+      setQuickSwitchError(t('codex.quickSwitch.validation.providerRequired', '请选择供应商'));
+      return;
+    }
+    if (!selectedQuickSwitchApiKey) {
+      setQuickSwitchError(t('codex.quickSwitch.validation.apiKeyRequired', '请选择 API Key'));
+      return;
+    }
+
+    setQuickSwitchSubmitting(true);
+    setQuickSwitchError(null);
+    try {
+      await updateApiKeyCredentials(
+        quickSwitchAccount.id,
+        selectedQuickSwitchApiKey.apiKey,
+        selectedQuickSwitchProvider.baseUrl,
+      );
+      setMessage({
+        text: t('codex.quickSwitch.success', {
+          defaultValue: '已切换到供应商：{{provider}}',
+          provider: selectedQuickSwitchProvider.name,
+        }),
+      });
+      setQuickSwitchAccountId(null);
+      setQuickSwitchProviderId('');
+      setQuickSwitchApiKeyId('');
+      setQuickSwitchError(null);
+    } catch (err) {
+      setQuickSwitchError(
+        t('codex.quickSwitch.failed', {
+          defaultValue: '切换供应商失败：{{error}}',
+          error: String(err).replace(/^Error:\s*/, ''),
+        }),
+      );
+    } finally {
+      setQuickSwitchSubmitting(false);
+    }
+  }, [
+    quickSwitchAccount,
+    selectedQuickSwitchApiKey,
+    selectedQuickSwitchProvider,
+    setMessage,
+    t,
+    updateApiKeyCredentials,
+  ]);
+
+  const handleOpenProviderLink = useCallback(async (url: string) => {
+    try {
+      await openUrl(url);
+    } catch {
+      await navigator.clipboard.writeText(url).catch(() => { });
+    }
+  }, []);
+
+  const handleApiKeyLogin = async (switchAfterAdd = false) => {
     const validation = validateApiKeyCredentialInputs(apiKeyInput, apiBaseUrlInput);
     if (!validation.ok) {
       page.setAddStatus('error');
@@ -796,21 +1140,47 @@ export function CodexAccountsPage() {
         validation.apiKey,
         validation.apiBaseUrl,
       );
-      await fetchAccounts();
-      await fetchCurrentAccount();
+      if (validation.apiBaseUrl) {
+        try {
+          await upsertCodexModelProviderFromCredential({
+            providerId: managedProviderId || null,
+            providerName: newManagedProviderNameInput.trim() || null,
+            apiBaseUrl: validation.apiBaseUrl,
+            apiKey: validation.apiKey,
+          });
+          await reloadManagedProviders();
+        } catch (providerErr) {
+          console.warn('[CodexModelProviders] 添加账号后写入供应商失败', providerErr);
+        }
+      }
+      if (switchAfterAdd) {
+        await switchAccount(account.id);
+      } else {
+        await fetchAccounts();
+        await fetchCurrentAccount();
+      }
       await emitAccountsChanged({
         platformId: 'codex',
         reason: 'import',
       });
       page.setAddStatus('success');
       page.setAddMessage(
-        t('codex.import.successMsg', '导入成功: {{email}}').replace(
-          '{{email}}',
-          maskAccountText(account.email),
-        ),
+        switchAfterAdd
+          ? t('codex.api.addAndSwitchSuccess', '添加并切换成功: {{email}}').replace(
+            '{{email}}',
+            maskAccountText(account.email),
+          )
+          : t('codex.import.successMsg', '导入成功: {{email}}').replace(
+            '{{email}}',
+            maskAccountText(account.email),
+          ),
       );
       setApiKeyInput('');
       setApiBaseUrlInput('');
+      setApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
+      setManagedProviderId('');
+      setManagedProviderApiKeyId('');
+      setNewManagedProviderNameInput('');
       setTimeout(() => {
         closeAddModal();
       }, 1200);
@@ -920,19 +1290,50 @@ export function CodexAccountsPage() {
     [t],
   );
 
+  const resolveApiProviderDisplayName = useCallback(
+    (account: CodexAccount): string => {
+      const baseUrl = (account.api_base_url || '').trim();
+      if (!baseUrl) {
+        const fallback = findCodexApiProviderPresetById('openai_official');
+        return fallback ? t(`codex.api.providers.${fallback.id}.name`, fallback.name) : t('common.none', '暂无');
+      }
+      const matchedProvider = findCodexModelProviderByBaseUrl(managedProviders, baseUrl);
+      if (matchedProvider) return matchedProvider.name;
+      const preset = findCodexApiProviderPresetById(resolveCodexApiProviderPresetId(baseUrl));
+      if (preset) return t(`codex.api.providers.${preset.id}.name`, preset.name);
+      return t('codex.api.provider.custom', '自定义');
+    },
+    [managedProviders, t],
+  );
+
   const closeApiKeyCredentialsModal = useCallback(() => {
     if (savingApiKeyCredentials) return;
     setEditingApiKeyCredentialsId(null);
     setEditingApiKeyCredentialsValue('');
     setEditingApiBaseUrlCredentialsValue('');
+    setEditingApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
+    setEditingManagedProviderId('');
+    setEditingManagedProviderApiKeyId('');
+    setEditingNewManagedProviderNameInput('');
   }, [savingApiKeyCredentials]);
 
   const openApiKeyCredentialsModal = useCallback((account: CodexAccount) => {
     if (!isCodexApiKeyAccount(account)) return;
+    const initialBaseUrl = (account.api_base_url || '').trim();
+    const initialApiKey = (account.openai_api_key || '').trim();
+    const matchedProvider = findCodexModelProviderByBaseUrl(managedProviders, initialBaseUrl);
+    const matchedProviderKey = matchedProvider?.apiKeys.find(
+      (item) => item.apiKey.trim() === initialApiKey,
+    );
+
     setEditingApiKeyCredentialsId(account.id);
-    setEditingApiKeyCredentialsValue((account.openai_api_key || '').trim());
-    setEditingApiBaseUrlCredentialsValue((account.api_base_url || '').trim());
-  }, []);
+    setEditingApiKeyCredentialsValue(initialApiKey);
+    setEditingApiBaseUrlCredentialsValue(initialBaseUrl);
+    setEditingApiProviderPresetId(resolveCodexApiProviderPresetId(initialBaseUrl));
+    setEditingManagedProviderId(matchedProvider?.id ?? '');
+    setEditingManagedProviderApiKeyId(matchedProviderKey?.id ?? '');
+    setEditingNewManagedProviderNameInput(matchedProvider?.name ?? '');
+  }, [managedProviders]);
 
   const handleSubmitApiKeyCredentials = useCallback(async () => {
     const accountId = editingApiKeyCredentialsId;
@@ -957,10 +1358,27 @@ export function CodexAccountsPage() {
         validation.apiKey,
         validation.apiBaseUrl,
       );
+      if (validation.apiBaseUrl) {
+        try {
+          await upsertCodexModelProviderFromCredential({
+            providerId: editingManagedProviderId || null,
+            providerName: editingNewManagedProviderNameInput.trim() || null,
+            apiBaseUrl: validation.apiBaseUrl,
+            apiKey: validation.apiKey,
+          });
+          await reloadManagedProviders();
+        } catch (providerErr) {
+          console.warn('[CodexModelProviders] 更新凭据后写入供应商失败', providerErr);
+        }
+      }
       setMessage({ text: t('instances.messages.updated', '实例已更新') });
       setEditingApiKeyCredentialsId(null);
       setEditingApiKeyCredentialsValue('');
       setEditingApiBaseUrlCredentialsValue('');
+      setEditingApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
+      setEditingManagedProviderId('');
+      setEditingManagedProviderApiKeyId('');
+      setEditingNewManagedProviderNameInput('');
     } catch (e) {
       setMessage({
         text: `${t('common.failed', '失败')}: ${String(e)}`,
@@ -973,8 +1391,12 @@ export function CodexAccountsPage() {
     editingApiBaseUrlCredentialsValue,
     editingApiKeyCredentialsId,
     editingApiKeyCredentialsValue,
+    editingManagedProviderId,
+    editingNewManagedProviderNameInput,
+    reloadManagedProviders,
     setMessage,
     t,
+    upsertCodexModelProviderFromCredential,
     updateApiKeyCredentials,
     validateApiKeyCredentialInputs,
   ]);
@@ -1123,15 +1545,23 @@ export function CodexAccountsPage() {
     [accountMetaMap, t],
   );
 
+  const isAbnormalAccount = useCallback(
+    (account: CodexAccount) => Boolean(account.quota_error),
+    [],
+  );
+
   const tierCounts = useMemo(() => {
-    const counts = { all: accounts.length, FREE: 0, PLUS: 0, PRO: 0, TEAM: 0, ENTERPRISE: 0, ERROR: 0 };
+    const counts = { all: accounts.length, VALID: 0, FREE: 0, PLUS: 0, PRO: 0, TEAM: 0, ENTERPRISE: 0, ERROR: 0 };
     accounts.forEach((a) => {
+      if (!isAbnormalAccount(a)) {
+        counts.VALID += 1;
+      }
       const tier = resolvePlanKey(a);
       if (tier in counts) counts[tier as keyof typeof counts] += 1;
       if (a.quota_error) counts.ERROR += 1;
     });
     return counts;
-  }, [accounts, resolvePlanKey]);
+  }, [accounts, isAbnormalAccount, resolvePlanKey]);
 
   const tierFilterOptions = useMemo<MultiSelectFilterOption[]>(() => [
     { value: 'FREE', label: `FREE (${tierCounts.FREE})` },
@@ -1140,7 +1570,8 @@ export function CodexAccountsPage() {
     { value: 'TEAM', label: `TEAM (${tierCounts.TEAM})` },
     { value: 'ENTERPRISE', label: `ENTERPRISE (${tierCounts.ENTERPRISE})` },
     { value: 'ERROR', label: `ERROR (${tierCounts.ERROR})` },
-  ], [tierCounts]);
+    buildValidAccountsFilterOption(t, tierCounts.VALID),
+  ], [t, tierCounts]);
 
   // ─── Filtering & Sorting ────────────────────────────────────────────
   const compareAccountsBySort = useCallback((a: CodexAccount, b: CodexAccount) => {
@@ -1178,13 +1609,18 @@ export function CodexAccountsPage() {
       result = result.filter((a) => resolvePresentation(a).displayName.toLowerCase().includes(query));
     }
     if (filterTypes.length > 0) {
-      const selectedTypes = new Set(filterTypes);
-      result = result.filter((a) => {
-        if (selectedTypes.has('ERROR') && a.quota_error) {
-          return true;
-        }
-        return selectedTypes.has(resolvePlanKey(a));
-      });
+      const { requireValidAccounts, selectedTypes } = splitValidityFilterValues(filterTypes);
+      if (requireValidAccounts) {
+        result = result.filter((account) => !isAbnormalAccount(account));
+      }
+      if (selectedTypes.size > 0) {
+        result = result.filter((a) => {
+          if (selectedTypes.has('ERROR') && a.quota_error) {
+            return true;
+          }
+          return selectedTypes.has(resolvePlanKey(a));
+        });
+      }
     }
     if (tagFilter.length > 0) {
       const selectedTags = new Set(tagFilter.map(normalizeTag));
@@ -1207,7 +1643,7 @@ export function CodexAccountsPage() {
     }
     result.sort(compareAccountsBySort);
     return result;
-  }, [accounts, codexGroups, compareAccountsBySort, filterTypes, groupFilter, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
+  }, [accounts, codexGroups, compareAccountsBySort, filterTypes, groupFilter, isAbnormalAccount, normalizeTag, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);
@@ -1343,6 +1779,8 @@ export function CodexAccountsPage() {
       const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
       const apiKeyText = resolveApiKeyDisplayText(account);
       const apiKeyLine = `${t('codex.addModal.token', 'API Key')}：${apiKeyText}`;
+      const apiProviderName = resolveApiProviderDisplayName(account);
+      const apiProviderLine = `${t('codex.api.provider.label', '供应商')}：${apiProviderName}`;
       const apiBaseUrlText = (account.api_base_url || '').trim() || '-';
       const apiBaseUrlLine = `${t('codex.api.baseUrl', 'Base URL')}：${apiBaseUrlText}`;
       const accountTags = (account.tags || []).map((tag) => tag.trim()).filter(Boolean);
@@ -1405,6 +1843,19 @@ export function CodexAccountsPage() {
                   {apiKeyLine}
                 </span>
               </div>
+              <div className="account-sub-line codex-provider-inline-line">
+                <span className="codex-login-subline codex-provider-inline-text" title={apiProviderLine}>
+                  {apiProviderLine}
+                </span>
+                <button
+                  type="button"
+                  className="codex-provider-inline-switch"
+                  onClick={() => openQuickSwitchProviderModal(account)}
+                  title={t('codex.quickSwitch.action', '快速切换供应商')}
+                >
+                  {t('codex.quickSwitch.inlineAction', '切换')}
+                </button>
+              </div>
               <div className="account-sub-line">
                 <span className="codex-login-subline" title={apiBaseUrlLine}>
                   {apiBaseUrlLine}
@@ -1452,6 +1903,15 @@ export function CodexAccountsPage() {
             <span className="card-date">{formatDate(account.created_at)}</span>
             <div className="card-actions">
               <button className="card-action-btn" onClick={() => openTagModal(account.id)} title={t('accounts.editTags', '编辑标签')}><Tag size={14} /></button>
+              {isApiKeyAccount && (
+                <button
+                  className="card-action-btn"
+                  onClick={() => openQuickSwitchProviderModal(account)}
+                  title={t('codex.quickSwitch.action', '快速切换供应商')}
+                >
+                  <Repeat size={14} />
+                </button>
+              )}
               {isApiKeyAccount && (
                 <button
                   className="card-action-btn"
@@ -1508,6 +1968,8 @@ export function CodexAccountsPage() {
       const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
       const apiKeyText = resolveApiKeyDisplayText(account);
       const apiKeyLine = `${t('codex.addModal.token', 'API Key')}：${apiKeyText}`;
+      const apiProviderName = resolveApiProviderDisplayName(account);
+      const apiProviderLine = `${t('codex.api.provider.label', '供应商')}：${apiProviderName}`;
       const apiBaseUrlText = (account.api_base_url || '').trim() || '-';
       const apiBaseUrlLine = `${t('codex.api.baseUrl', 'Base URL')}：${apiBaseUrlText}`;
       return (
@@ -1563,6 +2025,19 @@ export function CodexAccountsPage() {
                     {apiKeyLine}
                   </span>
                 </div>
+                <div className="account-sub-line codex-account-meta-inline codex-provider-inline-line">
+                  <span className="codex-login-subline codex-provider-inline-text" title={apiProviderLine}>
+                    {apiProviderLine}
+                  </span>
+                  <button
+                    type="button"
+                    className="codex-provider-inline-switch"
+                    onClick={() => openQuickSwitchProviderModal(account)}
+                    title={t('codex.quickSwitch.action', '快速切换供应商')}
+                  >
+                    {t('codex.quickSwitch.inlineAction', '切换')}
+                  </button>
+                </div>
                 <div className="account-sub-line codex-account-meta-inline">
                   <span className="codex-login-subline" title={apiBaseUrlLine}>
                     {apiBaseUrlLine}
@@ -1617,6 +2092,15 @@ export function CodexAccountsPage() {
             {isApiKeyAccount && (
               <button
                 className="action-btn"
+                onClick={() => openQuickSwitchProviderModal(account)}
+                title={t('codex.quickSwitch.action', '快速切换供应商')}
+              >
+                <Repeat size={14} />
+              </button>
+            )}
+            {isApiKeyAccount && (
+              <button
+                className="action-btn"
                 onClick={() => openApiKeyCredentialsModal(account)}
                 title={t('instances.actions.edit', '编辑')}
               >
@@ -1649,7 +2133,7 @@ export function CodexAccountsPage() {
       <CodexOverviewTabsHeader
         active={activeTab}
         onTabChange={setActiveTab}
-        tabs={['overview', 'wakeup', 'instances', 'sessions']}
+        tabs={['overview', 'providers', 'wakeup', 'instances', 'sessions']}
       />
 
       {activeTab === 'overview' && (<>
@@ -1834,6 +2318,113 @@ export function CodexAccountsPage() {
               ) : (<div className="oauth-loading"><RefreshCw size={24} className="loading-spinner" /><span>{t('codex.oauth.preparing', '正在准备授权链接...')}</span></div>)}</div>)}
             {addTab === 'apikey' && (<div className="add-section">
               <div className="oauth-link">
+                <label>{t('codex.modelProviders.selectSavedProvider', '已保存供应商')}</label>
+                {managedProvidersLoading ? (
+                  <div className="section-desc">{t('common.loading', '加载中...')}</div>
+                ) : managedProviders.length === 0 ? (
+                  <div className="section-desc">
+                    {t('codex.modelProviders.noSavedProviders', '暂无已保存供应商，可直接填写后自动保存。')}
+                  </div>
+                ) : (
+                  <div className="api-provider-chip-list">
+                    {managedProviders.map((provider) => (
+                      <button
+                        key={provider.id}
+                        className={`api-provider-chip ${managedProviderId === provider.id ? 'active' : ''}`}
+                        onClick={() => handleSelectManagedProvider(provider.id)}
+                        type="button"
+                      >
+                        <span>{provider.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {selectedManagedProvider && selectedManagedProvider.apiKeys.length > 0 && (
+                <div className="oauth-link">
+                  <label>{t('codex.modelProviders.selectSavedApiKey', '已保存 API Key')}</label>
+                  <div className="api-provider-endpoint-list">
+                    {selectedManagedProvider.apiKeys.map((item) => (
+                      <button
+                        key={item.id}
+                        className={`api-provider-endpoint-chip ${managedProviderApiKeyId === item.id ? 'active' : ''}`}
+                        onClick={() => handleSelectManagedProviderApiKey(item.id)}
+                        type="button"
+                      >
+                        {item.name || t('codex.modelProviders.unnamedKey', '未命名 Key')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="oauth-link">
+                <label>{t('codex.api.provider.label', '供应商')}</label>
+                <div className="api-provider-chip-list">
+                  <button
+                    className={`api-provider-chip ${apiProviderPresetId === CODEX_API_PROVIDER_CUSTOM_ID ? 'active' : ''}`}
+                    onClick={() => handleSelectApiProviderPreset(CODEX_API_PROVIDER_CUSTOM_ID)}
+                    type="button"
+                  >
+                    <span>{t('codex.api.provider.custom', '自定义')}</span>
+                  </button>
+                  {CODEX_API_PROVIDER_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      className={`api-provider-chip ${apiProviderPresetId === preset.id ? 'active' : ''}`}
+                      onClick={() => handleSelectApiProviderPreset(preset.id)}
+                      type="button"
+                    >
+                      <span>{t(`codex.api.providers.${preset.id}.name`, preset.name)}</span>
+                      {preset.isPartner && <Star size={12} className="api-provider-chip-badge" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {selectedApiProviderPreset && selectedApiProviderPreset.baseUrls.length > 1 && (
+                <div className="oauth-link">
+                  <label>{t('codex.api.provider.endpoint', '供应商端点')}</label>
+                  <div className="api-provider-endpoint-list">
+                    {selectedApiProviderPreset.baseUrls.map((baseUrl) => (
+                      <button
+                        key={baseUrl}
+                        className={`api-provider-endpoint-chip ${apiBaseUrlInput === baseUrl ? 'active' : ''}`}
+                        onClick={() => setApiBaseUrlInput(baseUrl)}
+                        type="button"
+                      >
+                        {baseUrl}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {selectedApiProviderPreset && (
+                <div className="api-provider-hint-block">
+                  <p className="api-provider-hint">
+                    {t('codex.api.provider.hint', '已自动填写兼容 Base URL，可继续手动调整。')}
+                  </p>
+                  <div className="api-provider-links">
+                    {selectedApiProviderPreset.website && (
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => void handleOpenProviderLink(selectedApiProviderPreset.website || '')}
+                      >
+                        <ExternalLink size={14} />
+                        {t('codex.api.provider.website', '官网')}
+                      </button>
+                    )}
+                    {selectedApiProviderPreset.apiKeyUrl && (
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => void handleOpenProviderLink(selectedApiProviderPreset.apiKeyUrl || '')}
+                      >
+                        <KeyRound size={14} />
+                        {t('codex.api.provider.apiKeyPage', 'API Key 页面')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+              <div className="oauth-link">
                 <label>{t('codex.addModal.token', 'API Key')}</label>
                 <div className="oauth-url-box oauth-manual-input">
                   <input
@@ -1854,9 +2445,35 @@ export function CodexAccountsPage() {
                   />
                 </div>
               </div>
-              <button className="btn btn-primary btn-full" onClick={() => void handleApiKeyLogin()} disabled={importing || !apiKeyInput.trim()}>
-                {importing ? <RefreshCw size={16} className="loading-spinner" /> : <KeyRound size={16} />}{t('common.shared.addAccount', '添加账号')}
-              </button>
+              <div className="oauth-link">
+                <label>{t('codex.modelProviders.newProviderName', '供应商名称（自动保存时使用，可选）')}</label>
+                <div className="oauth-url-box oauth-manual-input">
+                  <input
+                    type="text"
+                    value={newManagedProviderNameInput}
+                    onChange={(e) => setNewManagedProviderNameInput(e.target.value)}
+                    placeholder={t('codex.modelProviders.newProviderNamePlaceholder', '不填则按域名自动生成')}
+                  />
+                </div>
+              </div>
+              <div className="api-key-add-actions">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => void handleApiKeyLogin(false)}
+                  disabled={importing || addStatus === 'loading' || !apiKeyInput.trim()}
+                >
+                  {addStatus === 'loading' ? <RefreshCw size={16} className="loading-spinner" /> : <KeyRound size={16} />}
+                  {t('common.shared.addAccount', '添加账号')}
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => void handleApiKeyLogin(true)}
+                  disabled={importing || addStatus === 'loading' || !apiKeyInput.trim()}
+                >
+                  {addStatus === 'loading' ? <RefreshCw size={16} className="loading-spinner" /> : <Play size={16} />}
+                  {t('codex.api.actions.addAndSwitch', '添加并切换')}
+                </button>
+              </div>
             </div>)}
             {addTab === 'token' && (<div className="add-section">
               <p className="section-desc">{t('codex.token.desc', '粘贴您的 Codex Access Token 或导出的 JSON 数据。')}</p>
@@ -1900,6 +2517,124 @@ export function CodexAccountsPage() {
           </div>
         </div></div>)}
 
+        {quickSwitchAccountId && (
+          <div className="modal-overlay" onClick={closeQuickSwitchModal}>
+            <div className="modal-content codex-add-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>{t('codex.quickSwitch.title', '快速切换供应商')}</h2>
+                <button
+                  className="modal-close"
+                  onClick={closeQuickSwitchModal}
+                  aria-label={t('common.close', '关闭')}
+                  disabled={quickSwitchSubmitting}
+                >
+                  <X />
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="add-section">
+                  <p className="section-desc">
+                    {t('codex.quickSwitch.desc', '为当前 API Key 账号快速切换到已保存的供应商与 API Key。')}
+                  </p>
+                  {quickSwitchAccount && (
+                    <div className="section-desc">
+                      {t('codex.quickSwitch.currentAccount', {
+                        defaultValue: '当前账号：{{name}}',
+                        name: maskAccountText(resolvePresentation(quickSwitchAccount).displayName),
+                      })}
+                    </div>
+                  )}
+                  <div className="oauth-link">
+                    <label>{t('codex.modelProviders.selectSavedProvider', '已保存供应商')}</label>
+                    {managedProvidersLoading ? (
+                      <div className="section-desc">{t('common.loading', '加载中...')}</div>
+                    ) : managedProviders.length === 0 ? (
+                      <div className="add-status error">
+                        <CircleAlert size={16} />
+                        <span>{t('codex.quickSwitch.noProviders', '暂无已保存供应商，请先在“模型供应商”中添加。')}</span>
+                      </div>
+                    ) : (
+                      <div className="api-provider-chip-list">
+                        {managedProviders.map((provider) => (
+                          <button
+                            key={provider.id}
+                            className={`api-provider-chip ${quickSwitchProviderId === provider.id ? 'active' : ''}`}
+                            onClick={() => handleSelectQuickSwitchProvider(provider.id)}
+                            type="button"
+                            disabled={quickSwitchSubmitting}
+                          >
+                            <span>{provider.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedQuickSwitchProvider && selectedQuickSwitchProvider.apiKeys.length > 0 && (
+                    <div className="oauth-link">
+                      <label>{t('codex.modelProviders.selectSavedApiKey', '已保存 API Key')}</label>
+                      <div className="api-provider-endpoint-list">
+                        {selectedQuickSwitchProvider.apiKeys.map((item) => (
+                          <button
+                            key={item.id}
+                            className={`api-provider-endpoint-chip ${quickSwitchApiKeyId === item.id ? 'active' : ''}`}
+                            onClick={() => handleSelectQuickSwitchApiKey(item.id)}
+                            type="button"
+                            disabled={quickSwitchSubmitting}
+                          >
+                            {item.name || t('codex.modelProviders.unnamedKey', '未命名 Key')}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedQuickSwitchProvider && selectedQuickSwitchProvider.apiKeys.length === 0 && (
+                    <div className="add-status error">
+                      <CircleAlert size={16} />
+                      <span>{t('codex.quickSwitch.providerHasNoKeys', '该供应商没有可用 API Key，请先在模型供应商中添加。')}</span>
+                    </div>
+                  )}
+
+                  {quickSwitchError && (
+                    <div className="add-status error">
+                      <CircleAlert size={16} />
+                      <span>{quickSwitchError}</span>
+                    </div>
+                  )}
+
+                  <div className="api-key-edit-actions">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        setActiveTab('providers');
+                        closeQuickSwitchModal();
+                      }}
+                      disabled={quickSwitchSubmitting}
+                    >
+                      {t('codex.quickSwitch.gotoProviders', '管理供应商')}
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => void handleSubmitQuickSwitch()}
+                      disabled={
+                        quickSwitchSubmitting
+                        || managedProvidersLoading
+                        || !selectedQuickSwitchProvider
+                        || !selectedQuickSwitchApiKey
+                      }
+                    >
+                      {quickSwitchSubmitting
+                        ? t('common.saving', '保存中...')
+                        : t('codex.quickSwitch.apply', '立即切换')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {editingApiKeyCredentialsId && (
           <div className="modal-overlay" onClick={closeApiKeyCredentialsModal}>
             <div className="modal-content codex-add-modal" onClick={(e) => e.stopPropagation()}>
@@ -1916,6 +2651,120 @@ export function CodexAccountsPage() {
               </div>
               <div className="modal-body">
                 <div className="add-section">
+                  <div className="oauth-link">
+                    <label>{t('codex.modelProviders.selectSavedProvider', '已保存供应商')}</label>
+                    {managedProvidersLoading ? (
+                      <div className="section-desc">{t('common.loading', '加载中...')}</div>
+                    ) : managedProviders.length === 0 ? (
+                      <div className="section-desc">
+                        {t('codex.modelProviders.noSavedProviders', '暂无已保存供应商，可直接填写后自动保存。')}
+                      </div>
+                    ) : (
+                      <div className="api-provider-chip-list">
+                        {managedProviders.map((provider) => (
+                          <button
+                            key={provider.id}
+                            className={`api-provider-chip ${editingManagedProviderId === provider.id ? 'active' : ''}`}
+                            onClick={() => handleSelectEditingManagedProvider(provider.id)}
+                            type="button"
+                            disabled={savingApiKeyCredentials}
+                          >
+                            <span>{provider.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {selectedEditingManagedProvider && selectedEditingManagedProvider.apiKeys.length > 0 && (
+                    <div className="oauth-link">
+                      <label>{t('codex.modelProviders.selectSavedApiKey', '已保存 API Key')}</label>
+                      <div className="api-provider-endpoint-list">
+                        {selectedEditingManagedProvider.apiKeys.map((item) => (
+                          <button
+                            key={item.id}
+                            className={`api-provider-endpoint-chip ${editingManagedProviderApiKeyId === item.id ? 'active' : ''}`}
+                            onClick={() => handleSelectEditingManagedProviderApiKey(item.id)}
+                            type="button"
+                            disabled={savingApiKeyCredentials}
+                          >
+                            {item.name || t('codex.modelProviders.unnamedKey', '未命名 Key')}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="oauth-link">
+                    <label>{t('codex.api.provider.label', '供应商')}</label>
+                    <div className="api-provider-chip-list">
+                      <button
+                        className={`api-provider-chip ${editingApiProviderPresetId === CODEX_API_PROVIDER_CUSTOM_ID ? 'active' : ''}`}
+                        onClick={() => handleSelectEditingApiProviderPreset(CODEX_API_PROVIDER_CUSTOM_ID)}
+                        type="button"
+                        disabled={savingApiKeyCredentials}
+                      >
+                        <span>{t('codex.api.provider.custom', '自定义')}</span>
+                      </button>
+                      {CODEX_API_PROVIDER_PRESETS.map((preset) => (
+                        <button
+                          key={preset.id}
+                          className={`api-provider-chip ${editingApiProviderPresetId === preset.id ? 'active' : ''}`}
+                          onClick={() => handleSelectEditingApiProviderPreset(preset.id)}
+                          type="button"
+                          disabled={savingApiKeyCredentials}
+                        >
+                          <span>{t(`codex.api.providers.${preset.id}.name`, preset.name)}</span>
+                          {preset.isPartner && <Star size={12} className="api-provider-chip-badge" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {selectedEditingApiProviderPreset && selectedEditingApiProviderPreset.baseUrls.length > 1 && (
+                    <div className="oauth-link">
+                      <label>{t('codex.api.provider.endpoint', '供应商端点')}</label>
+                      <div className="api-provider-endpoint-list">
+                        {selectedEditingApiProviderPreset.baseUrls.map((baseUrl) => (
+                          <button
+                            key={baseUrl}
+                            className={`api-provider-endpoint-chip ${editingApiBaseUrlCredentialsValue === baseUrl ? 'active' : ''}`}
+                            onClick={() => setEditingApiBaseUrlCredentialsValue(baseUrl)}
+                            type="button"
+                            disabled={savingApiKeyCredentials}
+                          >
+                            {baseUrl}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {selectedEditingApiProviderPreset && (
+                    <div className="api-provider-hint-block">
+                      <p className="api-provider-hint">
+                        {t('codex.api.provider.hint', '已自动填写兼容 Base URL，可继续手动调整。')}
+                      </p>
+                      <div className="api-provider-links">
+                        {selectedEditingApiProviderPreset.website && (
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => void handleOpenProviderLink(selectedEditingApiProviderPreset.website || '')}
+                            disabled={savingApiKeyCredentials}
+                          >
+                            <ExternalLink size={14} />
+                            {t('codex.api.provider.website', '官网')}
+                          </button>
+                        )}
+                        {selectedEditingApiProviderPreset.apiKeyUrl && (
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => void handleOpenProviderLink(selectedEditingApiProviderPreset.apiKeyUrl || '')}
+                            disabled={savingApiKeyCredentials}
+                          >
+                            <KeyRound size={14} />
+                            {t('codex.api.provider.apiKeyPage', 'API Key 页面')}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <div className="oauth-link">
                     <label>{t('codex.addModal.token', 'API Key')}</label>
                     <div className="oauth-url-box oauth-manual-input">
@@ -1935,6 +2784,18 @@ export function CodexAccountsPage() {
                         value={editingApiBaseUrlCredentialsValue}
                         onChange={(e) => setEditingApiBaseUrlCredentialsValue(e.target.value)}
                         placeholder={t('codex.api.baseUrlPlaceholder', '不填写则是官方默认')}
+                        disabled={savingApiKeyCredentials}
+                      />
+                    </div>
+                  </div>
+                  <div className="oauth-link">
+                    <label>{t('codex.modelProviders.newProviderName', '供应商名称（自动保存时使用，可选）')}</label>
+                    <div className="oauth-url-box oauth-manual-input">
+                      <input
+                        type="text"
+                        value={editingNewManagedProviderNameInput}
+                        onChange={(e) => setEditingNewManagedProviderNameInput(e.target.value)}
+                        placeholder={t('codex.modelProviders.newProviderNamePlaceholder', '不填则按域名自动生成')}
                         disabled={savingApiKeyCredentials}
                       />
                     </div>
@@ -2019,6 +2880,13 @@ export function CodexAccountsPage() {
 
       {activeTab === 'sessions' && (
         <CodexSessionManager />
+      )}
+
+      {activeTab === 'providers' && (
+        <CodexModelProviderManager
+          accounts={accounts}
+          onProvidersChanged={setManagedProviders}
+        />
       )}
 
       {activeTab === 'wakeup' && (
