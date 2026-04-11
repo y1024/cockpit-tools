@@ -45,7 +45,8 @@
         "free": "ZDARMA ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "OBCHOD ({{count}})",
-        "individual": "JEDNOTLIVCE ({{count}})"
+        "individual": "JEDNOTLIVCE ({{count}})",
+        "validAccounts": "Platné účty ({{count}})"
       },
       "filterLabel": "Filtr",
       "import": {
@@ -614,7 +615,8 @@
       "codexAutoSwitchAccountScopeDesc": "Aktuální stav automatického přepínání Codex: {{status}}. Zohledněny budou pouze účty v tomto rozsahu.",
       "defaultTerminal": "Výchozí terminál",
       "defaultTerminalDesc": "Terminál použitý při otevírání Gemini CLI",
-      "terminalSystem": "Systémový výchozí"
+      "terminalSystem": "Systémový výchozí",
+      "currentAccountRefreshRequiresAutoRefresh": "Pro nastavení obnovení aktuálního účtu nejprve zapněte „Automatické obnovení kvóty“."
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Vybrat vše",
         "clearSelectedAccounts": "Zrušit výběr",
-        "runCheckNow": "Dokončit ověření"
+        "runCheckNow": "Dokončit ověření",
+        "retryFiltered": "Zkusit znovu aktuální filtr ({{count}})",
+        "retryMissingModel": "V této dávce chybí informace o modelu, proto ji nelze zopakovat.",
+        "retryMissingAccount": "V aktuálním filtru nejsou žádné účty, které by bylo možné zopakovat."
       },
       "runHint": {
         "title": "Poznámky k ověření",
@@ -1512,7 +1517,7 @@
       "schedule": {
         "daily": "Denně",
         "weekly": "Týdně",
-        "interval": "Interval",
+        "interval": "Časový interval",
         "quota_reset": "Po resetu kvóty"
       },
       "dailyTimeLabel": "Denní čas spuštění",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Přesunout do koše",
         "syncSessions": "Synchronizovat relace",
         "expand": "Rozbalit",
-        "collapse": "Sbalit"
+        "collapse": "Sbalit",
+        "repairVisibility": "Opravit viditelnost"
       },
       "confirm": {
         "title": "Přesunout do koše",
         "message": "Vybrané relace budou přesunuty do koše z odpovídajících instancí, aby je bylo možné později obnovit; běžící instance mohou vyžadovat restart, než se změna projeví. Pokračovat?",
-        "syncMessage": "Chybějící vlákna a jejich data relací budou synchronizována do všech instancí. Existující obsah se nebude zapisovat znovu a soubory cílové instance budou před zápisem zazálohovány. Pokračovat?"
+        "syncMessage": "Chybějící vlákna a jejich data relací budou synchronizována do všech instancí. Existující obsah se nebude zapisovat znovu a soubory cílové instance budou před zápisem zazálohovány. Pokračovat?",
+        "repairVisibilityMessage": "Tato akce opraví metadata poskytovatele v rollout souborech a v databázi state_5.sqlite podle hodnoty model_provider z kořenového souboru config.toml každé instance (pokud chybí, použije se openai). Soubory, které budou změněny, se před zápisem zálohují. Běžící instance mohou vyžadovat restart, než se změna projeví. Pokračovat?"
       },
       "empty": {
         "title": "Žádné relace ke správě",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "Klíč API nemůže být URL. Zkontrolujte, zda nejsou pole prohozená.",
         "baseUrlInvalid": "Neplatná základní adresa URL. Zadejte prosím úplnou URL s http:// nebo https://.",
         "apiKeyEqualsBaseUrl": "Klíč API nemůže být stejný jako základní URL."
+      },
+      "addAndSwitchSuccess": "Přidáno a přepnuto: {{email}}",
+      "actions": {
+        "addAndSwitch": "Přidat a přepnout"
+      },
+      "provider": {
+        "label": "Poskytovatel",
+        "custom": "Vlastní",
+        "endpoint": "Koncový bod poskytovatele",
+        "hint": "Kompatibilní Base URL byla vyplněna automaticky. Stále ji můžete upravit ručně.",
+        "website": "Web",
+        "apiKeyPage": "Stránka API klíče"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Poskytovatelé modelů",
+      "desc": "Spravujte poskytovatele modelů a více API klíčů na jednom místě a pak je přímo znovu používejte při přidávání účtů Codex s API klíčem.",
+      "add": "Přidat poskytovatele",
+      "loadFailed": "Nepodařilo se načíst poskytovatele modelů: {{error}}",
+      "emptyTitle": "Zatím žádní poskytovatelé modelů",
+      "emptyDesc": "Začněte kliknutím na „Přidat poskytovatele“ vpravo nahoře.",
+      "baseUrl": "Základní URL",
+      "website": "Web",
+      "apiKeyPage": "Stránka API klíče",
+      "apiKeysCount": "{{count}} API klíčů",
+      "referencesCount": "{{count}} propojených účtů",
+      "unnamedKey": "Nepojmenovaný klíč",
+      "createTitle": "Přidat poskytovatele modelu",
+      "editTitle": "Upravit poskytovatele modelu",
+      "existingApiKeys": "Stávající API klíče",
+      "fields": {
+        "name": "Název poskytovatele",
+        "baseUrl": "Základní URL",
+        "website": "Web (volitelné)",
+        "apiKeyUrl": "Stránka API klíče (volitelné)",
+        "newApiKeyName": "Název nového klíče (volitelné)",
+        "newApiKey": "Nový API klíč"
+      },
+      "validation": {
+        "nameRequired": "Název poskytovatele je povinný.",
+        "baseUrlInvalid": "Neplatná Base URL.",
+        "baseUrlExists": "Tato Base URL už existuje.",
+        "providerNotFound": "Poskytovatel nebyl nalezen.",
+        "apiKeyRequiredOnCreate": "Při vytváření poskytovatele je vyžadován alespoň jeden API klíč.",
+        "apiKeyRequiredWhenEmpty": "Tento poskytovatel zatím nemá žádný API klíč. Nejprve jej přidejte."
+      },
+      "saveSuccess": "Poskytovatel modelu byl uložen.",
+      "deleteBlocked": "Tento poskytovatel je propojen s {{count}} účty a nelze jej smazat.",
+      "confirmDelete": "Smazat poskytovatele „{{name}}“?",
+      "deleteFailed": "Nepodařilo se smazat poskytovatele: {{error}}",
+      "deleteApiKeyFailed": "Nepodařilo se smazat API klíč: {{error}}",
+      "selectSavedProvider": "Uložení poskytovatelé",
+      "selectSavedApiKey": "Uložené API klíče",
+      "noSavedProviders": "Zatím nejsou uloženi žádní poskytovatelé. Pole můžete vyplnit přímo a vše se uloží automaticky.",
+      "newProviderName": "Název poskytovatele (volitelné, používá se pro automatické uložení)",
+      "newProviderNamePlaceholder": "Pokud zůstane prázdné, automaticky se použije hostname"
+    },
+    "quickSwitch": {
+      "action": "Rychle přepnout poskytovatele",
+      "inlineAction": "Přepnout",
+      "title": "Rychle přepnout poskytovatele",
+      "desc": "Rychle přepněte tento účet s API klíčem na uloženého poskytovatele a API klíč.",
+      "currentAccount": "Aktuální účet: {{name}}",
+      "noProviders": "Zatím nejsou uloženi žádní poskytovatelé. Nejprve jednoho přidejte v sekci Poskytovatelé modelů.",
+      "providerHasNoKeys": "Tento poskytovatel zatím nemá k dispozici žádný API klíč. Nejprve jej přidejte v sekci Poskytovatelé modelů.",
+      "gotoProviders": "Spravovat poskytovatele",
+      "apply": "Přepnout nyní",
+      "success": "Přepnuto na poskytovatele: {{provider}}",
+      "failed": "Nepodařilo se přepnout poskytovatele: {{error}}",
+      "validation": {
+        "providerRequired": "Vyberte poskytovatele.",
+        "apiKeyRequired": "Vyberte API klíč."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Nastavení Codex",
-      "appPath": "Cesta k aplikaci"
+      "appPath": "Cesta k aplikaci",
+      "configToml": "Konfigurační soubor Codex",
+      "openConfigToml": "Otevřít soubor",
+      "openConfigHint": "Rychle otevře aktivní soubor Codex config.toml."
     },
     "githubCopilot": {
       "title": "Nastavení GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Nepodařilo se načíst konfiguraci: {{error}}",
       "saveFailed": "Nepodařilo se uložit konfiguraci: {{error}}",
       "pickPathFailed": "Nepodařilo se vybrat cestu: {{error}}",
-      "resetPathFailed": "Nepodařilo se resetovat cestu: {{error}}"
+      "resetPathFailed": "Nepodařilo se resetovat cestu: {{error}}",
+      "openCodexConfigFailed": "Nepodařilo se otevřít Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Nastavení Qoder",

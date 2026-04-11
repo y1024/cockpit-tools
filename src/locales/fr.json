@@ -45,7 +45,8 @@
         "free": "GRATUIT ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "ENTREPRISE ({{count}})",
-        "individual": "INDIVIDUEL ({{count}})"
+        "individual": "INDIVIDUEL ({{count}})",
+        "validAccounts": "Comptes valides ({{count}})"
       },
       "filterLabel": "Filtrer",
       "import": {
@@ -614,7 +615,8 @@
       "codexAutoSwitchAccountScopeDesc": "État actuel de la bascule automatique Codex : {{status}}. Seuls les comptes de cette portée seront pris en compte.",
       "defaultTerminal": "Terminal par défaut",
       "defaultTerminalDesc": "Le terminal utilisé lors de l'ouverture de Gemini CLI",
-      "terminalSystem": "Système par défaut"
+      "terminalSystem": "Système par défaut",
+      "currentAccountRefreshRequiresAutoRefresh": "Activez d'abord « Actualisation automatique du quota » pour configurer l'actualisation du compte actuel."
     },
     "network": {
       "apiTitle": "API du cockpit antigravité",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Tout sélectionner",
         "clearSelectedAccounts": "Effacer la sélection",
-        "runCheckNow": "Terminer la vérification"
+        "runCheckNow": "Terminer la vérification",
+        "retryFiltered": "Réessayer le filtre actuel ({{count}})",
+        "retryMissingModel": "Ce lot ne contient pas d'informations sur le modèle et ne peut pas être relancé.",
+        "retryMissingAccount": "Aucun compte ne peut être relancé dans le filtre actuel."
       },
       "runHint": {
         "title": "Notes de vérification",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Déplacer vers la corbeille",
         "syncSessions": "Synchroniser les sessions",
         "expand": "Développer",
-        "collapse": "Réduire"
+        "collapse": "Réduire",
+        "repairVisibility": "Réparer la visibilité"
       },
       "confirm": {
         "title": "Déplacer vers la corbeille",
         "message": "Les sessions sélectionnées seront déplacées vers la corbeille depuis leurs instances afin de pouvoir être restaurées plus tard. Les instances en cours d’exécution peuvent nécessiter un redémarrage avant que la modification apparaisse. Continuer ?",
-        "syncMessage": "Les threads manquants et leurs données de session seront synchronisés vers toutes les instances. Le contenu existant ne sera pas réécrit et les fichiers de l’instance cible seront sauvegardés avant toute écriture. Continuer ?"
+        "syncMessage": "Les threads manquants et leurs données de session seront synchronisés vers toutes les instances. Le contenu existant ne sera pas réécrit et les fichiers de l’instance cible seront sauvegardés avant toute écriture. Continuer ?",
+        "repairVisibilityMessage": "Cette action réparera les métadonnées du fournisseur dans les fichiers de rollout et dans state_5.sqlite en utilisant la valeur model_provider du config.toml racine de chaque instance (avec openai par défaut si elle est absente). Les fichiers à modifier sont sauvegardés avant l'écriture. Les instances en cours d'exécution peuvent nécessiter un redémarrage avant que le changement n'apparaisse. Continuer ?"
       },
       "empty": {
         "title": "Aucune session à gérer",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "La clé API ne peut pas être une URL. Vérifiez si les champs sont inversés.",
         "baseUrlInvalid": "URL de base invalide. Veuillez saisir une URL complète commençant par http:// ou https://.",
         "apiKeyEqualsBaseUrl": "La clé API ne peut pas être identique à l'URL de base."
+      },
+      "addAndSwitchSuccess": "Ajouté et basculé : {{email}}",
+      "actions": {
+        "addAndSwitch": "Ajouter et basculer"
+      },
+      "provider": {
+        "label": "Fournisseur",
+        "custom": "Personnalisé",
+        "endpoint": "Point de terminaison du fournisseur",
+        "hint": "Une Base URL compatible a été renseignée automatiquement. Vous pouvez toujours la modifier manuellement.",
+        "website": "Site web",
+        "apiKeyPage": "Page de clé API"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Fournisseurs de modèles",
+      "desc": "Gérez les fournisseurs de modèles et plusieurs clés API au même endroit, puis réutilisez-les directement lors de l'ajout de comptes Codex à clé API.",
+      "add": "Ajouter un fournisseur",
+      "loadFailed": "Échec du chargement des fournisseurs de modèles : {{error}}",
+      "emptyTitle": "Aucun fournisseur de modèles pour le moment",
+      "emptyDesc": "Cliquez sur « Ajouter un fournisseur » en haut à droite pour commencer.",
+      "baseUrl": "URL de base",
+      "website": "Site web",
+      "apiKeyPage": "Page de clé API",
+      "apiKeysCount": "{{count}} clés API",
+      "referencesCount": "{{count}} comptes liés",
+      "unnamedKey": "Clé sans nom",
+      "createTitle": "Ajouter un fournisseur de modèles",
+      "editTitle": "Modifier le fournisseur de modèles",
+      "existingApiKeys": "Clés API existantes",
+      "fields": {
+        "name": "Nom du fournisseur",
+        "baseUrl": "URL de base",
+        "website": "Site web (facultatif)",
+        "apiKeyUrl": "Page de clé API (facultatif)",
+        "newApiKeyName": "Nom de la nouvelle clé (facultatif)",
+        "newApiKey": "Nouvelle clé API"
+      },
+      "validation": {
+        "nameRequired": "Le nom du fournisseur est obligatoire.",
+        "baseUrlInvalid": "Base URL invalide.",
+        "baseUrlExists": "Cette Base URL existe déjà.",
+        "providerNotFound": "Fournisseur introuvable.",
+        "apiKeyRequiredOnCreate": "Au moins une clé API est requise lors de la création d'un fournisseur.",
+        "apiKeyRequiredWhenEmpty": "Ce fournisseur n'a pas encore de clé API. Ajoutez-en d'abord une."
+      },
+      "saveSuccess": "Fournisseur de modèles enregistré.",
+      "deleteBlocked": "Ce fournisseur est lié à {{count}} compte(s) et ne peut pas être supprimé.",
+      "confirmDelete": "Supprimer le fournisseur « {{name}} » ?",
+      "deleteFailed": "Échec de la suppression du fournisseur : {{error}}",
+      "deleteApiKeyFailed": "Échec de la suppression de la clé API : {{error}}",
+      "selectSavedProvider": "Fournisseurs enregistrés",
+      "selectSavedApiKey": "Clés API enregistrées",
+      "noSavedProviders": "Aucun fournisseur enregistré pour le moment. Vous pouvez remplir les champs directement et l'entrée sera enregistrée automatiquement.",
+      "newProviderName": "Nom du fournisseur (facultatif, utilisé pour l'enregistrement automatique)",
+      "newProviderNamePlaceholder": "S'il est vide, le nom d'hôte sera utilisé automatiquement"
+    },
+    "quickSwitch": {
+      "action": "Changer rapidement de fournisseur",
+      "inlineAction": "Basculer",
+      "title": "Changer rapidement de fournisseur",
+      "desc": "Basculez rapidement ce compte à clé API vers un fournisseur et une clé API enregistrés.",
+      "currentAccount": "Compte actuel : {{name}}",
+      "noProviders": "Aucun fournisseur enregistré pour le moment. Ajoutez-en d'abord un dans Fournisseurs de modèles.",
+      "providerHasNoKeys": "Ce fournisseur n'a pas encore de clé API disponible. Ajoutez-en d'abord une dans Fournisseurs de modèles.",
+      "gotoProviders": "Gérer les fournisseurs",
+      "apply": "Basculer maintenant",
+      "success": "Basculé vers le fournisseur : {{provider}}",
+      "failed": "Échec du changement de fournisseur : {{error}}",
+      "validation": {
+        "providerRequired": "Veuillez sélectionner un fournisseur.",
+        "apiKeyRequired": "Veuillez sélectionner une clé API."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Paramètres Codex",
-      "appPath": "Chemin de l'application"
+      "appPath": "Chemin de l'application",
+      "configToml": "Fichier de configuration Codex",
+      "openConfigToml": "Ouvrir le fichier",
+      "openConfigHint": "Ouvrez rapidement le fichier config.toml actif de Codex."
     },
     "githubCopilot": {
       "title": "Paramètres GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Échec du chargement de la configuration : {{error}}",
       "saveFailed": "Échec de la sauvegarde de la configuration : {{error}}",
       "pickPathFailed": "Échec de la sélection du chemin : {{error}}",
-      "resetPathFailed": "Échec de la réinitialisation du chemin : {{error}}"
+      "resetPathFailed": "Échec de la réinitialisation du chemin : {{error}}",
+      "openCodexConfigFailed": "Échec de l'ouverture du fichier config.toml de Codex : {{error}}"
     },
     "qoder": {
       "title": "Parametres Qoder",

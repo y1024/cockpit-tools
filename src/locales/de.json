@@ -45,7 +45,8 @@
         "free": "KOSTENLOS ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "GESCHÄFT ({{count}})",
-        "individual": "EINZEL ({{count}})"
+        "individual": "EINZEL ({{count}})",
+        "validAccounts": "Gültige Konten ({{count}})"
       },
       "filterLabel": "Filter",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Bereich für automatisches Kontowechseln auswählen",
       "autoSwitchAccountScopeAllHint": "Der aktuelle Bereich umfasst alle Konten. {{total}} Konto/Konten nehmen am automatischen Wechsel teil.",
       "codexAutoSwitchAccountScope": "Codex-Bereich für automatisches Kontowechseln",
-      "codexAutoSwitchAccountScopeDesc": "Aktueller Codex-Auto-Wechsel-Status: {{status}}. Es werden nur Konten in diesem Bereich berücksichtigt."
+      "codexAutoSwitchAccountScopeDesc": "Aktueller Codex-Auto-Wechsel-Status: {{status}}. Es werden nur Konten in diesem Bereich berücksichtigt.",
+      "currentAccountRefreshRequiresAutoRefresh": "Aktivieren Sie zuerst „Automatische Kontingent-Aktualisierung“, um die Aktualisierung des aktuellen Kontos zu konfigurieren."
     },
     "network": {
       "apiTitle": "Antigravity-Cockpit-API",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Alle auswählen",
         "clearSelectedAccounts": "Auswahl aufheben",
-        "runCheckNow": "Bestätigung abschließen"
+        "runCheckNow": "Bestätigung abschließen",
+        "retryFiltered": "Aktuellen Filter erneut versuchen ({{count}})",
+        "retryMissingModel": "In diesem Durchlauf fehlen Modellinformationen; ein erneuter Versuch ist nicht möglich.",
+        "retryMissingAccount": "Im aktuellen Filter gibt es keine Konten, die erneut versucht werden können."
       },
       "runHint": {
         "title": "Hinweise zur Verifizierung",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "In den Papierkorb verschieben",
         "syncSessions": "Sitzungen synchronisieren",
         "expand": "Erweitern",
-        "collapse": "Einklappen"
+        "collapse": "Einklappen",
+        "repairVisibility": "Sichtbarkeit reparieren"
       },
       "confirm": {
         "title": "In den Papierkorb verschieben",
         "message": "Ausgewählte Sitzungen werden aus den jeweiligen Instanzen in den Papierkorb verschoben, damit sie später wiederhergestellt werden können. Laufende Instanzen müssen möglicherweise neu gestartet werden, bevor die Änderung sichtbar wird. Fortfahren?",
-        "syncMessage": "Fehlende Threads und ihre Sitzungsdaten werden in alle Instanzen synchronisiert. Vorhandene Inhalte werden nicht erneut geschrieben, und die Dateien der Zielinstanz werden vor jedem Schreibvorgang gesichert. Fortfahren?"
+        "syncMessage": "Fehlende Threads und ihre Sitzungsdaten werden in alle Instanzen synchronisiert. Vorhandene Inhalte werden nicht erneut geschrieben, und die Dateien der Zielinstanz werden vor jedem Schreibvorgang gesichert. Fortfahren?",
+        "repairVisibilityMessage": "Dadurch werden die Anbieter-Metadaten in Rollout-Dateien und in state_5.sqlite anhand des model_provider aus der jeweiligen root-config.toml der Instanz repariert (wenn er fehlt, wird standardmäßig openai verwendet). Dateien, die geändert werden, werden vor dem Schreiben gesichert. Bei laufenden Instanzen kann ein Neustart nötig sein, bevor die Änderung sichtbar wird. Fortfahren?"
       },
       "empty": {
         "title": "Keine Sitzungen zur Verwaltung",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "Der API-Schlüssel darf keine URL sein. Bitte prüfen Sie, ob die Felder vertauscht wurden.",
         "baseUrlInvalid": "Ungültige Basis-URL. Bitte geben Sie eine vollständige URL mit http:// oder https:// ein.",
         "apiKeyEqualsBaseUrl": "Der API-Schlüssel darf nicht mit der Basis-URL identisch sein."
+      },
+      "addAndSwitchSuccess": "Hinzugefügt und gewechselt: {{email}}",
+      "actions": {
+        "addAndSwitch": "Hinzufügen und wechseln"
+      },
+      "provider": {
+        "label": "Anbieter",
+        "custom": "Benutzerdefiniert",
+        "endpoint": "Anbieter-Endpunkt",
+        "hint": "Eine kompatible Base URL wurde automatisch eingetragen. Sie können sie weiterhin manuell bearbeiten.",
+        "website": "Website",
+        "apiKeyPage": "API-Key-Seite"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Modellanbieter",
+      "desc": "Verwalten Sie Modellanbieter und mehrere API-Keys an einem Ort und verwenden Sie sie beim Hinzufügen von Codex-Konten mit API-Key direkt wieder.",
+      "add": "Anbieter hinzufügen",
+      "loadFailed": "Modellanbieter konnten nicht geladen werden: {{error}}",
+      "emptyTitle": "Noch keine Modellanbieter",
+      "emptyDesc": "Klicken Sie oben rechts auf „Anbieter hinzufügen“, um loszulegen.",
+      "baseUrl": "Basis-URL",
+      "website": "Website",
+      "apiKeyPage": "API-Key-Seite",
+      "apiKeysCount": "{{count}} API-Keys",
+      "referencesCount": "{{count}} verknüpfte Konten",
+      "unnamedKey": "Unbenannter Schlüssel",
+      "createTitle": "Modellanbieter hinzufügen",
+      "editTitle": "Modellanbieter bearbeiten",
+      "existingApiKeys": "Vorhandene API-Keys",
+      "fields": {
+        "name": "Name des Anbieters",
+        "baseUrl": "Basis-URL",
+        "website": "Website (optional)",
+        "apiKeyUrl": "API-Key-Seite (optional)",
+        "newApiKeyName": "Name des neuen Keys (optional)",
+        "newApiKey": "Neuer API-Key"
+      },
+      "validation": {
+        "nameRequired": "Der Name des Anbieters ist erforderlich.",
+        "baseUrlInvalid": "Ungültige Base URL.",
+        "baseUrlExists": "Diese Base URL existiert bereits.",
+        "providerNotFound": "Anbieter nicht gefunden.",
+        "apiKeyRequiredOnCreate": "Beim Erstellen eines Anbieters ist mindestens ein API-Key erforderlich.",
+        "apiKeyRequiredWhenEmpty": "Dieser Anbieter hat noch keinen API-Key. Bitte fügen Sie zuerst einen hinzu."
+      },
+      "saveSuccess": "Modellanbieter gespeichert.",
+      "deleteBlocked": "Dieser Anbieter ist mit {{count}} Konten verknüpft und kann nicht gelöscht werden.",
+      "confirmDelete": "Anbieter „{{name}}“ löschen?",
+      "deleteFailed": "Anbieter konnte nicht gelöscht werden: {{error}}",
+      "deleteApiKeyFailed": "API-Key konnte nicht gelöscht werden: {{error}}",
+      "selectSavedProvider": "Gespeicherte Anbieter",
+      "selectSavedApiKey": "Gespeicherte API-Keys",
+      "noSavedProviders": "Es sind noch keine Anbieter gespeichert. Sie können die Felder direkt ausfüllen; der Eintrag wird automatisch gespeichert.",
+      "newProviderName": "Name des Anbieters (optional, für die automatische Speicherung)",
+      "newProviderNamePlaceholder": "Wenn leer, wird der Hostname automatisch verwendet"
+    },
+    "quickSwitch": {
+      "action": "Anbieter schnell wechseln",
+      "inlineAction": "Wechseln",
+      "title": "Anbieter schnell wechseln",
+      "desc": "Wechseln Sie dieses API-Key-Konto schnell zu einem gespeicherten Anbieter und API-Key.",
+      "currentAccount": "Aktuelles Konto: {{name}}",
+      "noProviders": "Es sind noch keine Anbieter gespeichert. Bitte fügen Sie zuerst einen unter „Modellanbieter“ hinzu.",
+      "providerHasNoKeys": "Dieser Anbieter hat noch keinen verfügbaren API-Key. Fügen Sie zuerst einen unter „Modellanbieter“ hinzu.",
+      "gotoProviders": "Anbieter verwalten",
+      "apply": "Jetzt wechseln",
+      "success": "Zum Anbieter gewechselt: {{provider}}",
+      "failed": "Anbieterwechsel fehlgeschlagen: {{error}}",
+      "validation": {
+        "providerRequired": "Bitte wählen Sie einen Anbieter aus.",
+        "apiKeyRequired": "Bitte wählen Sie einen API-Key aus."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Codex-Einstellungen",
-      "appPath": "App-Pfad"
+      "appPath": "App-Pfad",
+      "configToml": "Codex-Konfigurationsdatei",
+      "openConfigToml": "Datei öffnen",
+      "openConfigHint": "Öffnet schnell die aktive Codex-config.toml."
     },
     "githubCopilot": {
       "title": "GitHub Copilot-Einstellungen",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Konfiguration konnte nicht geladen werden: {{error}}",
       "saveFailed": "Konfiguration konnte nicht gespeichert werden: {{error}}",
       "pickPathFailed": "Pfadauswahl fehlgeschlagen: {{error}}",
-      "resetPathFailed": "Pfad konnte nicht zurückgesetzt werden: {{error}}"
+      "resetPathFailed": "Pfad konnte nicht zurückgesetzt werden: {{error}}",
+      "openCodexConfigFailed": "Codex config.toml konnte nicht geöffnet werden: {{error}}"
     },
     "qoder": {
       "title": "Qoder-Einstellungen",

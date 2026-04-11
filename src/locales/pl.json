@@ -45,7 +45,8 @@
         "free": "GRATIS (__MASKA_0__)",
         "pro": "PRO (__MASKA_0__)",
         "business": "BIZNES (__MASKA_0__)",
-        "individual": "INDYWIDUALNE (__MASKA_0__)"
+        "individual": "INDYWIDUALNE (__MASKA_0__)",
+        "validAccounts": "Prawidłowe konta ({{count}})"
       },
       "filterLabel": "Filtr",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Wybierz zakres kont do automatycznego przełączania",
       "autoSwitchAccountScopeAllHint": "Aktualny zakres obejmuje wszystkie konta. {{total}} kont weźmie udział w automatycznym przełączaniu.",
       "codexAutoSwitchAccountScope": "Zakres automatycznego przełączania kont Codex",
-      "codexAutoSwitchAccountScopeDesc": "Aktualny stan automatycznego przełączania Codex: {{status}}. Uwzględniane będą tylko konta z tego zakresu."
+      "codexAutoSwitchAccountScopeDesc": "Aktualny stan automatycznego przełączania Codex: {{status}}. Uwzględniane będą tylko konta z tego zakresu.",
+      "currentAccountRefreshRequiresAutoRefresh": "Aby skonfigurować odświeżanie bieżącego konta, najpierw włącz „Automatyczne odświeżanie limitu”."
     },
     "network": {
       "apiTitle": "API kokpitu antygrawitacyjnego",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Zaznacz wszystko",
         "clearSelectedAccounts": "Wyczyść zaznaczenie",
-        "runCheckNow": "Zakończ weryfikację"
+        "runCheckNow": "Zakończ weryfikację",
+        "retryFiltered": "Ponów bieżący filtr ({{count}})",
+        "retryMissingModel": "W tej partii brakuje informacji o modelu, więc nie można ponowić próby.",
+        "retryMissingAccount": "W bieżącym filtrze nie ma kont, dla których można ponowić próbę."
       },
       "runHint": {
         "title": "Uwagi dotyczące weryfikacji",
@@ -1128,7 +1133,7 @@
     "historyCount": "Historia wywołań ({{count}})",
     "historyEmpty": "Brak historii",
     "historyClear": "Wyczyść historię",
-    "historyPromptLabel": "Prompt: {{prompt}}",
+    "historyPromptLabel": "Fraza wybudzania: {{prompt}}",
     "errorUi": {
       "verificationRequiredTitle": "Wymagana weryfikacja",
       "quotaTitle": "Limit przydziału",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Przenieś do kosza",
         "syncSessions": "Synchronizuj sesje",
         "expand": "Rozwiń",
-        "collapse": "Zwiń"
+        "collapse": "Zwiń",
+        "repairVisibility": "Napraw widoczność"
       },
       "confirm": {
         "title": "Przenieś do kosza",
         "message": "Wybrane sesje zostaną przeniesione do kosza z odpowiednich instancji, aby można je było później przywrócić. Uruchomione instancje mogą wymagać ponownego uruchomienia, zanim zmiana będzie widoczna. Kontynuować?",
-        "syncMessage": "Brakujące wątki i ich dane sesji zostaną zsynchronizowane ze wszystkimi instancjami. Istniejąca zawartość nie zostanie zapisana ponownie, a pliki instancji docelowej zostaną zarchiwizowane przed każdym zapisem. Kontynuować?"
+        "syncMessage": "Brakujące wątki i ich dane sesji zostaną zsynchronizowane ze wszystkimi instancjami. Istniejąca zawartość nie zostanie zapisana ponownie, a pliki instancji docelowej zostaną zarchiwizowane przed każdym zapisem. Kontynuować?",
+        "repairVisibilityMessage": "To naprawi metadane dostawcy w plikach rollout i w state_5.sqlite, używając wartości model_provider z głównego pliku config.toml każdej instancji (gdy jej brakuje, zostanie użyte openai). Pliki, które zostaną zmienione, są archiwizowane przed zapisem. Działające instancje mogą wymagać ponownego uruchomienia, zanim zmiana będzie widoczna. Kontynuować?"
       },
       "empty": {
         "title": "Brak sesji do zarządzania",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "Klucz API nie może być adresem URL. Sprawdź, czy pola nie są zamienione.",
         "baseUrlInvalid": "Nieprawidłowy bazowy URL. Wpisz pełny adres URL z http:// lub https://.",
         "apiKeyEqualsBaseUrl": "Klucz API nie może być taki sam jak bazowy URL."
+      },
+      "addAndSwitchSuccess": "Dodano i przełączono: {{email}}",
+      "actions": {
+        "addAndSwitch": "Dodaj i przełącz"
+      },
+      "provider": {
+        "label": "Dostawca",
+        "custom": "Niestandardowy",
+        "endpoint": "Punkt końcowy dostawcy",
+        "hint": "Zgodny Base URL został uzupełniony automatycznie. Nadal możesz go edytować ręcznie.",
+        "website": "Witryna",
+        "apiKeyPage": "Strona klucza API"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Dostawcy modeli",
+      "desc": "Zarządzaj dostawcami modeli i wieloma kluczami API w jednym miejscu, a potem używaj ich bezpośrednio podczas dodawania kont Codex z kluczem API.",
+      "add": "Dodaj dostawcę",
+      "loadFailed": "Nie udało się załadować dostawców modeli: {{error}}",
+      "emptyTitle": "Nie ma jeszcze dostawców modeli",
+      "emptyDesc": "Aby rozpocząć, kliknij „Dodaj dostawcę” w prawym górnym rogu.",
+      "baseUrl": "Bazowy adres URL",
+      "website": "Witryna",
+      "apiKeyPage": "Strona klucza API",
+      "apiKeysCount": "{{count}} kluczy API",
+      "referencesCount": "{{count}} powiązanych kont",
+      "unnamedKey": "Klucz bez nazwy",
+      "createTitle": "Dodaj dostawcę modelu",
+      "editTitle": "Edytuj dostawcę modelu",
+      "existingApiKeys": "Istniejące klucze API",
+      "fields": {
+        "name": "Nazwa dostawcy",
+        "baseUrl": "Bazowy adres URL",
+        "website": "Witryna (opcjonalnie)",
+        "apiKeyUrl": "Strona klucza API (opcjonalnie)",
+        "newApiKeyName": "Nazwa nowego klucza (opcjonalnie)",
+        "newApiKey": "Nowy klucz API"
+      },
+      "validation": {
+        "nameRequired": "Nazwa dostawcy jest wymagana.",
+        "baseUrlInvalid": "Nieprawidłowy bazowy adres URL.",
+        "baseUrlExists": "Ten bazowy adres URL już istnieje.",
+        "providerNotFound": "Nie znaleziono dostawcy.",
+        "apiKeyRequiredOnCreate": "Przy tworzeniu dostawcy wymagany jest co najmniej jeden klucz API.",
+        "apiKeyRequiredWhenEmpty": "Ten dostawca nie ma jeszcze klucza API. Najpierw dodaj jeden."
+      },
+      "saveSuccess": "Dostawca modelu został zapisany.",
+      "deleteBlocked": "Ten dostawca jest powiązany z {{count}} kontami i nie można go usunąć.",
+      "confirmDelete": "Usunąć dostawcę „{{name}}”?",
+      "deleteFailed": "Nie udało się usunąć dostawcy: {{error}}",
+      "deleteApiKeyFailed": "Nie udało się usunąć klucza API: {{error}}",
+      "selectSavedProvider": "Zapisani dostawcy",
+      "selectSavedApiKey": "Zapisane klucze API",
+      "noSavedProviders": "Nie ma jeszcze zapisanych dostawców. Możesz uzupełnić pola bezpośrednio, a wpis zostanie zapisany automatycznie.",
+      "newProviderName": "Nazwa dostawcy (opcjonalnie, używana do automatycznego zapisu)",
+      "newProviderNamePlaceholder": "Jeśli pole jest puste, nazwa hosta zostanie użyta automatycznie"
+    },
+    "quickSwitch": {
+      "action": "Szybka zmiana dostawcy",
+      "inlineAction": "Przełącz",
+      "title": "Szybka zmiana dostawcy",
+      "desc": "Szybko przełącz to konto z kluczem API na zapisanego dostawcę i klucz API.",
+      "currentAccount": "Bieżące konto: {{name}}",
+      "noProviders": "Nie ma jeszcze zapisanych dostawców. Najpierw dodaj jednego w sekcji Dostawcy modeli.",
+      "providerHasNoKeys": "Ten dostawca nie ma jeszcze dostępnego klucza API. Najpierw dodaj go w sekcji Dostawcy modeli.",
+      "gotoProviders": "Zarządzaj dostawcami",
+      "apply": "Przełącz teraz",
+      "success": "Przełączono na dostawcę: {{provider}}",
+      "failed": "Nie udało się przełączyć dostawcy: {{error}}",
+      "validation": {
+        "providerRequired": "Wybierz dostawcę.",
+        "apiKeyRequired": "Wybierz klucz API."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Ustawienia Codex",
-      "appPath": "Ścieżka aplikacji"
+      "appPath": "Ścieżka aplikacji",
+      "configToml": "Plik konfiguracji Codex",
+      "openConfigToml": "Otwórz plik",
+      "openConfigHint": "Szybko otwórz aktywny plik config.toml aplikacji Codex."
     },
     "githubCopilot": {
       "title": "Ustawienia GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Nie udało się załadować konfiguracji: {{error}}",
       "saveFailed": "Nie udało się zapisać konfiguracji: {{error}}",
       "pickPathFailed": "Nie udało się wybrać ścieżki: {{error}}",
-      "resetPathFailed": "Nie udało się zresetować ścieżki: {{error}}"
+      "resetPathFailed": "Nie udało się zresetować ścieżki: {{error}}",
+      "openCodexConfigFailed": "Nie udało się otworzyć pliku Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Ustawienia Qoder",

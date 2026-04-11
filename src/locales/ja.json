@@ -45,7 +45,8 @@
         "free": "無料 ({{count}})",
         "pro": "プロ ({{count}})",
         "business": "ビジネス ({{count}})",
-        "individual": "個人 ({{count}})"
+        "individual": "個人 ({{count}})",
+        "validAccounts": "有効なアカウント（{{count}}）"
       },
       "filterLabel": "フィルター",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "自動切替アカウント範囲を選択",
       "autoSwitchAccountScopeAllHint": "現在の範囲はすべてのアカウントです。{{total}} 件が自動切替対象になります。",
       "codexAutoSwitchAccountScope": "Codex 自動切替アカウント範囲",
-      "codexAutoSwitchAccountScopeDesc": "現在の Codex 自動切替ステータス：{{status}}。この範囲内のアカウントのみ対象になります。"
+      "codexAutoSwitchAccountScopeDesc": "現在の Codex 自動切替ステータス：{{status}}。この範囲内のアカウントのみ対象になります。",
+      "currentAccountRefreshRequiresAutoRefresh": "現在のアカウントの更新を設定するには、先に「クォータ自動更新」を有効にしてください。"
     },
     "network": {
       "apiTitle": "反重力コックピット API",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "すべて選択",
         "clearSelectedAccounts": "選択解除",
-        "runCheckNow": "認証を完了"
+        "runCheckNow": "認証を完了",
+        "retryFiltered": "現在のフィルターで再試行（{{count}}）",
+        "retryMissingModel": "このバッチにはモデル情報がないため、再試行できません。",
+        "retryMissingAccount": "現在のフィルターには再試行できるアカウントがありません。"
       },
       "runHint": {
         "title": "検証の説明",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "ゴミ箱へ移動",
         "syncSessions": "セッションを同期",
         "expand": "展開",
-        "collapse": "折りたたむ"
+        "collapse": "折りたたむ",
+        "repairVisibility": "表示情報を修復"
       },
       "confirm": {
         "title": "ゴミ箱へ移動",
         "message": "選択したセッションは対応するインスタンスからゴミ箱へ移動され、後で復元できます。実行中のインスタンスでは、変更が反映されるまで再起動が必要な場合があります。続行しますか？",
-        "syncMessage": "不足しているスレッドとそのセッションデータをすべてのインスタンスに同期します。既存の内容は再書き込みされず、書き込み前に対象インスタンスのファイルをバックアップします。続行しますか？"
+        "syncMessage": "不足しているスレッドとそのセッションデータをすべてのインスタンスに同期します。既存の内容は再書き込みされず、書き込み前に対象インスタンスのファイルをバックアップします。続行しますか？",
+        "repairVisibilityMessage": "この操作では、各インスタンスのルート config.toml にある model_provider を使って、rollout ファイルと state_5.sqlite 内のプロバイダーメタデータを修復します（値がない場合は openai を使用します）。変更対象のファイルは書き込み前にバックアップされます。変更が反映されるまで、実行中のインスタンスを再起動する必要がある場合があります。続行しますか？"
       },
       "empty": {
         "title": "管理できるセッションはまだありません",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "API キーに URL は設定できません。入力欄が逆になっていないか確認してください。",
         "baseUrlInvalid": "ベース URL の形式が正しくありません。http:// または https:// を含む完全な URL を入力してください。",
         "apiKeyEqualsBaseUrl": "API キーをベース URL と同じ値にはできません。"
+      },
+      "addAndSwitchSuccess": "追加して切り替えました: {{email}}",
+      "actions": {
+        "addAndSwitch": "追加して切り替える"
+      },
+      "provider": {
+        "label": "プロバイダー",
+        "custom": "カスタム",
+        "endpoint": "プロバイダーエンドポイント",
+        "hint": "互換性のある Base URL を自動入力しました。必要なら手動で編集できます。",
+        "website": "ウェブサイト",
+        "apiKeyPage": "API キーページ"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "モデルプロバイダー",
+      "desc": "モデルプロバイダーと複数の API キーをまとめて管理し、Codex の API キーアカウントを追加するときにそのまま再利用できます。",
+      "add": "プロバイダーを追加",
+      "loadFailed": "モデルプロバイダーの読み込みに失敗しました: {{error}}",
+      "emptyTitle": "モデルプロバイダーはまだありません",
+      "emptyDesc": "右上の「プロバイダーを追加」をクリックして開始します。",
+      "baseUrl": "ベース URL",
+      "website": "ウェブサイト",
+      "apiKeyPage": "API キーページ",
+      "apiKeysCount": "API キー {{count}} 件",
+      "referencesCount": "関連アカウント {{count}} 件",
+      "unnamedKey": "名称未設定のキー",
+      "createTitle": "モデルプロバイダーを追加",
+      "editTitle": "モデルプロバイダーを編集",
+      "existingApiKeys": "既存の API キー",
+      "fields": {
+        "name": "プロバイダー名",
+        "baseUrl": "ベース URL",
+        "website": "ウェブサイト（任意）",
+        "apiKeyUrl": "API キーページ（任意）",
+        "newApiKeyName": "新しいキー名（任意）",
+        "newApiKey": "新しい API キー"
+      },
+      "validation": {
+        "nameRequired": "プロバイダー名は必須です。",
+        "baseUrlInvalid": "Base URL が無効です。",
+        "baseUrlExists": "この Base URL はすでに存在します。",
+        "providerNotFound": "プロバイダーが見つかりません。",
+        "apiKeyRequiredOnCreate": "プロバイダーを作成するには、少なくとも 1 つの API キーが必要です。",
+        "apiKeyRequiredWhenEmpty": "このプロバイダーにはまだ API キーがありません。先に追加してください。"
+      },
+      "saveSuccess": "モデルプロバイダーを保存しました。",
+      "deleteBlocked": "このプロバイダーは {{count}} 件のアカウントに関連付けられているため、削除できません。",
+      "confirmDelete": "プロバイダー「{{name}}」を削除しますか？",
+      "deleteFailed": "プロバイダーの削除に失敗しました: {{error}}",
+      "deleteApiKeyFailed": "API キーの削除に失敗しました: {{error}}",
+      "selectSavedProvider": "保存済みプロバイダー",
+      "selectSavedApiKey": "保存済み API キー",
+      "noSavedProviders": "保存済みのプロバイダーはまだありません。フィールドを直接入力すると自動で保存されます。",
+      "newProviderName": "プロバイダー名（任意、自動保存に使用）",
+      "newProviderNamePlaceholder": "空欄の場合はホスト名が自動で使われます"
+    },
+    "quickSwitch": {
+      "action": "プロバイダーをクイック切り替え",
+      "inlineAction": "切り替え",
+      "title": "プロバイダーをクイック切り替え",
+      "desc": "この API キーアカウントを、保存済みのプロバイダーと API キーにすばやく切り替えます。",
+      "currentAccount": "現在のアカウント: {{name}}",
+      "noProviders": "保存済みのプロバイダーはまだありません。まず「モデルプロバイダー」で追加してください。",
+      "providerHasNoKeys": "このプロバイダーにはまだ利用可能な API キーがありません。まず「モデルプロバイダー」で追加してください。",
+      "gotoProviders": "プロバイダーを管理",
+      "apply": "今すぐ切り替える",
+      "success": "次のプロバイダーに切り替えました: {{provider}}",
+      "failed": "プロバイダーの切り替えに失敗しました: {{error}}",
+      "validation": {
+        "providerRequired": "プロバイダーを選択してください。",
+        "apiKeyRequired": "API キーを選択してください。"
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Codex 設定",
-      "appPath": "アプリパス"
+      "appPath": "アプリパス",
+      "configToml": "Codex 設定ファイル",
+      "openConfigToml": "ファイルを開く",
+      "openConfigHint": "現在有効な Codex の config.toml をすばやく開きます。"
     },
     "githubCopilot": {
       "title": "GitHub Copilot 設定",
@@ -1851,7 +1995,8 @@
       "loadFailed": "設定の読み込みに失敗しました：{{error}}",
       "saveFailed": "設定の保存に失敗しました：{{error}}",
       "pickPathFailed": "パスの選択に失敗しました：{{error}}",
-      "resetPathFailed": "パスのリセットに失敗しました：{{error}}"
+      "resetPathFailed": "パスのリセットに失敗しました：{{error}}",
+      "openCodexConfigFailed": "Codex の config.toml を開けませんでした: {{error}}"
     },
     "qoder": {
       "title": "Qoder 設定",

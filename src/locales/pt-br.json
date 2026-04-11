@@ -45,7 +45,8 @@
         "free": "GRATUITO ({{count}})",
         "pro": "PRO (__MÁSCARA_0__)",
         "business": "NEGÓCIO ({{count}})",
-        "individual": "INDIVÍDUO (__MÁSCARA_0__)"
+        "individual": "INDIVÍDUO (__MÁSCARA_0__)",
+        "validAccounts": "Contas válidas ({{count}})"
       },
       "filterLabel": "Filtrar",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Selecionar escopo de contas para troca automática",
       "autoSwitchAccountScopeAllHint": "O escopo atual inclui todas as contas. {{total}} conta(s) participarão da troca automática.",
       "codexAutoSwitchAccountScope": "Escopo de troca automática de contas do Codex",
-      "codexAutoSwitchAccountScopeDesc": "Status atual da troca automática do Codex: {{status}}. Apenas contas dentro deste escopo serão consideradas."
+      "codexAutoSwitchAccountScopeDesc": "Status atual da troca automática do Codex: {{status}}. Apenas contas dentro deste escopo serão consideradas.",
+      "currentAccountRefreshRequiresAutoRefresh": "Ative primeiro a \"Atualização automática de cota\" para configurar a atualização da conta atual."
     },
     "network": {
       "apiTitle": "API de cockpit antigravidade",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Selecionar tudo",
         "clearSelectedAccounts": "Limpar seleção",
-        "runCheckNow": "Concluir verificação"
+        "runCheckNow": "Concluir verificação",
+        "retryFiltered": "Tentar novamente o filtro atual ({{count}})",
+        "retryMissingModel": "Este lote não tem informações do modelo e não pode ser tentado novamente.",
+        "retryMissingAccount": "Não há contas que possam ser tentadas novamente no filtro atual."
       },
       "runHint": {
         "title": "Notas de verificação",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Mover para a lixeira",
         "syncSessions": "Sincronizar sessões",
         "expand": "Expandir",
-        "collapse": "Recolher"
+        "collapse": "Recolher",
+        "repairVisibility": "Reparar visibilidade"
       },
       "confirm": {
         "title": "Mover para a lixeira",
         "message": "As sessões selecionadas serão movidas para a lixeira de suas instâncias para que possam ser restauradas depois. Instâncias em execução podem precisar ser reiniciadas antes que a mudança apareça. Continuar?",
-        "syncMessage": "Os threads ausentes e seus dados de sessão serão sincronizados com todas as instâncias. O conteúdo existente não será gravado novamente, e os arquivos da instância de destino serão copiados antes de qualquer gravação. Continuar?"
+        "syncMessage": "Os threads ausentes e seus dados de sessão serão sincronizados com todas as instâncias. O conteúdo existente não será gravado novamente, e os arquivos da instância de destino serão copiados antes de qualquer gravação. Continuar?",
+        "repairVisibilityMessage": "Isto vai reparar os metadados do provedor nos arquivos rollout e em state_5.sqlite usando o model_provider do config.toml raiz de cada instância (se estiver ausente, o padrão será openai). Os arquivos que serão alterados recebem backup antes da gravação. Instâncias em execução podem precisar ser reiniciadas antes que a mudança apareça. Continuar?"
       },
       "empty": {
         "title": "Nenhuma sessão para gerenciar",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "A chave de API não pode ser uma URL. Verifique se os campos foram invertidos.",
         "baseUrlInvalid": "URL base inválida. Informe uma URL completa com http:// ou https://.",
         "apiKeyEqualsBaseUrl": "A chave de API não pode ser igual à URL base."
+      },
+      "addAndSwitchSuccess": "Adicionado e alternado: {{email}}",
+      "actions": {
+        "addAndSwitch": "Adicionar e alternar"
+      },
+      "provider": {
+        "label": "Provedor",
+        "custom": "Personalizado",
+        "endpoint": "Endpoint do provedor",
+        "hint": "Uma Base URL compatível foi preenchida automaticamente. Você ainda pode editá-la manualmente.",
+        "website": "Site",
+        "apiKeyPage": "Página da chave API"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Provedores de modelo",
+      "desc": "Gerencie provedores de modelo e várias chaves API em um só lugar e reutilize-os diretamente ao adicionar contas Codex com chave API.",
+      "add": "Adicionar provedor",
+      "loadFailed": "Falha ao carregar os provedores de modelo: {{error}}",
+      "emptyTitle": "Ainda não há provedores de modelo",
+      "emptyDesc": "Clique em “Adicionar provedor” no canto superior direito para começar.",
+      "baseUrl": "URL base",
+      "website": "Site",
+      "apiKeyPage": "Página da chave API",
+      "apiKeysCount": "{{count}} chaves API",
+      "referencesCount": "{{count}} contas vinculadas",
+      "unnamedKey": "Chave sem nome",
+      "createTitle": "Adicionar provedor de modelo",
+      "editTitle": "Editar provedor de modelo",
+      "existingApiKeys": "Chaves API existentes",
+      "fields": {
+        "name": "Nome do provedor",
+        "baseUrl": "URL base",
+        "website": "Site (opcional)",
+        "apiKeyUrl": "Página da chave API (opcional)",
+        "newApiKeyName": "Nome da nova chave (opcional)",
+        "newApiKey": "Nova chave API"
+      },
+      "validation": {
+        "nameRequired": "O nome do provedor é obrigatório.",
+        "baseUrlInvalid": "URL base inválida.",
+        "baseUrlExists": "Esta URL base já existe.",
+        "providerNotFound": "Provedor não encontrado.",
+        "apiKeyRequiredOnCreate": "Ao criar um provedor, é necessária pelo menos uma chave API.",
+        "apiKeyRequiredWhenEmpty": "Este provedor ainda não tem chave API. Adicione uma primeiro."
+      },
+      "saveSuccess": "Provedor de modelo salvo.",
+      "deleteBlocked": "Este provedor está vinculado a {{count}} conta(s) e não pode ser excluído.",
+      "confirmDelete": "Excluir o provedor \"{{name}}\"?",
+      "deleteFailed": "Falha ao excluir o provedor: {{error}}",
+      "deleteApiKeyFailed": "Falha ao excluir a chave API: {{error}}",
+      "selectSavedProvider": "Provedores salvos",
+      "selectSavedApiKey": "Chaves API salvas",
+      "noSavedProviders": "Ainda não há provedores salvos. Você pode preencher os campos diretamente e eles serão salvos automaticamente.",
+      "newProviderName": "Nome do provedor (opcional, usado no salvamento automático)",
+      "newProviderNamePlaceholder": "Se ficar vazio, o nome do host será usado automaticamente"
+    },
+    "quickSwitch": {
+      "action": "Troca rápida de provedor",
+      "inlineAction": "Alternar",
+      "title": "Troca rápida de provedor",
+      "desc": "Altere rapidamente esta conta com chave API para um provedor salvo e uma chave API salva.",
+      "currentAccount": "Conta atual: {{name}}",
+      "noProviders": "Ainda não há provedores salvos. Adicione um primeiro em Provedores de modelo.",
+      "providerHasNoKeys": "Este provedor ainda não tem uma chave API disponível. Adicione uma primeiro em Provedores de modelo.",
+      "gotoProviders": "Gerenciar provedores",
+      "apply": "Alternar agora",
+      "success": "Alternado para o provedor: {{provider}}",
+      "failed": "Falha ao alternar o provedor: {{error}}",
+      "validation": {
+        "providerRequired": "Selecione um provedor.",
+        "apiKeyRequired": "Selecione uma chave API."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Configurações do Codex",
-      "appPath": "Caminho do aplicativo"
+      "appPath": "Caminho do aplicativo",
+      "configToml": "Arquivo de configuração do Codex",
+      "openConfigToml": "Abrir arquivo",
+      "openConfigHint": "Abra rapidamente o arquivo config.toml ativo do Codex."
     },
     "githubCopilot": {
       "title": "Configurações do GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Falha ao carregar configuração: {{error}}",
       "saveFailed": "Falha ao salvar configuração: {{error}}",
       "pickPathFailed": "Falha ao selecionar caminho: {{error}}",
-      "resetPathFailed": "Falha ao redefinir caminho: {{error}}"
+      "resetPathFailed": "Falha ao redefinir caminho: {{error}}",
+      "openCodexConfigFailed": "Falha ao abrir o config.toml do Codex: {{error}}"
     },
     "qoder": {
       "title": "Configuracoes do Qoder",

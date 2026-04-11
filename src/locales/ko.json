@@ -45,7 +45,8 @@
         "free": "무료({{count}})",
         "pro": "프로({{count}})",
         "business": "비즈니스({{count}})",
-        "individual": "개인({{count}})"
+        "individual": "개인({{count}})",
+        "validAccounts": "유효한 계정 ({{count}})"
       },
       "filterLabel": "필터",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "자동 전환 계정 범위 선택",
       "autoSwitchAccountScopeAllHint": "현재 범위는 모든 계정입니다. {{total}}개 계정이 자동 전환에 참여합니다.",
       "codexAutoSwitchAccountScope": "Codex 자동 전환 계정 범위",
-      "codexAutoSwitchAccountScopeDesc": "현재 Codex 자동 전환 상태: {{status}}. 이 범위의 계정만 고려됩니다."
+      "codexAutoSwitchAccountScopeDesc": "현재 Codex 자동 전환 상태: {{status}}. 이 범위의 계정만 고려됩니다.",
+      "currentAccountRefreshRequiresAutoRefresh": "현재 계정 새로 고침을 설정하려면 먼저 \"할당량 자동 새로 고침\"을 활성화하세요."
     },
     "network": {
       "apiTitle": "반중력 조종석 API",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "전체 선택",
         "clearSelectedAccounts": "선택 해제",
-        "runCheckNow": "인증 완료"
+        "runCheckNow": "인증 완료",
+        "retryFiltered": "현재 필터 다시 시도 ({{count}})",
+        "retryMissingModel": "이 배치에는 모델 정보가 없어 다시 시도할 수 없습니다.",
+        "retryMissingAccount": "현재 필터에는 다시 시도할 수 있는 계정이 없습니다."
       },
       "runHint": {
         "title": "검증 안내",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "휴지통으로 이동",
         "syncSessions": "세션 동기화",
         "expand": "펼치기",
-        "collapse": "접기"
+        "collapse": "접기",
+        "repairVisibility": "표시 정보 복구"
       },
       "confirm": {
         "title": "휴지통으로 이동",
         "message": "선택한 세션은 각 인스턴스에서 휴지통으로 이동되어 나중에 복원할 수 있습니다. 실행 중인 인스턴스는 변경 사항이 보이기 전에 재시작이 필요할 수 있습니다. 계속하시겠습니까?",
-        "syncMessage": "누락된 스레드와 해당 세션 데이터가 모든 인스턴스로 동기화됩니다. 기존 내용은 다시 기록되지 않으며, 쓰기 전에 대상 인스턴스 파일을 백업합니다. 계속하시겠습니까?"
+        "syncMessage": "누락된 스레드와 해당 세션 데이터가 모든 인스턴스로 동기화됩니다. 기존 내용은 다시 기록되지 않으며, 쓰기 전에 대상 인스턴스 파일을 백업합니다. 계속하시겠습니까?",
+        "repairVisibilityMessage": "각 인스턴스의 루트 config.toml에 있는 model_provider 값을 사용해 rollout 파일과 state_5.sqlite의 공급자 메타데이터를 복구합니다(없으면 openai를 기본값으로 사용). 변경될 파일은 쓰기 전에 백업됩니다. 변경 사항이 반영되기 전에 실행 중인 인스턴스를 다시 시작해야 할 수 있습니다. 계속할까요?"
       },
       "empty": {
         "title": "관리할 세션이 없습니다",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "API 키는 URL일 수 없습니다. 입력 필드가 서로 바뀌지 않았는지 확인하세요.",
         "baseUrlInvalid": "기본 URL 형식이 올바르지 않습니다. http:// 또는 https:// 를 포함한 전체 URL을 입력하세요.",
         "apiKeyEqualsBaseUrl": "API 키는 기본 URL과 동일할 수 없습니다."
+      },
+      "addAndSwitchSuccess": "추가 후 전환됨: {{email}}",
+      "actions": {
+        "addAndSwitch": "추가 후 전환"
+      },
+      "provider": {
+        "label": "공급자",
+        "custom": "사용자 지정",
+        "endpoint": "공급자 엔드포인트",
+        "hint": "호환되는 Base URL이 자동으로 입력되었습니다. 필요하면 수동으로 수정할 수 있습니다.",
+        "website": "웹사이트",
+        "apiKeyPage": "API 키 페이지"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "모델 공급자",
+      "desc": "모델 공급자와 여러 API 키를 한곳에서 관리하고, Codex API 키 계정을 추가할 때 바로 재사용하세요.",
+      "add": "공급자 추가",
+      "loadFailed": "모델 공급자를 불러오지 못했습니다: {{error}}",
+      "emptyTitle": "아직 모델 공급자가 없습니다",
+      "emptyDesc": "시작하려면 오른쪽 상단의 \"공급자 추가\"를 클릭하세요.",
+      "baseUrl": "기본 URL",
+      "website": "웹사이트",
+      "apiKeyPage": "API 키 페이지",
+      "apiKeysCount": "API 키 {{count}}개",
+      "referencesCount": "연결된 계정 {{count}}개",
+      "unnamedKey": "이름 없는 키",
+      "createTitle": "모델 공급자 추가",
+      "editTitle": "모델 공급자 편집",
+      "existingApiKeys": "기존 API 키",
+      "fields": {
+        "name": "공급자 이름",
+        "baseUrl": "기본 URL",
+        "website": "웹사이트 (선택 사항)",
+        "apiKeyUrl": "API 키 페이지 (선택 사항)",
+        "newApiKeyName": "새 키 이름 (선택 사항)",
+        "newApiKey": "새 API 키"
+      },
+      "validation": {
+        "nameRequired": "공급자 이름은 필수입니다.",
+        "baseUrlInvalid": "Base URL이 올바르지 않습니다.",
+        "baseUrlExists": "이 Base URL은 이미 존재합니다.",
+        "providerNotFound": "공급자를 찾을 수 없습니다.",
+        "apiKeyRequiredOnCreate": "공급자를 만들 때는 최소 하나의 API 키가 필요합니다.",
+        "apiKeyRequiredWhenEmpty": "이 공급자에는 아직 API 키가 없습니다. 먼저 하나를 추가하세요."
+      },
+      "saveSuccess": "모델 공급자가 저장되었습니다.",
+      "deleteBlocked": "이 공급자는 {{count}}개 계정에 연결되어 있어 삭제할 수 없습니다.",
+      "confirmDelete": "공급자 \"{{name}}\"을(를) 삭제할까요?",
+      "deleteFailed": "공급자 삭제 실패: {{error}}",
+      "deleteApiKeyFailed": "API 키 삭제 실패: {{error}}",
+      "selectSavedProvider": "저장된 공급자",
+      "selectSavedApiKey": "저장된 API 키",
+      "noSavedProviders": "아직 저장된 공급자가 없습니다. 필드를 바로 입력하면 자동으로 저장됩니다.",
+      "newProviderName": "공급자 이름 (선택 사항, 자동 저장에 사용)",
+      "newProviderNamePlaceholder": "비워 두면 호스트 이름이 자동으로 사용됩니다"
+    },
+    "quickSwitch": {
+      "action": "공급자 빠른 전환",
+      "inlineAction": "전환",
+      "title": "공급자 빠른 전환",
+      "desc": "이 API 키 계정을 저장된 공급자와 API 키로 빠르게 전환합니다.",
+      "currentAccount": "현재 계정: {{name}}",
+      "noProviders": "아직 저장된 공급자가 없습니다. 먼저 모델 공급자에서 추가하세요.",
+      "providerHasNoKeys": "이 공급자에는 아직 사용할 수 있는 API 키가 없습니다. 먼저 모델 공급자에서 추가하세요.",
+      "gotoProviders": "공급자 관리",
+      "apply": "지금 전환",
+      "success": "다음 공급자로 전환됨: {{provider}}",
+      "failed": "공급자 전환 실패: {{error}}",
+      "validation": {
+        "providerRequired": "공급자를 선택하세요.",
+        "apiKeyRequired": "API 키를 선택하세요."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Codex 설정",
-      "appPath": "앱 경로"
+      "appPath": "앱 경로",
+      "configToml": "Codex 구성 파일",
+      "openConfigToml": "파일 열기",
+      "openConfigHint": "현재 활성화된 Codex config.toml 파일을 빠르게 엽니다."
     },
     "githubCopilot": {
       "title": "GitHub Copilot 설정",
@@ -1851,7 +1995,8 @@
       "loadFailed": "설정 불러오기 실패: {{error}}",
       "saveFailed": "설정 저장 실패: {{error}}",
       "pickPathFailed": "경로 선택 실패: {{error}}",
-      "resetPathFailed": "경로 초기화 실패: {{error}}"
+      "resetPathFailed": "경로 초기화 실패: {{error}}",
+      "openCodexConfigFailed": "Codex config.toml을 열지 못했습니다: {{error}}"
     },
     "qoder": {
       "title": "Qoder 설정",

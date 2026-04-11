@@ -45,7 +45,8 @@
         "free": "ÜCRETSİZ ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "İŞ ({{count}})",
-        "individual": "BİREYSEL ({{count}})"
+        "individual": "BİREYSEL ({{count}})",
+        "validAccounts": "Geçerli hesaplar ({{count}})"
       },
       "filterLabel": "Filtre",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Otomatik geçiş hesap kapsamını seç",
       "autoSwitchAccountScopeAllHint": "Geçerli kapsam tüm hesaplardır. {{total}} hesap otomatik geçişe dahil olur.",
       "codexAutoSwitchAccountScope": "Codex otomatik hesap geçiş kapsamı",
-      "codexAutoSwitchAccountScopeDesc": "Mevcut Codex otomatik geçiş durumu: {{status}}. Yalnızca bu kapsam içindeki hesaplar dikkate alınır."
+      "codexAutoSwitchAccountScopeDesc": "Mevcut Codex otomatik geçiş durumu: {{status}}. Yalnızca bu kapsam içindeki hesaplar dikkate alınır.",
+      "currentAccountRefreshRequiresAutoRefresh": "Mevcut hesap yenilemeyi yapılandırmak için önce \"Kota Otomatik Yenileme\" özelliğini etkinleştirin."
     },
     "network": {
       "apiTitle": "Yerçekimine Karşı Kokpit API'si",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Tümünü seç",
         "clearSelectedAccounts": "Seçimi temizle",
-        "runCheckNow": "Doğrulamayı tamamla"
+        "runCheckNow": "Doğrulamayı tamamla",
+        "retryFiltered": "Geçerli filtreyi yeniden dene ({{count}})",
+        "retryMissingModel": "Bu partide model bilgisi eksik olduğu için yeniden deneme yapılamıyor.",
+        "retryMissingAccount": "Geçerli filtrede yeniden denenebilir hesap yok."
       },
       "runHint": {
         "title": "Doğrulama notları",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Çöp kutusuna taşı",
         "syncSessions": "Oturumları eşitle",
         "expand": "Genişlet",
-        "collapse": "Daralt"
+        "collapse": "Daralt",
+        "repairVisibility": "Görünürlüğü düzelt"
       },
       "confirm": {
         "title": "Çöp kutusuna taşı",
         "message": "Seçilen oturumlar daha sonra geri yüklenebilmesi için ilgili örneklerden çöp kutusuna taşınacaktır. Çalışan örneklerin değişikliğin görünmesi için yeniden başlatılması gerekebilir. Devam edilsin mi?",
-        "syncMessage": "Eksik iş parçacıkları ve bunlara ait oturum verileri tüm örneklerle eşitlenecektir. Mevcut içerik yeniden yazılmayacak ve hedef örnek dosyaları herhangi bir yazma işleminden önce yedeklenecektir. Devam edilsin mi?"
+        "syncMessage": "Eksik iş parçacıkları ve bunlara ait oturum verileri tüm örneklerle eşitlenecektir. Mevcut içerik yeniden yazılmayacak ve hedef örnek dosyaları herhangi bir yazma işleminden önce yedeklenecektir. Devam edilsin mi?",
+        "repairVisibilityMessage": "Bu işlem, her örneğin kök config.toml dosyasındaki model_provider değerini kullanarak rollout dosyaları ve state_5.sqlite içindeki sağlayıcı meta verilerini onarır (eksikse varsayılan olarak openai kullanılır). Değiştirilecek dosyalar yazılmadan önce yedeklenir. Değişikliğin görünmesi için çalışan örneklerin yeniden başlatılması gerekebilir. Devam edilsin mi?"
       },
       "empty": {
         "title": "Yönetilecek oturum yok",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "API anahtarı bir URL olamaz. Alanların yer değiştirmediğini kontrol edin.",
         "baseUrlInvalid": "Geçersiz temel URL. Lütfen http:// veya https:// içeren tam bir URL girin.",
         "apiKeyEqualsBaseUrl": "API anahtarı temel URL ile aynı olamaz."
+      },
+      "addAndSwitchSuccess": "Eklendi ve geçiş yapıldı: {{email}}",
+      "actions": {
+        "addAndSwitch": "Ekle ve geçiş yap"
+      },
+      "provider": {
+        "label": "Sağlayıcı",
+        "custom": "Özel",
+        "endpoint": "Sağlayıcı uç noktası",
+        "hint": "Uyumlu bir Base URL otomatik olarak dolduruldu. İsterseniz bunu yine de elle düzenleyebilirsiniz.",
+        "website": "Web sitesi",
+        "apiKeyPage": "API anahtarı sayfası"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Model sağlayıcıları",
+      "desc": "Model sağlayıcılarını ve birden çok API anahtarını tek bir yerde yönetin, ardından Codex API anahtarı hesapları eklerken bunları doğrudan yeniden kullanın.",
+      "add": "Sağlayıcı ekle",
+      "loadFailed": "Model sağlayıcıları yüklenemedi: {{error}}",
+      "emptyTitle": "Henüz model sağlayıcısı yok",
+      "emptyDesc": "Başlamak için sağ üstteki \"Sağlayıcı ekle\" düğmesine tıklayın.",
+      "baseUrl": "Temel URL",
+      "website": "Web sitesi",
+      "apiKeyPage": "API anahtarı sayfası",
+      "apiKeysCount": "{{count}} API anahtarı",
+      "referencesCount": "{{count}} bağlantılı hesap",
+      "unnamedKey": "Adsız anahtar",
+      "createTitle": "Model sağlayıcı ekle",
+      "editTitle": "Model sağlayıcıyı düzenle",
+      "existingApiKeys": "Mevcut API anahtarları",
+      "fields": {
+        "name": "Sağlayıcı adı",
+        "baseUrl": "Temel URL",
+        "website": "Web sitesi (isteğe bağlı)",
+        "apiKeyUrl": "API anahtarı sayfası (isteğe bağlı)",
+        "newApiKeyName": "Yeni anahtar adı (isteğe bağlı)",
+        "newApiKey": "Yeni API anahtarı"
+      },
+      "validation": {
+        "nameRequired": "Sağlayıcı adı gerekli.",
+        "baseUrlInvalid": "Geçersiz temel URL.",
+        "baseUrlExists": "Bu temel URL zaten mevcut.",
+        "providerNotFound": "Sağlayıcı bulunamadı.",
+        "apiKeyRequiredOnCreate": "Sağlayıcı oluştururken en az bir API anahtarı gereklidir.",
+        "apiKeyRequiredWhenEmpty": "Bu sağlayıcının henüz API anahtarı yok. Lütfen önce bir tane ekleyin."
+      },
+      "saveSuccess": "Model sağlayıcı kaydedildi.",
+      "deleteBlocked": "Bu sağlayıcı {{count}} hesapla bağlantılı olduğu için silinemez.",
+      "confirmDelete": "\"{{name}}\" sağlayıcısı silinsin mi?",
+      "deleteFailed": "Sağlayıcı silinemedi: {{error}}",
+      "deleteApiKeyFailed": "API anahtarı silinemedi: {{error}}",
+      "selectSavedProvider": "Kayıtlı sağlayıcılar",
+      "selectSavedApiKey": "Kayıtlı API anahtarları",
+      "noSavedProviders": "Henüz kayıtlı sağlayıcı yok. Alanları doğrudan doldurabilirsiniz; otomatik olarak kaydedilir.",
+      "newProviderName": "Sağlayıcı adı (isteğe bağlı, otomatik kayıt için kullanılır)",
+      "newProviderNamePlaceholder": "Boş bırakılırsa ana bilgisayar adı otomatik olarak kullanılır"
+    },
+    "quickSwitch": {
+      "action": "Sağlayıcıyı hızlı değiştir",
+      "inlineAction": "Geçiş yap",
+      "title": "Sağlayıcıyı hızlı değiştir",
+      "desc": "Bu API anahtarı hesabını kayıtlı bir sağlayıcıya ve API anahtarına hızlıca geçirin.",
+      "currentAccount": "Geçerli hesap: {{name}}",
+      "noProviders": "Henüz kayıtlı sağlayıcı yok. Önce Model sağlayıcıları bölümünde bir tane ekleyin.",
+      "providerHasNoKeys": "Bu sağlayıcının henüz kullanılabilir bir API anahtarı yok. Önce Model sağlayıcıları bölümünde bir tane ekleyin.",
+      "gotoProviders": "Sağlayıcıları yönet",
+      "apply": "Şimdi geçiş yap",
+      "success": "Şu sağlayıcıya geçildi: {{provider}}",
+      "failed": "Sağlayıcı değiştirilemedi: {{error}}",
+      "validation": {
+        "providerRequired": "Lütfen bir sağlayıcı seçin.",
+        "apiKeyRequired": "Lütfen bir API anahtarı seçin."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Codex Ayarları",
-      "appPath": "Uygulama Yolu"
+      "appPath": "Uygulama Yolu",
+      "configToml": "Codex yapılandırma dosyası",
+      "openConfigToml": "Dosyayı aç",
+      "openConfigHint": "Etkin Codex config.toml dosyasını hızla açın."
     },
     "githubCopilot": {
       "title": "GitHub Copilot Ayarları",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Yapılandırma yüklenemedi: {{error}}",
       "saveFailed": "Yapılandırma kaydedilemedi: {{error}}",
       "pickPathFailed": "Yol seçilemedi: {{error}}",
-      "resetPathFailed": "Yol sıfırlanamadı: {{error}}"
+      "resetPathFailed": "Yol sıfırlanamadı: {{error}}",
+      "openCodexConfigFailed": "Codex config.toml açılamadı: {{error}}"
     },
     "qoder": {
       "title": "Qoder Ayarları",

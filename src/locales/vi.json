@@ -45,7 +45,8 @@
         "free": "MIỄN PHÍ ({{count}})",
         "pro": "CHUYÊN NGHIỆP ({{count}})",
         "business": "KINH DOANH ({{count}})",
-        "individual": "CÁ NHÂN ({{count}})"
+        "individual": "CÁ NHÂN ({{count}})",
+        "validAccounts": "Tài khoản hợp lệ ({{count}})"
       },
       "filterLabel": "Bộ lọc",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Chọn phạm vi tài khoản để chuyển tự động",
       "autoSwitchAccountScopeAllHint": "Phạm vi hiện tại là tất cả tài khoản. {{total}} tài khoản sẽ tham gia chuyển tự động.",
       "codexAutoSwitchAccountScope": "Phạm vi chuyển tự động tài khoản Codex",
-      "codexAutoSwitchAccountScopeDesc": "Trạng thái chuyển tự động Codex hiện tại: {{status}}. Chỉ tài khoản trong phạm vi này mới được xét."
+      "codexAutoSwitchAccountScopeDesc": "Trạng thái chuyển tự động Codex hiện tại: {{status}}. Chỉ tài khoản trong phạm vi này mới được xét.",
+      "currentAccountRefreshRequiresAutoRefresh": "Hãy bật \"Tự động làm mới hạn ngạch\" trước để cấu hình làm mới tài khoản hiện tại."
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Chọn tất cả",
         "clearSelectedAccounts": "Bỏ chọn",
-        "runCheckNow": "Hoàn tất xác minh"
+        "runCheckNow": "Hoàn tất xác minh",
+        "retryFiltered": "Thử lại bộ lọc hiện tại ({{count}})",
+        "retryMissingModel": "Lô này thiếu thông tin mô hình nên không thể thử lại.",
+        "retryMissingAccount": "Không có tài khoản nào có thể thử lại trong bộ lọc hiện tại."
       },
       "runHint": {
         "title": "Ghi chú xác minh",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Chuyển vào thùng rác",
         "syncSessions": "Đồng bộ phiên",
         "expand": "Mở rộng",
-        "collapse": "Thu gọn"
+        "collapse": "Thu gọn",
+        "repairVisibility": "Sửa hiển thị"
       },
       "confirm": {
         "title": "Chuyển vào thùng rác",
         "message": "Các phiên đã chọn sẽ được chuyển vào thùng rác từ các phiên bản tương ứng để có thể khôi phục sau này. Các phiên bản đang chạy có thể cần khởi động lại trước khi thay đổi xuất hiện. Tiếp tục chứ?",
-        "syncMessage": "Các luồng còn thiếu và dữ liệu phiên của chúng sẽ được đồng bộ tới tất cả phiên bản. Nội dung hiện có sẽ không bị ghi lại, và các tệp của phiên bản đích sẽ được sao lưu trước khi ghi. Tiếp tục chứ?"
+        "syncMessage": "Các luồng còn thiếu và dữ liệu phiên của chúng sẽ được đồng bộ tới tất cả phiên bản. Nội dung hiện có sẽ không bị ghi lại, và các tệp của phiên bản đích sẽ được sao lưu trước khi ghi. Tiếp tục chứ?",
+        "repairVisibilityMessage": "Thao tác này sẽ sửa metadata nhà cung cấp trong các tệp rollout và state_5.sqlite bằng giá trị model_provider từ config.toml gốc của từng instance (nếu thiếu thì dùng openai mặc định). Các tệp sắp thay đổi sẽ được sao lưu trước khi ghi. Có thể cần khởi động lại các instance đang chạy trước khi thay đổi xuất hiện. Tiếp tục?"
       },
       "empty": {
         "title": "Chưa có phiên nào để quản lý",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "API key không thể là URL. Hãy kiểm tra xem bạn có điền nhầm hai trường hay không.",
         "baseUrlInvalid": "Base URL không hợp lệ. Vui lòng nhập URL đầy đủ bắt đầu bằng http:// hoặc https://.",
         "apiKeyEqualsBaseUrl": "API key không được trùng với Base URL."
+      },
+      "addAndSwitchSuccess": "Đã thêm và chuyển sang: {{email}}",
+      "actions": {
+        "addAndSwitch": "Thêm và chuyển"
+      },
+      "provider": {
+        "label": "Nhà cung cấp",
+        "custom": "Tùy chỉnh",
+        "endpoint": "Điểm cuối nhà cung cấp",
+        "hint": "Base URL tương thích đã được điền tự động. Bạn vẫn có thể chỉnh sửa thủ công.",
+        "website": "Trang web",
+        "apiKeyPage": "Trang API Key"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Nhà cung cấp mô hình",
+      "desc": "Quản lý nhà cung cấp mô hình và nhiều API Key ở một nơi, rồi tái sử dụng trực tiếp khi thêm tài khoản Codex dùng API Key.",
+      "add": "Thêm nhà cung cấp",
+      "loadFailed": "Không thể tải nhà cung cấp mô hình: {{error}}",
+      "emptyTitle": "Chưa có nhà cung cấp mô hình",
+      "emptyDesc": "Bấm \"Thêm nhà cung cấp\" ở góc trên bên phải để bắt đầu.",
+      "baseUrl": "URL cơ sở",
+      "website": "Trang web",
+      "apiKeyPage": "Trang API Key",
+      "apiKeysCount": "{{count}} API Key",
+      "referencesCount": "{{count}} tài khoản đã liên kết",
+      "unnamedKey": "Key chưa có tên",
+      "createTitle": "Thêm nhà cung cấp mô hình",
+      "editTitle": "Chỉnh sửa nhà cung cấp mô hình",
+      "existingApiKeys": "API Key hiện có",
+      "fields": {
+        "name": "Tên nhà cung cấp",
+        "baseUrl": "URL cơ sở",
+        "website": "Trang web (tùy chọn)",
+        "apiKeyUrl": "Trang API Key (tùy chọn)",
+        "newApiKeyName": "Tên key mới (tùy chọn)",
+        "newApiKey": "API Key mới"
+      },
+      "validation": {
+        "nameRequired": "Tên nhà cung cấp là bắt buộc.",
+        "baseUrlInvalid": "Base URL không hợp lệ.",
+        "baseUrlExists": "Base URL này đã tồn tại.",
+        "providerNotFound": "Không tìm thấy nhà cung cấp.",
+        "apiKeyRequiredOnCreate": "Khi tạo nhà cung cấp, cần ít nhất một API Key.",
+        "apiKeyRequiredWhenEmpty": "Nhà cung cấp này chưa có API Key. Hãy thêm một key trước."
+      },
+      "saveSuccess": "Đã lưu nhà cung cấp mô hình.",
+      "deleteBlocked": "Nhà cung cấp này đang được liên kết với {{count}} tài khoản nên không thể xóa.",
+      "confirmDelete": "Xóa nhà cung cấp \"{{name}}\"?",
+      "deleteFailed": "Không thể xóa nhà cung cấp: {{error}}",
+      "deleteApiKeyFailed": "Không thể xóa API Key: {{error}}",
+      "selectSavedProvider": "Nhà cung cấp đã lưu",
+      "selectSavedApiKey": "API Key đã lưu",
+      "noSavedProviders": "Chưa có nhà cung cấp nào được lưu. Bạn có thể điền trực tiếp các trường và hệ thống sẽ tự động lưu.",
+      "newProviderName": "Tên nhà cung cấp (tùy chọn, dùng cho tự động lưu)",
+      "newProviderNamePlaceholder": "Nếu để trống, tên máy chủ sẽ được dùng tự động"
+    },
+    "quickSwitch": {
+      "action": "Chuyển nhanh nhà cung cấp",
+      "inlineAction": "Chuyển",
+      "title": "Chuyển nhanh nhà cung cấp",
+      "desc": "Nhanh chóng chuyển tài khoản API Key này sang nhà cung cấp và API Key đã lưu.",
+      "currentAccount": "Tài khoản hiện tại: {{name}}",
+      "noProviders": "Chưa có nhà cung cấp nào được lưu. Hãy thêm một mục trong Nhà cung cấp mô hình trước.",
+      "providerHasNoKeys": "Nhà cung cấp này chưa có API Key khả dụng. Hãy thêm một key trong Nhà cung cấp mô hình trước.",
+      "gotoProviders": "Quản lý nhà cung cấp",
+      "apply": "Chuyển ngay",
+      "success": "Đã chuyển sang nhà cung cấp: {{provider}}",
+      "failed": "Không thể chuyển nhà cung cấp: {{error}}",
+      "validation": {
+        "providerRequired": "Vui lòng chọn nhà cung cấp.",
+        "apiKeyRequired": "Vui lòng chọn API Key."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Cài đặt Codex",
-      "appPath": "Đường dẫn ứng dụng"
+      "appPath": "Đường dẫn ứng dụng",
+      "configToml": "Tệp cấu hình Codex",
+      "openConfigToml": "Mở tệp",
+      "openConfigHint": "Mở nhanh tệp Codex config.toml đang hoạt động."
     },
     "githubCopilot": {
       "title": "Cài đặt GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Tải cấu hình thất bại: {{error}}",
       "saveFailed": "Lưu cấu hình thất bại: {{error}}",
       "pickPathFailed": "Chọn đường dẫn thất bại: {{error}}",
-      "resetPathFailed": "Đặt lại đường dẫn thất bại: {{error}}"
+      "resetPathFailed": "Đặt lại đường dẫn thất bại: {{error}}",
+      "openCodexConfigFailed": "Không thể mở Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Cài đặt Qoder",

@@ -52,9 +52,10 @@
         "free": "FREE ({{count}})",
         "pro": "PRO ({{count}})",
         "business": "BUSINESS ({{count}})",
-        "individual": "INDIVIDUAL ({{count}})"
+        "individual": "INDIVIDUAL ({{count}})",
+        "validAccounts": "Akun valid ({{count}})"
       },
-      "filterLabel": "Filter",
+      "filterLabel": "Penyaring",
       "import": {
         "failedMsg": "Impor gagal: {{error}}",
         "label": "Impor",
@@ -292,7 +293,7 @@
     "setAsDefaultInGroup": "Tetapkan sebagai platform bawaan dalam grup ini",
     "removeFromGroup": "Keluarkan dari grup"
   },
-"privacy": {
+  "privacy": {
     "hideSensitive": "Sembunyikan email",
     "showSensitive": "Tampilkan email"
   },
@@ -657,7 +658,11 @@
       "ghcpOpencodeRestart": "Mulai ulang OpenCode saat mengganti GitHub Copilot",
       "ghcpLaunchOnSwitch": "Luncurkan Aplikasi GitHub Copilot saat mengganti GitHub Copilot",
       "antigravityDualSwitchNoRestart": "Penggantian ganda tanpa mulai ulang",
-      "antigravityDualSwitchNoRestartDesc": "Saat mengganti, tulis data akun lokal dan panggil penggantian mulus ekstensi dalam satu alur, tanpa memulai ulang Antigravity."
+      "antigravityDualSwitchNoRestartDesc": "Saat mengganti, tulis data akun lokal dan panggil penggantian mulus ekstensi dalam satu alur, tanpa memulai ulang Antigravity.",
+      "defaultTerminal": "Terminal default",
+      "defaultTerminalDesc": "Terminal yang digunakan saat membuka Gemini CLI.",
+      "terminalSystem": "Ikuti sistem",
+      "currentAccountRefreshRequiresAutoRefresh": "Aktifkan terlebih dahulu \"Penyegaran Kuota Otomatis\" untuk mengatur penyegaran akun saat ini."
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -955,7 +960,7 @@
       "capture": "Tangkap Saat Ini",
       "import": "Impor",
       "deleteUnbound": "Hapus yang Tidak Tertaut",
-      "folder": "Folder",
+      "folder": "Folder kerja",
       "delete": "Hapus"
     },
     "table": {
@@ -1144,7 +1149,10 @@
       "actions": {
         "selectAllAccounts": "Pilih semua",
         "clearSelectedAccounts": "Hapus pilihan",
-        "runCheckNow": "Periksa sekarang"
+        "runCheckNow": "Periksa sekarang",
+        "retryFiltered": "Coba lagi filter saat ini ({{count}})",
+        "retryMissingModel": "Batch ini tidak memiliki informasi model dan tidak dapat dicoba lagi.",
+        "retryMissingAccount": "Tidak ada akun yang bisa dicoba lagi dalam filter saat ini."
       },
       "runHint": {
         "title": "Catatan verifikasi",
@@ -1171,7 +1179,7 @@
     "historyCount": "Riwayat Pemicu ({{count}})",
     "historyEmpty": "Belum ada riwayat",
     "historyClear": "Hapus riwayat",
-    "historyPromptLabel": "Prompt: {{prompt}}",
+    "historyPromptLabel": "Frasa pemicu: {{prompt}}",
     "errorUi": {
       "verificationRequiredTitle": "Verifikasi diperlukan",
       "quotaTitle": "Batas kuota",
@@ -1293,7 +1301,7 @@
       "repeatMode": "Mode pengulangan",
       "repeatDaily": "Harian",
       "repeatWeekly": "Mingguan",
-      "repeatInterval": "Interval",
+      "repeatInterval": "Interval pengulangan",
       "selectTime": "Pilih waktu",
       "customTime": "Waktu kustom",
       "selectWeekday": "Pilih hari",
@@ -1445,6 +1453,80 @@
         "apiKeyCannotBeUrl": "Kunci API tidak boleh berupa URL. Silakan periksa apakah bidang tertukar.",
         "baseUrlInvalid": "URL Dasar tidak valid. Silakan masukkan URL lengkap http:// atau https://.",
         "apiKeyEqualsBaseUrl": "Kunci API tidak boleh sama dengan URL Dasar."
+      },
+      "addAndSwitchSuccess": "Berhasil ditambahkan dan dialihkan: {{email}}",
+      "actions": {
+        "addAndSwitch": "Tambah dan alihkan"
+      },
+      "provider": {
+        "label": "Penyedia",
+        "custom": "Kustom",
+        "endpoint": "Endpoint penyedia",
+        "hint": "Base URL yang kompatibel sudah diisi otomatis. Anda masih bisa mengubahnya secara manual.",
+        "website": "Situs web",
+        "apiKeyPage": "Halaman API Key"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
       }
     },
     "local": {
@@ -1459,7 +1541,7 @@
     "quota": {
       "hourly": "Kuota 5 jam",
       "weekly": "Kuota mingguan",
-      "reset": "Reset"
+      "reset": "Setel ulang"
     },
     "usage": {
       "open": "Buka penggunaan OpenAI",
@@ -1696,12 +1778,14 @@
         "moveToTrash": "Pindahkan ke Sampah",
         "syncSessions": "Sinkronkan Sesi",
         "expand": "Perluas",
-        "collapse": "Ciutkan"
+        "collapse": "Ciutkan",
+        "repairVisibility": "Perbaiki visibilitas"
       },
       "confirm": {
         "title": "Pindahkan ke Sampah",
         "message": "Sesi yang dipilih akan dipindahkan ke Sampah dari instansinya sehingga dapat dipulihkan nanti. Instansi yang berjalan mungkin perlu dimulai ulang sebelum perubahan muncul. Lanjutkan?",
-        "syncMessage": "Thread yang hilang dan data sesinya akan disinkronkan ke semua instansi. Konten yang ada tidak akan ditulis lagi, dan berkas instansi target akan dicadangkan sebelum penulisan terjadi. Lanjutkan?"
+        "syncMessage": "Thread yang hilang dan data sesinya akan disinkronkan ke semua instansi. Konten yang ada tidak akan ditulis lagi, dan berkas instansi target akan dicadangkan sebelum penulisan terjadi. Lanjutkan?",
+        "repairVisibilityMessage": "Tindakan ini akan memperbaiki metadata penyedia di file rollout dan state_5.sqlite menggunakan model_provider dari config.toml root setiap instance (jika tidak ada, default-nya openai). File yang akan diubah akan dicadangkan sebelum ditulis. Instance yang sedang berjalan mungkin perlu dimulai ulang sebelum perubahan terlihat. Lanjutkan?"
       },
       "empty": {
         "title": "Tidak ada sesi untuk dikelola",
@@ -1715,6 +1799,66 @@
       "updatedAt": "Diperbarui",
       "locationRunning": " (berjalan)",
       "untitled": "Sesi tanpa judul"
+    },
+    "modelProviders": {
+      "tab": "Penyedia model",
+      "desc": "Kelola penyedia model dan beberapa API Key di satu tempat, lalu pakai ulang langsung saat menambahkan akun Codex berbasis API Key.",
+      "add": "Tambah penyedia",
+      "loadFailed": "Gagal memuat penyedia model: {{error}}",
+      "emptyTitle": "Belum ada penyedia model",
+      "emptyDesc": "Klik \"Tambah penyedia\" di kanan atas untuk memulai.",
+      "baseUrl": "URL dasar",
+      "website": "Situs web",
+      "apiKeyPage": "Halaman API Key",
+      "apiKeysCount": "{{count}} API Key",
+      "referencesCount": "{{count}} akun tertaut",
+      "unnamedKey": "Key tanpa nama",
+      "createTitle": "Tambah penyedia model",
+      "editTitle": "Edit penyedia model",
+      "existingApiKeys": "API Key yang ada",
+      "fields": {
+        "name": "Nama penyedia",
+        "baseUrl": "URL dasar",
+        "website": "Situs web (opsional)",
+        "apiKeyUrl": "Halaman API Key (opsional)",
+        "newApiKeyName": "Nama key baru (opsional)",
+        "newApiKey": "API Key baru"
+      },
+      "validation": {
+        "nameRequired": "Nama penyedia wajib diisi.",
+        "baseUrlInvalid": "Base URL tidak valid.",
+        "baseUrlExists": "Base URL ini sudah ada.",
+        "providerNotFound": "Penyedia tidak ditemukan.",
+        "apiKeyRequiredOnCreate": "Saat membuat penyedia, Anda harus mengisi setidaknya satu API Key.",
+        "apiKeyRequiredWhenEmpty": "Penyedia ini belum memiliki API Key. Tambahkan satu terlebih dahulu."
+      },
+      "saveSuccess": "Penyedia model disimpan.",
+      "deleteBlocked": "Penyedia ini tertaut ke {{count}} akun dan tidak bisa dihapus.",
+      "confirmDelete": "Hapus penyedia \"{{name}}\"?",
+      "deleteFailed": "Gagal menghapus penyedia: {{error}}",
+      "deleteApiKeyFailed": "Gagal menghapus API Key: {{error}}",
+      "selectSavedProvider": "Penyedia tersimpan",
+      "selectSavedApiKey": "API Key tersimpan",
+      "noSavedProviders": "Belum ada penyedia tersimpan. Anda bisa mengisi field secara langsung dan data akan disimpan otomatis.",
+      "newProviderName": "Nama penyedia (opsional, dipakai untuk simpan otomatis)",
+      "newProviderNamePlaceholder": "Jika kosong, nama host akan dipakai otomatis"
+    },
+    "quickSwitch": {
+      "action": "Alih cepat penyedia",
+      "inlineAction": "Alihkan",
+      "title": "Alih cepat penyedia",
+      "desc": "Alihkan akun API Key ini dengan cepat ke penyedia dan API Key yang sudah disimpan.",
+      "currentAccount": "Akun saat ini: {{name}}",
+      "noProviders": "Belum ada penyedia tersimpan. Tambahkan satu terlebih dahulu di Penyedia model.",
+      "providerHasNoKeys": "Penyedia ini belum punya API Key yang tersedia. Tambahkan satu terlebih dahulu di Penyedia model.",
+      "gotoProviders": "Kelola penyedia",
+      "apply": "Alihkan sekarang",
+      "success": "Dialihkan ke penyedia: {{provider}}",
+      "failed": "Gagal mengalihkan penyedia: {{error}}",
+      "validation": {
+        "providerRequired": "Pilih penyedia.",
+        "apiKeyRequired": "Pilih API Key."
+      }
     }
   },
   "codebuddy": {
@@ -1727,11 +1871,11 @@
       "permission": "Cakupan izin: baca database auth CodeBuddy (state.vscdb), panggil kemampuan kredensial sistem (macOS Keychain / Windows DPAPI / Linux Secret Service) untuk dekripsi/tulis-balik.",
       "network": "Cakupan jaringan: Login OAuth dan penyegaran token memerlukan permintaan jaringan ke codebuddy.ai; kueri kuota memanggil API penagihan. Tidak ada kunci lokal atau kredensial yang diunggah."
     },
-    "nickname": "Nickname",
-    "enterprise": "Enterprise",
+    "nickname": "Nama panggilan",
+    "enterprise": "Perusahaan",
     "usage": "Usage Status",
     "creditsBalance": "Credits Balance",
-    "usageNormal": "Normal",
+    "usageNormal": "Status normal",
     "usageAbnormal": "Abnormal",
     "usageViewDetail": "View details",
     "usageDetailTitle": "Usage Status Details",
@@ -1933,7 +2077,10 @@
     },
     "codex": {
       "title": "Codex Settings",
-      "appPath": "Launch Path"
+      "appPath": "Launch Path",
+      "configToml": "File konfigurasi Codex",
+      "openConfigToml": "Buka file",
+      "openConfigHint": "Buka cepat file Codex config.toml yang sedang aktif."
     },
     "githubCopilot": {
       "title": "GitHub Copilot Settings",
@@ -1993,7 +2140,8 @@
       "loadFailed": "Gagal memuat konfigurasi: {{error}}",
       "saveFailed": "Gagal menyimpan konfigurasi: {{error}}",
       "pickPathFailed": "Gagal memilih jalur: {{error}}",
-      "resetPathFailed": "Gagal mereset jalur: {{error}}"
+      "resetPathFailed": "Gagal mereset jalur: {{error}}",
+      "openCodexConfigFailed": "Gagal membuka Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Qoder Settings",
@@ -2024,7 +2172,7 @@
       "title": "Quota Alert",
       "desc": "Kuota akun saat ini telah mencapai ambang peringatan. Silakan tangani segera.",
       "unknownModel": "Unknown model",
-      "platform": "Platform",
+      "platform": "Platform saat ini",
       "account": "Current account",
       "threshold": "Alert threshold",
       "lowest": "Current lowest",
@@ -2075,7 +2223,7 @@
       "addOnCreditsAvailableLabel": "kredit tambahan tersedia"
     },
     "columns": {
-      "plan": "Tag"
+      "plan": "Paket"
     },
     "usageSummary": {
       "dailyQuota": "Penggunaan kuota harian",
@@ -2169,7 +2317,7 @@
     "subscription": "Subscription",
     "injectToCursor": "Switch to Cursor",
     "quota": {
-      "onDemand": "On-Demand"
+      "onDemand": "Sesuai permintaan"
     },
     "title": "Cursor Account",
     "instances": {
@@ -2224,7 +2372,11 @@
       "unsupportedDescPlatform": "Gemini Cli multi-instance is supported on macOS, Windows, and Linux only.",
       "launchDialogTitle": "Launch Instance",
       "launchHint": "Salin perintah dan jalankan secara manual, atau jalankan langsung di terminal.",
-      "runInTerminal": "Jalankan di Terminal"
+      "runInTerminal": "Jalankan di Terminal",
+      "workingDir": "Direktori kerja",
+      "workingDirPlaceholder": "Gunakan direktori saat ini sebagai default",
+      "workingDirDesc": "Saat startup, Gemini CLI akan berpindah ke direktori ini terlebih dahulu",
+      "pickWorkingDir": "Pilih direktori kerja"
     },
     "switch": {
       "success": "Account switched successfully"
@@ -2278,10 +2430,10 @@
     "rankCurrent": "Current",
     "rankNoData": "--",
     "restart": "Restart",
-    "pause": "Pause",
+    "pause": "Jeda",
     "resume": "Resume",
     "paused": "Paused",
-    "level": "Level {{level}}",
+    "level": "Tingkat {{level}}",
     "levelScore": "Level Score {{score}}",
     "levelCleared": "Level Cleared",
     "nextLevel": "Next Level",
@@ -2289,7 +2441,7 @@
     "historyShort": "Log",
     "historyEmpty": "No records yet",
     "historyClear": "Clear",
-    "historyScoreShort": "Score {{score}}",
+    "historyScoreShort": "Skor {{score}}",
     "historyLevelShort": "Lv {{level}}",
     "historyDurationShort": "Time {{duration}}",
     "historyReasonGameOver": "Game Over",
@@ -2309,7 +2461,7 @@
     "closeEnd": "End and Close"
   },
   "announcement": {
-    "title": "Notifications",
+    "title": "Pemberitahuan",
     "empty": "No notifications",
     "markAllRead": "Mark all read",
     "gotIt": "Got it",
@@ -2801,10 +2953,10 @@
       "network": "Cakupan jaringan: Login OAuth dan penyegaran token memerlukan permintaan jaringan ke WorkBuddy; kueri kuota memanggil API penagihan. Tidak ada kunci lokal atau kredensial yang diunggah."
     },
     "nickname": "Nama panggilan",
-    "enterprise": "Enterprise",
+    "enterprise": "Perusahaan",
     "usage": "Status Penggunaan",
     "creditsBalance": "Saldo Kredit",
-    "usageNormal": "Normal",
+    "usageNormal": "Status normal",
     "usageAbnormal": "Abnormal",
     "usageViewDetail": "Lihat detail",
     "usageDetailTitle": "Detail Status Penggunaan",

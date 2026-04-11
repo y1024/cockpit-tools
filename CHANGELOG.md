@@ -7,6 +7,21 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.21.0] - 2026-04-11
+
+### Added
+- **Codex now includes a dedicated Model Providers workspace for API-key accounts**: manage compatible providers and multiple API keys in one place, reuse them while adding or editing API-key accounts, and quick-switch existing API-key accounts to a saved provider/key pair directly from the account page.
+- **Bahasa Indonesia is now available as a supported UI language**: the locale registry, settings language picker, and documentation language list now include Indonesian.
+
+### Changed
+- **Gemini CLI launch now supports a configurable default terminal plus direct in-terminal execution from the launch dialog**: users can choose the preferred terminal in Settings, then copy the launch command or run it directly from the dialog after switching an instance.
+- **Codex Session Manager now adds one-click historical visibility repair across instances**: it repairs rollout files and `state_5.sqlite` provider metadata from each instance's root `config.toml` `model_provider`, and creates backups before writing.
+- **Windows desktop WebSocket access now allows WSL-side clients through a detected local-network whitelist**: Cockpit can now accept local plugin/runtime connections coming from WSL bridge networks instead of loopback only.
+
+### Fixed
+- **Local account persistence now uses atomic writes with backup-assisted recovery across providers**: account index/detail JSON writes create backups first and can auto-restore from `.bak` files when a recoverable parse failure is detected, reducing local data corruption risk.
+
+---
 ## [0.20.19] - 2026-04-07
 
 ### Changed

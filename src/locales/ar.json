@@ -45,7 +45,8 @@
         "free": "مجاني ({{count}})",
         "pro": "محترف ({{count}})",
         "business": "الأعمال ({{count}})",
-        "individual": "فردي ({{count}})"
+        "individual": "فردي ({{count}})",
+        "validAccounts": "الحسابات الصالحة ({{count}})"
       },
       "filterLabel": "تصفية",
       "import": {
@@ -660,7 +661,8 @@
       "codexAutoSwitchAccountScopeDesc": "حالة التبديل التلقائي الحالية لـ Codex: {{status}}. سيتم النظر فقط في الحسابات ضمن هذا النطاق.",
       "defaultTerminal": "المحطة الافتراضية",
       "defaultTerminalDesc": "المحطة المستخدمة عند فتح Gemini CLI",
-      "terminalSystem": "افتراضي النظام"
+      "terminalSystem": "افتراضي النظام",
+      "currentAccountRefreshRequiresAutoRefresh": "فعّل أولاً \"التحديث التلقائي للحصة\" حتى تتمكن من إعداد تحديث الحساب الحالي."
     },
     "network": {
       "apiTitle": "واجهة برمجة تطبيقات قمرة القيادة المضادة للجاذبية",
@@ -1147,7 +1149,10 @@
       "actions": {
         "selectAllAccounts": "تحديد الكل",
         "clearSelectedAccounts": "إلغاء تحديد الكل",
-        "runCheckNow": "إكمال التحقق"
+        "runCheckNow": "إكمال التحقق",
+        "retryFiltered": "إعادة محاولة التصفية الحالية ({{count}})",
+        "retryMissingModel": "تفتقد هذه الدفعة معلومات النموذج، لذلك لا يمكن إعادة المحاولة.",
+        "retryMissingAccount": "لا توجد حسابات قابلة لإعادة المحاولة في التصفية الحالية."
       },
       "runHint": {
         "title": "ملاحظات التحقق",
@@ -1690,12 +1695,14 @@
         "moveToTrash": "نقل إلى المهملات",
         "syncSessions": "مزامنة الجلسات",
         "expand": "توسيع",
-        "collapse": "طي"
+        "collapse": "طي",
+        "repairVisibility": "إصلاح الظهور"
       },
       "confirm": {
         "title": "نقل إلى المهملات",
         "message": "سيتم نقل الجلسات المحددة إلى سلة المهملات من المثيلات المقابلة لتسهيل استعادتها لاحقًا؛ قد تحتاج المثيلات قيد التشغيل إلى إعادة تشغيل قبل ظهور التغييرات. هل تريد المتابعة؟",
-        "syncMessage": "ستتم مزامنة السلاسل والجلسات المفقودة إلى جميع المثيلات. لن تتم كتابة المحتوى الموجود مرة أخرى، وسيتم نسخ ملفات المثيل الهدف احتياطيًا قبل أي كتابة. هل تريد المتابعة؟"
+        "syncMessage": "ستتم مزامنة السلاسل والجلسات المفقودة إلى جميع المثيلات. لن تتم كتابة المحتوى الموجود مرة أخرى، وسيتم نسخ ملفات المثيل الهدف احتياطيًا قبل أي كتابة. هل تريد المتابعة؟",
+        "repairVisibilityMessage": "سيؤدي هذا إلى إصلاح بيانات تعريف المزوّد في ملفات rollout وملف state_5.sqlite باستخدام قيمة model_provider من ملف config.toml الجذري لكل مثيل (وسيُستخدم openai افتراضيًا إذا كانت مفقودة). ستؤخذ نسخة احتياطية من الملفات التي سيجري تعديلها قبل الكتابة. قد تحتاج المثيلات قيد التشغيل إلى إعادة التشغيل قبل ظهور التغيير. هل تريد المتابعة؟"
       },
       "empty": {
         "title": "لا توجد جلسات لإدارتها",
@@ -1717,6 +1724,140 @@
         "apiKeyCannotBeUrl": "لا يمكن أن يكون مفتاح API عبارة عن عنوان URL. يرجى التحقق مما إذا تم تبديل الحقول.",
         "baseUrlInvalid": "عنوان Base URL غير صالح. يرجى إدخال رابط كامل يبدأ بـ http:// أو https://.",
         "apiKeyEqualsBaseUrl": "لا يمكن أن يكون مفتاح API مطابقًا لـ Base URL."
+      },
+      "addAndSwitchSuccess": "تمت الإضافة والتبديل: {{email}}",
+      "actions": {
+        "addAndSwitch": "إضافة وتبديل"
+      },
+      "provider": {
+        "label": "المزوّد",
+        "custom": "مخصّص",
+        "endpoint": "نقطة نهاية المزوّد",
+        "hint": "تم ملء Base URL متوافق تلقائيًا، وما زال بإمكانك تعديله يدويًا.",
+        "website": "الموقع الإلكتروني",
+        "apiKeyPage": "صفحة مفتاح API"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "موفرو النماذج",
+      "desc": "أدر موفري النماذج وعدة مفاتيح API في مكان واحد، ثم أعد استخدامها مباشرة عند إضافة حسابات Codex بمفتاح API.",
+      "add": "إضافة مزوّد",
+      "loadFailed": "فشل تحميل موفري النماذج: {{error}}",
+      "emptyTitle": "لا يوجد موفرو نماذج بعد",
+      "emptyDesc": "انقر على \"إضافة مزوّد\" في أعلى اليمين للبدء.",
+      "baseUrl": "عنوان URL الأساسي",
+      "website": "الموقع الإلكتروني",
+      "apiKeyPage": "صفحة مفتاح API",
+      "apiKeysCount": "{{count}} من مفاتيح API",
+      "referencesCount": "{{count}} من الحسابات المرتبطة",
+      "unnamedKey": "مفتاح بلا اسم",
+      "createTitle": "إضافة مزوّد نموذج",
+      "editTitle": "تعديل مزوّد النموذج",
+      "existingApiKeys": "مفاتيح API الحالية",
+      "fields": {
+        "name": "اسم المزوّد",
+        "baseUrl": "عنوان URL الأساسي",
+        "website": "الموقع الإلكتروني (اختياري)",
+        "apiKeyUrl": "صفحة مفتاح API (اختياري)",
+        "newApiKeyName": "اسم المفتاح الجديد (اختياري)",
+        "newApiKey": "مفتاح API جديد"
+      },
+      "validation": {
+        "nameRequired": "اسم المزوّد مطلوب.",
+        "baseUrlInvalid": "Base URL غير صالح.",
+        "baseUrlExists": "Base URL هذا موجود بالفعل.",
+        "providerNotFound": "لم يتم العثور على المزوّد.",
+        "apiKeyRequiredOnCreate": "يجب إدخال مفتاح API واحد على الأقل عند إنشاء مزوّد.",
+        "apiKeyRequiredWhenEmpty": "لا يملك هذا المزوّد أي مفتاح API بعد. أضف واحدًا أولاً."
+      },
+      "saveSuccess": "تم حفظ مزوّد النموذج.",
+      "deleteBlocked": "هذا المزوّد مرتبط بـ {{count}} حساب(ات)، ولا يمكن حذفه.",
+      "confirmDelete": "هل تريد حذف المزوّد \"{{name}}\"؟",
+      "deleteFailed": "فشل حذف المزوّد: {{error}}",
+      "deleteApiKeyFailed": "فشل حذف مفتاح API: {{error}}",
+      "selectSavedProvider": "المزوّدون المحفوظون",
+      "selectSavedApiKey": "مفاتيح API المحفوظة",
+      "noSavedProviders": "لا يوجد مزوّدون محفوظون بعد. يمكنك تعبئة الحقول مباشرةً وسيتم الحفظ تلقائيًا.",
+      "newProviderName": "اسم المزوّد (اختياري، يُستخدم للحفظ التلقائي)",
+      "newProviderNamePlaceholder": "إذا تُرك فارغًا، فسيُستخدم اسم المضيف تلقائيًا"
+    },
+    "quickSwitch": {
+      "action": "تبديل المزوّد سريعًا",
+      "inlineAction": "تبديل",
+      "title": "تبديل المزوّد سريعًا",
+      "desc": "بدّل حساب مفتاح API هذا بسرعة إلى مزوّد محفوظ ومفتاح API محفوظ.",
+      "currentAccount": "الحساب الحالي: {{name}}",
+      "noProviders": "لا يوجد مزوّدون محفوظون بعد. أضف واحدًا أولاً في موفري النماذج.",
+      "providerHasNoKeys": "لا يملك هذا المزوّد أي مفتاح API متاح بعد. أضف واحدًا أولاً في موفري النماذج.",
+      "gotoProviders": "إدارة المزوّدين",
+      "apply": "بدّل الآن",
+      "success": "تم التبديل إلى المزوّد: {{provider}}",
+      "failed": "فشل تبديل المزوّد: {{error}}",
+      "validation": {
+        "providerRequired": "يرجى اختيار مزوّد.",
+        "apiKeyRequired": "يرجى اختيار مفتاح API."
       }
     }
   },
@@ -1837,7 +1978,10 @@
     },
     "codex": {
       "title": "إعدادات Codex",
-      "appPath": "مسار التطبيق"
+      "appPath": "مسار التطبيق",
+      "configToml": "ملف إعدادات Codex",
+      "openConfigToml": "فتح الملف",
+      "openConfigHint": "افتح بسرعة ملف config.toml النشط الخاص بـ Codex."
     },
     "githubCopilot": {
       "title": "إعدادات GitHub Copilot",
@@ -1897,7 +2041,8 @@
       "loadFailed": "فشل تحميل الإعدادات: {{error}}",
       "saveFailed": "فشل حفظ الإعدادات: {{error}}",
       "pickPathFailed": "فشل اختيار المسار: {{error}}",
-      "resetPathFailed": "فشل إعادة تعيين المسار: {{error}}"
+      "resetPathFailed": "فشل إعادة تعيين المسار: {{error}}",
+      "openCodexConfigFailed": "فشل فتح ملف Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "إعدادات Qoder",

@@ -45,7 +45,8 @@
         "free": "免費（{{count}}）",
         "pro": "專業版 ({{count}})",
         "business": "商業 ({{count}})",
-        "individual": "個人 ({{count}})"
+        "individual": "個人 ({{count}})",
+        "validAccounts": "有效帳號（{{count}}）"
       },
       "filterLabel": "篩選",
       "import": {
@@ -614,7 +615,8 @@
       "codexAutoSwitchAccountScopeDesc": "當前 Codex 自動切號狀態：{{status}}。僅在該範圍內參與切號。",
       "defaultTerminal": "預設終端機",
       "defaultTerminalDesc": "啟動 Gemini CLI 時使用的終端機",
-      "terminalSystem": "跟隨系統"
+      "terminalSystem": "跟隨系統",
+      "currentAccountRefreshRequiresAutoRefresh": "請先啟用「配額自動刷新」，才能設定目前帳號刷新。"
     },
     "network": {
       "apiTitle": "反重力駕駛艙 API",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "全選",
         "clearSelectedAccounts": "取消全選",
-        "runCheckNow": "立即檢測"
+        "runCheckNow": "立即檢測",
+        "retryFiltered": "重試目前篩選（{{count}}）",
+        "retryMissingModel": "這一批缺少模型資訊，無法重試。",
+        "retryMissingAccount": "目前篩選中沒有可重試的帳號。"
       },
       "runHint": {
         "title": "驗證說明",
@@ -1399,6 +1404,80 @@
         "apiKeyCannotBeUrl": "API Key 不能是 URL，請檢查是否填反",
         "baseUrlInvalid": "Base URL 格式無效，請輸入完整的 http:// 或 https:// 位址",
         "apiKeyEqualsBaseUrl": "API Key 不能與 Base URL 相同"
+      },
+      "addAndSwitchSuccess": "已新增並切換：{{email}}",
+      "actions": {
+        "addAndSwitch": "新增並切換"
+      },
+      "provider": {
+        "label": "供應商",
+        "custom": "自訂",
+        "endpoint": "供應商端點",
+        "hint": "已自動填入相容的 Base URL，你仍可手動編輯。",
+        "website": "網站",
+        "apiKeyPage": "API Key 頁面"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
       }
     },
     "local": {
@@ -1653,12 +1732,14 @@
         "moveToTrash": "移到垃圾桶",
         "syncSessions": "同步會話",
         "expand": "展開",
-        "collapse": "收起"
+        "collapse": "收起",
+        "repairVisibility": "修復可見性"
       },
       "confirm": {
         "title": "移到垃圾桶",
         "message": "會將所選會話從對應實例中移到垃圾桶，方便後續恢復；執行中的實例可能需要重新啟動後才會反映。確認繼續？",
-        "syncMessage": "會將缺失的執行緒與對應會話同步到所有實例中，已有內容不會重複寫入，寫入前會先備份目標實例關鍵檔案。確認繼續？"
+        "syncMessage": "會將缺失的執行緒與對應會話同步到所有實例中，已有內容不會重複寫入，寫入前會先備份目標實例關鍵檔案。確認繼續？",
+        "repairVisibilityMessage": "這將依照每個實例根目錄 config.toml 中的 model_provider（缺失時預設使用 openai），修復 rollout 檔案與 state_5.sqlite 內的供應商中繼資料。所有即將寫入變更的檔案都會先建立備份。正在執行的實例可能需要重新啟動，變更才會顯示。是否繼續？"
       },
       "empty": {
         "title": "還沒有可管理的會話",
@@ -1672,6 +1753,66 @@
       "updatedAt": "最近更新",
       "locationRunning": "（執行中）",
       "untitled": "未命名會話"
+    },
+    "modelProviders": {
+      "tab": "模型供應商",
+      "desc": "集中管理模型供應商與多個 API Key，新增 Codex API Key 帳號時可直接重複使用。",
+      "add": "新增供應商",
+      "loadFailed": "載入模型供應商失敗：{{error}}",
+      "emptyTitle": "尚無模型供應商",
+      "emptyDesc": "點擊右上角「新增供應商」開始設定。",
+      "baseUrl": "基礎 URL",
+      "website": "網站",
+      "apiKeyPage": "API Key 頁面",
+      "apiKeysCount": "API Key {{count}} 個",
+      "referencesCount": "關聯帳號 {{count}} 個",
+      "unnamedKey": "未命名 Key",
+      "createTitle": "新增模型供應商",
+      "editTitle": "編輯模型供應商",
+      "existingApiKeys": "現有 API Keys",
+      "fields": {
+        "name": "供應商名稱",
+        "baseUrl": "基礎 URL",
+        "website": "網站（可選）",
+        "apiKeyUrl": "API Key 頁面（可選）",
+        "newApiKeyName": "新 Key 名稱（可選）",
+        "newApiKey": "新 API Key"
+      },
+      "validation": {
+        "nameRequired": "供應商名稱不能為空",
+        "baseUrlInvalid": "Base URL 格式無效",
+        "baseUrlExists": "此 Base URL 已存在",
+        "providerNotFound": "找不到供應商",
+        "apiKeyRequiredOnCreate": "建立供應商時至少需要一個 API Key",
+        "apiKeyRequiredWhenEmpty": "目前供應商尚無 API Key，請先新增一個"
+      },
+      "saveSuccess": "模型供應商已儲存",
+      "deleteBlocked": "此供應商已連結 {{count}} 個帳號，無法刪除。",
+      "confirmDelete": "確定刪除供應商「{{name}}」嗎？",
+      "deleteFailed": "刪除供應商失敗：{{error}}",
+      "deleteApiKeyFailed": "刪除 API Key 失敗：{{error}}",
+      "selectSavedProvider": "已儲存供應商",
+      "selectSavedApiKey": "已儲存 API Key",
+      "noSavedProviders": "尚無已儲存的供應商，可直接填寫欄位並自動儲存。",
+      "newProviderName": "供應商名稱（可選，用於自動儲存）",
+      "newProviderNamePlaceholder": "留空時會自動使用主機名稱"
+    },
+    "quickSwitch": {
+      "action": "快速切換供應商",
+      "inlineAction": "切換",
+      "title": "快速切換供應商",
+      "desc": "快速將此 API Key 帳號切換到已儲存的供應商與 API Key。",
+      "currentAccount": "目前帳號：{{name}}",
+      "noProviders": "尚無已儲存的供應商，請先到「模型供應商」新增。",
+      "providerHasNoKeys": "此供應商尚無可用的 API Key，請先到「模型供應商」新增。",
+      "gotoProviders": "管理供應商",
+      "apply": "立即切換",
+      "success": "已切換到供應商：{{provider}}",
+      "failed": "切換供應商失敗：{{error}}",
+      "validation": {
+        "providerRequired": "請選擇供應商",
+        "apiKeyRequired": "請選擇 API Key"
+      }
     }
   },
   "githubCopilot": {
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Codex 設定",
-      "appPath": "啟動路徑"
+      "appPath": "啟動路徑",
+      "configToml": "Codex 設定檔",
+      "openConfigToml": "開啟檔案",
+      "openConfigHint": "快速開啟目前使用的 Codex config.toml 檔案。"
     },
     "githubCopilot": {
       "title": "GitHub Copilot 設定",
@@ -1851,7 +1995,8 @@
       "loadFailed": "載入設定失敗：{{error}}",
       "saveFailed": "儲存設定失敗：{{error}}",
       "pickPathFailed": "選擇路徑失敗：{{error}}",
-      "resetPathFailed": "重設路徑失敗：{{error}}"
+      "resetPathFailed": "重設路徑失敗：{{error}}",
+      "openCodexConfigFailed": "開啟 Codex config.toml 失敗：{{error}}"
     },
     "qoder": {
       "title": "Qoder 設定",

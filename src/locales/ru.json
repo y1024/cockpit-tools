@@ -45,7 +45,8 @@
         "free": "БЕСПЛАТНО ({{count}})",
         "pro": "ПРО ({{count}})",
         "business": "БИЗНЕС ({{count}})",
-        "individual": "ИНДИВИДУАЛЬНЫЙ ({{count}})"
+        "individual": "ИНДИВИДУАЛЬНЫЙ ({{count}})",
+        "validAccounts": "Действительные аккаунты ({{count}})"
       },
       "filterLabel": "Фильтр",
       "import": {
@@ -614,7 +615,8 @@
       "autoSwitchAccountScopeDialogTitle": "Выберите область аккаунтов для автопереключения",
       "autoSwitchAccountScopeAllHint": "Текущая область включает все аккаунты. В автопереключении будут участвовать {{total}} аккаунтов.",
       "codexAutoSwitchAccountScope": "Область автопереключения аккаунтов Codex",
-      "codexAutoSwitchAccountScopeDesc": "Текущий статус автопереключения Codex: {{status}}. Учитываются только аккаунты в этой области."
+      "codexAutoSwitchAccountScopeDesc": "Текущий статус автопереключения Codex: {{status}}. Учитываются только аккаунты в этой области.",
+      "currentAccountRefreshRequiresAutoRefresh": "Сначала включите «Автообновление квоты», чтобы настроить обновление текущего аккаунта."
     },
     "network": {
       "apiTitle": "API антигравитационной кабины",
@@ -1101,7 +1103,10 @@
       "actions": {
         "selectAllAccounts": "Выбрать все",
         "clearSelectedAccounts": "Снять выделение",
-        "runCheckNow": "Завершить проверку"
+        "runCheckNow": "Завершить проверку",
+        "retryFiltered": "Повторить текущий фильтр ({{count}})",
+        "retryMissingModel": "В этом наборе отсутствует информация о модели, поэтому повторить попытку нельзя.",
+        "retryMissingAccount": "В текущем фильтре нет аккаунтов, для которых можно повторить попытку."
       },
       "runHint": {
         "title": "Пояснение к проверке",
@@ -1644,12 +1649,14 @@
         "moveToTrash": "Переместить в корзину",
         "syncSessions": "Синхронизировать сессии",
         "expand": "Развернуть",
-        "collapse": "Свернуть"
+        "collapse": "Свернуть",
+        "repairVisibility": "Исправить видимость"
       },
       "confirm": {
         "title": "Переместить в корзину",
         "message": "Выбранные сессии будут перемещены в корзину из соответствующих экземпляров, чтобы их можно было восстановить позже. Запущенным экземплярам может потребоваться перезапуск, прежде чем изменения станут видны. Продолжить?",
-        "syncMessage": "Отсутствующие треды и их данные сессий будут синхронизированы со всеми экземплярами. Существующее содержимое не будет записываться повторно, а файлы целевого экземпляра будут сохранены в резервной копии перед любой записью. Продолжить?"
+        "syncMessage": "Отсутствующие треды и их данные сессий будут синхронизированы со всеми экземплярами. Существующее содержимое не будет записываться повторно, а файлы целевого экземпляра будут сохранены в резервной копии перед любой записью. Продолжить?",
+        "repairVisibilityMessage": "Это исправит метаданные провайдера в rollout-файлах и в state_5.sqlite, используя значение model_provider из корневого config.toml каждого экземпляра (если оно отсутствует, будет использован openai). Для файлов, которые будут изменены, перед записью создаются резервные копии. Запущенным экземплярам может понадобиться перезапуск, прежде чем изменения станут видны. Продолжить?"
       },
       "empty": {
         "title": "Нет сессий для управления",
@@ -1671,6 +1678,140 @@
         "apiKeyCannotBeUrl": "Ключ API не может быть URL. Проверьте, не перепутаны ли поля.",
         "baseUrlInvalid": "Некорректный базовый URL. Введите полный URL с http:// или https://.",
         "apiKeyEqualsBaseUrl": "Ключ API не может совпадать с базовым URL."
+      },
+      "addAndSwitchSuccess": "Добавлено и переключено: {{email}}",
+      "actions": {
+        "addAndSwitch": "Добавить и переключить"
+      },
+      "provider": {
+        "label": "Провайдер",
+        "custom": "Пользовательский",
+        "endpoint": "Конечная точка провайдера",
+        "hint": "Совместимый Base URL был заполнен автоматически. При необходимости вы можете отредактировать его вручную.",
+        "website": "Сайт",
+        "apiKeyPage": "Страница ключа API"
+      },
+      "providers": {
+        "openai_official": {
+          "name": "OpenAI Official"
+        },
+        "azure_openai": {
+          "name": "Azure OpenAI"
+        },
+        "packycode": {
+          "name": "PackyCode"
+        },
+        "cubence": {
+          "name": "Cubence"
+        },
+        "aigocode": {
+          "name": "AIGoCode"
+        },
+        "rightcode": {
+          "name": "RightCode"
+        },
+        "sssaicode": {
+          "name": "SSSAiCode"
+        },
+        "micu": {
+          "name": "Micu"
+        },
+        "x_code_api": {
+          "name": "X-Code API"
+        },
+        "ctok_ai": {
+          "name": "CTok.ai"
+        },
+        "aihubmix": {
+          "name": "AiHubMix"
+        },
+        "dmxapi": {
+          "name": "DMXAPI"
+        },
+        "compshare": {
+          "name": "Compshare"
+        },
+        "openrouter": {
+          "name": "OpenRouter"
+        },
+        "aicodemirror": {
+          "name": "AICodeMirror"
+        },
+        "aicoding": {
+          "name": "AICoding"
+        },
+        "crazyrouter": {
+          "name": "CrazyRouter"
+        },
+        "deepseek": {
+          "name": "DeepSeek"
+        },
+        "moonshot": {
+          "name": "Moonshot"
+        },
+        "siliconflow": {
+          "name": "SiliconFlow"
+        }
+      }
+    },
+    "modelProviders": {
+      "tab": "Провайдеры моделей",
+      "desc": "Управляйте провайдерами моделей и несколькими ключами API в одном месте, а затем напрямую переиспользуйте их при добавлении аккаунтов Codex с API key.",
+      "add": "Добавить провайдера",
+      "loadFailed": "Не удалось загрузить провайдеров моделей: {{error}}",
+      "emptyTitle": "Провайдеров моделей пока нет",
+      "emptyDesc": "Нажмите «Добавить провайдера» в правом верхнем углу, чтобы начать.",
+      "baseUrl": "Базовый URL",
+      "website": "Сайт",
+      "apiKeyPage": "Страница ключа API",
+      "apiKeysCount": "{{count}} ключей API",
+      "referencesCount": "{{count}} связанных аккаунтов",
+      "unnamedKey": "Ключ без имени",
+      "createTitle": "Добавить провайдера модели",
+      "editTitle": "Изменить провайдера модели",
+      "existingApiKeys": "Существующие ключи API",
+      "fields": {
+        "name": "Название провайдера",
+        "baseUrl": "Базовый URL",
+        "website": "Сайт (необязательно)",
+        "apiKeyUrl": "Страница ключа API (необязательно)",
+        "newApiKeyName": "Имя нового ключа (необязательно)",
+        "newApiKey": "Новый ключ API"
+      },
+      "validation": {
+        "nameRequired": "Укажите название провайдера.",
+        "baseUrlInvalid": "Неверный базовый URL.",
+        "baseUrlExists": "Этот базовый URL уже существует.",
+        "providerNotFound": "Провайдер не найден.",
+        "apiKeyRequiredOnCreate": "При создании провайдера требуется как минимум один ключ API.",
+        "apiKeyRequiredWhenEmpty": "У этого провайдера пока нет ключа API. Сначала добавьте его."
+      },
+      "saveSuccess": "Провайдер модели сохранён.",
+      "deleteBlocked": "Этот провайдер связан с {{count}} аккаунтами и не может быть удалён.",
+      "confirmDelete": "Удалить провайдера «{{name}}»?",
+      "deleteFailed": "Не удалось удалить провайдера: {{error}}",
+      "deleteApiKeyFailed": "Не удалось удалить ключ API: {{error}}",
+      "selectSavedProvider": "Сохранённые провайдеры",
+      "selectSavedApiKey": "Сохранённые ключи API",
+      "noSavedProviders": "Пока нет сохранённых провайдеров. Можно заполнить поля напрямую, и запись сохранится автоматически.",
+      "newProviderName": "Название провайдера (необязательно, используется для автосохранения)",
+      "newProviderNamePlaceholder": "Если поле пустое, будет автоматически использовано имя хоста"
+    },
+    "quickSwitch": {
+      "action": "Быстрое переключение провайдера",
+      "inlineAction": "Переключить",
+      "title": "Быстрое переключение провайдера",
+      "desc": "Быстро переключите этот аккаунт с API key на сохранённого провайдера и ключ API.",
+      "currentAccount": "Текущий аккаунт: {{name}}",
+      "noProviders": "Пока нет сохранённых провайдеров. Сначала добавьте одного в разделе «Провайдеры моделей».",
+      "providerHasNoKeys": "У этого провайдера пока нет доступного ключа API. Сначала добавьте его в разделе «Провайдеры моделей».",
+      "gotoProviders": "Управлять провайдерами",
+      "apply": "Переключить сейчас",
+      "success": "Переключено на провайдера: {{provider}}",
+      "failed": "Не удалось переключить провайдера: {{error}}",
+      "validation": {
+        "providerRequired": "Выберите провайдера.",
+        "apiKeyRequired": "Выберите ключ API."
       }
     }
   },
@@ -1791,7 +1932,10 @@
     },
     "codex": {
       "title": "Настройки Codex",
-      "appPath": "Путь к приложению"
+      "appPath": "Путь к приложению",
+      "configToml": "Файл конфигурации Codex",
+      "openConfigToml": "Открыть файл",
+      "openConfigHint": "Быстро открыть активный файл Codex config.toml."
     },
     "githubCopilot": {
       "title": "Настройки GitHub Copilot",
@@ -1851,7 +1995,8 @@
       "loadFailed": "Не удалось загрузить настройки: {{error}}",
       "saveFailed": "Не удалось сохранить настройки: {{error}}",
       "pickPathFailed": "Не удалось выбрать путь: {{error}}",
-      "resetPathFailed": "Не удалось сбросить путь: {{error}}"
+      "resetPathFailed": "Не удалось сбросить путь: {{error}}",
+      "openCodexConfigFailed": "Не удалось открыть Codex config.toml: {{error}}"
     },
     "qoder": {
       "title": "Настройки Qoder",
