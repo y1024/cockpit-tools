@@ -1,6 +1,7 @@
 {
   "version": "1.0",
-  "topRightAd": {
+  "topRightAd": null,
+  "topRightAd_backup": {
     "id": "top-right-ad-2026-04-shop",
     "priority": 100,
     "text": "此地址提供Gemini Pro成品号与Codex Plus兑换码，有需要可以支持一下，感谢。",
