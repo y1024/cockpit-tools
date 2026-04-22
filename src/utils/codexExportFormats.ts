@@ -3,6 +3,7 @@ import type { CodexAccount } from '../types/codex';
 export type CodexExportFormat = 'cockpit_tools' | 'sub2api' | 'cpa';
 
 type JsonRecord = Record<string, unknown>;
+const INVALID_FILE_CHARS_REGEX = /[<>:"/\\|?*\x00-\x1F]/g;
 
 interface Sub2apiBatchCreatePayload {
   exported_at: string;
@@ -32,6 +33,25 @@ interface CpaCodexTokenStorage {
   expired: string;
 }
 
+export interface CodexExportDocument {
+  id: string;
+  label: string;
+  fileNameBase: string;
+  jsonContent: string;
+}
+
+export type CodexExportContent =
+  | {
+      type: 'single';
+      fileNameBase: string;
+      jsonContent: string;
+    }
+  | {
+      type: 'multiple';
+      fileNameBase: string;
+      documents: CodexExportDocument[];
+    };
+
 function toJsonRecord(value: unknown): JsonRecord | null {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as JsonRecord) : null;
 }
@@ -49,6 +69,16 @@ function toStringValue(value: unknown): string | undefined {
 
 function toNumberValue(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function sanitizeFileNameSegment(input: string | undefined, fallback: string): string {
+  const raw = (input || '').trim();
+  const normalized = raw
+    .replace(INVALID_FILE_CHARS_REGEX, '_')
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return normalized || fallback;
 }
 
 function decodeJwtPayload(token: string | undefined): JsonRecord | null {
@@ -256,4 +286,57 @@ export function buildCodexExportFileNameBase(
     return baseName;
   }
   return `${baseName}_${format}`;
+}
+
+function resolveCpaDocumentLabel(account: CodexAccount, index: number): string {
+  return (
+    account.email?.trim() ||
+    resolveAccountId(account) ||
+    account.account_name?.trim() ||
+    account.id ||
+    `account_${index + 1}`
+  );
+}
+
+function buildCpaDocumentFileNameBase(
+  baseName: string,
+  account: CodexAccount,
+  index: number,
+): string {
+  const label = sanitizeFileNameSegment(
+    account.email?.trim() || resolveAccountId(account) || account.id,
+    `account_${index + 1}`,
+  );
+  const accountIdSuffix = sanitizeFileNameSegment(resolveAccountId(account), '');
+  const suffix =
+    accountIdSuffix && accountIdSuffix !== label ? `_${accountIdSuffix.slice(-6)}` : '';
+  return `${baseName}_${String(index + 1).padStart(2, '0')}_${label}${suffix}`;
+}
+
+export function buildCodexExportContent(
+  rawJson: string,
+  format: CodexExportFormat,
+  baseName: string,
+): CodexExportContent {
+  const fileNameBase = buildCodexExportFileNameBase(baseName, format);
+  const accounts = parseCockpitToolsCodexExport(rawJson);
+
+  if (format !== 'cpa' || accounts.length <= 1) {
+    return {
+      type: 'single',
+      fileNameBase,
+      jsonContent: transformCodexExportJson(rawJson, format),
+    };
+  }
+
+  return {
+    type: 'multiple',
+    fileNameBase,
+    documents: accounts.map((account, index) => ({
+      id: `${account.id || resolveAccountId(account) || 'cpa_account'}_${index}`,
+      label: resolveCpaDocumentLabel(account, index),
+      fileNameBase: buildCpaDocumentFileNameBase(fileNameBase, account, index),
+      jsonContent: JSON.stringify(toCpaTokenStorage(account), null, 2),
+    })),
+  };
 }
