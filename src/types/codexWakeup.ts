@@ -63,6 +63,7 @@ export interface CodexWakeupState {
   enabled: boolean;
   tasks: CodexWakeupTask[];
   model_presets: CodexWakeupModelPreset[];
+  model_preset_migrations: string[];
 }
 
 export interface CodexQuotaSnapshot {

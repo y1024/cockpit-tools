@@ -1684,19 +1684,118 @@ fn build_local_oauth_snapshot(tokens: CodexAuthTokens) -> Option<LocalCodexOAuth
     })
 }
 
-fn load_local_oauth_snapshot_from_dir(base_dir: &Path) -> Option<LocalCodexOAuthSnapshot> {
+fn read_codex_auth_file_from_dir(base_dir: &Path) -> Option<CodexAuthFile> {
     let auth_path = base_dir.join("auth.json");
     if !auth_path.exists() {
         return None;
     }
 
     let content = fs::read_to_string(&auth_path).ok()?;
-    let auth_file: CodexAuthFile = serde_json::from_str(&content).ok()?;
+    serde_json::from_str(&content).ok()
+}
+
+fn load_local_oauth_snapshot_from_auth_file(
+    auth_file: CodexAuthFile,
+) -> Option<LocalCodexOAuthSnapshot> {
     if is_auth_mode_apikey(auth_file.auth_mode.as_deref()) {
         return None;
     }
 
     build_local_oauth_snapshot(auth_file.tokens?)
+}
+
+#[cfg(target_os = "macos")]
+fn is_codex_keychain_item_not_found(status: std::process::ExitStatus, stderr: &str) -> bool {
+    let lower = stderr.to_ascii_lowercase();
+    status.code() == Some(44)
+        || lower.contains("could not be found")
+        || lower.contains("errsecitemnotfound")
+        || lower.contains("specified item could not be found")
+}
+
+#[cfg(target_os = "macos")]
+fn read_codex_keychain_auth_file_from_dir(
+    base_dir: &Path,
+) -> Result<Option<CodexAuthFile>, String> {
+    let keychain_account = build_codex_keychain_account(base_dir);
+    let output = std::process::Command::new("security")
+        .arg("find-generic-password")
+        .arg("-s")
+        .arg(CODEX_KEYCHAIN_SERVICE)
+        .arg("-a")
+        .arg(&keychain_account)
+        .arg("-w")
+        .output()
+        .map_err(|e| format!("执行 security 命令失败: {}", e))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        if is_codex_keychain_item_not_found(output.status, &stderr) {
+            return Ok(None);
+        }
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        return Err(format!(
+            "读取 Codex keychain 失败: status={}, stderr={}, stdout={}",
+            output.status,
+            if stderr.trim().is_empty() {
+                "<empty>"
+            } else {
+                stderr.trim()
+            },
+            if stdout.trim().is_empty() {
+                "<empty>"
+            } else {
+                stdout.trim()
+            }
+        ));
+    }
+
+    let secret = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    if secret.is_empty() {
+        return Ok(None);
+    }
+
+    let auth_file: CodexAuthFile = serde_json::from_str(&secret)
+        .map_err(|e| format!("解析 Codex keychain JSON 失败: {}", e))?;
+    Ok(Some(auth_file))
+}
+
+#[cfg(not(target_os = "macos"))]
+fn read_codex_keychain_auth_file_from_dir(
+    _base_dir: &Path,
+) -> Result<Option<CodexAuthFile>, String> {
+    Ok(None)
+}
+
+fn load_local_oauth_snapshot_from_official_store(
+    base_dir: &Path,
+) -> Option<LocalCodexOAuthSnapshot> {
+    let auth_json = read_codex_auth_file_from_dir(base_dir);
+    if auth_json
+        .as_ref()
+        .map(|auth_file| is_auth_mode_apikey(auth_file.auth_mode.as_deref()))
+        .unwrap_or(false)
+    {
+        return None;
+    }
+
+    match read_codex_keychain_auth_file_from_dir(base_dir) {
+        Ok(Some(auth_file)) => {
+            if let Some(snapshot) = load_local_oauth_snapshot_from_auth_file(auth_file) {
+                return Some(snapshot);
+            }
+        }
+        Ok(None) => {}
+        Err(err) => {
+            logger::log_warn(&format!(
+                "读取 Codex 官方 keychain 凭证失败，回退读取 auth.json: target_dir={}, error={}",
+                base_dir.display(),
+                err
+            ));
+        }
+    }
+
+    auth_json.and_then(load_local_oauth_snapshot_from_auth_file)
 }
 
 fn local_oauth_snapshot_matches_account(
@@ -1773,7 +1872,7 @@ fn sync_account_from_auth_dir_if_current(
     account: &mut CodexAccount,
     base_dir: &Path,
 ) -> Result<bool, String> {
-    let Some(snapshot) = load_local_oauth_snapshot_from_dir(base_dir) else {
+    let Some(snapshot) = load_local_oauth_snapshot_from_official_store(base_dir) else {
         return Ok(false);
     };
 
@@ -1784,13 +1883,42 @@ fn sync_account_from_auth_dir_if_current(
     if apply_local_oauth_snapshot(account, &snapshot) {
         save_account(account)?;
         logger::log_info(&format!(
-            "Codex 账号已从本地 auth.json 同步最新 Token: account_id={}, source_dir={}",
+            "Codex 账号已从官方凭证源同步最新 Token: account_id={}, source_dir={}",
             account.id,
             base_dir.display()
         ));
     }
 
     Ok(true)
+}
+
+pub fn sync_current_official_account_from_dir(
+    base_dir: &Path,
+) -> Result<Option<CodexAccount>, String> {
+    let Some(snapshot) = load_local_oauth_snapshot_from_official_store(base_dir) else {
+        return Ok(None);
+    };
+
+    for mut account in list_accounts() {
+        if account.is_api_key_auth() {
+            continue;
+        }
+        if !local_oauth_snapshot_matches_account(&snapshot, &account) {
+            continue;
+        }
+
+        if apply_local_oauth_snapshot(&mut account, &snapshot) {
+            save_account(&account)?;
+            logger::log_info(&format!(
+                "Codex 当前官方凭证已同步回账号库: account_id={}, source_dir={}",
+                account.id,
+                base_dir.display()
+            ));
+        }
+        return Ok(Some(account));
+    }
+
+    Ok(None)
 }
 
 pub fn sync_account_from_auth_dir(
@@ -1866,10 +1994,17 @@ fn sync_api_key_account_from_local_state(account: &mut CodexAccount, base_dir: &
 pub fn get_current_account() -> Option<CodexAccount> {
     let current_id = load_account_index().current_account_id?;
     let mut account = load_account(&current_id)?;
+    let base_dir = get_codex_home();
 
     if account.is_api_key_auth() {
-        let base_dir = get_codex_home();
         sync_api_key_account_from_local_state(&mut account, &base_dir);
+    } else if let Err(err) = sync_account_from_auth_dir_if_current(&mut account, &base_dir) {
+        logger::log_warn(&format!(
+            "读取 Codex 当前官方凭证同步账号失败: account_id={}, source_dir={}, error={}",
+            account.id,
+            base_dir.display(),
+            err
+        ));
     }
     Some(account)
 }
@@ -2104,7 +2239,20 @@ pub fn write_auth_file_to_dir(base_dir: &Path, account: &CodexAccount) -> Result
     Ok(())
 }
 
-pub fn write_account_bundle_to_dir(base_dir: &Path, account: &CodexAccount) -> Result<(), String> {
+fn resolve_account_for_bundle_write(
+    base_dir: &Path,
+    account: &CodexAccount,
+) -> Result<CodexAccount, String> {
+    match sync_current_official_account_from_dir(base_dir)? {
+        Some(synced_account) if synced_account.id == account.id => Ok(synced_account),
+        _ => Ok(account.clone()),
+    }
+}
+
+pub(crate) fn write_prepared_account_bundle_to_dir(
+    base_dir: &Path,
+    account: &CodexAccount,
+) -> Result<(), String> {
     write_auth_file_to_dir(base_dir, account)?;
     if let Err(err) = write_codex_keychain_to_dir(base_dir, account) {
         logger::log_warn(&format!(
@@ -2115,7 +2263,12 @@ pub fn write_account_bundle_to_dir(base_dir: &Path, account: &CodexAccount) -> R
     Ok(())
 }
 
-/// 准备账号注入：优先同步本地 auth.json，再在必要时刷新 Token 并写回存储
+pub fn write_account_bundle_to_dir(base_dir: &Path, account: &CodexAccount) -> Result<(), String> {
+    let account = resolve_account_for_bundle_write(base_dir, account)?;
+    write_prepared_account_bundle_to_dir(base_dir, &account)
+}
+
+/// 准备账号注入：优先同步官方凭证源，再在必要时刷新 Token 并写回存储
 pub async fn prepare_account_for_injection_from_auth_dir(
     account_id: &str,
     auth_dir: Option<&Path>,
@@ -2155,7 +2308,7 @@ pub async fn prepare_account_for_injection_from_auth_dir(
                     account.tokens = new_tokens;
                     save_account(&account)?;
                     if let Some(dir) = matched_auth_dir.as_deref() {
-                        if let Err(err) = write_account_bundle_to_dir(dir, &account) {
+                        if let Err(err) = write_prepared_account_bundle_to_dir(dir, &account) {
                             logger::log_warn(&format!(
                                 "Codex 账号刷新后回写本地 auth.json 失败: account_id={}, target_dir={}, error={}",
                                 account.id,
@@ -2178,6 +2331,8 @@ pub async fn prepare_account_for_injection_from_auth_dir(
 }
 
 pub async fn prepare_account_for_injection(account_id: &str) -> Result<CodexAccount, String> {
+    let default_home = get_codex_home();
+    sync_current_official_account_from_dir(&default_home)?;
     prepare_account_for_injection_from_store(account_id).await
 }
 
@@ -2223,14 +2378,15 @@ pub async fn prepare_account_for_injection_from_store(
 pub fn switch_account(account_id: &str) -> Result<CodexAccount, String> {
     let account = load_account(account_id).ok_or_else(|| format!("账号不存在: {}", account_id))?;
     let codex_home = get_codex_home();
+    let account_for_write = resolve_account_for_bundle_write(&codex_home, &account)?;
     let auth_path = codex_home.join("auth.json");
     logger::log_info(&format!(
         "[Codex切号] 开始切换账号: account_id={}, email={}, target_dir={}",
-        account.id,
-        account.email,
+        account_for_write.id,
+        account_for_write.email,
         codex_home.display()
     ));
-    write_account_bundle_to_dir(&codex_home, &account)?;
+    write_prepared_account_bundle_to_dir(&codex_home, &account_for_write)?;
     logger::log_info(&format!(
         "[Codex切号] 已替换目录登录信息: target_dir={}, target_file={}",
         codex_home.display(),
@@ -2243,7 +2399,7 @@ pub fn switch_account(account_id: &str) -> Result<CodexAccount, String> {
     save_account_index(&index)?;
 
     // 更新账号的 last_used
-    let mut updated_account = account.clone();
+    let mut updated_account = account_for_write.clone();
     updated_account.update_last_used();
     save_account(&updated_account)?;
 
@@ -2835,7 +2991,7 @@ mod tests {
     }
 
     #[test]
-    fn current_account_prefers_stored_tokens_over_local_auth_json() {
+    fn current_account_syncs_tokens_from_official_store() {
         let _lock = TEST_ENV_LOCK.lock().unwrap_or_else(|err| err.into_inner());
         let env = TestEnvGuard::new("codex-current-account-sync-test");
 
@@ -2857,17 +3013,17 @@ mod tests {
 
         let current = get_current_account().expect("current account");
         assert_eq!(current.id, stored.id);
-        assert_eq!(current.tokens.access_token, stored.tokens.access_token);
+        assert_eq!(current.tokens.access_token, latest_tokens.access_token);
         assert_eq!(
             current.tokens.refresh_token.as_deref(),
-            stored.tokens.refresh_token.as_deref()
+            latest_tokens.refresh_token.as_deref()
         );
 
         let persisted = load_account(&stored.id).expect("persisted account");
-        assert_eq!(persisted.tokens.access_token, stored.tokens.access_token);
+        assert_eq!(persisted.tokens.access_token, latest_tokens.access_token);
         assert_eq!(
             persisted.tokens.refresh_token.as_deref(),
-            stored.tokens.refresh_token.as_deref()
+            latest_tokens.refresh_token.as_deref()
         );
     }
 

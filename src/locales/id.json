@@ -1678,7 +1678,11 @@
       "label": "Format ekspor",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "Format sub2api",
-      "cpa": "Format cpa"
+      "cpa": "Format cpa",
+      "downloadAll": "Unduh semua",
+      "cpaCardTitle": "Akun {{index}}",
+      "savedFolder": "Folder tersimpan",
+      "savedPath": "Path tersimpan"
     },
     "localAccess": {
       "title": "Layanan API",
@@ -1801,7 +1805,8 @@
       "enableAndActivateAction": "Aktifkan dan alihkan",
       "apiPortUrl": "URL Port API",
       "modelId": "ID Model",
-      "modelIdPlaceholder": "Pilih ID model"
+      "modelIdPlaceholder": "Pilih ID model",
+      "modelIdViewOnly": "Hanya lihat"
     },
     "api": {
       "baseUrl": "URL Dasar",
@@ -1812,6 +1817,9 @@
         "apiKeyEqualsBaseUrl": "Kunci API tidak boleh sama dengan URL Dasar."
       },
       "addAndSwitchSuccess": "Berhasil ditambahkan dan dialihkan: {{email}}",
+      "showApiKey": "Tampilkan API Key",
+      "hideApiKey": "Sembunyikan API Key",
+      "apiKeyHiddenHint": "API Key disembunyikan. Klik untuk menampilkan.",
       "actions": {
         "addAndSwitch": "Tambah dan alihkan"
       },
@@ -2268,7 +2276,8 @@
         "contextWindowHint": "Menulis model_context_window. Hanya dapat diedit dalam mode Kustom.",
         "partialDetected": "Hanya satu bidang terkelola yang saat ini disetel: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Menyimpan akan menulis ulang kedua bidang menggunakan skema saat ini.",
         "notSet": "Tidak disetel"
-      }
+      },
+      "managePresets": "Preset model"
     },
     "quickSwitch": {
       "action": "Alih cepat penyedia",

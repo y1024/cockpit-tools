@@ -38,6 +38,7 @@ import { CodexQuickConfigCard } from './CodexQuickConfigCard';
 interface CodexModelProviderManagerProps {
   accounts: CodexAccount[];
   onProvidersChanged?: (providers: CodexModelProvider[]) => void;
+  onManageModelPresets?: () => void;
 }
 
 function maskApiKey(value: string): string {
@@ -82,6 +83,7 @@ const DEFAULT_PROVIDER_PREVIEW_PATHS: ProviderPreviewPaths = {
 export function CodexModelProviderManager({
   accounts,
   onProvidersChanged,
+  onManageModelPresets,
 }: CodexModelProviderManagerProps) {
   const { t } = useTranslation();
   const [providers, setProviders] = useState<CodexModelProvider[]>([]);
@@ -418,6 +420,12 @@ export function CodexModelProviderManager({
           </div>
         </div>
         <div className="toolbar-right">
+          {onManageModelPresets && (
+            <button className="btn btn-secondary" onClick={onManageModelPresets}>
+              <Settings size={14} />
+              {t('codex.modelProviders.managePresets', '模型预设')}
+            </button>
+          )}
           <button className="btn btn-secondary" onClick={() => setShowQuickConfigModal(true)}>
             <Settings size={14} />
             {t('codex.modelProviders.quickConfig.title', '当前 Codex 配置')}

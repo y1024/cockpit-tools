@@ -76,6 +76,7 @@ interface CodexWakeupGeneralConfig {
 interface CodexWakeupContentProps {
   accounts: CodexAccount[];
   onRefreshAccounts: () => Promise<void>;
+  openPresetManagerSignal?: number;
 }
 
 interface TaskDraft {
@@ -811,7 +812,11 @@ function calculatePreviewRuns(taskDraft: TaskDraft, count: number = 5) {
   return runs;
 }
 
-export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupContentProps) {
+export function CodexWakeupContent({
+  accounts,
+  onRefreshAccounts,
+  openPresetManagerSignal = 0,
+}: CodexWakeupContentProps) {
   const { t } = useTranslation();
   const {
     runtime,
@@ -965,7 +970,15 @@ export function CodexWakeupContent({ accounts, onRefreshAccounts }: CodexWakeupC
     message: presetModalError,
     scrollKey: presetModalErrorScrollKey,
     set: setPresetModalError,
+    clear: clearPresetModalError,
   } = useModalErrorState();
+
+  useEffect(() => {
+    if (openPresetManagerSignal <= 0) return;
+    setPresetDraft(createEmptyPresetDraft());
+    clearPresetModalError();
+    setShowPresetModal(true);
+  }, [clearPresetModalError, openPresetManagerSignal]);
   const [showTestModal, setShowTestModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [testAccountIds, setTestAccountIds] = useState<string[]>([]);

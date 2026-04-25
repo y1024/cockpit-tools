@@ -23,6 +23,16 @@
   background: transparent; /* 背景由 body 处理 */
 }
 
+.app-container-windows .drag-region {
+  /* Windows 上拖拽层不能压过侧边菜单，否则缩放/布局变化后图标会被透明层截获点击。 */
+  z-index: 900;
+}
+
+.app-container-windows .side-nav,
+.app-container-windows .side-nav-classic-handle {
+  -webkit-app-region: no-drag;
+}
+
 .app-container-side-nav-classic {
   --side-nav-classic-width-expanded: 205px;
   --side-nav-classic-width-collapsed: 84px;

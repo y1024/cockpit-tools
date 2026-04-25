@@ -1629,7 +1629,11 @@
       "label": "Dışa aktarma biçimi",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "sub2api biçimi",
-      "cpa": "cpa biçimi"
+      "cpa": "cpa biçimi",
+      "downloadAll": "Tümünü indir",
+      "cpaCardTitle": "Hesap {{index}}",
+      "savedFolder": "Kaydedilen klasör",
+      "savedPath": "Kaydedilen yol"
     },
     "localAccess": {
       "title": "API Hizmeti",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "Etkinleştir ve geçiş yap",
       "apiPortUrl": "API Port URL",
       "modelId": "Model ID",
-      "modelIdPlaceholder": "Model ID seçin"
+      "modelIdPlaceholder": "Model ID seçin",
+      "modelIdViewOnly": "Yalnızca görüntüle"
     },
     "local": {
       "desc": "~/.codex/auth.json'dan mevcut hesabı içe aktar",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "API anahtarı temel URL ile aynı olamaz."
       },
       "addAndSwitchSuccess": "Eklendi ve geçiş yapıldı: {{email}}",
+      "showApiKey": "API Key’i göster",
+      "hideApiKey": "API Key’i gizle",
+      "apiKeyHiddenHint": "API Key gizli. Göstermek için tıklayın.",
       "actions": {
         "addAndSwitch": "Ekle ve geçiş yap"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "model_context_window yazar. Yalnızca Özel modda düzenlenebilir.",
         "partialDetected": "Şu anda yalnızca bir yönetilen alan ayarlanmıştır: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Kaydetme, mevcut şemayı kullanarak her iki alanı da yeniden yazacaktır.",
         "notSet": "Ayarlanmadı"
-      }
+      },
+      "managePresets": "Model ön ayarları"
     },
     "quickSwitch": {
       "action": "Sağlayıcıyı hızlı değiştir",

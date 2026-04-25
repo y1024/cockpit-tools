@@ -575,11 +575,13 @@ pub fn codex_wakeup_save_state(
     enabled: bool,
     tasks: Vec<codex_wakeup::CodexWakeupTask>,
     model_presets: Vec<codex_wakeup::CodexWakeupModelPreset>,
+    model_preset_migrations: Vec<String>,
 ) -> Result<codex_wakeup::CodexWakeupState, String> {
     codex_wakeup::save_state(&codex_wakeup::CodexWakeupState {
         enabled,
         tasks,
         model_presets,
+        model_preset_migrations,
     })
 }
 

@@ -45,6 +45,7 @@ const EMPTY_STATE: CodexWakeupState = {
   enabled: false,
   tasks: [],
   model_presets: [],
+  model_preset_migrations: [],
 };
 
 let loadAllInFlight: Promise<void> | null = null;
@@ -100,7 +101,13 @@ export const useCodexWakeupStore = create<CodexWakeupStoreState>((set) => ({
   saveState: async (enabled, tasks, modelPresets) => {
     set({ saving: true, error: null });
     try {
-      const state = await codexWakeupService.saveCodexWakeupState(enabled, tasks, modelPresets);
+      const currentMigrations = useCodexWakeupStore.getState().state.model_preset_migrations;
+      const state = await codexWakeupService.saveCodexWakeupState(
+        enabled,
+        tasks,
+        modelPresets,
+        currentMigrations,
+      );
       set({ state, saving: false });
       return state;
     } catch (error) {

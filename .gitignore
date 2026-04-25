@@ -44,3 +44,4 @@ src-tauri/native/macos-native-menu/.build/
 # Rust
 target/
 **/*.rs.bk
+docs/plugin-architecture-proposal.md

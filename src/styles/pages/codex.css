@@ -1614,6 +1614,34 @@
   white-space: nowrap;
 }
 
+.codex-accounts-page .codex-api-key-reveal-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.codex-accounts-page .codex-api-key-reveal-line .codex-login-subline {
+  flex: 1;
+}
+
+.codex-accounts-page .codex-api-key-reveal-line svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.codex-accounts-page .codex-api-key-reveal-line:hover .codex-login-subline,
+.codex-accounts-page .codex-api-key-reveal-line:hover svg {
+  color: var(--text-primary);
+}
+
 .codex-accounts-page .codex-provider-inline-line {
   display: flex;
   align-items: center;
@@ -1873,6 +1901,19 @@
 .codex-add-modal .oauth-manual-input {
   align-items: stretch;
   flex-wrap: wrap;
+}
+
+.codex-add-modal .oauth-manual-input.codex-secret-input {
+  flex-wrap: nowrap;
+}
+
+.codex-add-modal .oauth-manual-input.codex-secret-input .codex-secret-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  min-width: 42px;
+  padding: 0;
 }
 
 .codex-add-modal .oauth-url-box input {

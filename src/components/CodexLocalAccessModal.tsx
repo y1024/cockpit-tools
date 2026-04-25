@@ -1080,6 +1080,9 @@ export function CodexLocalAccessModal({
                           <span className="codex-local-access-config-label">
                             {t('codex.localAccess.modelId', '模型 ID')}
                           </span>
+                          <span className="codex-local-access-view-only-badge">
+                            {t('codex.localAccess.modelIdViewOnly', '仅查看使用，无切换功能')}
+                          </span>
                           <div className="codex-local-access-config-actions">
                             <button
                               type="button"

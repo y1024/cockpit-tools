@@ -1694,6 +1694,7 @@
       "apiPortUrl": "API Port URL",
       "apiKey": "API Key",
       "modelId": "Model ID",
+      "modelIdViewOnly": "View only, no switching",
       "modelIdPlaceholder": "Select model ID",
       "statusRunning": "Running",
       "statusStopped": "Stopped",
@@ -1811,6 +1812,9 @@
       "baseUrl": "Base URL",
       "baseUrlPlaceholder": "Leave blank to use official default",
       "addAndSwitchSuccess": "Added and switched: {{email}}",
+      "showApiKey": "Show API Key",
+      "hideApiKey": "Hide API Key",
+      "apiKeyHiddenHint": "API Key hidden. Click to show.",
       "actions": {
         "addAndSwitch": "Add and Switch"
       },
@@ -1894,6 +1898,7 @@
       "tab": "Model Providers",
       "desc": "Manage model providers and multiple API keys in one place, then reuse them directly when adding Codex API-key accounts.",
       "add": "Add Provider",
+      "managePresets": "Model Presets",
       "loadFailed": "Failed to load model providers: {{error}}",
       "emptyTitle": "No model providers yet",
       "emptyDesc": "Click \"Add Provider\" in the top right to start.",

@@ -1,4 +1,12 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from 'react';
 import './App.css';
 import { getVersion } from '@tauri-apps/api/app';
 import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -2628,8 +2636,13 @@ function MainApp() {
   }, [handleExternalProviderImportRawPayload]);
 
   // 窗口拖拽处理
-  const handleDragStart = () => {
-    getCurrentWindow().startDragging();
+  const handleDragStart = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0) {
+      return;
+    }
+    void getCurrentWindow().startDragging().catch((error) => {
+      console.warn('[Window] startDragging failed:', error);
+    });
   };
 
   useEffect(() => {
@@ -2716,7 +2729,7 @@ function MainApp() {
 
   return (
     <div
-      className={`app-container${sideNavLayoutMode === 'classic' ? ' app-container-side-nav-classic' : ''}${sideNavLayoutMode === 'classic' && sideNavClassicCollapsed ? ' app-container-side-nav-classic-collapsed' : ''}`}
+      className={`app-container${isWindowsPlatform() ? ' app-container-windows' : ''}${sideNavLayoutMode === 'classic' ? ' app-container-side-nav-classic' : ''}${sideNavLayoutMode === 'classic' && sideNavClassicCollapsed ? ' app-container-side-nav-classic-collapsed' : ''}`}
     >
       {/* 更新通知：活跃状态时保持挂载，关闭后继续保留当前更新状态 */}
       {shouldRenderUpdateNotification && (

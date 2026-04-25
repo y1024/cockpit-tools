@@ -862,7 +862,8 @@ pub fn replace_bind_account_references(
 }
 
 pub async fn inject_account_to_profile(profile_dir: &Path, account_id: &str) -> Result<(), String> {
+    modules::codex_account::sync_current_official_account_from_dir(profile_dir)?;
     let account =
         modules::codex_account::prepare_account_for_injection_from_store(account_id).await?;
-    modules::codex_account::write_account_bundle_to_dir(profile_dir, &account)
+    modules::codex_account::write_prepared_account_bundle_to_dir(profile_dir, &account)
 }

@@ -1694,6 +1694,7 @@
       "apiPortUrl": "API端口URL",
       "apiKey": "密钥",
       "modelId": "模型 ID",
+      "modelIdViewOnly": "仅查看，无切换功能",
       "modelIdPlaceholder": "选择模型 ID",
       "statusRunning": "运行中",
       "statusStopped": "未运行",
@@ -1811,6 +1812,9 @@
       "baseUrl": "基础地址",
       "baseUrlPlaceholder": "不填写则是官方默认",
       "addAndSwitchSuccess": "添加并切换成功: {{email}}",
+      "showApiKey": "显示 API Key",
+      "hideApiKey": "隐藏 API Key",
+      "apiKeyHiddenHint": "API Key 已隐藏，点击显示",
       "actions": {
         "addAndSwitch": "添加并切换"
       },
@@ -1894,6 +1898,7 @@
       "tab": "模型供应商",
       "desc": "统一管理模型供应商与多个 API Key，添加 Codex API Key 账号时可直接复用。",
       "add": "新增供应商",
+      "managePresets": "模型预设",
       "loadFailed": "加载模型供应商失败：{{error}}",
       "emptyTitle": "暂无模型供应商",
       "emptyDesc": "点击右上角“新增供应商”开始维护。",

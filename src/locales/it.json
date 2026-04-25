@@ -1629,7 +1629,11 @@
       "label": "Formato di esportazione",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "Formato sub2api",
-      "cpa": "Formato cpa"
+      "cpa": "Formato cpa",
+      "downloadAll": "Scarica tutto",
+      "cpaCardTitle": "Account {{index}}",
+      "savedFolder": "Cartella salvata",
+      "savedPath": "Percorso salvato"
     },
     "localAccess": {
       "title": "Servizio API",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "Abilita e cambia",
       "apiPortUrl": "URL porta API",
       "modelId": "ID modello",
-      "modelIdPlaceholder": "Seleziona ID modello"
+      "modelIdPlaceholder": "Seleziona ID modello",
+      "modelIdViewOnly": "Solo vista"
     },
     "local": {
       "desc": "Importa l'account attuale da ~/.codex/auth.json",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "La chiave API non può coincidere con l'URL di base."
       },
       "addAndSwitchSuccess": "Aggiunto e selezionato: {{email}}",
+      "showApiKey": "Mostra API Key",
+      "hideApiKey": "Nascondi API Key",
+      "apiKeyHiddenHint": "API Key nascosta. Fai clic per mostrarla.",
       "actions": {
         "addAndSwitch": "Aggiungi e passa"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "Scrive model_context_window. Modificabile solo in modalità personalizzata.",
         "partialDetected": "Attualmente è impostato un solo campo gestito: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Il salvataggio riscriverà entrambi i campi utilizzando lo schema corrente.",
         "notSet": "Non impostato"
-      }
+      },
+      "managePresets": "Preset modello"
     },
     "quickSwitch": {
       "action": "Cambio rapido provider",

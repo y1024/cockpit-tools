@@ -1629,7 +1629,11 @@
       "label": "Format eksportu",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "Format sub2api",
-      "cpa": "Format cpa"
+      "cpa": "Format cpa",
+      "downloadAll": "Pobierz wszystko",
+      "cpaCardTitle": "Konto {{index}}",
+      "savedFolder": "Zapisany folder",
+      "savedPath": "Zapisana ścieżka"
     },
     "localAccess": {
       "title": "Usługa API",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "Włącz i przełącz",
       "apiPortUrl": "URL portu API",
       "modelId": "ID modelu",
-      "modelIdPlaceholder": "Wybierz ID modelu"
+      "modelIdPlaceholder": "Wybierz ID modelu",
+      "modelIdViewOnly": "Tylko podgląd"
     },
     "local": {
       "desc": "Importuj bieżące konto z ~/.codex/auth.json",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "Klucz API nie może być taki sam jak bazowy URL."
       },
       "addAndSwitchSuccess": "Dodano i przełączono: {{email}}",
+      "showApiKey": "Pokaż API Key",
+      "hideApiKey": "Ukryj API Key",
+      "apiKeyHiddenHint": "API Key jest ukryty. Kliknij, aby pokazać.",
       "actions": {
         "addAndSwitch": "Dodaj i przełącz"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "Zapisuje model_context_window. Można edytować tylko w trybie niestandardowym.",
         "partialDetected": "Aktualnie ustawione jest tylko jedno pole zarządzane: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Zapisanie spowoduje przepisanie obu pól według aktualnego schematu.",
         "notSet": "Nie ustawiono"
-      }
+      },
+      "managePresets": "Presety modeli"
     },
     "quickSwitch": {
       "action": "Szybka zmiana dostawcy",

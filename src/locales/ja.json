@@ -1629,7 +1629,11 @@
       "label": "エクスポート形式",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "sub2api 形式",
-      "cpa": "cpa 形式"
+      "cpa": "cpa 形式",
+      "downloadAll": "すべてダウンロード",
+      "cpaCardTitle": "アカウント {{index}}",
+      "savedFolder": "保存フォルダー",
+      "savedPath": "保存パス"
     },
     "localAccess": {
       "title": "API サービス",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "有効化して切り替え",
       "apiPortUrl": "APIポートURL",
       "modelId": "モデル ID",
-      "modelIdPlaceholder": "モデル ID を選択"
+      "modelIdPlaceholder": "モデル ID を選択",
+      "modelIdViewOnly": "表示のみ"
     },
     "local": {
       "desc": "~/.codex/auth.json から現在ログイン中のアカウントをインポート",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "API キーをベース URL と同じ値にはできません。"
       },
       "addAndSwitchSuccess": "追加して切り替えました: {{email}}",
+      "showApiKey": "API Keyを表示",
+      "hideApiKey": "API Keyを非表示",
+      "apiKeyHiddenHint": "API Keyは非表示です。クリックすると表示します。",
       "actions": {
         "addAndSwitch": "追加して切り替える"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "model_context_window を書き込みます。カスタムモードでのみ編集可能です。",
         "partialDetected": "現在設定されている管理フィールドは、model_context_window={{context}}、model_auto_compact_token_limit={{compact}} の 1 つだけです。保存すると、現在のスキームを使用して両方のフィールドが書き換えられます。",
         "notSet": "未設定"
-      }
+      },
+      "managePresets": "モデルプリセット"
     },
     "quickSwitch": {
       "action": "プロバイダーをクイック切り替え",

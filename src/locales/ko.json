@@ -1629,7 +1629,11 @@
       "label": "내보내기 형식",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "sub2api 형식",
-      "cpa": "cpa 형식"
+      "cpa": "cpa 형식",
+      "downloadAll": "모두 다운로드",
+      "cpaCardTitle": "계정 {{index}}",
+      "savedFolder": "저장 폴더",
+      "savedPath": "저장 경로"
     },
     "localAccess": {
       "title": "API 서비스",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "활성화 후 전환",
       "apiPortUrl": "API 포트 URL",
       "modelId": "모델 ID",
-      "modelIdPlaceholder": "모델 ID 선택"
+      "modelIdPlaceholder": "모델 ID 선택",
+      "modelIdViewOnly": "보기 전용"
     },
     "local": {
       "desc": "~/.codex/auth.json에서 현재 로그인된 계정 가져오기",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "API 키는 기본 URL과 동일할 수 없습니다."
       },
       "addAndSwitchSuccess": "추가 후 전환됨: {{email}}",
+      "showApiKey": "API Key 표시",
+      "hideApiKey": "API Key 숨기기",
+      "apiKeyHiddenHint": "API Key가 숨겨져 있습니다. 클릭하면 표시됩니다.",
       "actions": {
         "addAndSwitch": "추가 후 전환"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "model_context_window를 작성합니다. 사용자 정의 모드에서만 편집할 수 있습니다.",
         "partialDetected": "현재 하나의 관리 필드(model_context_window={{context}}, model_auto_compact_token_limit={{compact}})만 설정되어 있습니다. 저장하면 현재 구성표를 사용하여 두 필드가 모두 다시 작성됩니다.",
         "notSet": "설정되지 않음"
-      }
+      },
+      "managePresets": "모델 프리셋"
     },
     "quickSwitch": {
       "action": "공급자 빠른 전환",

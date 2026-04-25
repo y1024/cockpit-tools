@@ -27,6 +27,7 @@ const REASONING_EFFORT_HIGH: &str = "high";
 const REASONING_EFFORT_XHIGH: &str = "xhigh";
 const CODEX_WAKEUP_TEST_CANCELLED_MESSAGE: &str = "Codex 唤醒测试已取消";
 const CODEX_WAKEUP_CANCEL_POLL_MS: u64 = 120;
+const GPT_5_5_MODEL_PRESET_MIGRATION_ID: &str = "add-gpt-5-5-model-preset";
 
 static TASKS_LOCK: std::sync::LazyLock<Mutex<()>> = std::sync::LazyLock::new(|| Mutex::new(()));
 static HISTORY_LOCK: std::sync::LazyLock<Mutex<()>> = std::sync::LazyLock::new(|| Mutex::new(()));
@@ -147,6 +148,8 @@ pub struct CodexWakeupState {
     pub tasks: Vec<CodexWakeupTask>,
     #[serde(default = "default_model_presets")]
     pub model_presets: Vec<CodexWakeupModelPreset>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub model_preset_migrations: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -295,6 +298,7 @@ impl Default for CodexWakeupState {
             enabled: false,
             tasks: Vec::new(),
             model_presets: default_model_presets(),
+            model_preset_migrations: vec![GPT_5_5_MODEL_PRESET_MIGRATION_ID.to_string()],
         }
     }
 }
@@ -401,6 +405,7 @@ fn default_reasoning_efforts_for_model(model: &str) -> Vec<String> {
 
 fn default_model_presets() -> Vec<CodexWakeupModelPreset> {
     let items = [
+        ("preset-gpt-5-5", "GPT-5.5", "gpt-5.5"),
         ("preset-gpt-5-4", "GPT-5.4", "gpt-5.4"),
         ("preset-gpt-5-4-mini", "GPT-5.4-Mini", "gpt-5.4-mini"),
         ("preset-gpt-5-3-codex", "GPT-5.3-Codex", "gpt-5.3-codex"),
@@ -442,6 +447,54 @@ fn default_model_presets() -> Vec<CodexWakeupModelPreset> {
             }
         })
         .collect()
+}
+
+fn gpt_5_5_model_preset() -> CodexWakeupModelPreset {
+    let model = "gpt-5.5";
+    let allowed_reasoning_efforts = default_reasoning_efforts_for_model(model);
+    let default_reasoning_effort = if allowed_reasoning_efforts
+        .iter()
+        .any(|item| item == REASONING_EFFORT_MEDIUM)
+    {
+        REASONING_EFFORT_MEDIUM.to_string()
+    } else {
+        allowed_reasoning_efforts
+            .first()
+            .cloned()
+            .unwrap_or_else(|| REASONING_EFFORT_MEDIUM.to_string())
+    };
+    CodexWakeupModelPreset {
+        id: "preset-gpt-5-5".to_string(),
+        name: "GPT-5.5".to_string(),
+        model: model.to_string(),
+        allowed_reasoning_efforts,
+        default_reasoning_effort,
+    }
+}
+
+fn ensure_gpt_5_5_model_preset(state: &mut CodexWakeupState) -> bool {
+    if state
+        .model_preset_migrations
+        .iter()
+        .any(|item| item == GPT_5_5_MODEL_PRESET_MIGRATION_ID)
+    {
+        return false;
+    }
+
+    state
+        .model_preset_migrations
+        .push(GPT_5_5_MODEL_PRESET_MIGRATION_ID.to_string());
+
+    if state
+        .model_presets
+        .iter()
+        .any(|preset| preset.model.trim().eq_ignore_ascii_case("gpt-5.5"))
+    {
+        return true;
+    }
+
+    state.model_presets.insert(0, gpt_5_5_model_preset());
+    true
 }
 
 fn data_dir() -> Result<PathBuf, String> {
@@ -1485,6 +1538,15 @@ fn load_state_inner(
         .filter_map(normalize_model_preset)
         .filter(|preset| preset_ids.insert(preset.id.clone()))
         .collect();
+    state.model_preset_migrations = state
+        .model_preset_migrations
+        .iter()
+        .map(|item| item.trim().to_string())
+        .filter(|item| !item.is_empty())
+        .collect();
+    state.model_preset_migrations.sort();
+    state.model_preset_migrations.dedup();
+    let migration_changed = ensure_gpt_5_5_model_preset(&mut state);
     let changed = if apply_cli_guard {
         if let Some(runtime_available) = runtime_available_override {
             disable_tasks_when_cli_missing_with_runtime(&mut state, runtime_available)
@@ -1495,7 +1557,7 @@ fn load_state_inner(
         false
     };
     refresh_next_run_at(&mut state);
-    if changed {
+    if migration_changed || changed {
         let _lock = TASKS_LOCK.lock().map_err(|_| "获取 Codex 唤醒任务锁失败")?;
         save_json_atomic(&path, &state)?;
     }
@@ -1545,7 +1607,16 @@ pub fn save_state(next_state: &CodexWakeupState) -> Result<CodexWakeupState, Str
             .filter_map(normalize_model_preset)
             .filter(|preset| preset_seen.insert(preset.id.clone()))
             .collect(),
+        model_preset_migrations: next_state
+            .model_preset_migrations
+            .iter()
+            .map(|item| item.trim().to_string())
+            .filter(|item| !item.is_empty())
+            .collect(),
     };
+    state.model_preset_migrations.sort();
+    state.model_preset_migrations.dedup();
+    ensure_gpt_5_5_model_preset(&mut state);
 
     disable_tasks_when_cli_missing(&mut state);
     refresh_next_run_at(&mut state);

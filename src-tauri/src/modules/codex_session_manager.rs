@@ -626,6 +626,10 @@ fn is_instance_running(
 
 fn load_thread_snapshots(instance: &CodexSyncInstance) -> Result<Vec<ThreadSnapshot>, String> {
     let db_path = instance.data_dir.join(STATE_DB_FILE);
+    if !db_path.exists() {
+        return Ok(Vec::new());
+    }
+
     let connection = open_readonly_connection(&db_path)?;
     let columns = read_thread_columns(&connection)?;
     let select_columns = columns

@@ -103,6 +103,7 @@ interface RawCodexWakeupState {
   enabled: boolean;
   tasks: RawCodexWakeupTask[];
   modelPresets?: RawCodexWakeupModelPreset[];
+  modelPresetMigrations?: string[];
 }
 
 interface RawCodexWakeupBatchResult {
@@ -272,6 +273,7 @@ function fromRawState(raw: RawCodexWakeupState): CodexWakeupState {
     enabled: raw.enabled,
     tasks: (raw.tasks ?? []).map(fromRawTask),
     model_presets: (raw.modelPresets ?? []).map(fromRawModelPreset),
+    model_preset_migrations: raw.modelPresetMigrations ?? [],
   };
 }
 
@@ -340,12 +342,14 @@ export async function saveCodexWakeupState(
   enabled: boolean,
   tasks: CodexWakeupTask[],
   modelPresets: CodexWakeupModelPreset[],
+  modelPresetMigrations: string[] = [],
 ): Promise<CodexWakeupState> {
   return fromRawState(
     await invoke<RawCodexWakeupState>('codex_wakeup_save_state', {
       enabled,
       tasks: tasks.map(toRawTask),
       modelPresets: modelPresets.map(toRawModelPreset),
+      modelPresetMigrations,
     }),
   );
 }

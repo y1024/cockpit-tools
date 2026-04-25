@@ -3336,7 +3336,24 @@ pub fn update_tray_menu<R: Runtime>(app: &tauri::AppHandle<R>) -> Result<(), Str
         }
     }
 
-    #[cfg(not(target_os = "macos"))]
+    #[cfg(target_os = "windows")]
+    {
+        let app = app.clone();
+        app.run_on_main_thread(move || {
+            let Some(tray) = app.tray_by_id(TRAY_ID) else {
+                logger::log_warn("[Tray] Windows 托盘不存在，跳过菜单更新");
+                return;
+            };
+
+            match build_tray_menu(&app).and_then(|menu| tray.set_menu(Some(menu))) {
+                Ok(()) => logger::log_info("[Tray] Windows 托盘菜单已更新"),
+                Err(err) => logger::log_error(&format!("[Tray] Windows 托盘菜单更新失败: {}", err)),
+            }
+        })
+        .map_err(|e| e.to_string())?;
+    }
+
+    #[cfg(all(not(target_os = "macos"), not(target_os = "windows")))]
     if let Some(tray) = app.tray_by_id(TRAY_ID) {
         let menu = build_tray_menu(app).map_err(|e| e.to_string())?;
         tray.set_menu(Some(menu)).map_err(|e| e.to_string())?;

@@ -1629,7 +1629,11 @@
       "label": "Định dạng xuất",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "Định dạng sub2api",
-      "cpa": "Định dạng cpa"
+      "cpa": "Định dạng cpa",
+      "downloadAll": "Tải xuống tất cả",
+      "cpaCardTitle": "Tài khoản {{index}}",
+      "savedFolder": "Thư mục đã lưu",
+      "savedPath": "Đường dẫn đã lưu"
     },
     "localAccess": {
       "title": "Dịch vụ API",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "Bật và chuyển",
       "apiPortUrl": "URL cổng API",
       "modelId": "ID mô hình",
-      "modelIdPlaceholder": "Chọn ID mô hình"
+      "modelIdPlaceholder": "Chọn ID mô hình",
+      "modelIdViewOnly": "Chỉ xem"
     },
     "local": {
       "desc": "Nhập tài khoản hiện tại từ ~/.codex/auth.json",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "API key không được trùng với Base URL."
       },
       "addAndSwitchSuccess": "Đã thêm và chuyển sang: {{email}}",
+      "showApiKey": "Hiện API Key",
+      "hideApiKey": "Ẩn API Key",
+      "apiKeyHiddenHint": "API Key đã bị ẩn. Nhấp để hiển thị.",
       "actions": {
         "addAndSwitch": "Thêm và chuyển"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "Viết model_context_window. Chỉ có thể chỉnh sửa ở chế độ Tùy chỉnh.",
         "partialDetected": "Hiện chỉ có một trường được quản lý được đặt: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Việc lưu sẽ ghi lại cả hai trường bằng cách sử dụng lược đồ hiện tại.",
         "notSet": "Chưa đặt"
-      }
+      },
+      "managePresets": "Mẫu mô hình"
     },
     "quickSwitch": {
       "action": "Chuyển nhanh nhà cung cấp",

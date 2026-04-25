@@ -1675,7 +1675,11 @@
       "label": "تنسيق التصدير",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "تنسيق sub2api",
-      "cpa": "تنسيق cpa"
+      "cpa": "تنسيق cpa",
+      "downloadAll": "تنزيل الكل",
+      "cpaCardTitle": "الحساب {{index}}",
+      "savedFolder": "مجلد الحفظ",
+      "savedPath": "مسار الحفظ"
     },
     "localAccess": {
       "title": "خدمة API",
@@ -1798,7 +1802,8 @@
       "enableAndActivateAction": "تفعيل والتبديل",
       "apiPortUrl": "عنوان منفذ API",
       "modelId": "معرّف النموذج",
-      "modelIdPlaceholder": "اختر معرّف النموذج"
+      "modelIdPlaceholder": "اختر معرّف النموذج",
+      "modelIdViewOnly": "عرض فقط"
     },
     "local": {
       "desc": "استيراد الحساب الحالي من ~/.codex/auth.json",
@@ -2100,6 +2105,9 @@
         "apiKeyEqualsBaseUrl": "لا يمكن أن يكون مفتاح API مطابقًا لـ Base URL."
       },
       "addAndSwitchSuccess": "تمت الإضافة والتبديل: {{email}}",
+      "showApiKey": "إظهار API Key",
+      "hideApiKey": "إخفاء API Key",
+      "apiKeyHiddenHint": "تم إخفاء API Key. انقر للإظهار.",
       "actions": {
         "addAndSwitch": "إضافة وتبديل"
       },
@@ -2268,7 +2276,8 @@
         "contextWindowHint": "يكتب model_context_window. قابل للتحرير فقط في الوضع المخصص.",
         "partialDetected": "تم حاليًا تعيين حقل مُدار واحد فقط: model_context_window={{context}}، model_auto_compact_token_limit={{compact}}. سيؤدي الحفظ إلى إعادة كتابة كلا الحقلين باستخدام المخطط الحالي.",
         "notSet": "لم يتم ضبطه"
-      }
+      },
+      "managePresets": "النماذج المسبقة"
     },
     "quickSwitch": {
       "action": "تبديل المزوّد سريعًا",

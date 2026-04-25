@@ -5,7 +5,7 @@ use crate::models::codex_local_access::{
     CodexLocalAccessUsageEvent, CodexLocalAccessUsageStats,
 };
 use crate::modules::atomic_write::write_string_atomic;
-use crate::modules::{codex_account, codex_oauth, logger};
+use crate::modules::{codex_account, codex_oauth, codex_wakeup, logger};
 use futures_util::StreamExt;
 use rand::{distributions::Alphanumeric, Rng};
 use reqwest::header::{HeaderName, HeaderValue, ACCEPT, AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
@@ -334,18 +334,43 @@ fn has_date_snapshot_suffix(value: &str) -> bool {
             .all(|(index, byte)| matches!(index, 0 | 5 | 8) || byte.is_ascii_digit())
 }
 
+fn supported_codex_model_ids() -> Vec<String> {
+    let mut seen = HashSet::new();
+    let model_ids: Vec<String> = codex_wakeup::load_state_for_scheduler()
+        .ok()
+        .map(|state| {
+            state
+                .model_presets
+                .into_iter()
+                .map(|preset| preset.model.trim().to_string())
+                .filter(|model| !model.is_empty())
+                .filter(|model| seen.insert(model.to_ascii_lowercase()))
+                .collect()
+        })
+        .unwrap_or_default();
+
+    if model_ids.is_empty() {
+        DEFAULT_CODEX_MODELS
+            .iter()
+            .map(|model| (*model).to_string())
+            .collect()
+    } else {
+        model_ids
+    }
+}
+
 fn resolve_supported_model_alias(model: &str) -> String {
     let trimmed = model.trim();
     let normalized = trimmed.to_ascii_lowercase();
 
-    for alias in DEFAULT_CODEX_MODELS {
-        if normalized == *alias {
-            return (*alias).to_string();
+    for alias in supported_codex_model_ids() {
+        if normalized == alias {
+            return alias;
         }
 
-        if let Some(suffix) = normalized.strip_prefix(alias) {
+        if let Some(suffix) = normalized.strip_prefix(&alias) {
             if has_date_snapshot_suffix(suffix) {
-                return (*alias).to_string();
+                return alias;
             }
         }
     }
@@ -2555,10 +2580,7 @@ fn build_state_snapshot(runtime: &GatewayRuntime) -> CodexLocalAccessState {
         .as_ref()
         .map(|item| build_api_port_url(item.port));
     let base_url = collection.as_ref().map(|item| build_base_url(item.port));
-    let model_ids = DEFAULT_CODEX_MODELS
-        .iter()
-        .map(|model| (*model).to_string())
-        .collect();
+    let model_ids = supported_codex_model_ids();
     let mut stats = runtime.stats.clone();
     stats.events.clear();
 
@@ -2969,8 +2991,8 @@ fn is_local_models_request(target: &str) -> bool {
 }
 
 fn build_local_models_response() -> Value {
-    let data: Vec<Value> = DEFAULT_CODEX_MODELS
-        .iter()
+    let data: Vec<Value> = supported_codex_model_ids()
+        .into_iter()
         .map(|model| {
             json!({
                 "id": model,

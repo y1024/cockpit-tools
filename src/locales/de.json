@@ -1629,7 +1629,11 @@
       "label": "Exportformat",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "sub2api-Format",
-      "cpa": "cpa-Format"
+      "cpa": "cpa-Format",
+      "downloadAll": "Alle herunterladen",
+      "cpaCardTitle": "Konto {{index}}",
+      "savedFolder": "Gespeicherter Ordner",
+      "savedPath": "Gespeicherter Pfad"
     },
     "localAccess": {
       "title": "API-Dienst",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "Aktivieren und wechseln",
       "apiPortUrl": "API-Port-URL",
       "modelId": "Modell-ID",
-      "modelIdPlaceholder": "Modell-ID wählen"
+      "modelIdPlaceholder": "Modell-ID wählen",
+      "modelIdViewOnly": "Nur Ansicht"
     },
     "local": {
       "desc": "Aktuell eingeloggtes Konto aus ~/.codex/auth.json importieren",
@@ -2054,6 +2059,9 @@
         "apiKeyEqualsBaseUrl": "Der API-Schlüssel darf nicht mit der Basis-URL identisch sein."
       },
       "addAndSwitchSuccess": "Hinzugefügt und gewechselt: {{email}}",
+      "showApiKey": "API Key anzeigen",
+      "hideApiKey": "API Key ausblenden",
+      "apiKeyHiddenHint": "API Key ist ausgeblendet. Zum Anzeigen klicken.",
       "actions": {
         "addAndSwitch": "Hinzufügen und wechseln"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "Schreibt model_context_window. Nur im benutzerdefinierten Modus bearbeitbar.",
         "partialDetected": "Derzeit ist nur ein verwaltetes Feld festgelegt: model_context_window={{context}}, model_auto_compact_token_limit={{compact}}. Beim Speichern werden beide Felder mit dem aktuellen Schema neu geschrieben.",
         "notSet": "Nicht festgelegt"
-      }
+      },
+      "managePresets": "Modellvorgaben"
     },
     "quickSwitch": {
       "action": "Anbieter schnell wechseln",

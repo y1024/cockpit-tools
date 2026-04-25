@@ -253,8 +253,16 @@ function joinFilePath(directory: string, fileName: string): string {
     : `${directory}${separator}${fileName}`;
 }
 
+function maskCodexApiKey(value: string): string {
+  const raw = value.trim();
+  if (!raw) return raw;
+  if (raw.startsWith('sk-')) return 'sk-••••••••••••••••';
+  return '••••••••••••••••';
+}
+
 export function CodexAccountsPage() {
   const [activeTab, setActiveTab] = useState<CodexTab>('overview');
+  const [wakeupPresetManagerSignal, setWakeupPresetManagerSignal] = useState(0);
   const untaggedKey = '__untagged__';
   const [filterTypes, setFilterTypes] = useState<string[]>(() =>
     readAccountsOverviewFilterPersistenceEnabled(CODEX_FILTER_PERSISTENCE_SCOPE)
@@ -1001,6 +1009,7 @@ export function CodexAccountsPage() {
   const [oauthTokenExchangeRetryVisible, setOauthTokenExchangeRetryVisible] = useState(false);
   const [switching, setSwitching] = useState<string | null>(null);
   const [apiKeyInput, setApiKeyInput] = useState('');
+  const [apiKeyInputVisible, setApiKeyInputVisible] = useState(false);
   const [apiBaseUrlInput, setApiBaseUrlInput] = useState('');
   const [apiProviderPresetId, setApiProviderPresetId] = useState(
     DEFAULT_CODEX_API_PROVIDER_ID,
@@ -1015,6 +1024,7 @@ export function CodexAccountsPage() {
   const [savingApiKeyNameId, setSavingApiKeyNameId] = useState<string | null>(null);
   const [editingApiKeyCredentialsId, setEditingApiKeyCredentialsId] = useState<string | null>(null);
   const [editingApiKeyCredentialsValue, setEditingApiKeyCredentialsValue] = useState('');
+  const [editingApiKeyCredentialsVisible, setEditingApiKeyCredentialsVisible] = useState(false);
   const [editingApiBaseUrlCredentialsValue, setEditingApiBaseUrlCredentialsValue] = useState('');
   const [editingApiProviderPresetId, setEditingApiProviderPresetId] = useState(
     DEFAULT_CODEX_API_PROVIDER_ID,
@@ -1028,6 +1038,9 @@ export function CodexAccountsPage() {
   const [quickSwitchApiKeyId, setQuickSwitchApiKeyId] = useState<string>('');
   const [quickSwitchSubmitting, setQuickSwitchSubmitting] = useState(false);
   const [quickSwitchError, setQuickSwitchError] = useState<string | null>(null);
+  const [visibleApiKeyAccountIds, setVisibleApiKeyAccountIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [showCodeReviewQuota, setShowCodeReviewQuota] = useState<boolean>(
     isCodexCodeReviewQuotaVisibleByDefault,
   );
@@ -1158,12 +1171,29 @@ export function CodexAccountsPage() {
   }, [fetchAccounts, fetchCurrentAccount]);
 
   useEffect(() => {
+    const accountIds = new Set(accounts.map((account) => account.id));
+    setVisibleApiKeyAccountIds((prev) => {
+      let changed = false;
+      const next = new Set<string>();
+      prev.forEach((accountId) => {
+        if (accountIds.has(accountId)) {
+          next.add(accountId);
+        } else {
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [accounts]);
+
+  useEffect(() => {
     void reloadManagedProviders();
   }, [reloadManagedProviders]);
 
   useEffect(() => {
     if (!showAddModal) {
       setApiKeyInput('');
+      setApiKeyInputVisible(false);
       setApiBaseUrlInput('');
       setApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
       setManagedProviderId('');
@@ -1171,6 +1201,12 @@ export function CodexAccountsPage() {
       setNewManagedProviderNameInput('');
     }
   }, [showAddModal]);
+
+  useEffect(() => {
+    if (showAddModal && addTab === 'apikey') {
+      setApiKeyInputVisible(false);
+    }
+  }, [addTab, showAddModal]);
 
   useEffect(() => {
     if (apiProviderPresetId === OPENAI_OFFICIAL_PRESET_ID) {
@@ -1193,6 +1229,7 @@ export function CodexAccountsPage() {
   useEffect(() => {
     if (!selectedManagedProviderApiKey) return;
     setApiKeyInput(selectedManagedProviderApiKey.apiKey);
+    setApiKeyInputVisible(false);
   }, [managedProviderApiKeyId, selectedManagedProviderApiKey]);
 
   useEffect(() => {
@@ -1219,6 +1256,7 @@ export function CodexAccountsPage() {
   useEffect(() => {
     if (!selectedEditingManagedProviderApiKey) return;
     setEditingApiKeyCredentialsValue(selectedEditingManagedProviderApiKey.apiKey);
+    setEditingApiKeyCredentialsVisible(false);
   }, [editingManagedProviderApiKeyId, selectedEditingManagedProviderApiKey]);
 
   useEffect(() => {
@@ -1677,6 +1715,7 @@ export function CodexAccountsPage() {
       if (firstKey) {
         setManagedProviderApiKeyId(firstKey.id);
         setApiKeyInput(firstKey.apiKey);
+        setApiKeyInputVisible(false);
       } else {
         setManagedProviderApiKeyId('');
       }
@@ -1691,6 +1730,7 @@ export function CodexAccountsPage() {
       const key = selectedManagedProvider?.apiKeys.find((item) => item.id === apiKeyId);
       if (key) {
         setApiKeyInput(key.apiKey);
+        setApiKeyInputVisible(false);
       }
     },
     [selectedManagedProvider],
@@ -1714,6 +1754,7 @@ export function CodexAccountsPage() {
       if (firstKey) {
         setEditingManagedProviderApiKeyId(firstKey.id);
         setEditingApiKeyCredentialsValue(firstKey.apiKey);
+        setEditingApiKeyCredentialsVisible(false);
       } else {
         setEditingManagedProviderApiKeyId('');
       }
@@ -1728,6 +1769,7 @@ export function CodexAccountsPage() {
       const key = selectedEditingManagedProvider?.apiKeys.find((item) => item.id === apiKeyId);
       if (key) {
         setEditingApiKeyCredentialsValue(key.apiKey);
+        setEditingApiKeyCredentialsVisible(false);
       }
     },
     [selectedEditingManagedProvider],
@@ -2004,9 +2046,50 @@ export function CodexAccountsPage() {
     ],
   );
 
+  const toggleAccountApiKeyVisible = useCallback((accountId: string) => {
+    setVisibleApiKeyAccountIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(accountId)) {
+        next.delete(accountId);
+      } else {
+        next.add(accountId);
+      }
+      return next;
+    });
+  }, []);
+
   const resolveApiKeyDisplayText = useCallback(
-    (account: CodexAccount) => (account.openai_api_key || '').trim() || t('common.none', '暂无'),
+    (account: CodexAccount, visible: boolean) => {
+      const apiKey = (account.openai_api_key || '').trim();
+      if (!apiKey) return t('common.none', '暂无');
+      return visible ? apiKey : maskCodexApiKey(apiKey);
+    },
     [t],
+  );
+
+  const renderApiKeyRevealLine = useCallback(
+    (account: CodexAccount): ReactElement => {
+      const visible = visibleApiKeyAccountIds.has(account.id);
+      const label = t('codex.addModal.token', 'API Key');
+      const value = resolveApiKeyDisplayText(account, visible);
+      const line = `${label}：${value}`;
+      const actionLabel = visible
+        ? t('codex.api.hideApiKey', '隐藏 API Key')
+        : t('codex.api.showApiKey', '显示 API Key');
+      return (
+        <button
+          type="button"
+          className="codex-api-key-reveal-line"
+          onClick={() => toggleAccountApiKeyVisible(account.id)}
+          title={visible ? line : t('codex.api.apiKeyHiddenHint', 'API Key 已隐藏，点击显示')}
+          aria-label={actionLabel}
+        >
+          <span className="codex-login-subline">{line}</span>
+          {visible ? <EyeOff size={12} /> : <Eye size={12} />}
+        </button>
+      );
+    },
+    [resolveApiKeyDisplayText, t, toggleAccountApiKeyVisible, visibleApiKeyAccountIds],
   );
 
   const resolveApiProviderDisplayName = useCallback(
@@ -2035,6 +2118,7 @@ export function CodexAccountsPage() {
     if (savingApiKeyCredentials) return;
     setEditingApiKeyCredentialsId(null);
     setEditingApiKeyCredentialsValue('');
+    setEditingApiKeyCredentialsVisible(false);
     setEditingApiBaseUrlCredentialsValue('');
     setEditingApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
     setEditingManagedProviderId('');
@@ -2056,6 +2140,7 @@ export function CodexAccountsPage() {
 
     setEditingApiKeyCredentialsId(account.id);
     setEditingApiKeyCredentialsValue(initialApiKey);
+    setEditingApiKeyCredentialsVisible(false);
     setEditingApiBaseUrlCredentialsValue(initialBaseUrl);
     setEditingApiProviderPresetId(
       providerMode === 'openai_builtin'
@@ -2117,6 +2202,7 @@ export function CodexAccountsPage() {
       setMessage({ text: t('instances.messages.updated', '实例已更新') });
       setEditingApiKeyCredentialsId(null);
       setEditingApiKeyCredentialsValue('');
+      setEditingApiKeyCredentialsVisible(false);
       setEditingApiBaseUrlCredentialsValue('');
       setEditingApiProviderPresetId(DEFAULT_CODEX_API_PROVIDER_ID);
       setEditingManagedProviderId('');
@@ -3113,8 +3199,6 @@ export function CodexAccountsPage() {
           ? meta.chatgptAccountId
           : meta.userId;
       const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
-      const apiKeyText = resolveApiKeyDisplayText(account);
-      const apiKeyLine = `${t('codex.addModal.token', 'API Key')}：${apiKeyText}`;
       const apiProviderName = resolveApiProviderDisplayName(account);
       const apiProviderLine = `${t('codex.api.provider.label', '供应商')}：${apiProviderName}`;
       const apiBaseUrlText = (account.api_base_url || '').trim() || '-';
@@ -3181,9 +3265,7 @@ export function CodexAccountsPage() {
           {isApiKeyAccount && (
             <>
               <div className="account-sub-line">
-                <span className="codex-login-subline" title={apiKeyLine}>
-                  {apiKeyLine}
-                </span>
+                {renderApiKeyRevealLine(account)}
               </div>
               <div className="account-sub-line codex-provider-inline-line">
                 <span className="codex-login-subline codex-provider-inline-text" title={apiProviderLine}>
@@ -3715,8 +3797,6 @@ export function CodexAccountsPage() {
           ? meta.chatgptAccountId
           : meta.userId;
       const signInLine = `${meta.signedInWithText} | ${accountIdLabel}: ${accountIdText}`;
-      const apiKeyText = resolveApiKeyDisplayText(account);
-      const apiKeyLine = `${t('codex.addModal.token', 'API Key')}：${apiKeyText}`;
       const apiProviderName = resolveApiProviderDisplayName(account);
       const apiProviderLine = `${t('codex.api.provider.label', '供应商')}：${apiProviderName}`;
       const apiBaseUrlText = (account.api_base_url || '').trim() || '-';
@@ -3776,9 +3856,7 @@ export function CodexAccountsPage() {
             {isApiKeyAccount && (
               <>
                 <div className="account-sub-line codex-account-meta-inline">
-                  <span className="codex-login-subline" title={apiKeyLine}>
-                    {apiKeyLine}
-                  </span>
+                  {renderApiKeyRevealLine(account)}
                 </div>
                 <div className="account-sub-line codex-account-meta-inline codex-provider-inline-line">
                   <span className="codex-login-subline codex-provider-inline-text" title={apiProviderLine}>
@@ -4374,12 +4452,31 @@ export function CodexAccountsPage() {
               )}
               <div className="oauth-link">
                 <label>{t('codex.addModal.token', 'API Key')}</label>
-                <div className="oauth-url-box oauth-manual-input">
+                <div className="oauth-url-box oauth-manual-input codex-secret-input">
                   <input
-                    type="text"
+                    type={apiKeyInputVisible ? 'text' : 'password'}
                     value={apiKeyInput}
                     onChange={(e) => setApiKeyInput(e.target.value)}
+                    autoComplete="off"
+                    spellCheck={false}
                   />
+                  <button
+                    type="button"
+                    className="codex-secret-toggle-btn"
+                    onClick={() => setApiKeyInputVisible((visible) => !visible)}
+                    title={
+                      apiKeyInputVisible
+                        ? t('codex.api.hideApiKey', '隐藏 API Key')
+                        : t('codex.api.showApiKey', '显示 API Key')
+                    }
+                    aria-label={
+                      apiKeyInputVisible
+                        ? t('codex.api.hideApiKey', '隐藏 API Key')
+                        : t('codex.api.showApiKey', '显示 API Key')
+                    }
+                  >
+                    {apiKeyInputVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
               </div>
               <div className="oauth-link">
@@ -4715,13 +4812,33 @@ export function CodexAccountsPage() {
                   )}
                   <div className="oauth-link">
                     <label>{t('codex.addModal.token', 'API Key')}</label>
-                    <div className="oauth-url-box oauth-manual-input">
+                    <div className="oauth-url-box oauth-manual-input codex-secret-input">
                       <input
-                        type="text"
+                        type={editingApiKeyCredentialsVisible ? 'text' : 'password'}
                         value={editingApiKeyCredentialsValue}
                         onChange={(e) => setEditingApiKeyCredentialsValue(e.target.value)}
                         disabled={savingApiKeyCredentials}
+                        autoComplete="off"
+                        spellCheck={false}
                       />
+                      <button
+                        type="button"
+                        className="codex-secret-toggle-btn"
+                        onClick={() => setEditingApiKeyCredentialsVisible((visible) => !visible)}
+                        disabled={savingApiKeyCredentials}
+                        title={
+                          editingApiKeyCredentialsVisible
+                            ? t('codex.api.hideApiKey', '隐藏 API Key')
+                            : t('codex.api.showApiKey', '显示 API Key')
+                        }
+                        aria-label={
+                          editingApiKeyCredentialsVisible
+                            ? t('codex.api.hideApiKey', '隐藏 API Key')
+                            : t('codex.api.showApiKey', '显示 API Key')
+                        }
+                      >
+                        {editingApiKeyCredentialsVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
                   </div>
                   <div className="oauth-link">
@@ -5060,12 +5177,17 @@ export function CodexAccountsPage() {
         <CodexModelProviderManager
           accounts={accounts}
           onProvidersChanged={setManagedProviders}
+          onManageModelPresets={() => {
+            setActiveTab('wakeup');
+            setWakeupPresetManagerSignal((value) => value + 1);
+          }}
         />
       )}
 
       {activeTab === 'wakeup' && (
         <CodexWakeupContent
           accounts={accounts}
+          openPresetManagerSignal={wakeupPresetManagerSignal}
           onRefreshAccounts={async () => {
             await fetchAccounts();
             await fetchCurrentAccount();

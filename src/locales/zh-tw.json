@@ -1629,7 +1629,11 @@
       "label": "匯出格式",
       "cockpitTools": "Cockpit Tools",
       "sub2api": "sub2api 格式",
-      "cpa": "cpa 格式"
+      "cpa": "cpa 格式",
+      "downloadAll": "一鍵下載全部",
+      "cpaCardTitle": "帳號 {{index}}",
+      "savedFolder": "儲存目錄",
+      "savedPath": "儲存路徑"
     },
     "localAccess": {
       "title": "API 服務",
@@ -1752,7 +1756,8 @@
       "enableAndActivateAction": "啟用並切號",
       "apiPortUrl": "API 連接埠 URL",
       "modelId": "模型 ID",
-      "modelIdPlaceholder": "選擇模型 ID"
+      "modelIdPlaceholder": "選擇模型 ID",
+      "modelIdViewOnly": "僅查看，無切換"
     },
     "api": {
       "baseUrl": "基礎網址",
@@ -1763,6 +1768,9 @@
         "apiKeyEqualsBaseUrl": "API Key 不能與 Base URL 相同"
       },
       "addAndSwitchSuccess": "已新增並切換：{{email}}",
+      "showApiKey": "顯示 API Key",
+      "hideApiKey": "隱藏 API Key",
+      "apiKeyHiddenHint": "API Key 已隱藏，點擊顯示",
       "actions": {
         "addAndSwitch": "新增並切換"
       },
@@ -2222,7 +2230,8 @@
         "contextWindowHint": "寫入 model_context_window。僅在「自訂」模式可編輯。",
         "partialDetected": "偵測到目前兩個欄位並不完整：model_context_window={{context}}，model_auto_compact_token_limit={{compact}}。儲存後會依照目前方案改寫。",
         "notSet": "未設定"
-      }
+      },
+      "managePresets": "模型預設"
     },
     "quickSwitch": {
       "action": "快速切換供應商",

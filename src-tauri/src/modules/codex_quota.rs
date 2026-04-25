@@ -310,8 +310,7 @@ fn sync_plan_type_from_token(account: &mut CodexAccount, plan_type: Option<Strin
 
 /// 刷新账号配额并保存（包含 token 自动刷新）
 async fn refresh_account_quota_once(account_id: &str) -> Result<CodexQuota, String> {
-    let mut account = codex_account::load_account(account_id)
-        .ok_or_else(|| format!("账号不存在: {}", account_id))?;
+    let mut account = codex_account::prepare_account_for_injection(account_id).await?;
     if account.is_api_key_auth() {
         account.quota = None;
         account.quota_error = None;
