@@ -863,6 +863,11 @@ fn write_api_provider_to_config_toml(
         CodexApiProviderMode::OpenaiBuiltin => {
             let _ = doc.remove(CODEX_CONFIG_MODEL_PROVIDER_KEY);
             remove_managed_api_key_model_providers_from_doc(&mut doc);
+            #[cfg(target_os = "windows")]
+            {
+                write_windows_builtin_openai_provider_to_doc(&mut doc, normalized.as_deref())?;
+            }
+            #[cfg(not(target_os = "windows"))]
             match normalized.as_deref() {
                 Some(base_url) => {
                     doc[CODEX_CONFIG_OPENAI_BASE_URL_KEY] = value(base_url);
@@ -949,6 +954,32 @@ fn remove_managed_api_key_model_providers_from_doc(doc: &mut Document) {
     if should_remove_model_providers {
         let _ = doc.remove(CODEX_CONFIG_MODEL_PROVIDERS_KEY);
     }
+}
+
+#[cfg(target_os = "windows")]
+fn write_windows_builtin_openai_provider_to_doc(
+    doc: &mut Document,
+    base_url: Option<&str>,
+) -> Result<(), String> {
+    let base_url = base_url.unwrap_or(CODEX_DEFAULT_OPENAI_BASE_URL);
+    let _ = doc.remove(CODEX_CONFIG_OPENAI_BASE_URL_KEY);
+    doc[CODEX_CONFIG_MODEL_PROVIDER_KEY] = value(CODEX_OPENAI_PROVIDER_ID);
+    if doc.get(CODEX_CONFIG_MODEL_PROVIDERS_KEY).is_none() {
+        doc[CODEX_CONFIG_MODEL_PROVIDERS_KEY] = toml_edit::table();
+    }
+    let model_providers = doc[CODEX_CONFIG_MODEL_PROVIDERS_KEY]
+        .as_table_mut()
+        .ok_or("config.toml 中 model_providers 不是合法表结构")?;
+    model_providers[CODEX_OPENAI_PROVIDER_ID] = toml_edit::table();
+    let provider_table = model_providers[CODEX_OPENAI_PROVIDER_ID]
+        .as_table_mut()
+        .ok_or("config.toml 中 OpenAI provider 不是合法表结构")?;
+    provider_table["name"] = value(CODEX_DEFAULT_RUNTIME_PROVIDER_NAME);
+    provider_table["base_url"] = value(base_url);
+    provider_table["wire_api"] = value(CODEX_PROVIDER_WIRE_API);
+    provider_table["requires_openai_auth"] = value(true);
+    provider_table["supports_websockets"] = value(true);
+    Ok(())
 }
 
 fn write_api_key_provider_to_config_toml(
