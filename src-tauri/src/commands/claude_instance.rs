@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::path::Path;
 
 use serde::Serialize;
@@ -66,6 +67,7 @@ struct ClaudeCliLaunchContext {
     working_dir: Option<String>,
     extra_args: String,
     use_config_env: bool,
+    env: BTreeMap<String, String>,
 }
 
 fn is_profile_initialized(user_data_dir: &str) -> bool {
@@ -131,6 +133,28 @@ fn is_cli_launch_mode(mode: &InstanceLaunchMode) -> bool {
     matches!(mode, InstanceLaunchMode::Cli)
 }
 
+fn resolve_cli_env_for_bind_account(
+    bind_account_id: Option<&str>,
+) -> Result<BTreeMap<String, String>, String> {
+    let bind_id = bind_account_id
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let Some(bind_id) = bind_id else {
+        return Ok(BTreeMap::new());
+    };
+
+    let account = modules::claude_account::load_account(bind_id)
+        .ok_or_else(|| format!("绑定账号不存在: {}", bind_id))?;
+    match account.auth_mode {
+        ClaudeAuthMode::ApiKey => modules::claude_account::build_api_key_cli_env_map(&account),
+        ClaudeAuthMode::DesktopOAuth => Err(
+            "Claude Desktop 登录账号不能写入 Claude CLI 实例，请选择 Claude CLI OAuth / API Key 账号。"
+                .to_string(),
+        ),
+        _ => Ok(BTreeMap::new()),
+    }
+}
+
 fn default_user_data_dir_for_launch_mode(
     mode: &InstanceLaunchMode,
 ) -> Result<std::path::PathBuf, String> {
@@ -181,6 +205,7 @@ fn resolve_cli_launch_context(instance_id: &str) -> Result<ClaudeCliLaunchContex
             working_dir: default_settings.working_dir,
             extra_args: default_settings.extra_args,
             use_config_env: false,
+            env: resolve_cli_env_for_bind_account(default_settings.bind_account_id.as_deref())?,
         });
     }
 
@@ -198,71 +223,19 @@ fn resolve_cli_launch_context(instance_id: &str) -> Result<ClaudeCliLaunchContex
         working_dir: instance.working_dir,
         extra_args: instance.extra_args,
         use_config_env: true,
+        env: resolve_cli_env_for_bind_account(instance.bind_account_id.as_deref())?,
     })
 }
 
 fn build_cli_launch_command(context: &ClaudeCliLaunchContext) -> String {
-    let parsed_args = modules::process::parse_extra_args(&context.extra_args);
-    let mut command_parts = Vec::new();
-
-    if let Some(dir) = context
-        .working_dir
-        .as_deref()
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-    {
-        #[cfg(target_os = "windows")]
-        command_parts.push(format!(
-            "Set-Location -LiteralPath {}",
-            crate::commands::claude::powershell_quote(dir)
-        ));
-        #[cfg(not(target_os = "windows"))]
-        command_parts.push(format!(
-            "cd {}",
-            crate::commands::claude::posix_shell_quote(dir)
-        ));
-    }
-
-    #[cfg(target_os = "windows")]
-    {
-        if context.use_config_env {
-            command_parts.push(format!(
-                "$env:CLAUDE_CONFIG_DIR={}",
-                crate::commands::claude::powershell_quote(&context.user_data_dir)
-            ));
-        }
-        let mut command = "claude".to_string();
-        for arg in parsed_args {
-            let trimmed = arg.trim();
-            if !trimmed.is_empty() {
-                command.push(' ');
-                command.push_str(&crate::commands::claude::powershell_quote(trimmed));
-            }
-        }
-        command_parts.push(command);
-        return command_parts.join("; ");
-    }
-
-    #[cfg(not(target_os = "windows"))]
-    {
-        let mut command = if context.use_config_env {
-            format!(
-                "CLAUDE_CONFIG_DIR={} claude",
-                crate::commands::claude::posix_shell_quote(&context.user_data_dir)
-            )
-        } else {
-            "claude".to_string()
-        };
-        for arg in parsed_args {
-            let trimmed = arg.trim();
-            if !trimmed.is_empty() {
-                command.push(' ');
-                command.push_str(&crate::commands::claude::posix_shell_quote(trimmed));
-            }
-        }
-        command_parts.push(command);
-        command_parts.join(" && ")
-    }
+    crate::commands::claude::build_claude_cli_command_for_context(
+        context.working_dir.as_deref(),
+        context
+            .use_config_env
+            .then_some(context.user_data_dir.as_str()),
+        &context.extra_args,
+        &context.env,
+    )
 }
 
 #[tauri::command]

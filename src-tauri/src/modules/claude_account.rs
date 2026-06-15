@@ -4863,7 +4863,9 @@ fn clear_api_key_env_from_claude_code_settings(config_dir: &Path) -> Result<(), 
     record_settings_managed_env_keys(&settings_path, BTreeSet::new())
 }
 
-fn build_api_key_cli_env_map(account: &ClaudeAccount) -> Result<BTreeMap<String, String>, String> {
+pub(crate) fn build_api_key_cli_env_map(
+    account: &ClaudeAccount,
+) -> Result<BTreeMap<String, String>, String> {
     let api_key = account
         .api_key
         .as_deref()

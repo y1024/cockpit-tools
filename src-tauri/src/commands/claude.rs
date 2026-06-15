@@ -54,23 +54,89 @@ fn normalize_cli_working_dir(working_dir: &str) -> Result<String, String> {
     Ok(trimmed.to_string())
 }
 
-fn build_claude_cli_command(working_dir: &str) -> Result<String, String> {
-    let working_dir = normalize_cli_working_dir(working_dir)?;
+pub(crate) fn build_claude_cli_command_for_context(
+    working_dir: Option<&str>,
+    config_dir: Option<&str>,
+    extra_args: &str,
+    env: &BTreeMap<String, String>,
+) -> String {
+    let parsed_args = crate::modules::process::parse_extra_args(extra_args);
+
     #[cfg(target_os = "windows")]
     {
-        return Ok(format!(
-            "Set-Location -LiteralPath {}; claude",
-            powershell_quote(&working_dir)
-        ));
+        let mut command_parts = Vec::new();
+        if let Some(dir) = working_dir.map(str::trim).filter(|value| !value.is_empty()) {
+            command_parts.push(format!(
+                "Set-Location -LiteralPath {}",
+                powershell_quote(dir)
+            ));
+        }
+        if let Some(dir) = config_dir.map(str::trim).filter(|value| !value.is_empty()) {
+            command_parts.push(format!("$env:CLAUDE_CONFIG_DIR={}", powershell_quote(dir)));
+        }
+        for (key, value) in env {
+            command_parts.push(format!("$env:{}={}", key, powershell_quote(value)));
+        }
+
+        let mut command = "claude".to_string();
+        for arg in parsed_args {
+            let trimmed = arg.trim();
+            if !trimmed.is_empty() {
+                command.push(' ');
+                command.push_str(&powershell_quote(trimmed));
+            }
+        }
+        command_parts.push(command);
+        return command_parts.join("; ");
     }
 
     #[cfg(not(target_os = "windows"))]
     {
-        return Ok(format!("cd {} && claude", posix_shell_quote(&working_dir)));
+        let mut command_parts = Vec::new();
+        if let Some(dir) = working_dir.map(str::trim).filter(|value| !value.is_empty()) {
+            command_parts.push(format!("cd {}", posix_shell_quote(dir)));
+        }
+
+        let mut env_parts = Vec::new();
+        if let Some(dir) = config_dir.map(str::trim).filter(|value| !value.is_empty()) {
+            env_parts.push(format!("CLAUDE_CONFIG_DIR={}", posix_shell_quote(dir)));
+        }
+        for (key, value) in env {
+            env_parts.push(format!("{}={}", key, posix_shell_quote(value)));
+        }
+
+        let mut command = String::new();
+        if !env_parts.is_empty() {
+            command.push_str(&env_parts.join(" "));
+            command.push(' ');
+        }
+        command.push_str("claude");
+        for arg in parsed_args {
+            let trimmed = arg.trim();
+            if !trimmed.is_empty() {
+                command.push(' ');
+                command.push_str(&posix_shell_quote(trimmed));
+            }
+        }
+        command_parts.push(command);
+        return command_parts.join(" && ");
     }
 
     #[allow(unreachable_code)]
-    Err("当前系统暂不支持生成 Claude CLI 启动命令".to_string())
+    "claude".to_string()
+}
+
+fn build_claude_cli_command(
+    working_dir: &str,
+    env: &BTreeMap<String, String>,
+) -> Result<String, String> {
+    let working_dir = normalize_cli_working_dir(working_dir)?;
+    Ok(build_claude_cli_command_for_context(
+        Some(&working_dir),
+        None,
+        "",
+        env,
+    ))
 }
 
 pub(crate) fn execute_claude_cli_command(
@@ -248,7 +314,12 @@ fn prepare_claude_cli_launch(
     }
     let normalized_working_dir = normalize_cli_working_dir(working_dir)?;
     claude_account::inject_to_claude_config(account_id, None)?;
-    let command = build_claude_cli_command(&normalized_working_dir)?;
+    let env = if account.auth_mode == ClaudeAuthMode::ApiKey {
+        claude_account::build_api_key_cli_env_map(&account)?
+    } else {
+        BTreeMap::new()
+    };
+    let command = build_claude_cli_command(&normalized_working_dir, &env)?;
     crate::modules::provider_current_state::set_current_account_id("claude_cli", Some(account_id))?;
     Ok((account, normalized_working_dir, command))
 }
