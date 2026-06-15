@@ -67,6 +67,7 @@ function prepareClaudeDesktopAuthElectron() {
     recursive: true,
     force: true,
     errorOnExist: false,
+    verbatimSymlinks: true,
   });
   fs.writeFileSync(electronResourceGitkeep, '\n');
   console.log(`[prepare-tauri] Prepared Claude Desktop auth Electron runtime: ${source}`);
