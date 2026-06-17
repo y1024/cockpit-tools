@@ -1,13 +1,5 @@
 {
-  "version": "2026-06-15.1",
+  "version": "2026-06-17.1",
   "refreshIntervalMs": 3600000,
-  "rules": [
-    {
-      "platformIds": ["claude"],
-      "hidden": false,
-      "targetOs": ["windows"],
-      "targetVersions": "*",
-      "reason": "Claude support on Windows is enabled for local development."
-    }
-  ]
+  "rules": []
 }

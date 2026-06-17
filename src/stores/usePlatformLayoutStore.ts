@@ -1095,16 +1095,18 @@ function loadPersistedState(): NormalizedLayoutStateData {
   try {
     const raw = localStorage.getItem(PLATFORM_LAYOUT_STORAGE_KEY);
     if (!raw) {
+      const defaultGroups = defaultPlatformGroups();
+      const defaultOrder = defaultPlatformOrder();
       const defaults = normalizeStateData({
-        orderedPlatformIds: [...ALL_PLATFORM_IDS],
+        orderedPlatformIds: defaultOrder,
         hiddenPlatformIds: [],
-        sidebarPlatformIds: ['antigravity', 'codex'],
-        trayPlatformIds: [...ALL_PLATFORM_IDS],
+        sidebarPlatformIds: ['claude', 'antigravity', 'codex'],
+        trayPlatformIds: defaultOrder,
         traySortMode: 'auto',
-        platformGroups: defaultPlatformGroups(),
-        orderedEntryIds: buildEntryOrderFromPlatformOrder(ALL_PLATFORM_IDS, defaultPlatformGroups()),
+        platformGroups: defaultGroups,
+        orderedEntryIds: buildEntryOrderFromPlatformOrder(defaultOrder, defaultGroups),
         hiddenEntryIds: [],
-        sidebarEntryIds: [makePlatformEntryId('antigravity'), makePlatformEntryId('codex')],
+        sidebarEntryIds: defaultSidebarEntryIds(defaultGroups),
         antigravityGroupFirstMigrated: true,
         apiRelaySidebarVisible: true,
         apiRelayDashboardVisible: true,
@@ -1116,10 +1118,10 @@ function loadPersistedState(): NormalizedLayoutStateData {
     const parsed = JSON.parse(raw) as PersistedPlatformLayout;
     const antigravityGroupFirstMigrated = parsed.antigravityGroupFirstMigrated === true;
 
-    const orderedPlatformIds = normalizeOrder(parsed.orderedPlatformIds ?? ALL_PLATFORM_IDS);
+    const orderedPlatformIds = normalizeOrder(parsed.orderedPlatformIds ?? defaultPlatformOrder());
     const hiddenPlatformIds = normalizeHidden(parsed.hiddenPlatformIds ?? []);
     const sidebarPlatformIds = normalizeSidebar(
-      parsed.sidebarPlatformIds ?? ['antigravity', 'codex'],
+      parsed.sidebarPlatformIds ?? ['claude', 'antigravity', 'codex'],
       hiddenPlatformIds,
     );
 
@@ -1148,7 +1150,7 @@ function loadPersistedState(): NormalizedLayoutStateData {
       hiddenPlatformIds,
       sidebarPlatformIds,
       trayPlatformIds: normalizeTray(
-        parsed.trayPlatformIds ?? ALL_PLATFORM_IDS,
+        parsed.trayPlatformIds ?? defaultPlatformOrder(),
         sanitizePlatformIds(parsed.orderedPlatformIds ?? []),
         true,
       ),
@@ -1169,16 +1171,18 @@ function loadPersistedState(): NormalizedLayoutStateData {
     }
     return normalized;
   } catch {
+    const defaultGroups = defaultPlatformGroups();
+    const defaultOrder = defaultPlatformOrder();
     return normalizeStateData({
-      orderedPlatformIds: [...ALL_PLATFORM_IDS],
+      orderedPlatformIds: defaultOrder,
       hiddenPlatformIds: [],
-      sidebarPlatformIds: ['antigravity', 'codex'],
-      trayPlatformIds: [...ALL_PLATFORM_IDS],
+      sidebarPlatformIds: ['claude', 'antigravity', 'codex'],
+      trayPlatformIds: defaultOrder,
       traySortMode: 'auto',
-      platformGroups: defaultPlatformGroups(),
-      orderedEntryIds: buildEntryOrderFromPlatformOrder(ALL_PLATFORM_IDS, defaultPlatformGroups()),
+      platformGroups: defaultGroups,
+      orderedEntryIds: buildEntryOrderFromPlatformOrder(defaultOrder, defaultGroups),
       hiddenEntryIds: [],
-      sidebarEntryIds: [makePlatformEntryId('antigravity'), makePlatformEntryId('codex')],
+      sidebarEntryIds: defaultSidebarEntryIds(defaultGroups),
       antigravityGroupFirstMigrated: true,
       apiRelaySidebarVisible: true,
       apiRelayDashboardVisible: true,
@@ -1702,16 +1706,17 @@ export const usePlatformLayoutStore = create<PlatformLayoutState>((set, get) => 
 
   resetPlatformLayout: () => {
     const defaults = defaultPlatformGroups();
+    const defaultOrder = defaultPlatformOrder();
     const next = normalizeStateData({
-      orderedPlatformIds: [...ALL_PLATFORM_IDS],
+      orderedPlatformIds: defaultOrder,
       hiddenPlatformIds: [],
-      sidebarPlatformIds: ['antigravity', 'codex'],
-      trayPlatformIds: [...ALL_PLATFORM_IDS],
+      sidebarPlatformIds: ['claude', 'antigravity', 'codex'],
+      trayPlatformIds: defaultOrder,
       traySortMode: 'auto',
       platformGroups: defaults,
-      orderedEntryIds: buildEntryOrderFromPlatformOrder(ALL_PLATFORM_IDS, defaults),
+      orderedEntryIds: buildEntryOrderFromPlatformOrder(defaultOrder, defaults),
       hiddenEntryIds: [],
-      sidebarEntryIds: [makePlatformEntryId('antigravity'), makePlatformEntryId('codex')],
+      sidebarEntryIds: defaultSidebarEntryIds(defaults),
       apiRelaySidebarVisible: true,
       apiRelayDashboardVisible: true,
       apiRelayEntryOrder: 0,
