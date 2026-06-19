@@ -1,5 +1,10 @@
 package auth
 
+import (
+	"errors"
+	"net/http"
+)
+
 // Error describes an authentication related failure in a provider agnostic format.
 type Error struct {
 	// Code is a short machine readable identifier.
@@ -28,5 +33,17 @@ func (e *Error) StatusCode() int {
 	if e == nil {
 		return 0
 	}
+	if e.HTTPStatus <= 0 && IsAuthSelectionUnavailable(e) {
+		return http.StatusServiceUnavailable
+	}
 	return e.HTTPStatus
+}
+
+// IsAuthSelectionUnavailable reports local auth selection failures that leave no usable credential.
+func IsAuthSelectionUnavailable(err error) bool {
+	var authErr *Error
+	if !errors.As(err, &authErr) || authErr == nil {
+		return false
+	}
+	return authErr.Code == "auth_not_found" || authErr.Code == "auth_unavailable"
 }

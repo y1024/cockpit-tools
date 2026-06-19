@@ -188,6 +188,15 @@ func StreamingBootstrapRetries(cfg *config.SDKConfig) int {
 	return retries
 }
 
+func streamingBootstrapRetryDelay(cfg *config.SDKConfig, attempt int) time.Duration {
+	if cfg == nil {
+		return 0
+	}
+	base := time.Duration(cfg.Streaming.BootstrapRetryBaseDelayMS) * time.Millisecond
+	max := time.Duration(cfg.Streaming.BootstrapRetryMaxDelayMS) * time.Millisecond
+	return util.BackoffDelay(attempt, base, max)
+}
+
 // PassthroughHeadersEnabled returns whether upstream response headers should be forwarded to clients.
 // Default is false.
 func PassthroughHeadersEnabled(cfg *config.SDKConfig) bool {
@@ -792,7 +801,11 @@ func (h *BaseAPIHandler) executeStreamWithAuthManager(ctx context.Context, handl
 					// retry a few times (to allow auth rotation / transient recovery) and then attempt model fallback.
 					if !sentPayload {
 						if bootstrapRetries < maxBootstrapRetries && bootstrapEligible(streamErr) {
-							bootstrapRetries++
+							nextRetry := bootstrapRetries + 1
+							if errWait := util.SleepContext(ctx, streamingBootstrapRetryDelay(h.Cfg, nextRetry)); errWait != nil {
+								return
+							}
+							bootstrapRetries = nextRetry
 							retryResult, retryErr := h.AuthManager.ExecuteStream(ctx, providers, req, opts)
 							if retryErr == nil {
 								if passthroughHeadersEnabled {

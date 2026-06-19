@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/interfaces"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/registry"
@@ -370,7 +371,9 @@ func TestExecuteStreamWithAuthManager_HeaderPassthroughDisabledByDefault(t *test
 
 	handler := NewBaseAPIHandlers(&sdkconfig.SDKConfig{
 		Streaming: sdkconfig.StreamingConfig{
-			BootstrapRetries: 1,
+			BootstrapRetries:          1,
+			BootstrapRetryBaseDelayMS: 300,
+			BootstrapRetryMaxDelayMS:  1500,
 		},
 	}, manager)
 	dataChan, upstreamHeaders, errChan := handler.ExecuteStreamWithAuthManager(context.Background(), "openai", "test-model", []byte(`{"model":"test-model"}`), "")
@@ -430,7 +433,9 @@ func TestExecuteStreamWithAuthManager_DoesNotRetryAfterFirstByte(t *testing.T) {
 
 	handler := NewBaseAPIHandlers(&sdkconfig.SDKConfig{
 		Streaming: sdkconfig.StreamingConfig{
-			BootstrapRetries: 1,
+			BootstrapRetries:          1,
+			BootstrapRetryBaseDelayMS: 300,
+			BootstrapRetryMaxDelayMS:  1500,
 		},
 	}, manager)
 	dataChan, _, errChan := handler.ExecuteStreamWithAuthManager(context.Background(), "openai", "test-model", []byte(`{"model":"test-model"}`), "")
@@ -488,9 +493,12 @@ func TestExecuteStreamWithAuthManager_EnrichesBootstrapRetryAuthUnavailableError
 
 	handler := NewBaseAPIHandlers(&sdkconfig.SDKConfig{
 		Streaming: sdkconfig.StreamingConfig{
-			BootstrapRetries: 1,
+			BootstrapRetries:          1,
+			BootstrapRetryBaseDelayMS: 300,
+			BootstrapRetryMaxDelayMS:  1500,
 		},
 	}, manager)
+	started := time.Now()
 	dataChan, _, errChan := handler.ExecuteStreamWithAuthManager(context.Background(), "openai", "test-model", []byte(`{"model":"test-model"}`), "")
 	if dataChan == nil || errChan == nil {
 		t.Fatalf("expected non-nil channels")
@@ -531,6 +539,10 @@ func TestExecuteStreamWithAuthManager_EnrichesBootstrapRetryAuthUnavailableError
 		t.Fatalf("message missing model context: %q", authErr.Message)
 	}
 
+	wantDelay := 300 * time.Millisecond
+	if elapsed := time.Since(started); elapsed < wantDelay {
+		t.Fatalf("expected bootstrap retry delay >= %v, got %v", wantDelay, elapsed)
+	}
 	if executor.Calls() != 1 {
 		t.Fatalf("expected exactly one upstream call before retry path selection failure, got %d", executor.Calls())
 	}

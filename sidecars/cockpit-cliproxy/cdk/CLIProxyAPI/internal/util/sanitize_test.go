@@ -2,6 +2,7 @@ package util
 
 import (
 	"testing"
+	"time"
 )
 
 func TestSanitizeFunctionName(t *testing.T) {
@@ -126,5 +127,23 @@ func TestRestoreSanitizedToolName(t *testing.T) {
 	}
 	if got := RestoreSanitizedToolName(m, ""); got != "" {
 		t.Errorf("expected empty for empty name, got %q", got)
+	}
+}
+
+func TestBackoffDelay(t *testing.T) {
+	base := 300 * time.Millisecond
+	max := 1500 * time.Millisecond
+
+	if got := BackoffDelay(1, base, max); got != 300*time.Millisecond {
+		t.Fatalf("attempt 1 delay = %v, want 300ms", got)
+	}
+	if got := BackoffDelay(2, base, max); got != 600*time.Millisecond {
+		t.Fatalf("attempt 2 delay = %v, want 600ms", got)
+	}
+	if got := BackoffDelay(3, base, 1000*time.Millisecond); got != 1000*time.Millisecond {
+		t.Fatalf("attempt 3 delay = %v, want 1s", got)
+	}
+	if got := BackoffDelay(0, base, max); got != 0 {
+		t.Fatalf("attempt 0 delay = %v, want 0", got)
 	}
 }

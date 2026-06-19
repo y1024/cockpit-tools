@@ -7046,7 +7046,9 @@ async fn prepare_sidecar_launch_config_in_dir(
         "streaming".to_string(),
         json!({
             "keepalive-seconds": timeouts.sidecar_stream_keepalive_seconds,
-            "bootstrap-retries": timeouts.sidecar_streaming_bootstrap_retries,
+            "bootstrap-retries": timeouts.single_account_status_retry_attempts,
+            "bootstrap-retry-base-delay-ms": timeouts.single_account_status_retry_base_delay_ms,
+            "bootstrap-retry-max-delay-ms": timeouts.single_account_status_retry_max_delay_ms,
             "stream-open-timeout-ms": timeouts.sidecar_stream_open_timeout_ms,
             "stream-idle-timeout-ms": timeouts.sidecar_stream_idle_timeout_ms,
             "image-stream-open-timeout-ms": timeouts.sidecar_image_stream_open_timeout_ms,
@@ -15276,7 +15278,8 @@ fn backoff_retry_delay(retry_attempt: usize, base_delay_ms: u64, max_delay_ms: u
 fn should_retry_single_account_upstream_status(status: StatusCode) -> bool {
     matches!(
         status,
-        StatusCode::REQUEST_TIMEOUT
+        StatusCode::UNAUTHORIZED
+            | StatusCode::REQUEST_TIMEOUT
             | StatusCode::INTERNAL_SERVER_ERROR
             | StatusCode::BAD_GATEWAY
             | StatusCode::SERVICE_UNAVAILABLE
@@ -19374,6 +19377,9 @@ data: {"type":"response.completed","response":{"id":"resp_123","usage":{"input_t
     fn retries_single_account_for_transient_upstream_status() {
         assert!(should_retry_single_account_upstream_status(
             StatusCode::SERVICE_UNAVAILABLE
+        ));
+        assert!(should_retry_single_account_upstream_status(
+            StatusCode::UNAUTHORIZED
         ));
         assert!(should_retry_single_account_upstream_status(
             StatusCode::GATEWAY_TIMEOUT

@@ -151,6 +151,24 @@ func TestCodexWebsocketsUpstreamDisconnectChanSignalsOnInvalidate(t *testing.T) 
 	}
 }
 
+func TestCodexWebsocketRetryDelayUsesStreamingBackoff(t *testing.T) {
+	cfg := &config.Config{
+		SDKConfig: config.SDKConfig{
+			Streaming: config.StreamingConfig{
+				BootstrapRetryBaseDelayMS: 300,
+				BootstrapRetryMaxDelayMS:  1500,
+			},
+		},
+	}
+
+	if got := codexWebsocketRetryDelay(cfg, 1); got != 300*time.Millisecond {
+		t.Fatalf("attempt 1 delay = %v, want 300ms", got)
+	}
+	if got := codexWebsocketRetryDelay(cfg, 2); got != 600*time.Millisecond {
+		t.Fatalf("attempt 2 delay = %v, want 600ms", got)
+	}
+}
+
 func TestApplyCodexWebsocketHeadersDefaultsToCurrentResponsesBeta(t *testing.T) {
 	headers := applyCodexWebsocketHeaders(context.Background(), http.Header{}, nil, "", nil)
 

@@ -29,6 +29,7 @@ import (
 	internallogging "github.com/router-for-me/CLIProxyAPI/v7/internal/logging"
 	internalregistry "github.com/router-for-me/CLIProxyAPI/v7/internal/registry"
 	responsesconverter "github.com/router-for-me/CLIProxyAPI/v7/internal/translator/openai/openai/responses"
+	"github.com/router-for-me/CLIProxyAPI/v7/internal/util"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/watcher/synthesizer"
 	sdkopenai "github.com/router-for-me/CLIProxyAPI/v7/sdk/api/handlers/openai"
 	sdkauth "github.com/router-for-me/CLIProxyAPI/v7/sdk/auth"
@@ -2656,7 +2657,7 @@ func (s *relayServer) handleImagesRelayRequest(c *gin.Context, imageReq imageRel
 	defer cancelStream()
 	result, err := s.executeStreamWithOpenTimeout(c, streamCtx, []string{"codex"}, req, opts, model, startedAt, timeouts.open)
 	if err != nil {
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	if result == nil || result.Chunks == nil {
@@ -2669,7 +2670,7 @@ func (s *relayServer) handleImagesRelayRequest(c *gin.Context, imageReq imageRel
 	}
 	out, err := collectImagesResponse(streamCtx, result.Chunks, imageReq.responseFormat, timeouts.idle)
 	if err != nil {
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	writeUpstreamHeaders(c.Writer.Header(), result.Headers)
@@ -3621,7 +3622,7 @@ func (s *relayServer) handleNonStream(c *gin.Context, body []byte, model string,
 	stopWaitLogger()
 	if err != nil {
 		s.emitExecutorDiagnostic(c, "executor_failed", model, "execute", startedAt, err.Error())
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	s.emitExecutorDiagnostic(c, "executor_completed", model, "execute", startedAt, "")
@@ -3645,7 +3646,7 @@ func (s *relayServer) handleStream(c *gin.Context, body []byte, model string, so
 	stopWaitLogger()
 	if err != nil {
 		s.emitExecutorDiagnostic(c, "executor_failed", model, "execute_stream", startedAt, err.Error())
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	if result == nil || result.Chunks == nil {
@@ -4377,7 +4378,7 @@ func (s *relayServer) handleOllamaRuntimeNonStream(c *gin.Context, body []byte, 
 	req, opts := buildExecutorRequest(c, body, model, sdktranslator.FormatOpenAI, "", false)
 	resp, err := s.runtime.Execute(relayContext(c), []string{"codex"}, req, opts)
 	if err != nil {
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	payload := convertOpenAIChatResponseToOllama(resp.Payload, model)
@@ -4393,7 +4394,7 @@ func (s *relayServer) handleOllamaRuntimeStream(c *gin.Context, body []byte, mod
 	defer cancelStream()
 	result, err := s.executeStreamWithOpenTimeout(c, streamCtx, []string{"codex"}, req, opts, model, startedAt, timeouts.open)
 	if err != nil {
-		writeExecutorError(c, err)
+		s.writeExecutorError(c, err)
 		return
 	}
 	if result == nil || result.Chunks == nil {
@@ -5069,7 +5070,7 @@ func writeAPIError(c *gin.Context, status int, message, code string) {
 	})
 }
 
-func writeExecutorError(c *gin.Context, err error) {
+func (s *relayServer) writeExecutorError(c *gin.Context, err error) {
 	status := statusCodeFromError(err)
 	code := "upstream_error"
 	if status == http.StatusUnauthorized || status == http.StatusForbidden {
@@ -5084,7 +5085,34 @@ func writeExecutorError(c *gin.Context, err error) {
 	if err != nil {
 		_ = c.Error(err)
 	}
+	if shouldThrottleDownstreamExecutorError(status) {
+		var ctx context.Context = context.Background()
+		if c != nil && c.Request != nil {
+			ctx = c.Request.Context()
+		}
+		if waitErr := util.SleepContext(ctx, s.downstreamExecutorErrorDelay()); waitErr != nil {
+			return
+		}
+	}
 	writeAPIError(c, status, errorMessage(err), code)
+}
+
+func shouldThrottleDownstreamExecutorError(status int) bool {
+	if status == http.StatusUnauthorized || status == http.StatusPaymentRequired ||
+		status == http.StatusForbidden || status == http.StatusRequestTimeout ||
+		status == http.StatusTooManyRequests {
+		return true
+	}
+	return status >= http.StatusInternalServerError
+}
+
+func (s *relayServer) downstreamExecutorErrorDelay() time.Duration {
+	if s == nil || s.cfg == nil {
+		return 0
+	}
+	base := time.Duration(s.cfg.Streaming.BootstrapRetryBaseDelayMS) * time.Millisecond
+	max := time.Duration(s.cfg.Streaming.BootstrapRetryMaxDelayMS) * time.Millisecond
+	return util.BackoffDelay(1, base, max)
 }
 
 func statusCodeFromError(err error) int {

@@ -378,6 +378,46 @@ func TestRequestPolicyMiddlewareSetsCPAUsageAPIKey(t *testing.T) {
 	}
 }
 
+type testExecutorStatusError struct {
+	status int
+}
+
+func (e testExecutorStatusError) Error() string {
+	return http.StatusText(e.status)
+}
+
+func (e testExecutorStatusError) StatusCode() int {
+	return e.status
+}
+
+func TestWriteExecutorErrorThrottlesRetryableDownstreamError(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", nil)
+	server := &relayServer{
+		cfg: &config.Config{
+			SDKConfig: config.SDKConfig{
+				Streaming: config.StreamingConfig{
+					BootstrapRetryBaseDelayMS: 50,
+					BootstrapRetryMaxDelayMS:  50,
+				},
+			},
+		},
+	}
+
+	started := time.Now()
+	server.writeExecutorError(c, testExecutorStatusError{status: http.StatusServiceUnavailable})
+	elapsed := time.Since(started)
+
+	if elapsed < 50*time.Millisecond {
+		t.Fatalf("expected downstream error delay >= 50ms, got %v", elapsed)
+	}
+	if recorder.Code != http.StatusServiceUnavailable {
+		t.Fatalf("unexpected status: %d", recorder.Code)
+	}
+}
+
 func TestRequestUsageTrackerFinalizesWithLastSuccessfulAttempt(t *testing.T) {
 	tracker := newRequestUsageTracker()
 	tracker.record(usagePayload{

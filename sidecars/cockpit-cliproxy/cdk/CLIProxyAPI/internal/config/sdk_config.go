@@ -67,6 +67,12 @@ type StreamingConfig struct {
 	// <= 0 disables bootstrap retries. Default is 0.
 	BootstrapRetries int `yaml:"bootstrap-retries,omitempty" json:"bootstrap-retries,omitempty"`
 
+	// BootstrapRetryBaseDelayMS controls the initial wait before a bootstrap retry.
+	BootstrapRetryBaseDelayMS int `yaml:"bootstrap-retry-base-delay-ms,omitempty" json:"bootstrap-retry-base-delay-ms,omitempty"`
+
+	// BootstrapRetryMaxDelayMS caps the bootstrap retry wait.
+	BootstrapRetryMaxDelayMS int `yaml:"bootstrap-retry-max-delay-ms,omitempty" json:"bootstrap-retry-max-delay-ms,omitempty"`
+
 	// StreamOpenTimeoutMS controls how long the sidecar waits for a text stream to open.
 	StreamOpenTimeoutMS int `yaml:"stream-open-timeout-ms,omitempty" json:"stream-open-timeout-ms,omitempty"`
 
