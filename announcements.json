@@ -28,7 +28,7 @@
   },
   "topRightAd": null,
   "apiRelayEnabled": true,
-  "topRightAdsEnabled": true,
+  "topRightAdsEnabled": false,
   "topRightAds": [
     {
       "id": "top-right-ad-2026-04-shop",
