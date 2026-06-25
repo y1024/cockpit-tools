@@ -1,0 +1,304 @@
+name: Platform Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "Build channel"
+        required: true
+        default: "ci"
+        type: choice
+        options:
+          - "ci"
+          - "test"
+      test_branch:
+        description: "Branch used by the test platform-package index"
+        required: false
+        default: "platform-test"
+        type: string
+      download_base_url:
+        description: "Override test artifact download base URL"
+        required: false
+        default: ""
+        type: string
+      publish_test_branch:
+        description: "Commit platform-packages/test artifacts to test_branch"
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/platform-packages.yml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/**"
+      - "platform-packages/**"
+      - "package.json"
+      - "scripts/build-platform-ui.cjs"
+      - "scripts/build-platform-package-index.cjs"
+      - "scripts/package-platform-package.cjs"
+      - "scripts/verify-platform-packages.cjs"
+      - "src/**"
+      - "src-tauri/**"
+
+concurrency:
+  group: platform-packages-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    name: Preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Node.js setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Check locales
+        run: node scripts/check_locales.cjs
+
+      - name: Verify checked-in platform packages
+        run: npm run verify:platform-packages
+
+  package:
+    name: Package (${{ matrix.label }})
+    needs: preflight
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: "macos-aarch64"
+            runner: "macos-latest"
+            package_os: "macos"
+            package_arch: "aarch64"
+            rust_targets: "aarch64-apple-darwin"
+            cargo_args: "--target aarch64-apple-darwin"
+            adapter_bin_dir: "target/aarch64-apple-darwin/release"
+          - label: "macos-x86_64"
+            runner: "macos-latest"
+            package_os: "macos"
+            package_arch: "x86_64"
+            rust_targets: "x86_64-apple-darwin"
+            cargo_args: "--target x86_64-apple-darwin"
+            adapter_bin_dir: "target/x86_64-apple-darwin/release"
+          - label: "linux-x86_64"
+            runner: "ubuntu-22.04"
+            package_os: "linux"
+            package_arch: "x86_64"
+            rust_targets: ""
+            cargo_args: ""
+            adapter_bin_dir: "target/release"
+          - label: "linux-aarch64"
+            runner: "ubuntu-24.04-arm"
+            package_os: "linux"
+            package_arch: "aarch64"
+            rust_targets: ""
+            cargo_args: ""
+            adapter_bin_dir: "target/release"
+          - label: "windows-x86_64"
+            runner: "windows-latest"
+            package_os: "windows"
+            package_arch: "x86_64"
+            rust_targets: ""
+            cargo_args: ""
+            adapter_bin_dir: "target/release"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: startsWith(matrix.runner, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl file libssl-dev pkg-config zip unzip
+
+      - name: Rust setup
+        if: matrix.rust_targets == ''
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust setup with target
+        if: matrix.rust_targets != ''
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
+
+      - name: Node.js setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Build all platform remote UIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const fs = require('node:fs');
+          const index = JSON.parse(fs.readFileSync('platform-packages/index.json', 'utf8'));
+          for (const pkg of index.packages || []) {
+            execFileSync(process.execPath, ['scripts/build-platform-ui.cjs', pkg.id], { stdio: 'inherit' });
+          }
+          NODE
+
+      - name: Build sidecar adapters
+        shell: bash
+        env:
+          CARGO_ARGS: ${{ matrix.cargo_args }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const fs = require('node:fs');
+          const cargoArgs = (process.env.CARGO_ARGS || '').split(/\s+/).filter(Boolean);
+          const index = JSON.parse(fs.readFileSync('platform-packages/index.json', 'utf8'));
+          for (const pkg of index.packages || []) {
+            if (pkg.installKind !== 'sidecarAdapter') continue;
+            const crate = `cockpit-${pkg.id.replace(/_/g, '-')}-adapter`;
+            execFileSync('cargo', ['build', '--release', '-p', crate, ...cargoArgs], { stdio: 'inherit' });
+          }
+          NODE
+
+      - name: Package platform artifacts
+        shell: bash
+        env:
+          PACKAGE_OS: ${{ matrix.package_os }}
+          PACKAGE_ARCH: ${{ matrix.package_arch }}
+          ADAPTER_BIN_DIR: ${{ matrix.adapter_bin_dir }}
+        run: |
+          set -euo pipefail
+          mkdir -p platform-packages/dist-ci
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const index = JSON.parse(fs.readFileSync('platform-packages/index.json', 'utf8'));
+          for (const pkg of index.packages || []) {
+            const metadataName = `${pkg.id}-${pkg.version}-${process.env.PACKAGE_OS}-${process.env.PACKAGE_ARCH}.json`;
+            const args = [
+              'scripts/package-platform-package.cjs',
+              '--platform', pkg.id,
+              '--os', process.env.PACKAGE_OS,
+              '--arch', process.env.PACKAGE_ARCH,
+              '--filename-template', 'os-arch',
+              '--dist-dir', 'platform-packages/dist-ci',
+              '--metadata-out', path.join('platform-packages', 'dist-ci', metadataName),
+            ];
+            if (pkg.installKind === 'sidecarAdapter') {
+              args.push('--adapter-bin-dir', process.env.ADAPTER_BIN_DIR);
+            }
+            execFileSync(process.execPath, args, { stdio: 'inherit' });
+          }
+          NODE
+
+      - name: Upload platform package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-packages-${{ matrix.label }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            platform-packages/dist-ci/*.zip
+            platform-packages/dist-ci/*.json
+
+  aggregate:
+    name: Aggregate Index
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      CHANNEL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel || 'ci' }}
+      TEST_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.test_branch || 'platform-test' }}
+      DOWNLOAD_BASE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.download_base_url || '' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Node.js setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download platform package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: platform-packages-*
+          path: platform-packages/dist-ci
+          merge-multiple: true
+
+      - name: Build merged platform package index
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(
+            --metadata-dir platform-packages/dist-ci
+            --verify-zip-dir platform-packages/dist-ci
+            --require-os-arch macos/aarch64,macos/x86_64,linux/x86_64,linux/aarch64,windows/x86_64
+            --output platform-packages/dist-ci/index.json
+          )
+          if [ "${CHANNEL}" = "test" ]; then
+            base_url="${DOWNLOAD_BASE_URL}"
+            if [ -z "${base_url}" ]; then
+              base_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${TEST_BRANCH}/platform-packages/test/dist"
+            fi
+            args+=(--download-base-url "${base_url}")
+          fi
+          npm run package:platform-index -- "${args[@]}"
+
+      - name: Upload merged platform package index
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-packages-index
+          retention-days: 14
+          if-no-files-found: error
+          path: platform-packages/dist-ci/index.json
+
+      - name: Publish test platform package branch
+        if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && inputs.publish_test_branch == true
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp_dir="$(mktemp -d)"
+          cp platform-packages/dist-ci/*.zip "${tmp_dir}/"
+          cp platform-packages/dist-ci/index.json "${tmp_dir}/index.json"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "${TEST_BRANCH}"
+
+          mkdir -p platform-packages/test/dist
+          rm -f platform-packages/test/dist/*.zip
+          cp "${tmp_dir}"/*.zip platform-packages/test/dist/
+          cp "${tmp_dir}/index.json" platform-packages/test/index.json
+
+          git add platform-packages/test
+          if git diff --cached --quiet; then
+            echo "No test platform package changes to publish."
+            exit 0
+          fi
+
+          git commit -m "chore: publish test platform packages [skip ci]"
+          git push origin "HEAD:${TEST_BRANCH}"
