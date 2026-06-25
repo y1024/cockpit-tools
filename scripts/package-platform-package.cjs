@@ -133,6 +133,13 @@ function expectedAdapterCrateName(platformId) {
   return `cockpit-${platformId.replace(/_/g, '-')}-adapter`;
 }
 
+function rustTargetFor(os, arch) {
+  if (os === 'macos') return `${arch}-apple-darwin`;
+  if (os === 'windows') return `${arch}-pc-windows-msvc`;
+  if (os === 'linux') return `${arch}-unknown-linux-gnu`;
+  fail(`Unsupported OS for Rust target: ${os}`);
+}
+
 function assertFile(filePath, label) {
   if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
     fail(`${label}: missing file ${path.relative(ROOT, filePath)}`);
@@ -173,6 +180,30 @@ function copyAdapterIfAvailable(packageRoot, manifest, os, adapterBinDir) {
   return entry;
 }
 
+function copyCodexRuntimeHelpers(packageRoot, manifest, os, arch) {
+  if (manifest.id !== 'codex') return [];
+
+  const adapterEntry = safeRelativePath(adapterEntryForOs(manifest.adapter, os), 'codex: adapter entry');
+  const adapterDir = path.dirname(path.join(packageRoot, adapterEntry));
+  const extension = os === 'windows' ? '.exe' : '';
+  const sourcePath = path.join(
+    ROOT,
+    'sidecars',
+    'cockpit-cliproxy',
+    'bin',
+    `cockpit-cliproxy-${rustTargetFor(os, arch)}${extension}`,
+  );
+  const targetPath = path.join(adapterDir, `cockpit-cliproxy${extension}`);
+
+  assertFile(sourcePath, 'codex: cockpit-cliproxy helper');
+  fs.mkdirSync(adapterDir, { recursive: true });
+  fs.copyFileSync(sourcePath, targetPath);
+  if (os !== 'windows') {
+    fs.chmodSync(targetPath, 0o755);
+  }
+  return [path.relative(packageRoot, targetPath)];
+}
+
 function createZip(packageRoot, zipPath) {
   fs.rmSync(zipPath, { force: true });
   fs.mkdirSync(path.dirname(zipPath), { recursive: true });
@@ -210,9 +241,29 @@ function replaceZipName(downloadUrl, zipName) {
   return `${downloadUrl.slice(0, index + 1)}${zipName}`;
 }
 
-function updateIndex(index, platformId, os, arch, metadata) {
+function updateIndex(index, platformId, os, arch, metadata, manifest) {
   const pkg = (index.packages || []).find((item) => item.id === platformId);
   if (!pkg) fail(`${platformId}: missing from platform-packages/index.json`);
+
+  for (const key of [
+    'platformId',
+    'version',
+    'apiVersion',
+    'minCoreVersion',
+    'displayName',
+    'entry',
+    'packageMode',
+    'installKind',
+    'adapter',
+    'ui',
+    'capabilities',
+    'changelog',
+    'contributions',
+  ]) {
+    if (Object.prototype.hasOwnProperty.call(manifest, key)) {
+      pkg[key] = manifest[key];
+    }
+  }
 
   if (!Array.isArray(pkg.artifacts)) pkg.artifacts = [];
   const artifactIndex = pkg.artifacts.findIndex((artifact) => artifact.os === os && artifact.arch === arch);
@@ -266,6 +317,7 @@ function main() {
   }
 
   const adapterEntry = copyAdapterIfAvailable(packageRoot, manifest, args.os, args.adapterBinDir);
+  const helperEntries = copyCodexRuntimeHelpers(packageRoot, manifest, args.os, args.arch);
   if (manifest.adapter) {
     const cratePath = path.join(ROOT, 'crates', expectedAdapterCrateName(args.platformId), 'Cargo.toml');
     assertFile(cratePath, `${args.platformId}: adapter crate`);
@@ -293,11 +345,12 @@ function main() {
     downloadSizeBytes: size,
     sha256: checksum,
     adapterEntry,
+    helperEntries,
     uiEntry: ui.entry,
     uiStyle: ui.style || null,
   };
 
-  if (args.updateIndex) updateIndex(index, args.platformId, args.os, args.arch, metadata);
+  if (args.updateIndex) updateIndex(index, args.platformId, args.os, args.arch, metadata, manifest);
   if (args.metadataOut) {
     fs.mkdirSync(path.dirname(args.metadataOut), { recursive: true });
     fs.writeFileSync(args.metadataOut, `${JSON.stringify(metadata, null, 2)}\n`);

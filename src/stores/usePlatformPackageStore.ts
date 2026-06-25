@@ -10,6 +10,8 @@ import {
 } from '../services/platformPackageService';
 
 const RUNTIME_MANAGED_PLATFORM_IDS = new Set<PlatformId>([
+  'antigravity',
+  'antigravity_ide',
   'claude_manager',
   'zed',
   'kiro',
@@ -33,6 +35,44 @@ const EMPTY_CONTRIBUTIONS: PlatformPackageState['contributions'] = {
 };
 
 const DEFAULT_PLATFORM_PACKAGES: PlatformPackageState[] = [
+  {
+    platformId: 'antigravity',
+    packageMode: 'hotUpdate',
+    installKind: 'sidecarAdapter',
+    installStatus: 'notInstalled',
+    runtimeReady: false,
+    installedVersion: null,
+    latestVersion: null,
+    downloadSizeBytes: null,
+    installedSizeBytes: null,
+    lastCheckedAt: null,
+    errorMessage: null,
+    entry: null,
+    adapter: null,
+    ui: null,
+    capabilities: [],
+    contributions: EMPTY_CONTRIBUTIONS,
+    changelog: [],
+  },
+  {
+    platformId: 'antigravity_ide',
+    packageMode: 'hotUpdate',
+    installKind: 'sidecarAdapter',
+    installStatus: 'notInstalled',
+    runtimeReady: false,
+    installedVersion: null,
+    latestVersion: null,
+    downloadSizeBytes: null,
+    installedSizeBytes: null,
+    lastCheckedAt: null,
+    errorMessage: null,
+    entry: null,
+    adapter: null,
+    ui: null,
+    capabilities: [],
+    contributions: EMPTY_CONTRIBUTIONS,
+    changelog: [],
+  },
   {
     platformId: 'claude_manager',
     packageMode: 'hotUpdate',

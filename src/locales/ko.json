@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "{{platform}} 패키지가 설치되지 않았습니다",
     "packagePageInstallDesc": "이 페이지에서 바로 설치하거나, 계정을 관리하기 전에 오른쪽 위 패키지 작업으로 설치 또는 복구할 수 있습니다. 설치 전에는 계정, OAuth, 전환, 백그라운드 새로 고침이 로드되지 않습니다.",
     "packageDashboardStateDesc": "{{platform}} 페이지를 열어 바로 설치하거나, 오른쪽 위 작업에서 업데이트, 복구, 변경 로그 보기를 할 수 있습니다.",
-    "packageOpenPlatformPage": "플랫폼 페이지 열기"
+    "packageOpenPlatformPage": "플랫폼 페이지 열기",
+    "packageBundledShort": "내장",
+    "packageBundledStatus": "기본 앱에서 제공",
+    "packageBundledDesc": "이 플랫폼은 기본 앱에 포함되어 있습니다. 설치와 업데이트는 기본 앱 버전을 따릅니다."
   },
   "privacy": {
     "hideSensitive": "이메일 숨기기",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "모든 인스턴스가 이미 실행 중입니다",
       "noneRunning": "실행 중인 인스턴스를 찾을 수 없습니다",
       "syncThreadsNeedTwo": "스레드를 동기화하려면 인스턴스가 두 개 이상 필요합니다",
+      "loadTimeout": "인스턴스 로드 시간이 초과되었습니다. 다시 시도하세요.",
       "launchPrepared": "실행 명령이 준비되었습니다",
       "speedUpdated": "속도가 업데이트되었습니다"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "컬렉션에 계정이 없습니다",
       "footerHint": "접근 범위: {{scope}}",
       "manageAccounts": "계정 관리",
+      "saveTimeout": "API 서비스 구성원 저장 시간이 초과되었습니다. 나중에 다시 시도하세요.",
       "rotateKey": "키 재발급",
       "rotateConfirmMessage": "재설정하면 현재 API 서비스 키가 즉시 무효화되며, 진행 중인 요청이 더 이상 사용되지 않을 수 있습니다. 계속할까요?",
       "disableService": "서비스 끄기",
@@ -2188,6 +2193,7 @@
       "subtitle": "Codex 깨우기 작업을 예약하고, CLI 경로를 테스트하고, 실행 기록을 확인합니다.",
       "heroTitle": "Codex 깨우기 작업",
       "heroSubtitle": "OAuth Codex 계정용 시간 기반 깨우기 작업을 만들고, 즉시 테스트를 실행하며, 모든 트리거 기록을 한곳에서 확인할 수 있습니다.",
+      "loadTimeout": "Codex 깨우기 작업 로드 시간이 초과되었습니다. 다시 시도하세요.",
       "runtimeReady": "Codex CLI 준비됨",
       "runtimeMissing": "Codex CLI 필요",
       "runtimeCardTitle": "Codex CLI 환경",
@@ -2606,6 +2612,7 @@
       "desc": "모델 공급자와 여러 API 키를 한곳에서 관리하고, Codex API 키 계정을 추가할 때 바로 재사용하세요.",
       "add": "공급자 추가",
       "loadFailed": "모델 공급자를 불러오지 못했습니다: {{error}}",
+      "loadTimeout": "모델 공급자 로드 시간이 초과되었습니다. 다시 시도하세요.",
       "emptyTitle": "아직 모델 공급자가 없습니다",
       "emptyDesc": "시작하려면 오른쪽 상단의 \"공급자 추가\"를 클릭하세요.",
       "baseUrl": "기본 URL",
@@ -3872,20 +3879,20 @@
         "4": "설정",
         "5": "문제해결",
         "6": "로그",
-        "7": "데이터"
+        "7": "app-YYYY-MM-DD.log 로그"
       },
       "outcomes": {
         "0": "가져오기/내보내기, 개인정보, 문제 해결가 어떤 문제를 해결하는지 이해합니다.",
         "1": "가져오기/내보내기, 개인정보, 문제 해결의 권장 흐름으로 실수를 줄입니다.",
         "2": "가져오기/내보내기, 개인정보, 문제 해결에서 1회 성공을 확인한 뒤 확장합니다.",
-        "3": "가져오기/내보내기, 개인정보, 문제 해결에서 이슈가 발생하면 먼저 logs를 확인하고 근거를 수집합니다."
+        "3": "logs 폴더의 app-YYYY-MM-DD.log 및 platform-<platform>-YYYY-MM-DD.log로 런타임 문제를 빠르게 찾습니다."
       },
       "steps": {
         "0": "가져오기/내보내기, 개인정보, 문제 해결 페이지를 엽니다.",
         "1": "가져오기/내보내기, 개인정보, 문제 해결의 기본 설정과 필요한 바인딩을 완료합니다.",
         "2": "가져오기/내보내기, 개인정보, 문제 해결에서 수동 작업을 1회 실행해 결과를 확인합니다.",
         "3": "문제 해결 시 \"설정 -> 데이터 디렉터리 -> 열기\" 후 logs로 이동합니다.",
-        "4": "최신 app.log 또는 app.log.*를 먼저 확인합니다.",
+        "4": "먼저 최신 app-YYYY-MM-DD.log를 확인하고, 플랫폼 문제는 해당 platform-<platform>-YYYY-MM-DD.log를 선택합니다.",
         "5": "피드백 시 시간, 플랫폼, 재현 단계, 민감정보 제거 로그를 포함합니다."
       },
       "summary": "이 섹션은 일상 워크플로우에서 가져오기/내보내기, 개인정보, 문제 해결 사용 방법을 설명합니다.",

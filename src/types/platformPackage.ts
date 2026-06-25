@@ -37,6 +37,11 @@ export interface PlatformPackageChangelogEntry {
   version: string;
   date?: string | null;
   notes: string[];
+  locales?: Record<string, PlatformPackageChangelogLocale> | null;
+}
+
+export interface PlatformPackageChangelogLocale {
+  notes?: string[];
 }
 
 export interface PlatformPackageAdapter {

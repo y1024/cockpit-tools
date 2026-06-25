@@ -1,7 +1,7 @@
 {
   "name": "cockpit-tools",
   "private": true,
-  "version": "0.26.6",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,12 @@
     "build:platform-ui": "node scripts/build-platform-ui.cjs",
     "package:platform": "node scripts/package-platform-package.cjs",
     "package:platform-index": "node scripts/build-platform-package-index.cjs",
+    "prepare:test-channel-version": "node scripts/prepare-test-channel-version.cjs",
     "verify:platform-packages": "node scripts/verify-platform-packages.cjs",
+    "verify:codex-platform": "node scripts/verify-codex-platform-contract.cjs",
+    "smoke:platform-ui": "node scripts/smoke-platform-ui-contract.cjs",
+    "smoke:platform-adapter-contract": "node scripts/smoke-platform-adapters.cjs --contract-only",
+    "smoke:platform-adapters": "node scripts/smoke-platform-adapters.cjs",
     "audit:platform-full-hot-update": "node scripts/verify-platform-packages.cjs --strict-full-hot-update",
     "release:preflight": "node scripts/release/preflight.cjs",
     "preview": "vite preview",

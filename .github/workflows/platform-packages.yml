@@ -2,6 +2,30 @@ name: Platform Packages
 
 on:
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Build channel"
+        required: true
+        default: "ci"
+        type: choice
+        options:
+          - "ci"
+          - "test"
+      test_branch:
+        description: "Branch used by the test platform-package index"
+        required: false
+        default: "platform-test"
+        type: string
+      download_base_url:
+        description: "Override test artifact download base URL"
+        required: false
+        default: ""
+        type: string
+      publish_test_branch:
+        description: "Commit platform-packages/test artifacts to test_branch"
+        required: false
+        default: false
+        type: boolean
   pull_request:
     branches:
       - "main"
@@ -204,7 +228,11 @@ jobs:
     needs: package
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+    env:
+      CHANNEL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel || 'ci' }}
+      TEST_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.test_branch || 'platform-test' }}
+      DOWNLOAD_BASE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.download_base_url || '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -222,12 +250,23 @@ jobs:
           merge-multiple: true
 
       - name: Build merged platform package index
+        shell: bash
         run: |
-          npm run package:platform-index -- \
-            --metadata-dir platform-packages/dist-ci \
-            --verify-zip-dir platform-packages/dist-ci \
-            --require-os-arch macos/aarch64,macos/x86_64,linux/x86_64,linux/aarch64,windows/x86_64 \
+          set -euo pipefail
+          args=(
+            --metadata-dir platform-packages/dist-ci
+            --verify-zip-dir platform-packages/dist-ci
+            --require-os-arch macos/aarch64,macos/x86_64,linux/x86_64,linux/aarch64,windows/x86_64
             --output platform-packages/dist-ci/index.json
+          )
+          if [ "${CHANNEL}" = "test" ]; then
+            base_url="${DOWNLOAD_BASE_URL}"
+            if [ -z "${base_url}" ]; then
+              base_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${TEST_BRANCH}/platform-packages/test/dist"
+            fi
+            args+=(--download-base-url "${base_url}")
+          fi
+          npm run package:platform-index -- "${args[@]}"
 
       - name: Upload merged platform package index
         uses: actions/upload-artifact@v4
@@ -236,3 +275,30 @@ jobs:
           retention-days: 14
           if-no-files-found: error
           path: platform-packages/dist-ci/index.json
+
+      - name: Publish test platform package branch
+        if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && inputs.publish_test_branch == true
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp_dir="$(mktemp -d)"
+          cp platform-packages/dist-ci/*.zip "${tmp_dir}/"
+          cp platform-packages/dist-ci/index.json "${tmp_dir}/index.json"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "${TEST_BRANCH}"
+
+          mkdir -p platform-packages/test/dist
+          rm -f platform-packages/test/dist/*.zip
+          cp "${tmp_dir}"/*.zip platform-packages/test/dist/
+          cp "${tmp_dir}/index.json" platform-packages/test/index.json
+
+          git add platform-packages/test
+          if git diff --cached --quiet; then
+            echo "No test platform package changes to publish."
+            exit 0
+          fi
+
+          git commit -m "chore: publish test platform packages [skip ci]"
+          git push origin "HEAD:${TEST_BRANCH}"

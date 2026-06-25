@@ -3,13 +3,17 @@ use chrono::{DateTime, Duration, Local};
 use regex::{Captures, Regex};
 use std::fs;
 use std::fs::File;
-use std::io::{Read, Seek, SeekFrom};
+use std::fs::OpenOptions;
+use std::io::{Read, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use tracing::{error, info, warn};
-use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing_subscriber::{
+    filter::filter_fn, fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter, Layer,
+};
 
-const LOG_FILE_PREFIX: &str = "app.log";
+const LOG_FILE_BASENAME: &str = "app";
+const PLATFORM_LOG_FILE_PREFIX_ENV: &str = "COCKPIT_PLATFORM_LOG_FILE_PREFIX";
 const CODEX_API_LOG_TARGET: &str = "codex_api";
 const LOG_RETENTION_DAYS: i64 = 3;
 const DEFAULT_LOG_TAIL_LINES: usize = 200;
@@ -30,6 +34,58 @@ impl tracing_subscriber::fmt::time::FormatTime for LocalTimer {
     }
 }
 
+#[derive(Clone)]
+struct DailyLogMakeWriter {
+    log_dir: Arc<PathBuf>,
+    basename: String,
+}
+
+struct DailyLogWriter {
+    file: Option<File>,
+}
+
+impl DailyLogMakeWriter {
+    fn new(log_dir: PathBuf, basename: impl Into<String>) -> Self {
+        Self {
+            log_dir: Arc::new(log_dir),
+            basename: basename.into(),
+        }
+    }
+}
+
+impl DailyLogWriter {
+    fn new(log_dir: &Path, basename: &str) -> Self {
+        let file_name = current_daily_log_file_name(basename);
+        let path = log_dir.join(file_name);
+        let file = OpenOptions::new().create(true).append(true).open(path).ok();
+        Self { file }
+    }
+}
+
+impl Write for DailyLogWriter {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        match self.file.as_mut() {
+            Some(file) => file.write(buf),
+            None => Ok(buf.len()),
+        }
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self.file.as_mut() {
+            Some(file) => file.flush(),
+            None => Ok(()),
+        }
+    }
+}
+
+impl<'a> tracing_subscriber::fmt::writer::MakeWriter<'a> for DailyLogMakeWriter {
+    type Writer = DailyLogWriter;
+
+    fn make_writer(&'a self) -> Self::Writer {
+        DailyLogWriter::new(&self.log_dir, &self.basename)
+    }
+}
+
 pub fn get_log_dir() -> Result<PathBuf, String> {
     let data_dir = get_data_dir()?;
     let log_dir = data_dir.join("logs");
@@ -44,8 +100,51 @@ pub fn get_log_dir() -> Result<PathBuf, String> {
 fn is_app_log_file(path: &Path) -> bool {
     path.file_name()
         .and_then(|name| name.to_str())
-        .map(|name| name.starts_with(LOG_FILE_PREFIX))
+        .map(is_app_log_file_name)
         .unwrap_or(false)
+}
+
+fn is_app_log_file_name(name: &str) -> bool {
+    if name == "app.log" {
+        return true;
+    }
+    if let Some(date) = name.strip_prefix("app.log.") {
+        return chrono::NaiveDate::parse_from_str(date, "%Y-%m-%d").is_ok();
+    }
+    name.strip_prefix("app-")
+        .and_then(|rest| rest.strip_suffix(".log"))
+        .map(|date| chrono::NaiveDate::parse_from_str(date, "%Y-%m-%d").is_ok())
+        .unwrap_or(false)
+}
+
+fn current_daily_log_file_name(basename: &str) -> String {
+    format!("{}-{}.log", basename, Local::now().format("%Y-%m-%d"))
+}
+
+fn resolve_log_file_prefix() -> (String, bool) {
+    std::env::var(PLATFORM_LOG_FILE_PREFIX_ENV)
+        .ok()
+        .and_then(|value| sanitize_log_file_prefix(&value))
+        .map(|value| (value, true))
+        .unwrap_or_else(|| (LOG_FILE_BASENAME.to_string(), false))
+}
+
+fn sanitize_log_file_prefix(value: &str) -> Option<String> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    let trimmed = trimmed.strip_suffix(".log").unwrap_or(trimmed);
+    if !trimmed.starts_with("platform-") {
+        return None;
+    }
+    let safe = trimmed
+        .chars()
+        .all(|ch| ch.is_ascii_alphanumeric() || ch == '-' || ch == '_');
+    if !safe || trimmed.contains('/') || trimmed.contains('\\') {
+        return None;
+    }
+    Some(trimmed.to_string())
 }
 
 pub fn clamp_log_tail_lines(line_limit: Option<usize>) -> usize {
@@ -212,17 +311,19 @@ pub fn init_logger() {
         }
     };
 
-    let file_appender = tracing_appender::rolling::daily(log_dir.clone(), "app.log");
-    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+    let (log_file_prefix, is_platform_logger) = resolve_log_file_prefix();
+    let file_writer = DailyLogMakeWriter::new(log_dir.clone(), log_file_prefix);
 
     let console_layer = fmt::Layer::new()
+        .with_writer(std::io::stderr)
         .with_target(false)
         .with_thread_ids(false)
         .with_level(true)
-        .with_timer(LocalTimer);
+        .with_timer(LocalTimer)
+        .with_filter(filter_fn(move |_| !is_platform_logger));
 
     let file_layer = fmt::Layer::new()
-        .with_writer(non_blocking)
+        .with_writer(file_writer)
         .with_ansi(false)
         .with_target(false)
         .with_level(true)
@@ -235,8 +336,6 @@ pub fn init_logger() {
         .with(console_layer)
         .with(file_layer)
         .try_init();
-
-    std::mem::forget(_guard);
 
     info!("日志系统已完成初始化");
 
@@ -316,5 +415,44 @@ fn mask_domain_head(head: &str) -> String {
         1 => "*".to_string(),
         2 => format!("{}*", chars[0]),
         _ => format!("{}***{}", chars[0], chars[chars.len() - 1]),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sanitizes_platform_log_prefix_env() {
+        assert_eq!(
+            sanitize_log_file_prefix("platform-zed"),
+            Some("platform-zed".to_string())
+        );
+        assert_eq!(
+            sanitize_log_file_prefix("platform-github-copilot.log"),
+            Some("platform-github-copilot".to_string())
+        );
+        assert_eq!(
+            sanitize_log_file_prefix(" platform-codebuddy_cn "),
+            Some("platform-codebuddy_cn".to_string())
+        );
+
+        assert_eq!(sanitize_log_file_prefix("app"), None);
+        assert_eq!(sanitize_log_file_prefix("platform-../zed"), None);
+        assert_eq!(
+            sanitize_log_file_prefix("platform-zed.log.2026-06-24"),
+            None
+        );
+    }
+
+    #[test]
+    fn recognizes_new_and_legacy_app_logs() {
+        assert!(is_app_log_file(Path::new("app-2026-06-24.log")));
+        assert!(is_app_log_file(Path::new("app.log.2026-06-24")));
+        assert!(is_app_log_file(Path::new("app.log")));
+
+        assert!(!is_app_log_file(Path::new("app-2026-06-24.txt")));
+        assert!(!is_app_log_file(Path::new("app.login")));
+        assert!(!is_app_log_file(Path::new("platform-zed-2026-06-24.log")));
     }
 }

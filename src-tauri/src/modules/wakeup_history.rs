@@ -27,7 +27,7 @@ pub struct WakeupHistoryItem {
 }
 
 fn history_path() -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     Ok(data_dir.join(HISTORY_FILE))
 }
 

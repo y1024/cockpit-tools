@@ -1491,17 +1491,13 @@ async fn ensure_wakeup_account_token(
     ),
     String,
 > {
-    let mut account = crate::modules::account::load_account(account_id)?;
-    let token = crate::modules::oauth::ensure_fresh_token(&account.token).await?;
-    if token.access_token != account.token.access_token
-        || token.refresh_token != account.token.refresh_token
-        || token.expiry_timestamp != account.token.expiry_timestamp
-        || token.project_id != account.token.project_id
-        || token.is_gcp_tos != account.token.is_gcp_tos
-    {
-        account.token = token.clone();
-        let _ = crate::modules::account::save_account(&account);
-    }
+    let account = crate::modules::platform_adapter::call_antigravity_series::<
+        crate::models::account::Account,
+    >(
+        "accounts.refresh",
+        serde_json::json!({ "accountId": account_id }),
+    )?;
+    let token = account.token.clone();
     Ok((account, token))
 }
 

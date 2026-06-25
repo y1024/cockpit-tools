@@ -264,7 +264,7 @@ export function LogViewerModal({ open, onClose }: LogViewerModalProps) {
                   >
                     {snapshot.available_files.map((file) => (
                       <option key={file.log_file_name} value={file.log_file_name}>
-                        {file.log_file_name}
+                        {file.log_file_display_name || file.log_file_name}
                       </option>
                     ))}
                   </select>

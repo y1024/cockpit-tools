@@ -27,7 +27,7 @@ fn now_ts() -> i64 {
 }
 
 fn get_data_dir() -> Result<PathBuf, String> {
-    account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 fn get_accounts_dir() -> Result<PathBuf, String> {
@@ -43,8 +43,8 @@ fn get_accounts_index_path() -> Result<PathBuf, String> {
     Ok(get_data_dir()?.join(ACCOUNTS_INDEX_FILE))
 }
 
-fn ensure_account_store_migrated() -> Result<(), String> {
-    crate::modules::account_store::ensure_platform_migrated_from_json(
+fn ensure_platform_account_store_migrated() -> Result<(), String> {
+    crate::modules::platform_account_store::ensure_platform_migrated_from_json(
         ACCOUNT_STORE_PLATFORM,
         &get_accounts_index_path()?,
         &get_accounts_dir()?,
@@ -52,9 +52,9 @@ fn ensure_account_store_migrated() -> Result<(), String> {
 }
 
 fn account_index_from_store() -> Result<WorkbuddyAccountIndex, String> {
-    ensure_account_store_migrated()?;
+    ensure_platform_account_store_migrated()?;
     let accounts =
-        crate::modules::account_store::list_accounts::<WorkbuddyAccount>(ACCOUNT_STORE_PLATFORM)?;
+        crate::modules::platform_account_store::list_accounts::<WorkbuddyAccount>(ACCOUNT_STORE_PLATFORM)?;
     let mut index = WorkbuddyAccountIndex::new();
     index.accounts = accounts.iter().map(|account| account.summary()).collect();
     Ok(index)
@@ -87,12 +87,12 @@ fn resolve_account_file_path(account_id: &str) -> Result<PathBuf, String> {
 }
 
 pub fn load_account(account_id: &str) -> Option<WorkbuddyAccount> {
-    if let Err(err) = ensure_account_store_migrated() {
+    if let Err(err) = ensure_platform_account_store_migrated() {
         logger::log_warn(&format!(
             "[WorkBuddy Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
             account_id, err
         ));
-    } else if let Ok(Some(account)) = crate::modules::account_store::load_account::<WorkbuddyAccount>(
+    } else if let Ok(Some(account)) = crate::modules::platform_account_store::load_account::<WorkbuddyAccount>(
         ACCOUNT_STORE_PLATFORM,
         account_id,
     ) {
@@ -108,8 +108,8 @@ pub fn load_account(account_id: &str) -> Option<WorkbuddyAccount> {
 }
 
 fn save_account_file(account: &WorkbuddyAccount) -> Result<(), String> {
-    ensure_account_store_migrated()?;
-    crate::modules::account_store::save_account(
+    ensure_platform_account_store_migrated()?;
+    crate::modules::platform_account_store::save_account(
         ACCOUNT_STORE_PLATFORM,
         account.id.as_str(),
         account,
@@ -122,7 +122,7 @@ fn save_account_file(account: &WorkbuddyAccount) -> Result<(), String> {
 }
 
 fn delete_account_file(account_id: &str) -> Result<(), String> {
-    crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
+    crate::modules::platform_account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     let path = resolve_account_file_path(account_id)?;
     if path.exists() {
         fs::remove_file(path).map_err(|e| format!("删除账号文件失败:{}", e))?;
@@ -236,7 +236,7 @@ fn save_account_index(index: &WorkbuddyAccountIndex) -> Result<(), String> {
         .iter()
         .map(|summary| summary.id.clone())
         .collect::<Vec<_>>();
-    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
+    crate::modules::platform_account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
     let path = get_accounts_index_path()?;
     let content =
         serde_json::to_string_pretty(index).map_err(|e| format!("序列化账号索引失败:{}", e))?;
@@ -247,7 +247,7 @@ fn save_account_index(index: &WorkbuddyAccountIndex) -> Result<(), String> {
 fn repair_account_index_from_details(reason: &str) -> Option<WorkbuddyAccountIndex> {
     let index_path = get_accounts_index_path().ok()?;
     let accounts_dir = get_accounts_dir().ok()?;
-    let mut accounts = crate::modules::account_index_repair::load_accounts_from_details(
+    let mut accounts = crate::modules::platform_account_index_repair::load_accounts_from_details(
         &accounts_dir,
         |account_id| load_account(account_id),
     )
@@ -257,7 +257,7 @@ fn repair_account_index_from_details(reason: &str) -> Option<WorkbuddyAccountInd
         return None;
     }
 
-    crate::modules::account_index_repair::sort_accounts_by_recency(
+    crate::modules::platform_account_index_repair::sort_accounts_by_recency(
         &mut accounts,
         |account| account.last_used,
         |account| account.created_at,
@@ -267,7 +267,7 @@ fn repair_account_index_from_details(reason: &str) -> Option<WorkbuddyAccountInd
     let mut index = WorkbuddyAccountIndex::new();
     index.accounts = accounts.iter().map(|account| account.summary()).collect();
 
-    let backup_path = crate::modules::account_index_repair::backup_existing_index(&index_path)
+    let backup_path = crate::modules::platform_account_index_repair::backup_existing_index(&index_path)
         .unwrap_or_else(|err| {
             logger::log_warn(&format!(
                 "[WorkBuddy Account] 自动修复前备份索引失败，继续尝试重建: path={}, error={}",

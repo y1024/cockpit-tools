@@ -65,7 +65,7 @@ pub(crate) fn is_banned_account(account: &CursorAccount) -> bool {
 // ---------------------------------------------------------------------------
 
 fn get_data_dir() -> Result<PathBuf, String> {
-    account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 fn get_accounts_dir() -> Result<PathBuf, String> {
@@ -81,8 +81,8 @@ fn get_accounts_index_path() -> Result<PathBuf, String> {
     Ok(get_data_dir()?.join(ACCOUNTS_INDEX_FILE))
 }
 
-fn ensure_account_store_migrated() -> Result<(), String> {
-    crate::modules::account_store::ensure_platform_migrated_from_json(
+fn ensure_platform_account_store_migrated() -> Result<(), String> {
+    crate::modules::platform_account_store::ensure_platform_migrated_from_json(
         ACCOUNT_STORE_PLATFORM,
         &get_accounts_index_path()?,
         &get_accounts_dir()?,
@@ -90,9 +90,9 @@ fn ensure_account_store_migrated() -> Result<(), String> {
 }
 
 fn account_index_from_store() -> Result<CursorAccountIndex, String> {
-    ensure_account_store_migrated()?;
+    ensure_platform_account_store_migrated()?;
     let accounts =
-        crate::modules::account_store::list_accounts::<CursorAccount>(ACCOUNT_STORE_PLATFORM)?;
+        crate::modules::platform_account_store::list_accounts::<CursorAccount>(ACCOUNT_STORE_PLATFORM)?;
     let mut index = CursorAccountIndex::new();
     index.accounts = accounts.iter().map(|account| account.summary()).collect();
     Ok(index)
@@ -132,12 +132,12 @@ fn resolve_account_file_path(account_id: &str) -> Result<PathBuf, String> {
 // ---------------------------------------------------------------------------
 
 pub fn load_account(account_id: &str) -> Option<CursorAccount> {
-    if let Err(err) = ensure_account_store_migrated() {
+    if let Err(err) = ensure_platform_account_store_migrated() {
         logger::log_warn(&format!(
             "[Cursor Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
             account_id, err
         ));
-    } else if let Ok(Some(account)) = crate::modules::account_store::load_account::<CursorAccount>(
+    } else if let Ok(Some(account)) = crate::modules::platform_account_store::load_account::<CursorAccount>(
         ACCOUNT_STORE_PLATFORM,
         account_id,
     ) {
@@ -153,8 +153,8 @@ pub fn load_account(account_id: &str) -> Option<CursorAccount> {
 }
 
 fn save_account_file(account: &CursorAccount) -> Result<(), String> {
-    ensure_account_store_migrated()?;
-    crate::modules::account_store::save_account(
+    ensure_platform_account_store_migrated()?;
+    crate::modules::platform_account_store::save_account(
         ACCOUNT_STORE_PLATFORM,
         account.id.as_str(),
         account,
@@ -167,7 +167,7 @@ fn save_account_file(account: &CursorAccount) -> Result<(), String> {
 }
 
 fn delete_account_file(account_id: &str) -> Result<(), String> {
-    crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
+    crate::modules::platform_account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     let path = resolve_account_file_path(account_id)?;
     if path.exists() {
         fs::remove_file(path).map_err(|e| format!("删除账号文件失败: {}", e))?;
@@ -284,7 +284,7 @@ fn save_account_index(index: &CursorAccountIndex) -> Result<(), String> {
         .iter()
         .map(|summary| summary.id.clone())
         .collect::<Vec<_>>();
-    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
+    crate::modules::platform_account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
     let path = get_accounts_index_path()?;
     let content =
         serde_json::to_string_pretty(index).map_err(|e| format!("序列化账号索引失败: {}", e))?;
@@ -2004,7 +2004,7 @@ fn clear_quota_alert_cooldown(account_id: &str, threshold: i32) {
 }
 
 pub fn run_quota_alert_if_needed(
-) -> Result<Option<crate::modules::account::QuotaAlertPayload>, String> {
+) -> Result<Option<crate::modules::quota_alert::QuotaAlertPayload>, String> {
     let cfg = crate::modules::config::get_user_config();
     if !cfg.cursor_quota_alert_enabled {
         return Ok(None);
@@ -2048,7 +2048,7 @@ pub fn run_quota_alert_if_needed(
 
     let recommendation = pick_quota_alert_recommendation(&accounts, &current_id);
     let lowest_percentage = low_models.iter().map(|(_, pct)| *pct).min().unwrap_or(0);
-    let payload = crate::modules::account::QuotaAlertPayload {
+    let payload = crate::modules::quota_alert::QuotaAlertPayload {
         platform: "cursor".to_string(),
         current_account_id: current_id,
         current_email: display_email(current),
@@ -2061,6 +2061,6 @@ pub fn run_quota_alert_if_needed(
         triggered_at: now,
     };
 
-    crate::modules::account::dispatch_quota_alert(&payload);
+    crate::modules::quota_alert::dispatch_quota_alert(&payload);
     Ok(Some(payload))
 }

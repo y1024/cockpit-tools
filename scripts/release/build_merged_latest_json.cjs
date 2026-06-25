@@ -44,9 +44,9 @@ function readText(filePath) {
   return fs.readFileSync(filePath, 'utf8').trim();
 }
 
-function buildUrl(repo, version, fileName) {
+function buildUrl(repo, releaseTag, fileName) {
   const encoded = encodeURIComponent(fileName);
-  return `https://github.com/${repo}/releases/download/v${version}/${encoded}`;
+  return `https://github.com/${repo}/releases/download/${releaseTag}/${encoded}`;
 }
 
 function findAsset(assets, pattern, label) {
@@ -57,14 +57,14 @@ function findAsset(assets, pattern, label) {
   return hit;
 }
 
-function buildPlatformEntry(assetName, signatures, repo, version) {
+function buildPlatformEntry(assetName, signatures, repo, releaseTag) {
   const signature = signatures.get(assetName);
   if (!signature) {
     throw new Error(`Missing signature file for asset ${assetName}`);
   }
   return {
     signature,
-    url: buildUrl(repo, version, assetName),
+    url: buildUrl(repo, releaseTag, assetName),
   };
 }
 
@@ -79,6 +79,7 @@ function main() {
   const assetsDir = requiredArg(args, 'assets-dir');
   const notesFile = requiredArg(args, 'notes-file');
   const publishedAt = normalizePubDate(requiredArg(args, 'published-at'));
+  const releaseTag = args['release-tag'] || `v${version}`;
   const output = args.output || 'latest.json';
 
   if (!fs.existsSync(assetsDir) || !fs.statSync(assetsDir).isDirectory()) {
@@ -114,16 +115,16 @@ function main() {
   const linuxX64Rpm = findAsset(assets, /-1\.x86_64\.rpm$/, 'linux-x86_64-rpm');
   const linuxArmRpm = findAsset(assets, /-1\.aarch64\.rpm$/, 'linux-aarch64-rpm');
 
-  const darwinAarch64Entry = buildPlatformEntry(darwinAarch64Tar, signatures, repo, version);
-  const darwinX64Entry = buildPlatformEntry(darwinX64Tar, signatures, repo, version);
-  const windowsMsiEntry = buildPlatformEntry(windowsMsi, signatures, repo, version);
-  const windowsNsisEntry = buildPlatformEntry(windowsNsis, signatures, repo, version);
-  const linuxX64AppImageEntry = buildPlatformEntry(linuxX64AppImage, signatures, repo, version);
-  const linuxArmAppImageEntry = buildPlatformEntry(linuxArmAppImage, signatures, repo, version);
-  const linuxX64DebEntry = buildPlatformEntry(linuxX64Deb, signatures, repo, version);
-  const linuxArmDebEntry = buildPlatformEntry(linuxArmDeb, signatures, repo, version);
-  const linuxX64RpmEntry = buildPlatformEntry(linuxX64Rpm, signatures, repo, version);
-  const linuxArmRpmEntry = buildPlatformEntry(linuxArmRpm, signatures, repo, version);
+  const darwinAarch64Entry = buildPlatformEntry(darwinAarch64Tar, signatures, repo, releaseTag);
+  const darwinX64Entry = buildPlatformEntry(darwinX64Tar, signatures, repo, releaseTag);
+  const windowsMsiEntry = buildPlatformEntry(windowsMsi, signatures, repo, releaseTag);
+  const windowsNsisEntry = buildPlatformEntry(windowsNsis, signatures, repo, releaseTag);
+  const linuxX64AppImageEntry = buildPlatformEntry(linuxX64AppImage, signatures, repo, releaseTag);
+  const linuxArmAppImageEntry = buildPlatformEntry(linuxArmAppImage, signatures, repo, releaseTag);
+  const linuxX64DebEntry = buildPlatformEntry(linuxX64Deb, signatures, repo, releaseTag);
+  const linuxArmDebEntry = buildPlatformEntry(linuxArmDeb, signatures, repo, releaseTag);
+  const linuxX64RpmEntry = buildPlatformEntry(linuxX64Rpm, signatures, repo, releaseTag);
+  const linuxArmRpmEntry = buildPlatformEntry(linuxArmRpm, signatures, repo, releaseTag);
 
   const latest = {
     version,

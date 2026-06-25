@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 export interface ManagedLogFile {
   log_file_path: string;
   log_file_name: string;
+  log_file_display_name: string;
   file_size: number;
   modified_at_ms: number | null;
 }
@@ -11,6 +12,7 @@ export interface LogSnapshot {
   log_dir_path: string;
   log_file_path: string;
   log_file_name: string;
+  log_file_display_name: string;
   content: string;
   line_limit: number;
   file_size: number;

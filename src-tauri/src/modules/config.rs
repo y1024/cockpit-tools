@@ -1184,13 +1184,13 @@ pub fn sync_global_proxy_env(config: &UserConfig) {
 
 /// 获取数据目录路径
 pub fn get_data_dir() -> Result<PathBuf, String> {
-    crate::modules::account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 /// 获取共享目录路径（供其他模块使用）
 /// 与 get_data_dir 相同，但不返回 Result
 pub fn get_shared_dir() -> PathBuf {
-    crate::modules::account::resolve_data_dir()
+    crate::modules::app_data::resolve_data_dir()
         .unwrap_or_else(|_| PathBuf::from(".antigravity_cockpit"))
 }
 

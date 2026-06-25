@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "Pakiet {{platform}} nie jest zainstalowany",
     "packagePageInstallDesc": "Możesz zainstalować bezpośrednio z tej strony albo użyć akcji pakietu w prawym górnym rogu, aby zainstalować lub naprawić przed zarządzaniem kontami. Konta, OAuth, przełączanie i odświeżanie w tle nie zostaną załadowane przed instalacją.",
     "packageDashboardStateDesc": "Otwórz stronę {{platform}}, aby zainstalować bezpośrednio, albo użyj akcji w prawym górnym rogu do aktualizacji, naprawy lub podglądu zmian.",
-    "packageOpenPlatformPage": "Otwórz stronę platformy"
+    "packageOpenPlatformPage": "Otwórz stronę platformy",
+    "packageBundledShort": "Wbudowane",
+    "packageBundledStatus": "Dostarczane z główną aplikacją",
+    "packageBundledDesc": "Ta platforma jest dołączona do głównej aplikacji. Instalacja i aktualizacje zależą od wersji głównej aplikacji."
   },
   "privacy": {
     "hideSensitive": "Ukryj e-maile",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Wszystkie instancje są już uruchomione",
       "noneRunning": "Nie znaleziono uruchomionych instancji",
       "syncThreadsNeedTwo": "Do synchronizacji wątków wymagane są co najmniej dwie instancje",
+      "loadTimeout": "Przekroczono czas ładowania instancji. Spróbuj ponownie.",
       "launchPrepared": "Polecenie uruchomienia jest gotowe",
       "speedUpdated": "Szybkość zaktualizowana"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "W tej kolekcji nie ma jeszcze kont",
       "footerHint": "Zakres dostępu: {{scope}}",
       "manageAccounts": "Zarządzaj kontami",
+      "saveTimeout": "Przekroczono czas zapisu członków usługi API. Spróbuj później.",
       "rotateKey": "Odśwież klucz",
       "rotateConfirmMessage": "Po zresetowaniu bieżący klucz usługi API natychmiast przestanie działać, a trwające żądania mogą stać się niedostępne. Kontynuować?",
       "disableService": "Wyłącz usługę",
@@ -2188,6 +2193,7 @@
       "subtitle": "Planuj zadania wybudzania Codex, testuj ścieżkę CLI i sprawdzaj historię uruchomień.",
       "heroTitle": "Zadania wybudzania Codex",
       "heroSubtitle": "Twórz zadania wybudzania oparte na czasie dla kont Codex OAuth, uruchamiaj szybkie testy i przeglądaj wszystkie wyzwolenia w jednym miejscu.",
+      "loadTimeout": "Przekroczono czas ładowania zadań wybudzania Codex. Spróbuj ponownie.",
       "runtimeReady": "Codex CLI gotowe",
       "runtimeMissing": "Wymagane jest Codex CLI",
       "runtimeCardTitle": "CLI Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Zarządzaj dostawcami modeli i wieloma kluczami API w jednym miejscu, a potem używaj ich bezpośrednio podczas dodawania kont Codex z kluczem API.",
       "add": "Dodaj dostawcę",
       "loadFailed": "Nie udało się załadować dostawców modeli: {{error}}",
+      "loadTimeout": "Przekroczono czas ładowania dostawców modeli. Spróbuj ponownie.",
       "emptyTitle": "Nie ma jeszcze dostawców modeli",
       "emptyDesc": "Aby rozpocząć, kliknij „Dodaj dostawcę” w prawym górnym rogu.",
       "baseUrl": "Bazowy adres URL",
@@ -3872,20 +3879,20 @@
         "4": "ustawienia",
         "5": "diagnoza",
         "6": "logi",
-        "7": "dane"
+        "7": "dziennik app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Zrozum, co daje Import/Eksport, prywatność i troubleshooting.",
         "1": "Stosuj zalecany przepływ w Import/Eksport, prywatność i troubleshooting, aby ograniczyć błędy.",
         "2": "Przed skalowaniem potwierdź jedno udane wykonanie w Import/Eksport, prywatność i troubleshooting.",
-        "3": "Gdy pojawi się problem w Import/Eksport, prywatność i troubleshooting, najpierw sprawdź logi i dowody."
+        "3": "Szybko znajdź problemy runtime w folderze logs przez app-YYYY-MM-DD.log i platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Otwórz stronę Import/Eksport, prywatność i troubleshooting.",
         "1": "Ukończ podstawową konfigurację i wymagane powiązania w Import/Eksport, prywatność i troubleshooting.",
         "2": "Wykonaj jedną ręczną operację w Import/Eksport, prywatność i troubleshooting, aby zweryfikować wynik.",
         "3": "Troubleshooting: Ustawienia -> Katalog danych -> Otwórz, potem logs.",
-        "4": "Najpierw sprawdź najnowszy app.log lub app.log.*.",
+        "4": "Najpierw sprawdź najnowszy app-YYYY-MM-DD.log; dla problemów platformy wybierz odpowiedni platform-<platform>-YYYY-MM-DD.log.",
         "5": "W zgłoszeniu podaj czas, platformę, kroki reprodukcji i zanonimizowane logi."
       },
       "summary": "Ta sekcja wyjaśnia użycie Import/Eksport, prywatność i troubleshooting w codziennym workflow.",

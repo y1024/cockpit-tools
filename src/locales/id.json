@@ -402,7 +402,10 @@
     "packagePageInstallTitle": "Paket {{platform}} belum terpasang",
     "packagePageInstallDesc": "Anda dapat memasang langsung dari halaman ini, atau memakai aksi paket di kanan atas untuk memasang atau memperbaiki sebelum mengelola akun. Akun, OAuth, pengalihan, dan penyegaran latar belakang tidak akan dimuat sebelum pemasangan.",
     "packageDashboardStateDesc": "Buka halaman {{platform}} untuk memasang langsung, atau gunakan aksi kanan atas untuk memperbarui, memperbaiki, atau melihat catatan perubahan.",
-    "packageOpenPlatformPage": "Buka halaman platform"
+    "packageOpenPlatformPage": "Buka halaman platform",
+    "packageBundledShort": "Bawaan",
+    "packageBundledStatus": "Disediakan oleh aplikasi utama",
+    "packageBundledDesc": "Platform ini disertakan bersama aplikasi utama. Instalasi dan pembaruan mengikuti versi aplikasi utama."
   },
   "privacy": {
     "hideSensitive": "Sembunyikan email",
@@ -584,6 +587,7 @@
       "allAlreadyRunning": "Semua instansi sudah berjalan",
       "noneRunning": "Tidak ditemukan instansi yang sedang berjalan",
       "syncThreadsNeedTwo": "Diperlukan setidaknya dua instansi untuk menyinkronkan thread",
+      "loadTimeout": "Memuat instans terlalu lama. Coba lagi.",
       "launchPrepared": "Perintah peluncuran siap",
       "speedUpdated": "Kecepatan diperbarui"
     },
@@ -1862,6 +1866,7 @@
       "emptyMembers": "Belum ada akun di koleksi ini",
       "footerHint": "Cakupan akses: {{scope}}",
       "manageAccounts": "Kelola akun",
+      "saveTimeout": "Penyimpanan anggota layanan API kehabisan waktu. Coba lagi nanti.",
       "rotateKey": "Putar kunci",
       "rotateConfirmMessage": "Setelah direset, kunci layanan API saat ini akan langsung tidak berlaku, dan permintaan yang sedang berjalan mungkin menjadi tidak tersedia. Lanjutkan?",
       "disableService": "Nonaktifkan layanan",
@@ -2351,6 +2356,7 @@
       "subtitle": "Jadwalkan pekerjaan bangun Codex, uji jalur CLI, dan tinjau riwayat eksekusi.",
       "heroTitle": "Tugas Bangun Codex",
       "heroSubtitle": "Buat pekerjaan bangun berbasis waktu untuk akun Codex OAuth, jalankan tes ad-hoc, dan periksa setiap pemicu di satu tempat.",
+      "loadTimeout": "Memuat tugas wakeup Codex terlalu lama. Coba lagi.",
       "runtimeReady": "CLI Codex siap",
       "runtimeMissing": "CLI Codex diperlukan",
       "runtimeCardTitle": "Codex CLI",
@@ -2652,6 +2658,7 @@
       "desc": "Kelola penyedia model dan beberapa API Key di satu tempat, lalu pakai ulang langsung saat menambahkan akun Codex berbasis API Key.",
       "add": "Tambah penyedia",
       "loadFailed": "Gagal memuat penyedia model: {{error}}",
+      "loadTimeout": "Memuat penyedia model terlalu lama. Coba lagi.",
       "emptyTitle": "Belum ada penyedia model",
       "emptyDesc": "Klik \"Tambah penyedia\" di kanan atas untuk memulai.",
       "baseUrl": "URL dasar",
@@ -4111,20 +4118,20 @@
         "4": "troubleshooting​",
         "5": "logs​",
         "6": "log directory​",
-        "7": "app.log​"
+        "7": "catatan app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Impor akun secara massal untuk migrasi lingkungan yang cepat.",
         "1": "Ekspor JSON untuk cadangan atau migrasi lintas perangkat.",
         "2": "Temukan masalah melalui petunjuk kesalahan dan panduan perbaikan berkas.",
-        "3": "Temukan masalah runtime dengan cepat melalui app.log* di Direktori Data/logs."
+        "3": "Temukan masalah runtime dengan cepat di folder logs melalui app-YYYY-MM-DD.log dan platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Sebelum operasi massal, ekspor data saat ini sekali sebagai snapshot.",
         "1": "Di halaman daftar, ganti tampilan privasi melalui \"Tampilkan/Sembunyikan Email\".",
         "2": "Saat prompt kerusakan berkas muncul, ikuti dialog dan buka direktori untuk memperbaiki.",
         "3": "Untuk pemecahan masalah, buka \"Pengaturan -> Direktori Data -> Buka\", lalu masuk ke folder logs.",
-        "4": "Periksa app.log atau app.log.* terbaru terlebih dahulu (berkas log yang dirotasi berdasarkan tanggal).",
+        "4": "Periksa app-YYYY-MM-DD.log terbaru terlebih dahulu; untuk masalah platform, pilih platform-<platform>-YYYY-MM-DD.log yang sesuai.",
         "5": "Saat mengirimkan umpan balik, sertakan: waktu kejadian, platform, langkah reproduksi, log kesalahan kunci (20 baris sebelum/sesudah)."
       },
       "summary": "Mencakup pemeliharaan harian: impor/ekspor JSON, tampilan email yang disamarkan, penanganan pengecualian dan alur pemulihan.",

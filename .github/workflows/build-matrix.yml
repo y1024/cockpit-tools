@@ -2,6 +2,30 @@ name: Build Matrix
 
 on:
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Build channel"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - "production"
+          - "test"
+      test_branch:
+        description: "Branch containing platform-packages/test/index.json"
+        required: false
+        default: "platform-test"
+        type: string
+      test_version:
+        description: "Optional semver override for test updater checks, for example 1.0.1-test.1"
+        required: false
+        default: ""
+        type: string
+      publish_test_release:
+        description: "Upload signed test updater assets to the test prerelease"
+        required: false
+        default: false
+        type: boolean
   pull_request:
     branches:
       - "main"
@@ -20,6 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      CHANNEL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel || 'production' }}
+      TEST_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.test_version || '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,6 +59,12 @@ jobs:
 
       - name: Install frontend dependencies
         run: npm install
+
+      - name: Prepare test channel version
+        if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test'
+        env:
+          COCKPIT_TEST_CHANNEL_VERSION: ${{ env.TEST_VERSION }}
+        run: npm run prepare:test-channel-version
 
       - name: Sync versions
         run: npm run sync-version
@@ -48,6 +81,12 @@ jobs:
     runs-on: ${{ matrix.platform }}
     permissions:
       contents: read
+    env:
+      CHANNEL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel || 'production' }}
+      TEST_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.test_version || '' }}
+      COCKPIT_TOOLS_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && 'test' || '' }}
+      VITE_COCKPIT_TOOLS_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && 'test' || '' }}
+      COCKPIT_PLATFORM_PACKAGE_INDEX_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && format('https://raw.githubusercontent.com/{0}/{1}/platform-packages/test/index.json', github.repository, inputs.test_branch) || '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -108,6 +147,12 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
+      - name: Prepare test channel version
+        if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test'
+        env:
+          COCKPIT_TEST_CHANNEL_VERSION: ${{ env.TEST_VERSION }}
+        run: npm run prepare:test-channel-version
+
       - name: Sync versions
         run: npm run sync-version
 
@@ -143,7 +188,7 @@ jobs:
           fi
 
       - name: Build app (signed)
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && !(github.event_name == 'workflow_dispatch' && inputs.channel == 'test')
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -152,6 +197,17 @@ jobs:
         run: |
           set -euo pipefail
           npx tauri build --ci ${{ matrix.args }} 2>&1 | tee "build-${{ matrix.label }}.log"
+
+      - name: Build app (test channel)
+        if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          npx tauri build --ci --config src-tauri/tauri.test.conf.json ${{ matrix.args }} 2>&1 | tee "build-${{ matrix.label }}.log"
 
       - name: Print build logs on failure (Signed)
         if: failure() && github.event_name != 'pull_request'
@@ -211,3 +267,80 @@ jobs:
           if-no-files-found: error
           path: |
             ${{ matrix.release_dir }}/bundle
+
+  publish-test-release:
+    name: Publish Test Release
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && inputs.publish_test_release == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TEST_VERSION: ${{ inputs.test_version }}
+      TEST_RELEASE_TAG: "test-latest"
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download bundle artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bundles-*
+          path: test-release-assets
+          merge-multiple: true
+
+      - name: Build and upload test updater JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${TEST_VERSION}"
+          if [ -z "${version}" ]; then
+            version="$(node -p "require('./package.json').version")"
+          fi
+
+          mkdir -p test-release-flat
+          find test-release-assets -type f \( \
+            -name '*.sig' -o \
+            -name '*.AppImage' -o \
+            -name '*.deb' -o \
+            -name '*.rpm' -o \
+            -name '*.msi' -o \
+            -name '*.exe' -o \
+            -name '*.app.tar.gz' \
+          \) -exec cp {} test-release-flat/ \;
+
+          cat > test-release-notes.md <<EOF
+          Cockpit Tools test channel build ${version}.
+
+          This prerelease is only used by test-channel builds.
+          EOF
+
+          node scripts/release/build_merged_latest_json.cjs \
+            --version "${version}" \
+            --release-tag "${TEST_RELEASE_TAG}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --assets-dir test-release-flat \
+            --notes-file test-release-notes.md \
+            --published-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --output test-release-flat/latest-test.json
+
+          if gh release view "${TEST_RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release edit "${TEST_RELEASE_TAG}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "Cockpit Tools Test Channel" \
+              --notes-file test-release-notes.md \
+              --prerelease \
+              --latest=false
+          else
+            gh release create "${TEST_RELEASE_TAG}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "Cockpit Tools Test Channel" \
+              --notes-file test-release-notes.md \
+              --prerelease \
+              --latest=false
+          fi
+
+          gh release upload "${TEST_RELEASE_TAG}" test-release-flat/* \
+            --repo "${GITHUB_REPOSITORY}" \
+            --clobber

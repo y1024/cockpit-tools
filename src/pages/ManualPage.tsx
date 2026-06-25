@@ -293,14 +293,14 @@ export function ManualPage({ onNavigate, onOpenPlatformLayout }: ManualPageProps
           t('manual.dataPrivacy.outcomes.0', '批量导入账号，快速迁移环境。'),
           t('manual.dataPrivacy.outcomes.1', '导出 JSON 做备份或跨设备迁移。'),
           t('manual.dataPrivacy.outcomes.2', '通过错误提示和文件修复指引定位问题。'),
-          t('manual.dataPrivacy.outcomes.3', '可通过数据目录下 logs 的 app.log* 快速定位运行异常。'),
+          t('manual.dataPrivacy.outcomes.3', '可通过数据目录下 logs 的 app-日期.log 与 platform-平台-日期.log 快速定位运行异常。'),
         ],
         steps: [
           t('manual.dataPrivacy.steps.0', '批量操作前先导出一次当前数据作为快照。'),
           t('manual.dataPrivacy.steps.1', '在列表页通过“显示/隐藏邮箱”切换隐私视图。'),
           t('manual.dataPrivacy.steps.2', '遇到文件损坏提示时，按弹窗指引打开目录修复。'),
           t('manual.dataPrivacy.steps.3', '排障时先进入“设置 -> 数据目录 -> 打开”，进入 logs 文件夹。'),
-          t('manual.dataPrivacy.steps.4', '优先查看最新的 app.log 或 app.log.*（按日期滚动的日志文件）。'),
+          t('manual.dataPrivacy.steps.4', '优先查看最新的 app-日期.log；平台问题优先选择对应 platform-平台-日期.log。'),
           t('manual.dataPrivacy.steps.5', '提交反馈时建议附上：发生时间、平台、复现步骤、关键报错日志（前后 20 行）。'),
         ],
         cautions: [
@@ -316,7 +316,7 @@ export function ManualPage({ onNavigate, onOpenPlatformLayout }: ManualPageProps
           t('manual.dataPrivacy.keywords.4', '故障'),
           t('manual.dataPrivacy.keywords.5', '日志'),
           t('manual.dataPrivacy.keywords.6', 'logs'),
-          t('manual.dataPrivacy.keywords.7', 'app.log'),
+          t('manual.dataPrivacy.keywords.7', 'app-日期.log'),
         ],
         actions: [
           { id: 'go-overview', kind: 'navigate', page: 'overview', label: t('manual.actions.goAntigravity', '前往 Antigravity IDE'), primary: true },

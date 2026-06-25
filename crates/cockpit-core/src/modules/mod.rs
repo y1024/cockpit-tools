@@ -2,6 +2,8 @@ pub mod account;
 pub mod account_index_repair;
 pub mod account_store;
 pub mod announcement;
+pub mod antigravity_credential;
+pub mod antigravity_legacy_instance;
 pub mod antigravity_paths;
 pub mod antigravity_switch_history;
 pub mod atomic_write;

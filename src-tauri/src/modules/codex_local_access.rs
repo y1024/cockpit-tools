@@ -928,19 +928,19 @@ fn upstream_http_client(
 }
 
 fn local_access_file_path() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_LOCAL_ACCESS_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_LOCAL_ACCESS_FILE))
 }
 
 fn local_access_stats_file_path() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_LOCAL_ACCESS_STATS_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_LOCAL_ACCESS_STATS_FILE))
 }
 
 fn local_access_logs_db_path() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_LOCAL_ACCESS_LOGS_DB_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_LOCAL_ACCESS_LOGS_DB_FILE))
 }
 
 fn local_access_takeover_backups_path() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_LOCAL_ACCESS_TAKEOVER_BACKUPS_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_LOCAL_ACCESS_TAKEOVER_BACKUPS_FILE))
 }
 
 fn now_ms() -> i64 {
@@ -6178,11 +6178,11 @@ struct SidecarAuthResultEvent {
 }
 
 fn local_access_sidecar_dir() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_LOCAL_ACCESS_SIDECAR_DIR))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_LOCAL_ACCESS_SIDECAR_DIR))
 }
 
 fn provider_gateway_sidecars_dir() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(CODEX_PROVIDER_GATEWAY_SIDECAR_DIR))
+    Ok(crate::modules::app_data::get_data_dir()?.join(CODEX_PROVIDER_GATEWAY_SIDECAR_DIR))
 }
 
 fn sidecar_config_path(base_dir: &Path) -> PathBuf {

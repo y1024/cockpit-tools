@@ -115,7 +115,7 @@ impl Default for TrayLayoutConfig {
 }
 
 fn get_tray_layout_path() -> Result<PathBuf, String> {
-    Ok(crate::modules::account::get_data_dir()?.join(TRAY_LAYOUT_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(TRAY_LAYOUT_FILE))
 }
 
 fn normalize_platform_id(id: &str) -> Option<&'static str> {

@@ -52,7 +52,7 @@ fn hash_email(email: &str) -> String {
 }
 
 fn cache_dir(source: &str) -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     let dir = data_dir.join(CACHE_DIR).join(source);
     if !dir.exists() {
         fs::create_dir_all(&dir).map_err(|e| format!("Failed to create quota cache dir: {}", e))?;

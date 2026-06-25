@@ -25,7 +25,7 @@ pub struct InstanceDefaults {
 }
 
 fn instances_path() -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     Ok(data_dir.join(INSTANCES_FILE))
 }
 
@@ -77,11 +77,40 @@ pub fn update_default_settings(
 }
 
 pub fn get_default_user_data_dir() -> Result<PathBuf, String> {
-    modules::antigravity_paths::default_user_data_dir()
+    #[cfg(target_os = "macos")]
+    {
+        let home = dirs::home_dir().ok_or("无法获取 Home 目录")?;
+        return Ok(home.join("Library/Application Support/Antigravity IDE"));
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let roaming_dir = std::env::var("APPDATA")
+            .map(PathBuf::from)
+            .map_err(|error| format!("无法获取 Roaming AppData 目录: {}", error))?;
+        let antigravity_dir = roaming_dir.join("Antigravity");
+        let antigravity_ide_dir = roaming_dir.join("Antigravity IDE");
+        if antigravity_ide_dir.exists() {
+            return Ok(antigravity_ide_dir);
+        }
+        if antigravity_dir.exists() {
+            return Ok(antigravity_dir);
+        }
+        return Ok(roaming_dir.join("Antigravity IDE"));
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let home = dirs::home_dir().ok_or("无法获取 Home 目录")?;
+        return Ok(home.join(".config/Antigravity IDE"));
+    }
+
+    #[allow(unreachable_code)]
+    Err("无法确定 Antigravity IDE 默认目录".to_string())
 }
 
 pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
-    modules::antigravity_paths::managed_instances_root_dir()
+    crate::modules::app_data::resolve_instances_dir("antigravity")
 }
 
 pub fn get_instance_defaults() -> Result<InstanceDefaults, String> {

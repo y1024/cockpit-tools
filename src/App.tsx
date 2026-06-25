@@ -71,8 +71,10 @@ import { prepareCodexLocalAccessForRestart } from './services/codexLocalAccessSe
 const DashboardPage = lazy(() =>
   import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })),
 );
-const AccountsPage = lazy(() =>
-  import('./pages/AccountsPage').then((module) => ({ default: module.AccountsPage })),
+const AntigravitySuitePage = lazy(() =>
+  import('./pages/AntigravitySuitePage').then((module) => ({
+    default: module.AntigravitySuitePage,
+  })),
 );
 const CodexAccountsPage = lazy(() =>
   import('./pages/CodexAccountsPage').then((module) => ({ default: module.CodexAccountsPage })),
@@ -117,14 +119,6 @@ const WorkbuddyAccountsPage = lazy(() =>
 );
 const ZedAccountsPage = lazy(() =>
   import('./pages/ZedAccountsPage').then((module) => ({ default: module.ZedAccountsPage })),
-);;
-const WakeupTasksPage = lazy(() =>
-  import('./pages/WakeupTasksPage').then((module) => ({ default: module.WakeupTasksPage })),
-);
-const WakeupVerificationPage = lazy(() =>
-  import('./pages/WakeupVerificationPage').then((module) => ({
-    default: module.WakeupVerificationPage,
-  })),
 );
 const SettingsPage = lazy(() =>
   import('./pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
@@ -137,9 +131,6 @@ const ManualPage = lazy(() =>
 );
 const ApiKeyFunPage = lazy(() =>
   import('./pages/ApiKeyFunPage').then((module) => ({ default: module.ApiKeyFunPage })),
-);
-const InstancesPage = lazy(() =>
-  import('./pages/InstancesPage').then((module) => ({ default: module.InstancesPage })),
 );
 const PlatformLayoutModal = lazy(() =>
   import('./components/PlatformLayoutModal').then((module) => ({
@@ -177,7 +168,6 @@ interface GeneralConfig extends GeneralConfigTheme, GeneralConfigLanguage {
   antigravity_app_path: string;
   codex_app_path: string;
   codex_launch_on_switch: boolean;
-  top_right_ad_visible?: boolean;
   vscode_app_path: string;
   windsurf_app_path: string;
   kiro_app_path: string;
@@ -575,7 +565,6 @@ function MainApp() {
   const updateCheckRequestIdRef = useRef(0);
   const externalImportHandledAtRef = useRef<Map<string, number>>(new Map());
   const { showModal, closeModal } = useGlobalModal();
-  const topRightAdState = useTopRightAdStore((state) => state.state);
   const fetchTopRightAdState = useTopRightAdStore((state) => state.fetchState);
   const sponsorModuleState = useSponsorStore((state) => state.state);
   const fetchSponsorModuleState = useSponsorStore((state) => state.fetchState);
@@ -584,7 +573,6 @@ function MainApp() {
   const refreshPlatformPackages = usePlatformPackageStore((state) => state.refresh);
   const codexRuntimeReady = usePlatformPackageStore((state) => state.canOpenPlatform('codex'));
   const sponsorEntryVisible = Boolean(sponsorModuleState.sponsorModule);
-  const [topRightAdVisible, setTopRightAdVisible] = useState(true);
   const trayRefreshInFlightRef = useRef(false);
   const openPlatformLayoutModal = useCallback(() => {
     setPlatformLayoutRequestedGroupId(null);
@@ -813,24 +801,6 @@ function MainApp() {
   useEffect(() => {
     void fetchTopRightAdState();
   }, [fetchTopRightAdState]);
-
-  useEffect(() => {
-    const loadTopRightAdVisible = async () => {
-      try {
-        const config = await invoke<GeneralConfig>('get_general_config');
-        setTopRightAdVisible(config.top_right_ad_visible ?? true);
-      } catch (error) {
-        console.error('Failed to load top-right ad visibility config:', error);
-        setTopRightAdVisible(true);
-      }
-    };
-
-    void loadTopRightAdVisible();
-    window.addEventListener('config-updated', loadTopRightAdVisible);
-    return () => {
-      window.removeEventListener('config-updated', loadTopRightAdVisible);
-    };
-  }, []);
 
   useEffect(() => {
     void fetchSponsorModuleState();
@@ -2746,7 +2716,12 @@ function MainApp() {
       try {
         await Promise.all(
           refreshTasks.map(({ command, errorMessage }) =>
-            ((command === 'refresh_current_codex_quota'
+            ((command === 'refresh_current_quota'
+              && !(
+                usePlatformPackageStore.getState().canOpenPlatform('antigravity')
+                || usePlatformPackageStore.getState().canOpenPlatform('antigravity_ide')
+              ))
+              || (command === 'refresh_current_codex_quota'
               && !usePlatformPackageStore.getState().canOpenPlatform('codex'))
               || (command === 'refresh_all_zed_tokens'
               && !usePlatformPackageStore.getState().canOpenPlatform('zed'))
@@ -3036,6 +3011,14 @@ function MainApp() {
         } else if (app === 'zed') {
           await invoke('zed_start_default_session');
         } else {
+          if (app === 'antigravity') {
+            const runtimeTarget =
+              retry?.runtimeTarget === 'antigravity'
+                || retry?.runtimeTarget === 'antigravity_ide'
+                ? retry.runtimeTarget
+                : 'antigravity_ide';
+            if (!usePlatformPackageStore.getState().canOpenPlatform(runtimeTarget)) return;
+          }
           await invoke(antigravityInstanceStartCommand, { instanceId: retry.instanceId });
         }
         if (!isAppPathMissingSessionActive(session)) return;
@@ -3070,6 +3053,14 @@ function MainApp() {
         } else if (app === 'zed') {
           await invoke('zed_start_default_session');
         } else {
+          if (app === 'antigravity') {
+            const runtimeTarget =
+              retry?.runtimeTarget === 'antigravity'
+                || retry?.runtimeTarget === 'antigravity_ide'
+                ? retry.runtimeTarget
+                : 'antigravity_ide';
+            if (!usePlatformPackageStore.getState().canOpenPlatform(runtimeTarget)) return;
+          }
           await invoke(antigravityInstanceStartCommand, { instanceId: '__default__' });
         }
         if (!isAppPathMissingSessionActive(session)) return;
@@ -3728,15 +3719,11 @@ function MainApp() {
               onNavigate={setPage}
               onOpenPlatformLayout={openPlatformLayoutModal}
               onEasterEggTriggerClick={handleBreakoutEntryTriggerClick}
-              topCenterBanner={
-                topRightAdVisible && topRightAdState.ads.length > 0 ? (
-                  <TopCenterPromoBanner reserveWhenEmpty={false} />
-                ) : null
-              }
+              topCenterBanner={<TopCenterPromoBanner reserveWhenEmpty={false} />}
             />
           )}
           {page === 'api-relay' && <ApiKeyFunPage />}
-          {page === 'overview' && <AccountsPage onNavigate={setPage} />}
+          {page === 'overview' && <AntigravitySuitePage initialTab="overview" onNavigate={setPage} />}
           {page === 'codex' && <CodexAccountsPage />}
           {page === 'claude' && <ClaudeAccountsPage subPlatform="desktop" />}
           {page === 'claude-cli' && <ClaudeAccountsPage subPlatform="cli" />}
@@ -3756,9 +3743,9 @@ function MainApp() {
           {page === 'trae' && <TraeAccountsPage />}
           {page === 'workbuddy' && <WorkbuddyAccountsPage />}
           {page === 'zed' && <ZedAccountsPage />}
-          {page === 'instances' && <InstancesPage onNavigate={setPage} />}
-          {page === 'wakeup' && <WakeupTasksPage onNavigate={setPage} />}
-          {page === 'verification' && <WakeupVerificationPage onNavigate={setPage} />}
+          {page === 'instances' && <AntigravitySuitePage initialTab="instances" onNavigate={setPage} />}
+          {page === 'wakeup' && <AntigravitySuitePage initialTab="wakeup" onNavigate={setPage} />}
+          {page === 'verification' && <AntigravitySuitePage initialTab="verification" onNavigate={setPage} />}
           {page === '2fa' && <TwoFactorAuthPage />}
           {page === 'manual' && (
             <ManualPage

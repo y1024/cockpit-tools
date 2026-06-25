@@ -45,7 +45,7 @@ fn normalize_platform(platform: &str) -> Result<&'static str, String> {
 }
 
 fn get_state_path() -> Result<PathBuf, String> {
-    Ok(crate::modules::account::get_data_dir()?.join(PROVIDER_CURRENT_STATE_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(PROVIDER_CURRENT_STATE_FILE))
 }
 
 fn load_state() -> Result<ProviderCurrentState, String> {

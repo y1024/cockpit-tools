@@ -94,7 +94,10 @@ import { TraeIcon } from '../components/icons/TraeIcon';
 import { WorkbuddyIcon } from '../components/icons/WorkbuddyIcon';
 import { PlatformId, PLATFORM_PAGE_MAP } from '../types/platform';
 import { getPlatformLabel, renderPlatformIcon } from '../utils/platformMeta';
-import { setAntigravityRuntimeTargetFromPlatform } from '../utils/antigravityRuntimeTarget';
+import {
+  getAntigravityRuntimeTarget,
+  setAntigravityRuntimeTargetFromPlatform,
+} from '../utils/antigravityRuntimeTarget';
 import { ManualHelpIconButton } from '../components/ManualHelpIconButton';
 import { AnnouncementCenter } from '../components/AnnouncementCenter';
 import { isPrivacyModeEnabledByDefault, maskSensitiveValue } from '../utils/privacy';
@@ -247,6 +250,12 @@ export function DashboardPage({
       const accountId = tagModalState.accountId;
       switch (tagModalState.platform) {
         case 'antigravity':
+          if (
+            !usePlatformPackageStore.getState().canOpenPlatform('antigravity')
+            && !usePlatformPackageStore.getState().canOpenPlatform('antigravity_ide')
+          ) {
+            return;
+          }
           await useAccountStore.getState().updateAccountTags(accountId, newTags);
           break;
         case 'codex':
@@ -2734,18 +2743,25 @@ export function DashboardPage({
     const packageStatus = getPackageEntryStatus(platformId);
 
     if (platformId === 'antigravity') {
+      const antigravityPlatformId = getAntigravityRuntimeTarget();
+      const antigravityPackageStatus = getPackageEntryStatus(antigravityPlatformId);
       return (
         <div className="main-card antigravity-card" key={platformId}>
           <div className="main-card-header">
             <div className="header-title">
               <RobotIcon className="" style={{ width: 18, height: 18 }} />
-              <h3>{getPlatformLabel(platformId, t)}</h3>
+              <h3>{getPlatformLabel(antigravityPlatformId, t)}</h3>
+              {antigravityPackageStatus && (
+                <span className={`platform-package-card-status is-${antigravityPackageStatus.tone}`}>
+                  {antigravityPackageStatus.label}
+                </span>
+              )}
             </div>
             <div className="header-action-group">
               <button
                 className="header-action-btn"
                 onClick={handleRefreshAgCard}
-                disabled={cardRefreshing.ag}
+                disabled={cardRefreshing.ag || Boolean(antigravityPackageStatus)}
                 title={t('common.refresh', '刷新')}
               >
                 <RotateCw size={14} className={cardRefreshing.ag ? 'loading-spinner' : ''} />
@@ -2755,26 +2771,45 @@ export function DashboardPage({
             </div>
           </div>
 
-          <div className="split-content">
-            <div className="split-half current-half">
-              <span className="half-label"><CheckCircle2 size={12} /> {t('dashboard.current', '当前账户')}</span>
-              {renderAgAccountContent(agCurrentAccount)}
+          {antigravityPackageStatus ? (
+            <div className="platform-package-dashboard-state">
+              <div className="platform-package-dashboard-icon">
+                {renderPlatformIcon(antigravityPlatformId, 30)}
+              </div>
+              <div>
+                <strong>{antigravityPackageStatus.label}</strong>
+                <p>
+                  {t('platformLayout.packageDashboardStateDesc', {
+                    platform: getPlatformLabel(antigravityPlatformId, t),
+                    defaultValue: '打开 {{platform}} 页面后，可在右上角安装、更新、修复或查看更新日志。',
+                  })}
+                </p>
+              </div>
             </div>
+          ) : (
+            <div className="split-content">
+              <div className="split-half current-half">
+                <span className="half-label"><CheckCircle2 size={12} /> {t('dashboard.current', '当前账户')}</span>
+                {renderAgAccountContent(agCurrentAccount)}
+              </div>
 
-            <div className="split-divider"></div>
+              <div className="split-divider"></div>
 
-            <div className="split-half recommend-half">
-              <span className="half-label"><Sparkles size={12} /> {t('dashboard.recommended', '推荐账号')}</span>
-              {agRecommended ? (
-                renderAgAccountContent(agRecommended)
-              ) : (
-                <div className="empty-slot-text">{t('dashboard.noRecommendation', '暂无更好推荐')}</div>
-              )}
+              <div className="split-half recommend-half">
+                <span className="half-label"><Sparkles size={12} /> {t('dashboard.recommended', '推荐账号')}</span>
+                {agRecommended ? (
+                  renderAgAccountContent(agRecommended)
+                ) : (
+                  <div className="empty-slot-text">{t('dashboard.noRecommendation', '暂无更好推荐')}</div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          <button className="card-footer-action" onClick={() => onNavigate('overview')}>
-            {t('dashboard.viewAllAccounts', '查看所有账号')}
+          <button className="card-footer-action" onClick={() => navigateToPlatform(antigravityPlatformId)}>
+            {antigravityPackageStatus
+              ? t('platformLayout.packageOpenPlatformPage', '打开平台页面')
+              : t('dashboard.viewAllAccounts', '查看所有账号')}
           </button>
         </div>
       );

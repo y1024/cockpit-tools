@@ -7,6 +7,23 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [1.0.0] - 2026-06-25
+
+### 新增
+- **平台热更新包成为主要平台交付方式**：Cockpit 现在可加载受支持平台的平台包元数据、runtime contribution、native boundary 声明、包操作和远程 React UI bundle，同时让宿主壳专注于生命周期、导航和共享 API。
+- **Antigravity 与 Antigravity IDE 作为独立平台包交付**：两个客户端分别维护平台包身份、运行状态、adapter artifact、更新元数据和包生命周期，同时在合适位置继续共享 Antigravity 套件体验。
+- **平台迁移增加专门的 smoke 与 contract 检查**：新增校验脚本覆盖平台包契约、Codex 平台行为、远程 UI 集成和 adapter smoke 验证。
+
+### 变更
+- **平台包页面统一使用生命周期操作区**：已安装、可更新、不可用、修复、卸载、检查更新、更新日志和更多菜单等动作遵循统一平台包规则，并把生命周期操作保留在平台页内，不放到侧边栏或仪表盘入口层。
+- **Codex 平台页改由平台包 runtime 承载**：API 服务、模型供应商、唤醒任务、多开实例和相关弹框通过远程 UI 与 adapter 边界运行，同时保持原有页面体验。
+- **平台日志与 adapter 执行边界更清晰**：宿主 facade 日志和 sidecar stderr 会按平台边界路由，便于审计平台包行为。
+
+### 修复
+- **平台包未就绪时不再提前加载业务页面**：未安装或未就绪的平台会停留在通用不可用页，直到 `runtimeReady` 恢复后再运行账号、OAuth、额度和刷新逻辑。
+- **远程平台 UI 切换减少不必要重挂**：runtime entry 读取、模块 import 和 CSS 挂载会在兼容包状态之间复用，降低已安装平台间切换时的可见卡顿。
+
+---
 ## [0.26.6] - 2026-06-22
 
 ### 变更

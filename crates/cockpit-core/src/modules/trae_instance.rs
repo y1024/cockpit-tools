@@ -73,27 +73,7 @@ pub fn get_default_trae_user_data_dir() -> Result<PathBuf, String> {
 }
 
 pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
-    #[cfg(target_os = "macos")]
-    {
-        let home = dirs::home_dir().ok_or("无法获取用户主目录")?;
-        return Ok(home.join(".antigravity_cockpit/instances/trae"));
-    }
-
-    #[cfg(target_os = "windows")]
-    {
-        let appdata =
-            std::env::var("APPDATA").map_err(|_| "无法获取 APPDATA 环境变量".to_string())?;
-        return Ok(PathBuf::from(appdata).join(".antigravity_cockpit\\instances\\trae"));
-    }
-
-    #[cfg(target_os = "linux")]
-    {
-        let home = dirs::home_dir().ok_or("无法获取用户主目录")?;
-        return Ok(home.join(".antigravity_cockpit/instances/trae"));
-    }
-
-    #[allow(unreachable_code)]
-    Err("Trae 多开实例仅支持 macOS、Windows 和 Linux".to_string())
+    crate::modules::account::resolve_instances_dir("trae")
 }
 
 pub fn get_instance_defaults() -> Result<InstanceDefaults, String> {

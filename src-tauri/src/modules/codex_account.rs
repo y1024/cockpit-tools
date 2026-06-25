@@ -1162,32 +1162,28 @@ fn migrate_codex_data_if_needed(new_data_dir: &PathBuf) {
     }
 }
 
-/// 获取我们的多账号存储路径（统一使用 ~/.antigravity_cockpit/）
+/// 获取我们的多账号存储路径（跟随当前 Cockpit 数据目录）
 fn get_accounts_storage_path() -> PathBuf {
-    let data_dir = account::get_data_dir().unwrap_or_else(|_| {
-        dirs::home_dir()
-            .expect("无法获取用户目录")
-            .join(".antigravity_cockpit")
-    });
+    let data_dir = crate::modules::app_data::get_data_dir()
+        .or_else(|_| crate::modules::app_data::resolve_data_dir())
+        .unwrap_or_else(|_| PathBuf::from(".antigravity_cockpit"));
     fs::create_dir_all(&data_dir).ok();
     migrate_codex_data_if_needed(&data_dir);
     data_dir.join("codex_accounts.json")
 }
 
-/// 获取账号详情存储目录（统一使用 ~/.antigravity_cockpit/codex_accounts/）
+/// 获取账号详情存储目录（跟随当前 Cockpit 数据目录）
 fn get_accounts_dir() -> PathBuf {
-    let data_dir = account::get_data_dir().unwrap_or_else(|_| {
-        dirs::home_dir()
-            .expect("无法获取用户目录")
-            .join(".antigravity_cockpit")
-    });
+    let data_dir = crate::modules::app_data::get_data_dir()
+        .or_else(|_| crate::modules::app_data::resolve_data_dir())
+        .unwrap_or_else(|_| PathBuf::from(".antigravity_cockpit"));
     let accounts_dir = data_dir.join("codex_accounts");
     fs::create_dir_all(&accounts_dir).ok();
     accounts_dir
 }
 
-fn ensure_account_store_migrated() -> Result<(), String> {
-    crate::modules::account_store::ensure_platform_migrated_from_json(
+fn ensure_platform_account_store_migrated() -> Result<(), String> {
+    crate::modules::platform_account_store::ensure_platform_migrated_from_json(
         ACCOUNT_STORE_PLATFORM,
         &get_accounts_storage_path(),
         &get_accounts_dir(),
@@ -1196,7 +1192,7 @@ fn ensure_account_store_migrated() -> Result<(), String> {
 
 fn codex_index_from_accounts(accounts: &[CodexAccount]) -> CodexAccountIndex {
     let current_account_id =
-        crate::modules::account_store::get_current_account_id(ACCOUNT_STORE_PLATFORM)
+        crate::modules::platform_account_store::get_current_account_id(ACCOUNT_STORE_PLATFORM)
             .ok()
             .flatten()
             .filter(|current_id| accounts.iter().any(|account| account.id == *current_id));
@@ -1217,9 +1213,10 @@ fn codex_index_from_accounts(accounts: &[CodexAccount]) -> CodexAccountIndex {
 }
 
 fn load_account_index_from_store() -> Result<CodexAccountIndex, String> {
-    ensure_account_store_migrated()?;
-    let values =
-        crate::modules::account_store::list_accounts::<serde_json::Value>(ACCOUNT_STORE_PLATFORM)?;
+    ensure_platform_account_store_migrated()?;
+    let values = crate::modules::platform_account_store::list_accounts::<serde_json::Value>(
+        ACCOUNT_STORE_PLATFORM,
+    )?;
     let mut accounts = Vec::new();
     for value in values {
         let Some(account_id) = value
@@ -1855,7 +1852,7 @@ fn load_account_index_checked() -> Result<CodexAccountIndex, String> {
 
 /// 保存账号索引
 pub fn save_account_index(index: &CodexAccountIndex) -> Result<(), String> {
-    crate::modules::account_store::set_current_account_id(
+    crate::modules::platform_account_store::set_current_account_id(
         ACCOUNT_STORE_PLATFORM,
         index.current_account_id.as_deref(),
     )?;
@@ -1864,7 +1861,10 @@ pub fn save_account_index(index: &CodexAccountIndex) -> Result<(), String> {
         .iter()
         .map(|summary| summary.id.clone())
         .collect::<Vec<_>>();
-    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
+    crate::modules::platform_account_store::save_account_order(
+        ACCOUNT_STORE_PLATFORM,
+        &ordered_ids,
+    )?;
     let path = get_accounts_storage_path();
     let content = serde_json::to_string_pretty(index).map_err(|e| format!("序列化失败: {}", e))?;
     write_string_atomic(&path, &content).map_err(|e| format!("写入账号索引失败: {}", e))?;
@@ -1885,21 +1885,22 @@ fn repair_account_index_from_details(reason: &str) -> Option<CodexAccountIndex> 
         accounts_dir.display()
     ));
 
-    let mut accounts = match crate::modules::account_index_repair::load_accounts_from_details(
-        &accounts_dir,
-        |account_id| load_account(account_id),
-    ) {
-        Ok(accounts) => accounts,
-        Err(err) => {
-            logger::log_warn(&format!(
+    let mut accounts =
+        match crate::modules::platform_account_index_repair::load_accounts_from_details(
+            &accounts_dir,
+            |account_id| load_account(account_id),
+        ) {
+            Ok(accounts) => accounts,
+            Err(err) => {
+                logger::log_warn(&format!(
                 "[Codex Account][Repair] 扫描账号详情文件失败，无法自动修复: reason={}, accounts_dir={}, error={}",
                 reason,
                 accounts_dir.display(),
                 err
             ));
-            return None;
-        }
-    };
+                return None;
+            }
+        };
 
     if accounts.is_empty() {
         logger::log_warn(&format!(
@@ -1915,7 +1916,7 @@ fn repair_account_index_from_details(reason: &str) -> Option<CodexAccountIndex> 
         accounts.len()
     ));
 
-    crate::modules::account_index_repair::sort_accounts_by_recency(
+    crate::modules::platform_account_index_repair::sort_accounts_by_recency(
         &mut accounts,
         |account| account.last_used,
         |account| account.created_at,
@@ -1946,15 +1947,16 @@ fn repair_account_index_from_details(reason: &str) -> Option<CodexAccountIndex> 
         index.current_account_id.as_deref().unwrap_or("-")
     ));
 
-    let backup_path = crate::modules::account_index_repair::backup_existing_index(&index_path)
-        .unwrap_or_else(|err| {
-            logger::log_warn(&format!(
-                "[Codex Account] 自动修复前备份索引失败，继续尝试重建: path={}, error={}",
-                index_path.display(),
-                err
-            ));
-            None
-        });
+    let backup_path =
+        crate::modules::platform_account_index_repair::backup_existing_index(&index_path)
+            .unwrap_or_else(|err| {
+                logger::log_warn(&format!(
+                    "[Codex Account] 自动修复前备份索引失败，继续尝试重建: path={}, error={}",
+                    index_path.display(),
+                    err
+                ));
+                None
+            });
 
     if let Err(err) = save_account_index(&index) {
         logger::log_warn(&format!(
@@ -2213,15 +2215,15 @@ fn load_account_with_summary(
     account_id: &str,
     summary: Option<&CodexAccountSummary>,
 ) -> Result<Option<CodexAccount>, String> {
-    if let Err(error) = ensure_account_store_migrated() {
+    if let Err(error) = ensure_platform_account_store_migrated() {
         logger::log_warn(&format!(
             "[Codex Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
             account_id, error
         ));
-    } else if let Some(value) = crate::modules::account_store::load_account::<serde_json::Value>(
-        ACCOUNT_STORE_PLATFORM,
-        account_id,
-    )? {
+    } else if let Some(value) = crate::modules::platform_account_store::load_account::<
+        serde_json::Value,
+    >(ACCOUNT_STORE_PLATFORM, account_id)?
+    {
         let mut account = parse_codex_account_compat(value.clone(), account_id, summary)?
             .ok_or_else(|| format!("账号数据库记录缺少可识别凭据: {}", account_id))?;
         let migrated_bound_oauth =
@@ -2280,8 +2282,8 @@ fn load_account_with_summary(
 
 /// 保存单个账号详情
 pub fn save_account(account: &CodexAccount) -> Result<(), String> {
-    ensure_account_store_migrated()?;
-    crate::modules::account_store::save_account(
+    ensure_platform_account_store_migrated()?;
+    crate::modules::platform_account_store::save_account(
         ACCOUNT_STORE_PLATFORM,
         account.id.as_str(),
         account,
@@ -2295,7 +2297,7 @@ pub fn save_account(account: &CodexAccount) -> Result<(), String> {
 
 /// 删除单个账号
 pub fn delete_account_file(account_id: &str) -> Result<(), String> {
-    crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
+    crate::modules::platform_account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     let path = get_accounts_dir().join(format!("{}.json", account_id));
     if path.exists() {
         fs::remove_file(&path).map_err(|e| format!("删除文件失败: {}", e))?;
@@ -8926,7 +8928,7 @@ pub fn pick_auto_switch_target_if_needed() -> Result<Option<CodexAccount>, Strin
 }
 
 pub fn run_quota_alert_if_needed(
-) -> Result<Option<crate::modules::account::QuotaAlertPayload>, String> {
+) -> Result<Option<crate::modules::quota_alert::QuotaAlertPayload>, String> {
     let cfg = crate::modules::config::get_user_config();
     if !cfg.codex_quota_alert_enabled {
         return Ok(None);
@@ -8973,7 +8975,7 @@ pub fn run_quota_alert_if_needed(
         secondary_threshold,
     );
     let lowest_percentage = low_models.iter().map(|(_, pct)| *pct).min().unwrap_or(0);
-    let payload = crate::modules::account::QuotaAlertPayload {
+    let payload = crate::modules::quota_alert::QuotaAlertPayload {
         platform: "codex".to_string(),
         current_account_id: current_id,
         current_email: current.email.clone(),
@@ -8989,6 +8991,6 @@ pub fn run_quota_alert_if_needed(
         triggered_at: now,
     };
 
-    crate::modules::account::dispatch_quota_alert(&payload);
+    crate::modules::quota_alert::dispatch_quota_alert(&payload);
     Ok(Some(payload))
 }

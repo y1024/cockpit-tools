@@ -2939,19 +2939,63 @@ mod imp {
     }
 
     fn build_antigravity_cards(lang: &str) -> (Vec<AccountCard>, Option<String>, Option<String>) {
-        let accounts = modules::account::list_accounts().unwrap_or_default();
-        let current_id = modules::account::get_current_account()
-            .ok()
-            .flatten()
-            .map(|account| account.id);
+        if !PlatformId::Antigravity.runtime_ready() {
+            return (Vec::new(), None, None);
+        }
 
-        let mut sorted = accounts;
+        let mut sorted = modules::platform_adapter::call_antigravity_series_with_timeout::<
+            Vec<crate::models::Account>,
+        >(
+            "accounts.list",
+            serde_json::json!({}),
+            Duration::from_secs(20),
+        )
+        .unwrap_or_default();
+        let current_id = modules::platform_adapter::call_antigravity_series_with_timeout::<
+            Option<crate::models::Account>,
+        >(
+            "accounts.current",
+            serde_json::json!({}),
+            Duration::from_secs(20),
+        )
+        .ok()
+        .flatten()
+        .map(|account| account.id);
+
         sorted.sort_by_key(|account| std::cmp::Reverse(account.last_used.max(account.created_at)));
 
-        let recommended = current_id
-            .as_deref()
-            .and_then(|id| modules::account::pick_quota_alert_recommendation(&sorted, id))
-            .map(|account| account.id);
+        let recommended = current_id.as_deref().and_then(|id| {
+            sorted
+                .iter()
+                .filter(|account| account.id != id && !account.disabled && account.quota.is_some())
+                .max_by(|left, right| {
+                    let score_left = left
+                        .quota
+                        .as_ref()
+                        .and_then(|quota| {
+                            let total: i32 =
+                                quota.models.iter().map(|model| model.percentage).sum();
+                            (!quota.models.is_empty())
+                                .then_some(total as f64 / quota.models.len() as f64)
+                        })
+                        .unwrap_or(-1.0);
+                    let score_right = right
+                        .quota
+                        .as_ref()
+                        .and_then(|quota| {
+                            let total: i32 =
+                                quota.models.iter().map(|model| model.percentage).sum();
+                            (!quota.models.is_empty())
+                                .then_some(total as f64 / quota.models.len() as f64)
+                        })
+                        .unwrap_or(-1.0);
+                    score_left
+                        .partial_cmp(&score_right)
+                        .unwrap_or(Ordering::Equal)
+                        .then_with(|| right.last_used.cmp(&left.last_used))
+                })
+                .map(|account| account.id.clone())
+        });
 
         let cards = sorted
             .into_iter()

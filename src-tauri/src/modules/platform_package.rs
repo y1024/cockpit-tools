@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
 use std::io;
@@ -10,7 +11,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Manager};
 use url::Url;
 
-use crate::modules::{account, atomic_write, logger};
+use crate::modules::{atomic_write, logger};
 
 const PLATFORM_PACKAGE_REGISTRY_FILE: &str = "platform_packages.json";
 const PLATFORM_PACKAGE_INDEX_CACHE_FILE: &str = "platform_package_index_cache.json";
@@ -19,6 +20,8 @@ const PLATFORM_PACKAGE_DIR: &str = "platform-packages";
 const MANIFEST_FILE: &str = "manifest.json";
 const CURRENT_DIR: &str = "current";
 const DOWNLOADS_DIR: &str = "downloads";
+const ANTIGRAVITY_PLATFORM_ID: &str = "antigravity";
+const ANTIGRAVITY_IDE_PLATFORM_ID: &str = "antigravity_ide";
 const ZED_PLATFORM_ID: &str = "zed";
 const CLAUDE_MANAGER_PLATFORM_ID: &str = "claude_manager";
 const KIRO_PLATFORM_ID: &str = "kiro";
@@ -34,6 +37,8 @@ const WORKBUDDY_PLATFORM_ID: &str = "workbuddy";
 const CODEX_PLATFORM_ID: &str = "codex";
 const PLATFORM_PACKAGE_API_VERSION: u32 = 1;
 const SUPPORTED_PLATFORM_IDS: &[&str] = &[
+    ANTIGRAVITY_PLATFORM_ID,
+    ANTIGRAVITY_IDE_PLATFORM_ID,
     CLAUDE_MANAGER_PLATFORM_ID,
     ZED_PLATFORM_ID,
     KIRO_PLATFORM_ID,
@@ -50,6 +55,8 @@ const SUPPORTED_PLATFORM_IDS: &[&str] = &[
 ];
 const PLATFORM_PACKAGE_INDEX_URL: &str =
     "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/index.json";
+const PLATFORM_PACKAGE_TEST_INDEX_URL: &str =
+    "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/platform-test/platform-packages/test/index.json";
 const PLATFORM_PACKAGE_INDEX_CACHE_TTL_MS: i64 = 30 * 60 * 1000;
 const MAX_PLATFORM_PACKAGE_DOWNLOAD_BYTES: u64 = 80 * 1024 * 1024;
 
@@ -106,12 +113,21 @@ pub struct PlatformPackageUi {
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
+pub struct PlatformPackageChangelogLocale {
+    #[serde(default)]
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
 pub struct PlatformPackageChangelogEntry {
     pub version: String,
     #[serde(default)]
     pub date: Option<String>,
     #[serde(default)]
     pub notes: Vec<String>,
+    #[serde(default)]
+    pub locales: HashMap<String, PlatformPackageChangelogLocale>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -317,7 +333,7 @@ fn now_ts_ms() -> i64 {
 }
 
 fn data_dir() -> Result<PathBuf, String> {
-    account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 fn registry_path() -> Result<PathBuf, String> {
@@ -476,6 +492,98 @@ fn sha256_file_hex(path: &Path) -> Result<String, String> {
         hasher.update(&buffer[..read]);
     }
     Ok(hex_encode(&hasher.finalize()))
+}
+
+fn sha256_package_file_hex(path: &Path) -> Result<String, String> {
+    let mut file = File::open(path)
+        .map_err(|err| format!("打开平台包文件失败: path={}, error={}", path.display(), err))?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0u8; 1024 * 256];
+    loop {
+        let read = io::Read::read(&mut file, &mut buffer)
+            .map_err(|err| format!("读取平台包文件失败: path={}, error={}", path.display(), err))?;
+        if read == 0 {
+            break;
+        }
+        hasher.update(&buffer[..read]);
+    }
+    Ok(hex_encode(&hasher.finalize()))
+}
+
+fn normalized_relative_path(root: &Path, path: &Path) -> Result<String, String> {
+    let relative = path.strip_prefix(root).map_err(|err| {
+        format!(
+            "计算平台包相对路径失败: root={}, path={}, error={}",
+            root.display(),
+            path.display(),
+            err
+        )
+    })?;
+    Ok(relative
+        .components()
+        .map(|component| component.as_os_str().to_string_lossy().to_string())
+        .collect::<Vec<_>>()
+        .join("/"))
+}
+
+fn collect_package_file_fingerprints(
+    root: &Path,
+    dir: &Path,
+    output: &mut Vec<String>,
+) -> Result<(), String> {
+    let mut entries = fs::read_dir(dir)
+        .map_err(|err| format!("读取平台包目录失败: path={}, error={}", dir.display(), err))?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|err| {
+            format!(
+                "读取平台包目录项失败: path={}, error={}",
+                dir.display(),
+                err
+            )
+        })?;
+    entries.sort_by_key(|entry| entry.file_name());
+
+    for entry in entries {
+        let path = entry.path();
+        let metadata = fs::symlink_metadata(&path).map_err(|err| {
+            format!(
+                "读取平台包文件元数据失败: path={}, error={}",
+                path.display(),
+                err
+            )
+        })?;
+        if metadata.is_dir() {
+            collect_package_file_fingerprints(root, &path, output)?;
+        } else if metadata.is_file() {
+            let relative = normalized_relative_path(root, &path)?;
+            let sha256 = sha256_package_file_hex(&path)?;
+            output.push(format!("{}\t{}\t{}", relative, metadata.len(), sha256));
+        }
+    }
+
+    Ok(())
+}
+
+fn package_dir_fingerprint(root: &Path) -> Result<String, String> {
+    let mut files = Vec::new();
+    collect_package_file_fingerprints(root, root, &mut files)?;
+    let mut hasher = Sha256::new();
+    for file in files {
+        hasher.update(file.as_bytes());
+        hasher.update(b"\n");
+    }
+    Ok(hex_encode(&hasher.finalize()))
+}
+
+fn strict_local_source_validation_enabled() -> bool {
+    cfg!(debug_assertions)
+        || std::env::var("COCKPIT_PLATFORM_PACKAGE_STRICT_LOCAL_SOURCE")
+            .ok()
+            .map(|value| {
+                let normalized = value.trim().to_ascii_lowercase();
+                normalized == "1" || normalized == "true" || normalized == "yes"
+            })
+            .unwrap_or(false)
 }
 
 fn validate_remote_download_url(raw: &str) -> Result<(), String> {
@@ -859,9 +967,16 @@ fn read_local_source(app: &AppHandle, platform_id: &str) -> Option<PlatformPacka
 fn platform_package_index_url() -> String {
     std::env::var("COCKPIT_PLATFORM_PACKAGE_INDEX_URL")
         .ok()
+        .or_else(|| option_env!("COCKPIT_PLATFORM_PACKAGE_INDEX_URL").map(ToString::to_string))
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
-        .unwrap_or_else(|| PLATFORM_PACKAGE_INDEX_URL.to_string())
+        .unwrap_or_else(|| {
+            if crate::modules::app_data::is_test_profile() {
+                PLATFORM_PACKAGE_TEST_INDEX_URL.to_string()
+            } else {
+                PLATFORM_PACKAGE_INDEX_URL.to_string()
+            }
+        })
 }
 
 fn workspace_package_index_candidates() -> Vec<PathBuf> {
@@ -1198,9 +1313,19 @@ fn read_latest_source_manifest(
     platform_id: &str,
     force_remote_refresh: bool,
 ) -> Option<PlatformPackageManifest> {
-    resolve_package_source(app, platform_id, force_remote_refresh)
-        .ok()
-        .map(|source| source.manifest().clone())
+    read_latest_source_manifest_and_root(app, platform_id, force_remote_refresh).0
+}
+
+fn read_latest_source_manifest_and_root(
+    app: &AppHandle,
+    platform_id: &str,
+    force_remote_refresh: bool,
+) -> (Option<PlatformPackageManifest>, Option<PathBuf>) {
+    match resolve_package_source(app, platform_id, force_remote_refresh).ok() {
+        Some(PlatformPackageSource::Local { dir, manifest }) => (Some(manifest), Some(dir)),
+        Some(PlatformPackageSource::Remote { manifest, .. }) => (Some(manifest), None),
+        None => (None, None),
+    }
 }
 
 fn copy_dir_all(source: &Path, target: &Path) -> Result<(), String> {
@@ -1534,6 +1659,7 @@ fn build_state(
     record: Option<&PersistedPlatformPackage>,
     installed_manifest: Option<PlatformPackageManifest>,
     source_manifest: Option<PlatformPackageManifest>,
+    source_root: Option<PathBuf>,
     validation_error: Option<String>,
 ) -> Result<PlatformPackageState, String> {
     ensure_supported_platform(platform_id)?;
@@ -1559,16 +1685,38 @@ fn build_state(
         .as_ref()
         .zip(source_manifest.as_ref())
         .filter(|(installed, source)| same_version_runtime_contract_mismatch(installed, source))
-        .map(|_| {
+        .map(|(installed, source)| {
+            logger::log_warn(&format!(
+                "[PlatformPackage] 运行契约不一致: platform={}, installedVersion={}, sourceVersion={}, {}",
+                platform_id,
+                installed.version,
+                source.version,
+                describe_runtime_contract_mismatch(installed, source)
+            ));
             "已安装平台包与当前运行组件声明不一致，请修复或重新安装平台包".to_string()
+        });
+    let local_content_error = installed_manifest
+        .as_ref()
+        .zip(source_manifest.as_ref())
+        .zip(source_root.as_ref())
+        .and_then(|((installed, source), source_root)| {
+            same_version_local_package_content_error(
+                platform_id,
+                installed,
+                source,
+                &current_dir,
+                source_root,
+            )
         });
 
     let mut runtime_ready = installed
         && validation_error.is_none()
         && runtime_contract_error.is_none()
+        && local_content_error.is_none()
         && record.map(|item| item.runtime_ready).unwrap_or(false);
     let mut error_message = validation_error
         .or(runtime_contract_error)
+        .or(local_content_error)
         .or_else(|| record.and_then(|item| item.error_message.clone()));
     if !installed {
         runtime_ready = false;
@@ -1647,6 +1795,16 @@ fn resolve_source_size_from_current_process(platform_id: &str) -> Option<u64> {
     source_dir.exists().then(|| dir_size(&source_dir))
 }
 
+fn local_source_package_dir_from_current_process(platform_id: &str) -> Option<PathBuf> {
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let repo_root = manifest_dir.parent()?;
+    let source_dir = repo_root.join(PLATFORM_PACKAGE_DIR).join(platform_id);
+    source_dir
+        .join(MANIFEST_FILE)
+        .exists()
+        .then_some(source_dir)
+}
+
 fn runtime_contract_mismatch(
     installed: &PlatformPackageManifest,
     source: &PlatformPackageManifest,
@@ -1659,11 +1817,144 @@ fn runtime_contract_mismatch(
         || installed.contributions.native_boundaries != source.contributions.native_boundaries
 }
 
+fn limited_string_list(values: &[String]) -> String {
+    const LIMIT: usize = 8;
+    if values.is_empty() {
+        return "-".to_string();
+    }
+    let mut selected = values.iter().take(LIMIT).cloned().collect::<Vec<_>>();
+    if values.len() > LIMIT {
+        selected.push(format!("...+{}", values.len() - LIMIT));
+    }
+    selected.join(",")
+}
+
+fn describe_runtime_contract_mismatch(
+    installed: &PlatformPackageManifest,
+    source: &PlatformPackageManifest,
+) -> String {
+    let mut parts = Vec::new();
+    if installed.api_version != source.api_version {
+        parts.push(format!(
+            "apiVersion installed={} source={}",
+            installed.api_version, source.api_version
+        ));
+    }
+    if installed.install_kind != source.install_kind {
+        parts.push(format!(
+            "installKind installed={} source={}",
+            installed.install_kind, source.install_kind
+        ));
+    }
+    if installed.ui != source.ui {
+        parts.push("ui differs".to_string());
+    }
+    if installed.capabilities != source.capabilities {
+        parts.push(format!(
+            "capabilities installed={} source={}",
+            installed.capabilities.len(),
+            source.capabilities.len()
+        ));
+    }
+    if installed.contributions.native_boundaries != source.contributions.native_boundaries {
+        parts.push(format!(
+            "nativeBoundaries installed={} source={}",
+            installed.contributions.native_boundaries.len(),
+            source.contributions.native_boundaries.len()
+        ));
+    }
+    if installed.adapter != source.adapter {
+        let installed_methods = installed
+            .adapter
+            .as_ref()
+            .map(|adapter| adapter.methods.as_slice())
+            .unwrap_or(&[]);
+        let source_methods = source
+            .adapter
+            .as_ref()
+            .map(|adapter| adapter.methods.as_slice())
+            .unwrap_or(&[]);
+        let installed_only = installed_methods
+            .iter()
+            .filter(|method| !source_methods.contains(method))
+            .cloned()
+            .collect::<Vec<_>>();
+        let source_only = source_methods
+            .iter()
+            .filter(|method| !installed_methods.contains(method))
+            .cloned()
+            .collect::<Vec<_>>();
+        parts.push(format!(
+            "adapter differs installedMethods={} sourceMethods={} installedOnly=[{}] sourceOnly=[{}]",
+            installed_methods.len(),
+            source_methods.len(),
+            limited_string_list(&installed_only),
+            limited_string_list(&source_only)
+        ));
+    }
+
+    if parts.is_empty() {
+        "unknown runtime contract mismatch".to_string()
+    } else {
+        parts.join("; ")
+    }
+}
+
 fn same_version_runtime_contract_mismatch(
     installed: &PlatformPackageManifest,
     source: &PlatformPackageManifest,
 ) -> bool {
     installed.version == source.version && runtime_contract_mismatch(installed, source)
+}
+
+fn same_version_local_package_content_mismatch(
+    platform_id: &str,
+    installed: &PlatformPackageManifest,
+    source: &PlatformPackageManifest,
+    installed_root: &Path,
+    source_root: &Path,
+) -> Result<bool, String> {
+    if !strict_local_source_validation_enabled() || installed.version != source.version {
+        return Ok(false);
+    }
+
+    let installed_fingerprint = package_dir_fingerprint(installed_root)?;
+    let source_fingerprint = package_dir_fingerprint(source_root)?;
+    if installed_fingerprint == source_fingerprint {
+        return Ok(false);
+    }
+
+    logger::log_warn(&format!(
+        "[PlatformPackage] 本地平台包内容不一致: platform={}, version={}, installedHash={}, sourceHash={}",
+        platform_id, installed.version, installed_fingerprint, source_fingerprint
+    ));
+    Ok(true)
+}
+
+fn same_version_local_package_content_error(
+    platform_id: &str,
+    installed: &PlatformPackageManifest,
+    source: &PlatformPackageManifest,
+    installed_root: &Path,
+    source_root: &Path,
+) -> Option<String> {
+    match same_version_local_package_content_mismatch(
+        platform_id,
+        installed,
+        source,
+        installed_root,
+        source_root,
+    ) {
+        Ok(true) => Some("已安装平台包与当前本地包内容不一致，请修复或重新安装平台包".to_string()),
+        Ok(false) => None,
+        Err(error) => {
+            logger::log_warn(&format!(
+                "[PlatformPackage] 本地平台包内容校验失败: platform={}, error={}",
+                platform_id, error
+            ));
+            Some(format!("本地平台包内容校验失败: {}", error))
+        }
+    }
 }
 
 fn read_installed_manifest_and_update_state(
@@ -1719,13 +2010,15 @@ pub fn list_platform_packages(app: &AppHandle) -> Result<Vec<PlatformPackageStat
         let (installed_manifest, validation_error) =
             read_installed_manifest_and_update_state(platform_id)?;
         let refreshed_registry = read_registry()?;
-        let source_manifest = read_latest_source_manifest(app, platform_id, false);
+        let (source_manifest, source_root) =
+            read_latest_source_manifest_and_root(app, platform_id, false);
         states.push(build_state(
             platform_id,
             get_record(&refreshed_registry, platform_id)
                 .or_else(|| get_record(&registry, platform_id)),
             installed_manifest,
             source_manifest,
+            source_root,
             validation_error,
         )?);
     }
@@ -1744,7 +2037,8 @@ pub fn check_platform_package_update(
 
     let (installed_manifest, validation_error) =
         read_installed_manifest_and_update_state(platform_id)?;
-    let source_manifest = read_latest_source_manifest(app, platform_id, true);
+    let (source_manifest, source_root) =
+        read_latest_source_manifest_and_root(app, platform_id, true);
     let mut registry = read_registry()?;
     let existing = get_record(&registry, platform_id).cloned();
     let installed_version = installed_manifest
@@ -1791,6 +2085,7 @@ pub fn check_platform_package_update(
         get_record(&refreshed_registry, platform_id),
         installed_manifest,
         source_manifest,
+        source_root,
         validation_error,
     )
 }
@@ -1804,9 +2099,14 @@ pub fn install_platform_package(
         "[PlatformPackage] 安装平台包开始: {}",
         platform_id
     ));
+    crate::modules::platform_adapter::stop_platform_adapter(platform_id);
 
     let source = resolve_package_source(app, platform_id, true)?;
     let source_manifest = source.manifest().clone();
+    let source_root = match &source {
+        PlatformPackageSource::Local { dir, .. } => Some(dir.clone()),
+        PlatformPackageSource::Remote { .. } => None,
+    };
 
     let installed_manifest = match match &source {
         PlatformPackageSource::Local { dir, .. } => install_local_source(platform_id, dir),
@@ -1856,6 +2156,7 @@ pub fn install_platform_package(
         get_record(&registry, platform_id),
         Some(installed_manifest),
         Some(source_manifest),
+        source_root,
         None,
     )
 }
@@ -1880,7 +2181,13 @@ pub fn uninstall_platform_package(
         "[PlatformPackage] 卸载平台包开始: {}",
         platform_id
     ));
-    if platform_id == ZED_PLATFORM_ID {
+    if platform_id == ANTIGRAVITY_PLATFORM_ID {
+        crate::modules::platform_adapter::stop_antigravity_runtime_before_uninstall();
+    } else if platform_id == ANTIGRAVITY_IDE_PLATFORM_ID {
+        crate::modules::platform_adapter::stop_antigravity_ide_runtime_before_uninstall();
+    } else if platform_id == CLAUDE_MANAGER_PLATFORM_ID {
+        crate::modules::platform_adapter::stop_claude_manager_runtime_before_uninstall();
+    } else if platform_id == ZED_PLATFORM_ID {
         crate::modules::platform_adapter::stop_zed_runtime_before_uninstall();
     } else if platform_id == KIRO_PLATFORM_ID {
         crate::modules::platform_adapter::stop_kiro_runtime_before_uninstall();
@@ -1902,6 +2209,8 @@ pub fn uninstall_platform_package(
         crate::modules::platform_adapter::stop_codebuddy_cn_runtime_before_uninstall();
     } else if platform_id == WORKBUDDY_PLATFORM_ID {
         crate::modules::platform_adapter::stop_workbuddy_runtime_before_uninstall();
+    } else if platform_id == CODEX_PLATFORM_ID {
+        crate::modules::platform_adapter::stop_codex_runtime_before_uninstall();
     }
 
     let source_manifest = app.and_then(|app| read_latest_source_manifest(app, platform_id, false));
@@ -1941,6 +2250,7 @@ pub fn uninstall_platform_package(
         None,
         source_manifest.or(installed_manifest),
         None,
+        None,
     )
 }
 
@@ -1957,7 +2267,25 @@ pub fn is_platform_package_runtime_ready(platform_id: &str) -> bool {
     let Ok(current_dir) = package_current_dir(platform_id) else {
         return false;
     };
-    validate_manifest(platform_id, &current_dir).is_ok()
+    let Ok(installed_manifest) = validate_manifest(platform_id, &current_dir) else {
+        return false;
+    };
+    if let Some(source_root) = local_source_package_dir_from_current_process(platform_id) {
+        if let Ok(source_manifest) = validate_manifest(platform_id, &source_root) {
+            if same_version_local_package_content_mismatch(
+                platform_id,
+                &installed_manifest,
+                &source_manifest,
+                &current_dir,
+                &source_root,
+            )
+            .unwrap_or(true)
+            {
+                return false;
+            }
+        }
+    }
+    true
 }
 
 pub fn is_platform_package_installed(platform_id: &str) -> bool {

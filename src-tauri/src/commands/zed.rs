@@ -6,7 +6,7 @@ use serde_json::{json, Value};
 use tauri::{AppHandle, Emitter};
 
 use crate::models::zed::{ZedAccount, ZedOAuthStartResponse, ZedRuntimeStatus};
-use crate::modules::{account, logger, platform_adapter, platform_package};
+use crate::modules::{logger, platform_adapter, platform_package, quota_alert};
 
 const ZED_FAST_LOCAL_MUTATION_TIMEOUT: Duration = Duration::from_secs(20);
 
@@ -52,9 +52,10 @@ fn update_tray_menu_in_background(app: AppHandle) {
 }
 
 fn dispatch_zed_quota_alert_if_needed() -> Result<(), String> {
-    let payload: Option<account::QuotaAlertPayload> = zed_call("quota.alertPayload", json!({}))?;
+    let payload: Option<quota_alert::QuotaAlertPayload> =
+        zed_call("quota.alertPayload", json!({}))?;
     if let Some(payload) = payload.as_ref() {
-        account::dispatch_quota_alert(payload);
+        quota_alert::dispatch_quota_alert(payload);
     }
     Ok(())
 }

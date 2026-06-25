@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "Il pacchetto {{platform}} non è installato",
     "packagePageInstallDesc": "Puoi installare direttamente da questa pagina oppure usare le azioni del pacchetto in alto a destra per installare o riparare prima di gestire gli account. Account, OAuth, cambio account e aggiornamento in background non verranno caricati prima dell’installazione.",
     "packageDashboardStateDesc": "Apri la pagina {{platform}} per installare direttamente oppure usa le azioni in alto a destra per aggiornare, riparare o vedere il registro modifiche.",
-    "packageOpenPlatformPage": "Apri pagina piattaforma"
+    "packageOpenPlatformPage": "Apri pagina piattaforma",
+    "packageBundledShort": "Integrato",
+    "packageBundledStatus": "Fornito dall’app principale",
+    "packageBundledDesc": "Questa piattaforma è inclusa nell’app principale. Installazione e aggiornamenti seguono la versione dell’app principale."
   },
   "privacy": {
     "hideSensitive": "Nascondi email",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Tutte le istanze sono già in esecuzione",
       "noneRunning": "Nessuna istanza in esecuzione trovata",
       "syncThreadsNeedTwo": "Sono necessarie almeno due istanze per sincronizzare i thread",
+      "loadTimeout": "Caricamento delle istanze scaduto. Riprova.",
       "launchPrepared": "Il comando di avvio è pronto",
       "speedUpdated": "Velocità aggiornata"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Nessun account nella raccolta",
       "footerHint": "Ambito accesso: {{scope}}",
       "manageAccounts": "Gestisci account",
+      "saveTimeout": "Salvataggio dei membri del servizio API scaduto. Riprova più tardi.",
       "rotateKey": "Ruota chiave",
       "rotateConfirmMessage": "Dopo il reset, la chiave attuale del servizio API smetterà subito di funzionare e le richieste in corso potrebbero non essere più disponibili. Continuare?",
       "disableService": "Disattiva servizio",
@@ -2188,6 +2193,7 @@
       "subtitle": "Pianifica attività di risveglio Codex, verifica il percorso del CLI e controlla la cronologia di esecuzione.",
       "heroTitle": "Attività di risveglio Codex",
       "heroSubtitle": "Crea attività di risveglio pianificate per account Codex OAuth, esegui test rapidi e controlla ogni attivazione in un solo posto.",
+      "loadTimeout": "Caricamento delle attività wakeup Codex scaduto. Riprova.",
       "runtimeReady": "Codex CLI pronto",
       "runtimeMissing": "Codex CLI richiesto",
       "runtimeCardTitle": "CLI di Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Gestisci provider di modelli e più chiavi API in un unico posto, poi riutilizzali direttamente quando aggiungi account Codex con chiave API.",
       "add": "Aggiungi provider",
       "loadFailed": "Impossibile caricare i provider di modelli: {{error}}",
+      "loadTimeout": "Caricamento dei provider modello scaduto. Riprova.",
       "emptyTitle": "Nessun provider di modelli per ora",
       "emptyDesc": "Fai clic su \"Aggiungi provider\" in alto a destra per iniziare.",
       "baseUrl": "URL di base",
@@ -3872,20 +3879,20 @@
         "4": "impostazioni",
         "5": "diagnosi",
         "6": "log",
-        "7": "dati"
+        "7": "registro app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Capisci cosa può fare Import/Export, privacy e troubleshooting per te.",
         "1": "Usa il flusso consigliato in Import/Export, privacy e troubleshooting per ridurre errori.",
         "2": "Conferma un’esecuzione riuscita in Import/Export, privacy e troubleshooting prima di scalare.",
-        "3": "Se c’è un problema in Import/Export, privacy e troubleshooting, controlla prima i log e raccogli evidenze."
+        "3": "Individua rapidamente i problemi di runtime nella cartella logs con app-YYYY-MM-DD.log e platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Apri la pagina di Import/Export, privacy e troubleshooting.",
         "1": "Completa setup base e collegamenti richiesti in Import/Export, privacy e troubleshooting.",
         "2": "Esegui un’operazione manuale in Import/Export, privacy e troubleshooting per verificare il risultato.",
         "3": "Per troubleshooting: Impostazioni -> Directory dati -> Apri, poi logs.",
-        "4": "Controlla prima il file più recente app.log o app.log.*.",
+        "4": "Controlla prima il file app-YYYY-MM-DD.log più recente; per problemi di piattaforma scegli il platform-<platform>-YYYY-MM-DD.log corrispondente.",
         "5": "Nel report includi ora, piattaforma, passi di riproduzione e log anonimizzati."
       },
       "summary": "Questa sezione spiega come usare Import/Export, privacy e troubleshooting nel flusso quotidiano.",

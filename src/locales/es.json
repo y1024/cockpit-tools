@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "El paquete de {{platform}} no está instalado",
     "packagePageInstallDesc": "Puedes instalar directamente desde esta página, o usar las acciones del paquete en la esquina superior derecha para instalar o reparar antes de gestionar cuentas. Antes de instalar no se cargarán cuentas, OAuth, cambios de cuenta ni actualización en segundo plano.",
     "packageDashboardStateDesc": "Abre la página de {{platform}} para instalar directamente, o usa las acciones superiores derechas para actualizar, reparar o ver el registro de cambios.",
-    "packageOpenPlatformPage": "Abrir página de plataforma"
+    "packageOpenPlatformPage": "Abrir página de plataforma",
+    "packageBundledShort": "Integrado",
+    "packageBundledStatus": "Incluido en la app principal",
+    "packageBundledDesc": "Esta plataforma está incluida en la app principal. La instalación y las actualizaciones siguen la versión de la app principal."
   },
   "privacy": {
     "hideSensitive": "Ocultar correos",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Todas las instancias ya están en ejecución",
       "noneRunning": "No se encontraron instancias en ejecución",
       "syncThreadsNeedTwo": "Se requieren al menos dos instancias para sincronizar hilos",
+      "loadTimeout": "Se agotó la carga de instancias. Inténtalo de nuevo.",
       "launchPrepared": "El comando de inicio está listo",
       "speedUpdated": "Velocidad actualizada"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "No hay cuentas en la colección",
       "footerHint": "Ámbito de acceso: {{scope}}",
       "manageAccounts": "Gestionar cuentas",
+      "saveTimeout": "Se agotó el tiempo al guardar miembros del servicio API. Inténtalo más tarde.",
       "rotateKey": "Rotar clave",
       "rotateConfirmMessage": "Después del restablecimiento, la clave actual del servicio API dejará de funcionar de inmediato y las solicitudes en curso podrían quedar no disponibles. ¿Continuar?",
       "disableService": "Desactivar servicio",
@@ -2188,6 +2193,7 @@
       "subtitle": "Programa tareas de activación de Codex, prueba la ruta del CLI y revisa el historial de ejecución.",
       "heroTitle": "Tareas de activación de Codex",
       "heroSubtitle": "Crea tareas de activación por horario para cuentas OAuth de Codex, ejecuta pruebas rápidas y revisa cada activación en un solo lugar.",
+      "loadTimeout": "Se agotó la carga de tareas de activación de Codex. Inténtalo de nuevo.",
       "runtimeReady": "Codex CLI listo",
       "runtimeMissing": "Se requiere Codex CLI",
       "runtimeCardTitle": "CLI de Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Gestiona los proveedores de modelos y varias claves API en un solo lugar, y luego reutilízalos directamente al añadir cuentas de Codex con clave API.",
       "add": "Añadir proveedor",
       "loadFailed": "No se pudieron cargar los proveedores de modelos: {{error}}",
+      "loadTimeout": "Se agotó la carga de proveedores de modelos. Inténtalo de nuevo.",
       "emptyTitle": "Aún no hay proveedores de modelos",
       "emptyDesc": "Haz clic en «Añadir proveedor» arriba a la derecha para empezar.",
       "baseUrl": "URL base",
@@ -3872,20 +3879,20 @@
         "4": "ajustes",
         "5": "diagnóstico",
         "6": "registros",
-        "7": "datos"
+        "7": "registro app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Entiende qué puede resolver Importar/Exportar, privacidad y diagnóstico.",
         "1": "Usa el flujo recomendado en Importar/Exportar, privacidad y diagnóstico para reducir errores.",
         "2": "Valida una ejecución exitosa en Importar/Exportar, privacidad y diagnóstico antes de escalar.",
-        "3": "Si hay un problema en Importar/Exportar, privacidad y diagnóstico, revisa logs y reúne evidencia primero."
+        "3": "Localiza rápido problemas de ejecución en logs con app-YYYY-MM-DD.log y platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Abre la página de Importar/Exportar, privacidad y diagnóstico.",
         "1": "Completa la configuración base y los enlaces requeridos en Importar/Exportar, privacidad y diagnóstico.",
         "2": "Ejecuta una operación manual en Importar/Exportar, privacidad y diagnóstico para verificar el resultado.",
         "3": "Para diagnóstico: Ajustes -> Directorio de datos -> Abrir, luego entra a logs.",
-        "4": "Primero revisa el archivo más reciente app.log o app.log.*.",
+        "4": "Primero revisa el app-YYYY-MM-DD.log más reciente; para problemas de plataforma, elige el platform-<platform>-YYYY-MM-DD.log correspondiente.",
         "5": "Al reportar, incluye hora, plataforma, pasos de reproducción y logs anonimizados."
       },
       "summary": "Esta sección explica cómo usar Importar/Exportar, privacidad y diagnóstico en el flujo diario.",

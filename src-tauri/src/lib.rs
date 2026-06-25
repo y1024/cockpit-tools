@@ -263,12 +263,16 @@ pub fn run() {
                     if modules::platform_package::is_platform_package_installed("workbuddy") {
                         modules::platform_adapter::restore_workbuddy_runtime();
                     }
+                    if modules::platform_package::is_platform_package_installed("antigravity") {
+                        modules::platform_adapter::restore_antigravity_runtime();
+                    }
+                    if modules::platform_package::is_platform_package_installed("antigravity_ide") {
+                        modules::platform_adapter::restore_antigravity_ide_runtime();
+                    }
                 });
             }
 
             modules::provider_token_keeper::ensure_started(app.handle().clone());
-            modules::wakeup_scheduler::restore_state_from_disk();
-            modules::wakeup_scheduler::ensure_started(app.handle().clone());
 
             #[cfg(target_os = "macos")]
             apply_macos_activation_policy(&app.handle());

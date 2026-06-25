@@ -36,6 +36,7 @@ import {
   type AutoRefreshSchedulerHandle,
   type AutoRefreshSchedulerTask,
 } from '../utils/autoRefreshScheduler';
+import { getAntigravityRuntimeTarget } from '../utils/antigravityRuntimeTarget';
 
 interface GeneralConfig {
   language: string;
@@ -140,7 +141,9 @@ function getCurrentAccountEmails(): Record<CurrentAccountRefreshPlatform, string
   };
 
   return {
-    antigravity: useAccountStore.getState().currentAccount?.email ?? null,
+    antigravity: canOpenAntigravityRuntimeTarget()
+      ? useAccountStore.getState().currentAccount?.email ?? null
+      : null,
     codex: usePlatformPackageStore.getState().canOpenPlatform('codex')
       ? useCodexAccountStore.getState().currentAccount?.email ?? null
       : null,
@@ -175,6 +178,14 @@ function getCurrentAccountEmails(): Record<CurrentAccountRefreshPlatform, string
       : null,
     zed: getProviderEmail(useZedAccountStore, getZedAccountDisplayEmail),
   };
+}
+
+function canOpenAntigravityRuntimeTarget(): boolean {
+  const target = getAntigravityRuntimeTarget();
+  const platformPackages = usePlatformPackageStore.getState();
+  return platformPackages.canOpenPlatform(target)
+    || platformPackages.canOpenPlatform('antigravity')
+    || platformPackages.canOpenPlatform('antigravity_ide');
 }
 
 export function useAutoRefresh() {
@@ -421,7 +432,7 @@ export function useAutoRefresh() {
           ): PlatformRefreshDescriptor[] => (enabled ? [descriptor] : []);
 
           const descriptors: PlatformRefreshDescriptor[] = [
-            {
+            ...optionalDescriptor(canOpenAntigravityRuntimeTarget(), {
               key: 'antigravity',
               label: 'Antigravity IDE',
               intervalMinutes: config.auto_refresh_minutes,
@@ -442,7 +453,7 @@ export function useAutoRefresh() {
                 await fetchAccounts();
                 await fetchCurrentAccount();
               },
-            },
+            }),
             ...optionalDescriptor(usePlatformPackageStore.getState().canOpenPlatform('codex'), {
               key: 'codex',
               label: 'Codex',

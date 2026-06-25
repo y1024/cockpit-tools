@@ -2,6 +2,326 @@
   "version": "1",
   "packages": [
     {
+      "id": "antigravity",
+      "platformId": "antigravity",
+      "version": "0.26.7",
+      "apiVersion": 1,
+      "minCoreVersion": "0.26.5",
+      "displayName": "Antigravity",
+      "entry": "runtime/index.json",
+      "packageMode": "hotUpdate",
+      "installKind": "sidecarAdapter",
+      "ui": {
+        "protocol": "react-remote-esm-v1",
+        "entry": "ui/remoteEntry.js",
+        "style": "ui/style.css",
+        "exports": [
+          "mount",
+          "unmount"
+        ]
+      },
+      "capabilities": [
+        "accounts",
+        "oauth",
+        "switch",
+        "quota",
+        "runtime",
+        "instances",
+        "wakeup",
+        "verification"
+      ],
+      "changelog": [
+        {
+          "version": "0.26.7",
+          "date": "2026-06-24",
+          "notes": [
+            "Antigravity page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
+            "Antigravity account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
+          ]
+        }
+      ],
+      "contributions": {
+        "platforms": [
+          {
+            "id": "antigravity",
+            "label": "Antigravity",
+            "labelKey": "nav.overview",
+            "iconKey": "antigravity",
+            "page": "overview"
+          }
+        ],
+        "dataPaths": [
+          "accounts.json",
+          "accounts",
+          "groups.json",
+          "display_groups.json",
+          "antigravity_legacy_instances.json",
+          "wakeup_history.json",
+          "wakeup_verification_state.json",
+          "wakeup_verification_history.json"
+        ],
+        "localStorageKeys": [
+          "agtools.antigravity.runtime_target.v1",
+          "agtools.wakeup.enabled",
+          "agtools.wakeup.tasks",
+          "agtools.wakeup.schedule",
+          "agtools.wakeup.official_ls_version_mode",
+          "agtools.accountsOverview.antigravity.*"
+        ],
+        "nativeBoundaries": []
+      },
+      "artifacts": [
+        {
+          "os": "macos",
+          "arch": "aarch64",
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7.zip",
+          "downloadSizeBytes": 11646751,
+          "sha256": "98f1596d98b0fe2ba224e08db5566a14829ccc4e4693b95b47035267158e8e51"
+        }
+      ],
+      "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7.zip",
+      "downloadSizeBytes": 11646751,
+      "sha256": "98f1596d98b0fe2ba224e08db5566a14829ccc4e4693b95b47035267158e8e51",
+      "adapter": {
+        "protocol": "http-json-v1",
+        "entry": "adapter/macos/cockpit-antigravity-adapter",
+        "macosEntry": "adapter/macos/cockpit-antigravity-adapter",
+        "windowsEntry": "adapter/windows/cockpit-antigravity-adapter.exe",
+        "linuxEntry": "adapter/linux/cockpit-antigravity-adapter",
+        "methods": [
+          "health.check",
+          "accounts.list",
+          "accounts.current",
+          "accounts.currentId",
+          "accounts.saveSnapshot",
+          "accounts.addRefreshToken",
+          "accounts.setCurrent",
+          "accounts.delete",
+          "accounts.deleteMany",
+          "accounts.reorder",
+          "accounts.importOldTools",
+          "accounts.importLocal",
+          "accounts.syncFromExtension",
+          "accounts.importJson",
+          "accounts.importFiles",
+          "accounts.export",
+          "accounts.refresh",
+          "accounts.refreshAll",
+          "accounts.updateTags",
+          "accounts.updateNotes",
+          "accounts.groups.load",
+          "accounts.groups.save",
+          "accounts.syncCurrentFromClient",
+          "accounts.refreshCurrent",
+          "quota.alertPayload",
+          "switch.inject",
+          "switch.history.load",
+          "switch.history.clear",
+          "instances.store.get",
+          "instances.store.replace",
+          "instance.getDefaults",
+          "instance.list",
+          "instance.create",
+          "instance.update",
+          "instance.delete",
+          "instance.start",
+          "instance.stop",
+          "instance.closeAll",
+          "instance.openWindow",
+          "runtime.detectLaunchPath",
+          "runtime.status",
+          "runtime.startDefault",
+          "runtime.stopDefault",
+          "runtime.restartDefault",
+          "runtime.focusDefault",
+          "runtime.restore",
+          "oauth.prepareUrl",
+          "oauth.complete",
+          "oauth.cancel",
+          "oauth.submitCallbackUrl",
+          "wakeup.fetchAvailableModels",
+          "wakeup.trigger",
+          "wakeup.scheduler.syncState",
+          "wakeup.scheduler.runEnabledTasks",
+          "wakeup.scheduler.confirmTask",
+          "wakeup.scheduler.cancelTask",
+          "wakeup.scheduler.checkTimeouts",
+          "wakeup.runtime.ensureReady",
+          "wakeup.crontab.validate",
+          "wakeup.sharedHistory.load",
+          "wakeup.sharedHistory.add",
+          "wakeup.sharedHistory.clear",
+          "wakeup.sharedScope.cancel",
+          "wakeup.sharedScope.release",
+          "wakeup.setOfficialLsVersionMode",
+          "wakeup.verification.loadState",
+          "wakeup.verification.loadHistory",
+          "wakeup.verification.deleteHistory",
+          "wakeup.verification.runBatch"
+        ]
+      }
+    },
+    {
+      "id": "antigravity_ide",
+      "platformId": "antigravity_ide",
+      "version": "0.26.7",
+      "apiVersion": 1,
+      "minCoreVersion": "0.26.5",
+      "displayName": "Antigravity IDE",
+      "entry": "runtime/index.json",
+      "packageMode": "hotUpdate",
+      "installKind": "sidecarAdapter",
+      "ui": {
+        "protocol": "react-remote-esm-v1",
+        "entry": "ui/remoteEntry.js",
+        "style": "ui/style.css",
+        "exports": [
+          "mount",
+          "unmount"
+        ]
+      },
+      "capabilities": [
+        "accounts",
+        "oauth",
+        "switch",
+        "quota",
+        "runtime",
+        "instances",
+        "wakeup",
+        "verification"
+      ],
+      "changelog": [
+        {
+          "version": "0.26.7",
+          "date": "2026-06-24",
+          "notes": [
+            "Antigravity IDE page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
+            "Antigravity IDE account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
+          ]
+        }
+      ],
+      "contributions": {
+        "platforms": [
+          {
+            "id": "antigravity_ide",
+            "label": "Antigravity IDE",
+            "labelKey": "nav.overview",
+            "iconKey": "antigravity_ide",
+            "page": "overview"
+          }
+        ],
+        "dataPaths": [
+          "accounts.json",
+          "accounts",
+          "groups.json",
+          "display_groups.json",
+          "instances.json",
+          "wakeup_history.json",
+          "wakeup_verification_state.json",
+          "wakeup_verification_history.json"
+        ],
+        "localStorageKeys": [
+          "agtools.antigravity.runtime_target.v1",
+          "agtools.wakeup.enabled",
+          "agtools.wakeup.tasks",
+          "agtools.wakeup.schedule",
+          "agtools.wakeup.official_ls_version_mode",
+          "agtools.accountsOverview.antigravity.*"
+        ],
+        "nativeBoundaries": []
+      },
+      "artifacts": [
+        {
+          "os": "macos",
+          "arch": "aarch64",
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7.zip",
+          "downloadSizeBytes": 11651530,
+          "sha256": "eadc9bd2829b086ec68a7ac55428bad03476f268de5f8383adb40abb6a45c818"
+        }
+      ],
+      "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7.zip",
+      "downloadSizeBytes": 11651530,
+      "sha256": "eadc9bd2829b086ec68a7ac55428bad03476f268de5f8383adb40abb6a45c818",
+      "adapter": {
+        "protocol": "http-json-v1",
+        "entry": "adapter/macos/cockpit-antigravity-ide-adapter",
+        "macosEntry": "adapter/macos/cockpit-antigravity-ide-adapter",
+        "windowsEntry": "adapter/windows/cockpit-antigravity-ide-adapter.exe",
+        "linuxEntry": "adapter/linux/cockpit-antigravity-ide-adapter",
+        "methods": [
+          "health.check",
+          "accounts.list",
+          "accounts.current",
+          "accounts.currentId",
+          "accounts.saveSnapshot",
+          "accounts.addRefreshToken",
+          "accounts.setCurrent",
+          "accounts.delete",
+          "accounts.deleteMany",
+          "accounts.reorder",
+          "accounts.importOldTools",
+          "accounts.importLocal",
+          "accounts.syncFromExtension",
+          "accounts.importJson",
+          "accounts.importFiles",
+          "accounts.export",
+          "accounts.refresh",
+          "accounts.refreshAll",
+          "accounts.updateTags",
+          "accounts.updateNotes",
+          "accounts.groups.load",
+          "accounts.groups.save",
+          "accounts.syncCurrentFromClient",
+          "accounts.refreshCurrent",
+          "quota.alertPayload",
+          "switch.inject",
+          "switch.history.load",
+          "switch.history.clear",
+          "instances.store.get",
+          "instances.store.replace",
+          "instance.getDefaults",
+          "instance.list",
+          "instance.create",
+          "instance.update",
+          "instance.delete",
+          "instance.start",
+          "instance.stop",
+          "instance.closeAll",
+          "instance.openWindow",
+          "runtime.detectLaunchPath",
+          "runtime.status",
+          "runtime.startDefault",
+          "runtime.stopDefault",
+          "runtime.restartDefault",
+          "runtime.focusDefault",
+          "runtime.restore",
+          "oauth.prepareUrl",
+          "oauth.complete",
+          "oauth.cancel",
+          "oauth.submitCallbackUrl",
+          "wakeup.fetchAvailableModels",
+          "wakeup.trigger",
+          "wakeup.scheduler.syncState",
+          "wakeup.scheduler.runEnabledTasks",
+          "wakeup.scheduler.confirmTask",
+          "wakeup.scheduler.cancelTask",
+          "wakeup.scheduler.checkTimeouts",
+          "wakeup.runtime.ensureReady",
+          "wakeup.crontab.validate",
+          "wakeup.sharedHistory.load",
+          "wakeup.sharedHistory.add",
+          "wakeup.sharedHistory.clear",
+          "wakeup.sharedScope.cancel",
+          "wakeup.sharedScope.release",
+          "wakeup.setOfficialLsVersionMode",
+          "wakeup.verification.loadState",
+          "wakeup.verification.loadHistory",
+          "wakeup.verification.deleteHistory",
+          "wakeup.verification.runBatch"
+        ]
+      }
+    },
+    {
       "id": "claude_manager",
       "platformId": "claude_manager",
       "version": "0.26.7",
@@ -20,8 +340,6 @@
         "methods": [
           "health.check",
           "adapter.shutdown",
-          "runtime.restore",
-          "runtime.shutdownForAppExit",
           "accounts.list",
           "accounts.current",
           "accounts.delete",
@@ -137,13 +455,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7.zip",
-          "downloadSizeBytes": 7700190,
-          "sha256": "04ddf3b1aa9c745c704c1f930b83143a6ef8c10c355c302099450a045b2077d7"
+          "downloadSizeBytes": 7946104,
+          "sha256": "513f08cfbf78b672263c415514165f98a2424498a366a74e072a0f61f06bc829"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7.zip",
-      "downloadSizeBytes": 7700190,
-      "sha256": "04ddf3b1aa9c745c704c1f930b83143a6ef8c10c355c302099450a045b2077d7"
+      "downloadSizeBytes": 7946104,
+      "sha256": "513f08cfbf78b672263c415514165f98a2424498a366a74e072a0f61f06bc829"
     },
     {
       "id": "zed",
@@ -203,12 +521,12 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7.zip",
-          "downloadSizeBytes": 6031564,
-          "sha256": "49d29af6897128c4656988901d615630acb3c2cf6ebc9e4698fd41edc5822f28"
+          "downloadSizeBytes": 6240942,
+          "sha256": "603888b3280f2ef85e470649825fc7b13edf81260a451505ea1281518deab075"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7.zip",
-      "downloadSizeBytes": 6031564,
+      "downloadSizeBytes": 6240942,
       "capabilities": [
         "accounts",
         "oauth",
@@ -255,7 +573,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "49d29af6897128c4656988901d615630acb3c2cf6ebc9e4698fd41edc5822f28"
+      "sha256": "603888b3280f2ef85e470649825fc7b13edf81260a451505ea1281518deab075"
     },
     {
       "id": "kiro",
@@ -328,12 +646,12 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7.zip",
-          "downloadSizeBytes": 6098125,
-          "sha256": "ce6b8cc52c5c0d530b63500dbb836bc304f2ebe9f3e818d082596b78148d27f2"
+          "downloadSizeBytes": 6322595,
+          "sha256": "8e32e99f4aba2bce186f7326200e71d887fea320656850f1dbfe52db4c29d8de"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7.zip",
-      "downloadSizeBytes": 6098125,
+      "downloadSizeBytes": 6322595,
       "capabilities": [
         "accounts",
         "oauth",
@@ -375,7 +693,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "ce6b8cc52c5c0d530b63500dbb836bc304f2ebe9f3e818d082596b78148d27f2"
+      "sha256": "8e32e99f4aba2bce186f7326200e71d887fea320656850f1dbfe52db4c29d8de"
     },
     {
       "id": "github-copilot",
@@ -445,12 +763,12 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7.zip",
-          "downloadSizeBytes": 5933211,
-          "sha256": "034a9804b620dfbf683792777295449f064840a778aff82429b48c750418225e"
+          "downloadSizeBytes": 6216265,
+          "sha256": "d3d2ceffdf380d14867eeb99e35df1f7ff603d46d2b21e5164855cf4af704ff2"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7.zip",
-      "downloadSizeBytes": 5933211,
+      "downloadSizeBytes": 6216265,
       "capabilities": [
         "accounts",
         "oauth",
@@ -492,7 +810,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "034a9804b620dfbf683792777295449f064840a778aff82429b48c750418225e"
+      "sha256": "d3d2ceffdf380d14867eeb99e35df1f7ff603d46d2b21e5164855cf4af704ff2"
     },
     {
       "id": "windsurf",
@@ -567,12 +885,12 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7.zip",
-          "downloadSizeBytes": 6020216,
-          "sha256": "abd7d67a76d8a0b48eb74679c72e63063844dbc9b7206effb85d76f617c69b7b"
+          "downloadSizeBytes": 6305716,
+          "sha256": "dd2d11db1a90b9ff3a33f913b29d25a8453c49a0c8e3159b471cc502bf895522"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7.zip",
-      "downloadSizeBytes": 6020216,
+      "downloadSizeBytes": 6305716,
       "capabilities": [
         "accounts",
         "oauth",
@@ -615,7 +933,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "abd7d67a76d8a0b48eb74679c72e63063844dbc9b7206effb85d76f617c69b7b"
+      "sha256": "dd2d11db1a90b9ff3a33f913b29d25a8453c49a0c8e3159b471cc502bf895522"
     },
     {
       "id": "cursor",
@@ -727,13 +1045,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7.zip",
-          "downloadSizeBytes": 5977676,
-          "sha256": "e845390c3a40494de7130d9d922cf3c7402b1b6cb80acc3dc77c5197a21badbd"
+          "downloadSizeBytes": 6269776,
+          "sha256": "ce8a5b96632798e9ac82a610af7ec5ae6c14ff433be85f3be186cfd9c278c0b0"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7.zip",
-      "downloadSizeBytes": 5977676,
-      "sha256": "e845390c3a40494de7130d9d922cf3c7402b1b6cb80acc3dc77c5197a21badbd"
+      "downloadSizeBytes": 6269776,
+      "sha256": "ce8a5b96632798e9ac82a610af7ec5ae6c14ff433be85f3be186cfd9c278c0b0"
     },
     {
       "id": "gemini",
@@ -849,13 +1167,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7.zip",
-          "downloadSizeBytes": 5039388,
-          "sha256": "d11d0ed6ee17219d7c0dfd0810bf38cc1ccb06551af2659eb68501da3439b809"
+          "downloadSizeBytes": 6207002,
+          "sha256": "c88f54449f381497ef5c4c95f632a7dc9c3135ad2b657da3374efe4742f8b417"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7.zip",
-      "downloadSizeBytes": 5039388,
-      "sha256": "d11d0ed6ee17219d7c0dfd0810bf38cc1ccb06551af2659eb68501da3439b809"
+      "downloadSizeBytes": 6207002,
+      "sha256": "c88f54449f381497ef5c4c95f632a7dc9c3135ad2b657da3374efe4742f8b417"
     },
     {
       "id": "trae",
@@ -971,13 +1289,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7.zip",
-          "downloadSizeBytes": 5321408,
-          "sha256": "b172785c4f76c99a306164cf309a67607e4e267747604288052a513ba1df5602"
+          "downloadSizeBytes": 6481717,
+          "sha256": "e56a966ad1ab3e06a35bda28e0131c0810e3c955e4d5f77c690ddf9bbdad0874"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7.zip",
-      "downloadSizeBytes": 5321408,
-      "sha256": "b172785c4f76c99a306164cf309a67607e4e267747604288052a513ba1df5602"
+      "downloadSizeBytes": 6481717,
+      "sha256": "e56a966ad1ab3e06a35bda28e0131c0810e3c955e4d5f77c690ddf9bbdad0874"
     },
     {
       "id": "qoder",
@@ -1048,12 +1366,12 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7.zip",
-          "downloadSizeBytes": 5821272,
-          "sha256": "ef2e260a87f33bd3b514699f249e91c7541c411848a0857df670b11a17e2c3a7"
+          "downloadSizeBytes": 6099107,
+          "sha256": "01b2f3509f69d756f61a4c2a8cd64e445749f616d12f025088a0dfee3ba06ab5"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7.zip",
-      "downloadSizeBytes": 5821272,
+      "downloadSizeBytes": 6099107,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1095,7 +1413,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "ef2e260a87f33bd3b514699f249e91c7541c411848a0857df670b11a17e2c3a7"
+      "sha256": "01b2f3509f69d756f61a4c2a8cd64e445749f616d12f025088a0dfee3ba06ab5"
     },
     {
       "id": "codebuddy",
@@ -1209,13 +1527,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7.zip",
-          "downloadSizeBytes": 5821552,
-          "sha256": "c157e6bce3ff26aede82c5bfbe28df1d6aa5751ed48f832e211a179493883ab8"
+          "downloadSizeBytes": 6061750,
+          "sha256": "df2e6cd342ad5c2648dd5fb65bdb7bb275d1f19cb0e37e47f5ebcb5e80c1d72b"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7.zip",
-      "downloadSizeBytes": 5821552,
-      "sha256": "c157e6bce3ff26aede82c5bfbe28df1d6aa5751ed48f832e211a179493883ab8"
+      "downloadSizeBytes": 6061750,
+      "sha256": "df2e6cd342ad5c2648dd5fb65bdb7bb275d1f19cb0e37e47f5ebcb5e80c1d72b"
     },
     {
       "id": "codebuddy_cn",
@@ -1331,13 +1649,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7.zip",
-          "downloadSizeBytes": 5872018,
-          "sha256": "f279a5ee7dc8aa634841de67799f83eaa4ba0531f4771fd8c59b02a5456031cb"
+          "downloadSizeBytes": 6120648,
+          "sha256": "2496415af6af5c12d39b01dc65ce979ab1d54afec5c033708169e8b78da85c9b"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7.zip",
-      "downloadSizeBytes": 5872018,
-      "sha256": "f279a5ee7dc8aa634841de67799f83eaa4ba0531f4771fd8c59b02a5456031cb"
+      "downloadSizeBytes": 6120648,
+      "sha256": "2496415af6af5c12d39b01dc65ce979ab1d54afec5c033708169e8b78da85c9b"
     },
     {
       "id": "workbuddy",
@@ -1456,13 +1774,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7.zip",
-          "downloadSizeBytes": 5899546,
-          "sha256": "ff5e4e4c88a129581116602023301d1f3d715a86299a6c664c16b7c9fba867fc"
+          "downloadSizeBytes": 6116471,
+          "sha256": "ceb3eae41890860133d84211db80b5f3affd0f8991976f7453bee7b0c4126e60"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7.zip",
-      "downloadSizeBytes": 5899546,
-      "sha256": "ff5e4e4c88a129581116602023301d1f3d715a86299a6c664c16b7c9fba867fc"
+      "downloadSizeBytes": 6116471,
+      "sha256": "ceb3eae41890860133d84211db80b5f3affd0f8991976f7453bee7b0c4126e60"
     },
     {
       "id": "codex",
@@ -1561,13 +1879,13 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.7.zip",
-          "downloadSizeBytes": 14989486,
-          "sha256": "d431c7b55d7d63a86f6a77ca5235364fa31d9b3e30528b3d018b8f7324b1b6ef"
+          "downloadSizeBytes": 21874868,
+          "sha256": "b41e35e7a897bf37aae761ade1d8575e427e723e3fc0f183a2758825ce2f4efe"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.7.zip",
-      "downloadSizeBytes": 14989486,
-      "sha256": "d431c7b55d7d63a86f6a77ca5235364fa31d9b3e30528b3d018b8f7324b1b6ef",
+      "downloadSizeBytes": 21874868,
+      "sha256": "b41e35e7a897bf37aae761ade1d8575e427e723e3fc0f183a2758825ce2f4efe",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-codex-adapter",
@@ -1577,6 +1895,8 @@
         "methods": [
           "health.check",
           "adapter.shutdown",
+          "runtime.restore",
+          "runtime.shutdownForAppExit",
           "accounts.list",
           "accounts.current",
           "accounts.keepaliveDue",

@@ -178,6 +178,11 @@ pub(crate) enum PlatformId {
     Workbuddy,
 }
 
+fn is_antigravity_series_runtime_ready() -> bool {
+    crate::modules::platform_package::is_platform_package_runtime_ready("antigravity")
+        || crate::modules::platform_package::is_platform_package_runtime_ready("antigravity_ide")
+}
+
 impl PlatformId {
     pub(crate) fn default_order() -> [Self; 14] {
         [
@@ -277,7 +282,7 @@ impl PlatformId {
 
     pub(crate) fn runtime_ready(self) -> bool {
         match self {
-            Self::Antigravity => true,
+            Self::Antigravity => is_antigravity_series_runtime_ready(),
             _ => crate::modules::platform_package::is_platform_package_runtime_ready(self.as_str()),
         }
     }
@@ -819,7 +824,20 @@ fn get_account_display_info(platform: PlatformId, lang: &str) -> AccountDisplayI
 
 #[cfg(not(target_os = "macos"))]
 fn build_antigravity_display_info(lang: &str) -> AccountDisplayInfo {
-    match crate::modules::account::get_current_account() {
+    if !is_antigravity_series_runtime_ready() {
+        return AccountDisplayInfo {
+            account: format!("📧 {}", get_text("not_logged_in", lang)),
+            quota_lines: vec!["—".to_string()],
+        };
+    }
+
+    match crate::modules::platform_adapter::call_antigravity_series_with_timeout::<
+        Option<crate::models::Account>,
+    >(
+        "accounts.current",
+        serde_json::json!({}),
+        Duration::from_secs(20),
+    ) {
         Ok(Some(account)) => {
             let quota_lines = if let Some(quota) = &account.quota {
                 let grouped_lines = build_antigravity_group_quota_lines(lang, &quota.models);

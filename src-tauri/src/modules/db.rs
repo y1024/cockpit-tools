@@ -18,7 +18,22 @@ pub fn get_db_path() -> Result<PathBuf, String> {
 
     #[cfg(target_os = "windows")]
     {
-        let path = crate::modules::antigravity_paths::state_db_path()?;
+        let roaming_dir = std::env::var("APPDATA")
+            .map(PathBuf::from)
+            .map_err(|error| format!("无法获取 Roaming AppData 目录: {}", error))?;
+        let antigravity_dir = roaming_dir.join("Antigravity");
+        let antigravity_ide_dir = roaming_dir.join("Antigravity IDE");
+        let user_data_dir = if antigravity_ide_dir.exists() {
+            antigravity_ide_dir
+        } else if antigravity_dir.exists() {
+            antigravity_dir
+        } else {
+            roaming_dir.join("Antigravity IDE")
+        };
+        let path = user_data_dir
+            .join("User")
+            .join("globalStorage")
+            .join("state.vscdb");
         if path.exists() {
             return Ok(path);
         }

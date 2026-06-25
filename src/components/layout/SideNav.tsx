@@ -65,6 +65,9 @@ interface SideNavEntry {
 
 const PAGE_PLATFORM_MAP: Partial<Record<Page, PlatformId>> = {
   overview: 'antigravity',
+  instances: 'antigravity',
+  wakeup: 'antigravity',
+  verification: 'antigravity',
   codex: 'codex',
   'codex-api-service': 'codex',
   claude: 'claude_manager',
@@ -82,8 +85,13 @@ const PAGE_PLATFORM_MAP: Partial<Record<Page, PlatformId>> = {
   workbuddy: 'workbuddy',
 };
 
+const APP_PROFILE = String(import.meta.env.VITE_COCKPIT_TOOLS_PROFILE || '').trim();
 const APP_DISPLAY_NAME =
-  import.meta.env.VITE_COCKPIT_TOOLS_PROFILE === 'dev' ? 'Cockpit Tools Dev' : 'Cockpit Tools';
+  APP_PROFILE === 'dev'
+    ? 'Cockpit Tools Dev'
+    : APP_PROFILE === 'test'
+      ? 'Cockpit Tools Test'
+      : 'Cockpit Tools';
 
 const CLASSIC_NAV_MIN_SCALE = 0.5;
 const CLASSIC_NAV_SCALE_EPSILON = 0.004;
@@ -125,6 +133,10 @@ function renderEntryIcon(entry: SideNavEntry, size: number) {
 
 function isAntigravitySuitePlatformIds(platformIds: PlatformId[]): boolean {
   return platformIds.includes('antigravity') && platformIds.includes('antigravity_ide');
+}
+
+function isAntigravitySuitePage(page: Page): boolean {
+  return page === 'overview' || page === 'instances' || page === 'wakeup' || page === 'verification';
 }
 
 export function SideNav({
@@ -201,7 +213,7 @@ export function SideNav({
   );
 
   const antigravityRuntimeTarget = useAntigravityRuntimeTarget();
-  const currentPlatformId = page === 'overview'
+  const currentPlatformId = isAntigravitySuitePage(page)
     ? antigravityRuntimeTarget
     : PAGE_PLATFORM_MAP[page] ?? null;
   const currentEntryId = useMemo<SideNavEntryId | null>(

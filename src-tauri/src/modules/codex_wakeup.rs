@@ -559,7 +559,7 @@ fn ensure_gpt_5_5_model_preset(state: &mut CodexWakeupState) -> bool {
 }
 
 fn data_dir() -> Result<PathBuf, String> {
-    account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 fn tasks_path() -> Result<PathBuf, String> {

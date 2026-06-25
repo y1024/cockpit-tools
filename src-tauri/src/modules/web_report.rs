@@ -90,10 +90,6 @@ pub fn get_actual_port() -> Option<u16> {
 fn build_service_refresh_policies(cfg: &super::config::UserConfig) -> Vec<ServiceRefreshPolicy> {
     let mut policies = vec![
         ServiceRefreshPolicy {
-            key: "antigravity",
-            interval_minutes: cfg.auto_refresh_minutes,
-        },
-        ServiceRefreshPolicy {
             key: "codex",
             interval_minutes: cfg.codex_auto_refresh_minutes,
         },
@@ -134,6 +130,12 @@ fn build_service_refresh_policies(cfg: &super::config::UserConfig) -> Vec<Servic
             interval_minutes: cfg.zed_auto_refresh_minutes,
         },
     ];
+    if is_antigravity_series_runtime_ready() {
+        policies.push(ServiceRefreshPolicy {
+            key: "antigravity",
+            interval_minutes: cfg.auto_refresh_minutes,
+        });
+    }
     if super::platform_package::is_platform_package_installed("windsurf") {
         policies.push(ServiceRefreshPolicy {
             key: "windsurf",
@@ -158,9 +160,15 @@ fn needs_auth_refresh_trigger(now: chrono::DateTime<chrono::Utc>) -> bool {
 async fn run_refresh_for_service(policy: ServiceRefreshPolicy) -> Result<(), String> {
     match policy.key {
         "antigravity" => {
-            super::account::refresh_all_quotas_logic(super::account::QuotaRefreshTrigger::Auto)
-                .await
-                .map(|_| ())
+            if !is_antigravity_series_runtime_ready() {
+                return Ok(());
+            }
+            super::platform_adapter::call_antigravity_series_with_timeout::<serde_json::Value>(
+                "accounts.refreshAll",
+                serde_json::json!({}),
+                Duration::from_secs(180),
+            )
+            .map(|_| ())
         }
         "codex" => {
             if !super::platform_package::is_platform_package_runtime_ready("codex") {
@@ -670,7 +678,9 @@ fn parse_bool_query(value: &str) -> bool {
 
 fn build_report_rows() -> Vec<ReportRow> {
     let mut rows = Vec::new();
-    append_antigravity_rows(&mut rows);
+    if is_antigravity_series_runtime_ready() {
+        append_antigravity_rows(&mut rows);
+    }
     append_codex_rows(&mut rows);
     append_github_copilot_rows(&mut rows);
     append_windsurf_rows(&mut rows);
@@ -700,8 +710,17 @@ fn build_report_rows() -> Vec<ReportRow> {
     rows
 }
 
+fn is_antigravity_series_runtime_ready() -> bool {
+    super::platform_package::is_platform_package_runtime_ready("antigravity")
+        || super::platform_package::is_platform_package_runtime_ready("antigravity_ide")
+}
+
 fn append_antigravity_rows(rows: &mut Vec<ReportRow>) {
-    match super::account::list_accounts() {
+    match super::platform_adapter::call_antigravity_series_with_timeout::<Vec<crate::models::Account>>(
+        "accounts.list",
+        serde_json::json!({}),
+        Duration::from_secs(30),
+    ) {
         Ok(accounts) => {
             for account in accounts {
                 let status = if account.disabled {

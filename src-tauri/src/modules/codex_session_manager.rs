@@ -974,7 +974,7 @@ fn create_trash_root_dir() -> Result<PathBuf, String> {
 }
 
 fn get_session_trash_base_dir() -> Result<PathBuf, String> {
-    Ok(modules::account::get_data_dir()?.join(SESSION_TRASH_ROOT_DIR))
+    Ok(modules::app_data::get_data_dir()?.join(SESSION_TRASH_ROOT_DIR))
 }
 
 fn get_legacy_session_trash_base_dir() -> Option<PathBuf> {

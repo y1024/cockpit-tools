@@ -10,6 +10,7 @@ use std::sync::Mutex;
 
 const ACCOUNTS_INDEX_FILE: &str = "github_copilot_accounts.json";
 const ACCOUNTS_DIR: &str = "github_copilot_accounts";
+const ACCOUNT_STORE_PLATFORM: &str = "github_copilot";
 const VSCODE_GHCP_CURRENT_LOGIN_KEY: &str = "github.copilot-github";
 const VSCODE_GHCP_REQUIRED_SCOPES: &[&str] = &["read:user", "user:email", "repo", "workflow"];
 static GHCP_ACCOUNT_INDEX_LOCK: std::sync::LazyLock<Mutex<()>> =
@@ -39,12 +40,41 @@ fn get_accounts_index_path() -> Result<PathBuf, String> {
     Ok(get_data_dir()?.join(ACCOUNTS_INDEX_FILE))
 }
 
+fn ensure_account_store_migrated() -> Result<(), String> {
+    crate::modules::account_store::ensure_platform_migrated_from_json(
+        ACCOUNT_STORE_PLATFORM,
+        &get_accounts_index_path()?,
+        &get_accounts_dir()?,
+    )
+}
+
+fn account_index_from_store() -> Result<GitHubCopilotAccountIndex, String> {
+    ensure_account_store_migrated()?;
+    let accounts =
+        crate::modules::account_store::list_accounts::<GitHubCopilotAccount>(ACCOUNT_STORE_PLATFORM)?;
+    let mut index = GitHubCopilotAccountIndex::new();
+    index.accounts = accounts.iter().map(|account| account.summary()).collect();
+    Ok(index)
+}
+
 pub fn accounts_index_path_string() -> Result<String, String> {
     Ok(get_accounts_index_path()?.to_string_lossy().to_string())
 }
 
 /// Load a single account by ID (public wrapper)
 pub fn load_account(account_id: &str) -> Option<GitHubCopilotAccount> {
+    if let Err(err) = ensure_account_store_migrated() {
+        logger::log_warn(&format!(
+            "[GitHub Copilot Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
+            account_id, err
+        ));
+    } else if let Ok(Some(account)) = crate::modules::account_store::load_account::<GitHubCopilotAccount>(
+        ACCOUNT_STORE_PLATFORM,
+        account_id,
+    ) {
+        return Some(account);
+    }
+
     load_account_file(account_id)
 }
 
@@ -60,6 +90,12 @@ fn load_account_file(account_id: &str) -> Option<GitHubCopilotAccount> {
 }
 
 fn save_account_file(account: &GitHubCopilotAccount) -> Result<(), String> {
+    ensure_account_store_migrated()?;
+    crate::modules::account_store::save_account(
+        ACCOUNT_STORE_PLATFORM,
+        account.id.as_str(),
+        account,
+    )?;
     let path = get_accounts_dir()?.join(format!("{}.json", account.id));
     let content =
         serde_json::to_string_pretty(account).map_err(|e| format!("序列化账号失败: {}", e))?;
@@ -77,6 +113,7 @@ fn persist_quota_query_error(account_id: &str, message: &str) {
 }
 
 fn delete_account_file(account_id: &str) -> Result<(), String> {
+    crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     let path = get_accounts_dir()?.join(format!("{}.json", account_id));
     if path.exists() {
         fs::remove_file(path).map_err(|e| format!("删除账号失败: {}", e))?;
@@ -85,6 +122,14 @@ fn delete_account_file(account_id: &str) -> Result<(), String> {
 }
 
 fn load_account_index() -> GitHubCopilotAccountIndex {
+    match account_index_from_store() {
+        Ok(index) => return index,
+        Err(error) => logger::log_warn(&format!(
+            "[GitHub Copilot Account][Store] 从 SQLite 读取账号索引失败，回退 JSON: {}",
+            error
+        )),
+    }
+
     let path = match get_accounts_index_path() {
         Ok(p) => p,
         Err(_) => return GitHubCopilotAccountIndex::new(),
@@ -122,6 +167,14 @@ fn load_account_index() -> GitHubCopilotAccountIndex {
 }
 
 fn load_account_index_checked() -> Result<GitHubCopilotAccountIndex, String> {
+    match account_index_from_store() {
+        Ok(index) => return Ok(index),
+        Err(error) => logger::log_warn(&format!(
+            "[GitHub Copilot Account][Store] 从 SQLite 读取账号索引失败，继续检查 JSON: {}",
+            error
+        )),
+    }
+
     let path = get_accounts_index_path()?;
     if !path.exists() {
         if let Some(index) = repair_account_index_from_details("索引文件不存在") {
@@ -171,6 +224,12 @@ fn load_account_index_checked() -> Result<GitHubCopilotAccountIndex, String> {
 }
 
 fn save_account_index(index: &GitHubCopilotAccountIndex) -> Result<(), String> {
+    let ordered_ids = index
+        .accounts
+        .iter()
+        .map(|summary| summary.id.clone())
+        .collect::<Vec<_>>();
+    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
     let path = get_accounts_index_path()?;
     let content =
         serde_json::to_string_pretty(index).map_err(|e| format!("序列化账号索引失败: {}", e))?;
@@ -257,7 +316,7 @@ pub fn list_accounts() -> Vec<GitHubCopilotAccount> {
     index
         .accounts
         .iter()
-        .filter_map(|summary| load_account_file(&summary.id))
+        .filter_map(|summary| load_account(&summary.id))
         .collect()
 }
 
@@ -266,7 +325,7 @@ pub fn list_accounts_checked() -> Result<Vec<GitHubCopilotAccount>, String> {
     Ok(index
         .accounts
         .iter()
-        .filter_map(|summary| load_account_file(&summary.id))
+        .filter_map(|summary| load_account(&summary.id))
         .collect())
 }
 
@@ -472,7 +531,7 @@ pub fn import_from_json(json_content: &str) -> Result<Vec<GitHubCopilotAccount>,
 pub fn export_accounts(account_ids: &[String]) -> Result<String, String> {
     let accounts: Vec<GitHubCopilotAccount> = account_ids
         .iter()
-        .filter_map(|id| load_account_file(id))
+        .filter_map(|id| load_account(id))
         .collect();
     serde_json::to_string_pretty(&accounts).map_err(|e| format!("序列化失败: {}", e))
 }

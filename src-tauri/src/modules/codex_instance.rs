@@ -81,7 +81,7 @@ pub struct UpdateInstanceParams {
 }
 
 fn instances_path() -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     Ok(data_dir.join(CODEX_INSTANCES_FILE))
 }
 
@@ -164,7 +164,7 @@ pub fn get_default_codex_home() -> Result<PathBuf, String> {
 }
 
 pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
-    Ok(modules::account::get_data_dir()?
+    Ok(modules::app_data::get_data_dir()?
         .join("instances")
         .join("codex"))
 }

@@ -1,0 +1,15 @@
+@import '../../styles/pages/overview.css';
+@import '../../styles/pages/overview-extra.css';
+@import '../../styles/pages/wakeup.css';
+@import '../../styles/pages/wakeup-verification.css';
+
+.antigravity-suite-remote {
+  width: 100%;
+  min-height: 520px;
+  padding-bottom: 28px;
+  background: transparent;
+}
+
+.antigravity-suite-remote .main-content {
+  width: 100%;
+}

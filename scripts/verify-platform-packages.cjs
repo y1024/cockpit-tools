@@ -37,6 +37,8 @@ const TAURI_SRC_DIR = path.join(ROOT, 'src-tauri', 'src');
 const TAURI_MODULES_MOD_PATH = path.join(ROOT, 'src-tauri', 'src', 'modules', 'mod.rs');
 
 const EXPECTED_PLATFORM_PACKAGES = new Map([
+  ['antigravity', 'sidecarAdapter'],
+  ['antigravity_ide', 'sidecarAdapter'],
   ['claude_manager', 'sidecarAdapter'],
   ['zed', 'sidecarAdapter'],
   ['kiro', 'sidecarAdapter'],
@@ -53,6 +55,8 @@ const EXPECTED_PLATFORM_PACKAGES = new Map([
 ]);
 
 const PLATFORM_CONTENT_COMPONENTS = new Map([
+  ['antigravity', 'AntigravityRemoteContent'],
+  ['antigravity_ide', 'AntigravityRemoteContent'],
   ['claude_manager', 'ClaudeAccountsContent'],
   ['zed', 'ZedAccountsContent'],
   ['kiro', 'KiroAccountsContent'],
@@ -69,6 +73,8 @@ const PLATFORM_CONTENT_COMPONENTS = new Map([
 ]);
 
 const PLATFORM_RUST_MODULE_PREFIXES = new Map([
+  ['antigravity', ['account', 'antigravity']],
+  ['antigravity_ide', ['account', 'antigravity']],
   ['claude_manager', ['claude']],
   ['zed', ['zed']],
   ['kiro', ['kiro']],
@@ -180,6 +186,10 @@ function assertRustPackageGate(label, source, platformId) {
     `is_platform_package_runtime_ready("${platformId}")`,
     `is_platform_package_installed("${platformId}")`,
   ]);
+}
+
+function isAntigravitySuitePackage(packageId) {
+  return packageId === 'antigravity' || packageId === 'antigravity_ide';
 }
 
 function listFilesRecursive(dir, predicate) {
@@ -551,7 +561,17 @@ function verifyPackage(indexPackage, workspaceMembers) {
   const runtime = readJson(runtimePath, `${packageId} runtime`);
   if (!manifest || !runtime) return;
 
-  for (const key of ['id', 'platformId', 'version', 'packageMode', 'installKind']) {
+  for (const key of [
+    'id',
+    'platformId',
+    'version',
+    'apiVersion',
+    'minCoreVersion',
+    'displayName',
+    'entry',
+    'packageMode',
+    'installKind',
+  ]) {
     assertEqual(`${packageId}: manifest.${key} vs index.${key}`, manifest[key], indexPackage[key]);
   }
   assertEqual(`${packageId}: runtime.packageId vs manifest.id`, runtime.packageId, manifest.id);
@@ -562,6 +582,9 @@ function verifyPackage(indexPackage, workspaceMembers) {
   assertJsonEqual(`${packageId}: runtime.ui vs manifest.ui`, runtime.ui ?? null, manifest.ui ?? null);
   assertJsonEqual(`${packageId}: runtime.capabilities vs manifest.capabilities`, runtime.capabilities ?? [], manifest.capabilities ?? []);
   assertJsonEqual(`${packageId}: runtime.contributions vs manifest.contributions`, runtime.contributions ?? {}, manifest.contributions ?? {});
+  assertJsonEqual(`${packageId}: index.adapter vs manifest.adapter`, indexPackage.adapter ?? null, manifest.adapter ?? null);
+  assertJsonEqual(`${packageId}: index.ui vs manifest.ui`, indexPackage.ui ?? null, manifest.ui ?? null);
+  assertJsonEqual(`${packageId}: index.capabilities vs manifest.capabilities`, indexPackage.capabilities ?? [], manifest.capabilities ?? []);
   assertJsonEqual(`${packageId}: index.contributions vs manifest.contributions`, indexPackage.contributions ?? {}, manifest.contributions ?? {});
   verifyChangelog(packageId, manifest, indexPackage);
   verifyPackageInfo(packageId, manifest, packageRoot);
@@ -725,6 +748,27 @@ function listAccountPageShells() {
 function verifyHostPlatformPages(indexPackages) {
   const pageShells = listAccountPageShells();
   for (const pkg of indexPackages) {
+    if (isAntigravitySuitePackage(pkg.id)) {
+      const pagePath = path.join(PAGES_DIR, 'AntigravitySuitePage.tsx');
+      const source = readText(pagePath, relative(pagePath));
+      const label = `${pkg.id}: ${relative(pagePath)}`;
+      for (const required of [
+        'PlatformPackageToolbar',
+        'PlatformPackageUnavailablePage',
+        'PlatformRuntimePageHost',
+        'usePlatformPackageStore',
+        'platformPackage.runtimeReady',
+        '<PlatformRuntimePageHost',
+        '<PlatformPackageUnavailablePage',
+        '<PlatformPackageToolbar',
+      ]) {
+        if (!source.includes(required)) {
+          fail(`${label} is missing ${required}`);
+        }
+      }
+      continue;
+    }
+
     const pages = pageShells.filter((page) => (
       page.source.includes(`'${pkg.id}'`) || page.source.includes(`"${pkg.id}"`)
     ));
@@ -754,6 +798,33 @@ function verifyHostPlatformPages(indexPackages) {
 
 function verifyRemoteUiSourceReuse(indexPackages) {
   for (const pkg of indexPackages) {
+    if (isAntigravitySuitePackage(pkg.id)) {
+      const remotePath = path.join(PLATFORM_UI_DIR, pkg.id, 'remote.tsx');
+      const sharedPath = path.join(PLATFORM_UI_DIR, 'antigravity', 'shared.tsx');
+      const remoteSource = readText(remotePath, relative(remotePath));
+      const sharedSource = readText(sharedPath, relative(sharedPath));
+
+      assertIncludes(relative(remotePath), remoteSource, 'mountAntigravityRemote');
+      assertIncludes(relative(remotePath), remoteSource, 'unmountAntigravityRemote');
+      assertIncludes(relative(remotePath), remoteSource, 'export async function mount');
+      assertIncludes(relative(remotePath), remoteSource, 'export function unmount');
+
+      for (const expected of [
+        '../../pages/AccountsPage',
+        '../../pages/InstancesPage',
+        '../../pages/WakeupTasksPage',
+        '../../pages/WakeupVerificationPage',
+        'AntigravityRemoteContent',
+        '<AccountsPage hideHeader',
+        '<InstancesPage hideHeader',
+        '<WakeupTasksPage hideHeader',
+        '<WakeupVerificationPage hideHeader',
+      ]) {
+        assertIncludes(relative(sharedPath), sharedSource, expected);
+      }
+      continue;
+    }
+
     const componentName = PLATFORM_CONTENT_COMPONENTS.get(pkg.id);
     if (!componentName) {
       fail(`${pkg.id}: missing expected remote content component mapping`);
@@ -785,8 +856,8 @@ function verifyHostLifecycleControls() {
     'updatePackage',
     'uninstallPackage',
     'showChangelog',
+    'showUpdateDialog',
     "confirmAction('install')",
-    "confirmAction('update')",
     "confirmAction('uninstall')",
     'formatPlatformPackageSize',
     'packageChangelogTitle',
@@ -960,9 +1031,14 @@ function verifyHostHiddenEntryGates(indexPackages) {
   }
 
   assertIncludes(relative(DATA_TRANSFER_PATH), dataTransfer, 'canUseAccountTransferPlatform');
+  assertIncludes(relative(DATA_TRANSFER_PATH), dataTransfer, 'canUseAntigravitySeriesTransfer');
+  assertIncludes(relative(DATA_TRANSFER_PATH), dataTransfer, "'antigravity'");
+  assertIncludes(relative(DATA_TRANSFER_PATH), dataTransfer, "'antigravity_ide'");
   assertIncludes(relative(DATA_TRANSFER_PATH), dataTransfer, "'codex'");
 
   for (const platformId of [
+    'antigravity',
+    'antigravity_ide',
     'codex',
     'claude_manager',
     'codebuddy',
@@ -975,7 +1051,7 @@ function verifyHostHiddenEntryGates(indexPackages) {
 
   for (const required of [
     'pub(crate) fn runtime_ready(self) -> bool',
-    'Self::Antigravity => true',
+    'is_antigravity_series_runtime_ready()',
     'is_platform_package_runtime_ready(self.as_str())',
   ]) {
     assertIncludes(relative(TRAY_PATH), tray, required);
@@ -1004,6 +1080,8 @@ function verifyHostHiddenEntryGates(indexPackages) {
   }
 
   for (const platformId of [
+    'antigravity',
+    'antigravity_ide',
     'codex',
     'windsurf',
     'cursor',
@@ -1014,7 +1092,11 @@ function verifyHostHiddenEntryGates(indexPackages) {
     'trae',
     'workbuddy',
   ]) {
-    assertRustPackageGate(relative(WEB_REPORT_PATH), webReport, platformId);
+    if (isAntigravitySuitePackage(platformId)) {
+      assertIncludes(relative(WEB_REPORT_PATH), webReport, 'is_antigravity_series_runtime_ready()');
+    } else {
+      assertRustPackageGate(relative(WEB_REPORT_PATH), webReport, platformId);
+    }
   }
 
   for (const platformId of [

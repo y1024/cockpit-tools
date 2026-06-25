@@ -995,7 +995,7 @@ fn resolve_downloads_dir() -> Result<PathBuf, String> {
 }
 
 fn get_auto_backup_dir_path() -> Result<PathBuf, String> {
-    Ok(modules::account::get_data_dir()?.join(AUTO_BACKUP_DIR_NAME))
+    Ok(modules::app_data::get_data_dir()?.join(AUTO_BACKUP_DIR_NAME))
 }
 
 fn ensure_auto_backup_dir_path() -> Result<PathBuf, String> {
@@ -1450,7 +1450,7 @@ fn open_path_in_system(path: &Path) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn open_data_folder() -> Result<(), String> {
-    let path = modules::account::get_data_dir()?;
+    let path = modules::app_data::get_data_dir()?;
     open_path_in_system(path.as_path())
 }
 

@@ -16,6 +16,8 @@ members = [
     "crates/cockpit-workbuddy-adapter",
     "crates/cockpit-claude-adapter",
     "crates/cockpit-codex-adapter",
+    "crates/cockpit-antigravity-adapter",
+    "crates/cockpit-antigravity-ide-adapter",
 ]
 resolver = "2"
 

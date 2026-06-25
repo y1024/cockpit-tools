@@ -1,11 +1,5 @@
-pub mod account;
-pub mod account_index_repair;
-pub mod account_store;
 pub mod announcement;
-pub mod antigravity_credential;
-pub mod antigravity_legacy_instance;
-pub mod antigravity_paths;
-pub mod antigravity_switch_history;
+pub mod app_data;
 pub mod atomic_write;
 pub mod config;
 pub mod db;
@@ -22,12 +16,16 @@ pub mod macos_native_menu;
 pub mod oauth;
 pub mod oauth_pending_state;
 pub mod oauth_server;
+pub mod platform_account_facade;
+pub mod platform_account_index_repair;
+pub mod platform_account_store;
 pub mod platform_adapter;
 pub mod platform_package;
 pub mod process;
 pub mod provider_current_state;
 pub mod provider_token_keeper;
 pub mod quota;
+pub mod quota_alert;
 pub mod quota_cache;
 pub mod remote_config;
 pub mod sync_settings;
@@ -47,4 +45,4 @@ pub mod webkit_cache_maintenance;
 pub mod websocket;
 
 // 重新导出常用函数
-pub use account::*;
+pub use platform_account_facade::*;

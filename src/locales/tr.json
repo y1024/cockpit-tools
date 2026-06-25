@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "{{platform}} paketi yüklü değil",
     "packagePageInstallDesc": "Bu sayfadan doğrudan kurabilir veya hesapları yönetmeden önce sağ üstteki paket işlemleriyle kurulum ya da onarım yapabilirsiniz. Kurulumdan önce hesaplar, OAuth, geçiş ve arka plan yenileme yüklenmez.",
     "packageDashboardStateDesc": "Doğrudan kurmak için {{platform}} sayfasını açın veya güncelleme, onarım ya da değişiklik günlüğü için sağ üstteki işlemleri kullanın.",
-    "packageOpenPlatformPage": "Platform sayfasını aç"
+    "packageOpenPlatformPage": "Platform sayfasını aç",
+    "packageBundledShort": "Yerleşik",
+    "packageBundledStatus": "Ana uygulamayla sağlanır",
+    "packageBundledDesc": "Bu platform ana uygulamaya dahildir. Kurulum ve güncellemeler ana uygulama sürümünü izler."
   },
   "privacy": {
     "hideSensitive": "E-postaları gizle",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Tüm oturumlar zaten çalışıyor",
       "noneRunning": "Çalışan oturum bulunamadı",
       "syncThreadsNeedTwo": "İş parçacıklarını eşitlemek için en az iki örnek gerekir",
+      "loadTimeout": "Örnekleri yükleme zaman aşımına uğradı. Tekrar deneyin.",
       "launchPrepared": "Başlatma komutu hazır",
       "speedUpdated": "Hız güncellendi"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Koleksiyonda henüz hesap yok",
       "footerHint": "Erişim kapsamı: {{scope}}",
       "manageAccounts": "Hesapları yönet",
+      "saveTimeout": "API hizmeti üyeleri kaydedilirken zaman aşımı oldu. Daha sonra tekrar deneyin.",
       "rotateKey": "Anahtarı yenile",
       "rotateConfirmMessage": "Sıfırlamadan sonra mevcut API hizmeti anahtarı hemen geçersiz olur ve devam eden istekler kullanılamaz hale gelebilir. Devam edilsin mi?",
       "disableService": "Hizmeti kapat",
@@ -2188,6 +2193,7 @@
       "subtitle": "Codex uyandırma görevlerini planlayın, CLI yolunu test edin ve çalışma geçmişini inceleyin.",
       "heroTitle": "Codex uyandırma görevleri",
       "heroSubtitle": "OAuth Codex hesapları için zaman bazlı uyandırma görevleri oluşturun, hızlı testler çalıştırın ve tüm tetiklemeleri tek yerde inceleyin.",
+      "loadTimeout": "Codex uyandırma görevleri yükleme zaman aşımına uğradı. Tekrar deneyin.",
       "runtimeReady": "Codex CLI hazır",
       "runtimeMissing": "Codex CLI gerekli",
       "runtimeCardTitle": "Codex CLI aracı",
@@ -2606,6 +2612,7 @@
       "desc": "Model sağlayıcılarını ve birden çok API anahtarını tek bir yerde yönetin, ardından Codex API anahtarı hesapları eklerken bunları doğrudan yeniden kullanın.",
       "add": "Sağlayıcı ekle",
       "loadFailed": "Model sağlayıcıları yüklenemedi: {{error}}",
+      "loadTimeout": "Model sağlayıcıları yükleme zaman aşımına uğradı. Tekrar deneyin.",
       "emptyTitle": "Henüz model sağlayıcısı yok",
       "emptyDesc": "Başlamak için sağ üstteki \"Sağlayıcı ekle\" düğmesine tıklayın.",
       "baseUrl": "Temel URL",
@@ -3872,20 +3879,20 @@
         "4": "ayarlar",
         "5": "sorun giderme",
         "6": "loglar",
-        "7": "veri"
+        "7": "app-YYYY-MM-DD.log günlüğü"
       },
       "outcomes": {
         "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting ile nelerin çözüldüğünü anlayın.",
         "1": "İçe/Dışa aktarma, gizlilik ve troubleshooting içinde önerilen akışı kullanarak hataları azaltın.",
         "2": "Ölçeklemeden önce İçe/Dışa aktarma, gizlilik ve troubleshooting içinde bir başarılı çalıştırma doğrulayın.",
-        "3": "İçe/Dışa aktarma, gizlilik ve troubleshooting içinde sorun olursa önce logs kontrol edin ve kanıt toplayın."
+        "3": "logs klasöründe app-YYYY-MM-DD.log ve platform-<platform>-YYYY-MM-DD.log ile çalışma zamanı sorunlarını hızlıca bulun."
       },
       "steps": {
         "0": "İçe/Dışa aktarma, gizlilik ve troubleshooting sayfasını açın.",
         "1": "İçe/Dışa aktarma, gizlilik ve troubleshooting için temel kurulum ve gerekli bağları tamamlayın.",
         "2": "Beklenen sonucu doğrulamak için İçe/Dışa aktarma, gizlilik ve troubleshooting içinde bir manuel işlem çalıştırın.",
         "3": "Troubleshooting için: Ayarlar -> Veri Dizini -> Aç, sonra logs klasörü.",
-        "4": "Önce en yeni app.log veya app.log.* dosyasını kontrol edin.",
+        "4": "Önce en yeni app-YYYY-MM-DD.log dosyasını kontrol edin; platform sorunları için ilgili platform-<platform>-YYYY-MM-DD.log dosyasını seçin.",
         "5": "Raporlarken zaman, platform, yeniden üretim adımları ve maskelenmiş logları ekleyin."
       },
       "summary": "Bu bölüm, günlük akışta İçe/Dışa aktarma, gizlilik ve troubleshooting kullanımını açıklar.",

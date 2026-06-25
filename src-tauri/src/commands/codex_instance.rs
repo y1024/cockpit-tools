@@ -2,6 +2,7 @@
 use std::process::Command;
 
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 
@@ -16,6 +17,7 @@ use crate::models::InstanceLaunchMode;
 use crate::modules;
 
 const DEFAULT_INSTANCE_ID: &str = "__default__";
+const CODEX_INSTANCE_FAST_READ_TIMEOUT: Duration = Duration::from_secs(15);
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -70,7 +72,11 @@ pub async fn codex_get_instance_defaults() -> Result<modules::instance::Instance
 
 #[tauri::command]
 pub async fn codex_list_instances() -> Result<Vec<CodexInstanceProfileView>, String> {
-    modules::platform_adapter::call_codex("instances.list", serde_json::json!({}))
+    modules::platform_adapter::call_codex_with_timeout(
+        "instances.list",
+        serde_json::json!({}),
+        CODEX_INSTANCE_FAST_READ_TIMEOUT,
+    )
 }
 
 #[tauri::command]

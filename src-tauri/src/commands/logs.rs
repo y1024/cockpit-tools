@@ -9,6 +9,7 @@ use crate::modules::logger;
 pub struct ManagedLogFile {
     pub log_file_path: String,
     pub log_file_name: String,
+    pub log_file_display_name: String,
     pub file_size: u64,
     pub modified_at_ms: Option<i64>,
 }
@@ -18,6 +19,7 @@ pub struct LogSnapshot {
     pub log_dir_path: String,
     pub log_file_path: String,
     pub log_file_name: String,
+    pub log_file_display_name: String,
     pub content: String,
     pub line_limit: usize,
     pub file_size: u64,
@@ -62,14 +64,16 @@ fn open_directory(path: &Path) -> Result<(), String> {
 
 fn build_managed_log_file(path: &Path) -> Result<ManagedLogFile, String> {
     let metadata = fs::metadata(path).map_err(|e| format!("读取日志文件元数据失败: {}", e))?;
+    let file_name = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or_default()
+        .to_string();
 
     Ok(ManagedLogFile {
         log_file_path: path.to_string_lossy().to_string(),
-        log_file_name: path
-            .file_name()
-            .and_then(|name| name.to_str())
-            .unwrap_or_default()
-            .to_string(),
+        log_file_display_name: logger::display_log_file_name(&file_name),
+        log_file_name: file_name,
         file_size: metadata.len(),
         modified_at_ms: metadata.modified().ok().and_then(to_unix_millis),
     })
@@ -102,6 +106,11 @@ pub fn logs_get_snapshot(
             .and_then(|name| name.to_str())
             .unwrap_or_default()
             .to_string(),
+        log_file_display_name: log_file
+            .file_name()
+            .and_then(|name| name.to_str())
+            .map(logger::display_log_file_name)
+            .unwrap_or_default(),
         content,
         line_limit,
         file_size: metadata.len(),

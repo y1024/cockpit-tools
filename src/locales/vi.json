@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "Gói {{platform}} chưa được cài đặt",
     "packagePageInstallDesc": "Bạn có thể cài đặt trực tiếp từ trang này, hoặc dùng thao tác gói ở góc trên bên phải để cài đặt hoặc sửa trước khi quản lý tài khoản. Trước khi cài đặt, tài khoản, OAuth, chuyển đổi và làm mới nền sẽ không được tải.",
     "packageDashboardStateDesc": "Mở trang {{platform}} để cài đặt trực tiếp, hoặc dùng thao tác góc trên bên phải để cập nhật, sửa hoặc xem nhật ký thay đổi.",
-    "packageOpenPlatformPage": "Mở trang nền tảng"
+    "packageOpenPlatformPage": "Mở trang nền tảng",
+    "packageBundledShort": "Tích hợp",
+    "packageBundledStatus": "Do ứng dụng chính cung cấp",
+    "packageBundledDesc": "Nền tảng này được tích hợp trong ứng dụng chính. Cài đặt và cập nhật đi theo phiên bản ứng dụng chính."
   },
   "privacy": {
     "hideSensitive": "Ẩn email",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Tất cả các phiên bản đã đang chạy",
       "noneRunning": "Không tìm thấy phiên bản nào đang chạy",
       "syncThreadsNeedTwo": "Cần ít nhất hai phiên bản để đồng bộ luồng",
+      "loadTimeout": "Tải phiên bản quá thời gian. Hãy thử lại.",
       "launchPrepared": "Lệnh khởi chạy đã sẵn sàng",
       "speedUpdated": "Đã cập nhật tốc độ"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Hiện chưa có tài khoản trong bộ sưu tập",
       "footerHint": "Phạm vi truy cập: {{scope}}",
       "manageAccounts": "Quản lý tài khoản",
+      "saveTimeout": "Lưu thành viên dịch vụ API quá thời gian. Hãy thử lại sau.",
       "rotateKey": "Đổi khóa",
       "rotateConfirmMessage": "Sau khi đặt lại, khóa dịch vụ API hiện tại sẽ mất hiệu lực ngay và các yêu cầu đang chạy có thể không dùng được nữa. Tiếp tục chứ?",
       "disableService": "Tắt dịch vụ",
@@ -2188,6 +2193,7 @@
       "subtitle": "Lên lịch tác vụ đánh thức Codex, kiểm tra đường dẫn CLI và xem lại lịch sử thực thi.",
       "heroTitle": "Tác vụ đánh thức Codex",
       "heroSubtitle": "Tạo tác vụ đánh thức theo thời gian cho tài khoản Codex OAuth, chạy thử nhanh và theo dõi mọi lần kích hoạt trong cùng một nơi.",
+      "loadTimeout": "Tải tác vụ đánh thức Codex quá thời gian. Hãy thử lại.",
       "runtimeReady": "Codex CLI đã sẵn sàng",
       "runtimeMissing": "Cần có Codex CLI",
       "runtimeCardTitle": "CLI của Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Quản lý nhà cung cấp mô hình và nhiều API Key ở một nơi, rồi tái sử dụng trực tiếp khi thêm tài khoản Codex dùng API Key.",
       "add": "Thêm nhà cung cấp",
       "loadFailed": "Không thể tải nhà cung cấp mô hình: {{error}}",
+      "loadTimeout": "Tải nhà cung cấp mô hình quá thời gian. Hãy thử lại.",
       "emptyTitle": "Chưa có nhà cung cấp mô hình",
       "emptyDesc": "Bấm \"Thêm nhà cung cấp\" ở góc trên bên phải để bắt đầu.",
       "baseUrl": "URL cơ sở",
@@ -3872,20 +3879,20 @@
         "4": "cài đặt",
         "5": "khắc phục lỗi",
         "6": "nhật ký",
-        "7": "dữ liệu"
+        "7": "nhật ký app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Hiểu Nhập/Xuất, riêng tư và troubleshooting giúp giải quyết điều gì.",
         "1": "Dùng quy trình đề xuất trong Nhập/Xuất, riêng tư và troubleshooting để giảm lỗi thao tác.",
         "2": "Xác nhận một lần chạy thành công trong Nhập/Xuất, riêng tư và troubleshooting trước khi mở rộng.",
-        "3": "Nếu có sự cố ở Nhập/Xuất, riêng tư và troubleshooting, hãy kiểm tra logs và thu thập bằng chứng trước."
+        "3": "Nhanh chóng xác định lỗi runtime trong thư mục logs bằng app-YYYY-MM-DD.log và platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Mở trang Nhập/Xuất, riêng tư và troubleshooting.",
         "1": "Hoàn tất cấu hình cơ bản và liên kết bắt buộc cho Nhập/Xuất, riêng tư và troubleshooting.",
         "2": "Chạy một thao tác thủ công trong Nhập/Xuất, riêng tư và troubleshooting để xác minh kết quả.",
         "3": "Khi troubleshooting: Cài đặt -> Thư mục dữ liệu -> Mở, rồi vào logs.",
-        "4": "Ưu tiên kiểm tra app.log hoặc app.log.* mới nhất.",
+        "4": "Kiểm tra app-YYYY-MM-DD.log mới nhất trước; với lỗi nền tảng, chọn platform-<platform>-YYYY-MM-DD.log tương ứng.",
         "5": "Khi phản hồi, kèm thời gian, nền tảng, bước tái hiện và logs đã ẩn dữ liệu nhạy cảm."
       },
       "summary": "Mục này giải thích cách dùng Nhập/Xuất, riêng tư và troubleshooting trong quy trình hàng ngày.",

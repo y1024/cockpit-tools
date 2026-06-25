@@ -35,33 +35,150 @@ type PlatformRemoteModule = {
   unmount?: (container: HTMLElement) => void;
 };
 
+type CachedPlatformRemoteRuntime = {
+  key: string;
+  platformId: PlatformId;
+  entryPromise: Promise<PlatformPackageUiEntry>;
+  remotePromise: Promise<PlatformRemoteModule>;
+  moduleUrl: string | null;
+  styleElement: HTMLStyleElement | null;
+  lastUsedAt: number;
+};
+
+const REMOTE_RUNTIME_CACHE_MAX = 24;
+const platformRemoteRuntimeCache = new Map<string, CachedPlatformRemoteRuntime>();
+
 function buildRemoteModuleUrl(source: string): string {
   const blob = new Blob([source], { type: 'text/javascript;charset=utf-8' });
   return URL.createObjectURL(blob);
+}
+
+function buildRemoteRuntimeCacheKey(
+  platformId: PlatformId,
+  state: PlatformPackageState,
+): string {
+  return [
+    platformId,
+    state.installedVersion || state.latestVersion || 'unknown',
+    state.installedSizeBytes ?? 'unknown-size',
+  ].join('@');
+}
+
+function cleanupCachedRemoteRuntime(cached: CachedPlatformRemoteRuntime): void {
+  cached.styleElement?.remove();
+  cached.styleElement = null;
+  if (cached.moduleUrl) {
+    URL.revokeObjectURL(cached.moduleUrl);
+    cached.moduleUrl = null;
+  }
+}
+
+function evictStaleRemoteRuntimeCache(): void {
+  while (platformRemoteRuntimeCache.size > REMOTE_RUNTIME_CACHE_MAX) {
+    let oldestKey: string | null = null;
+    let oldestLastUsedAt = Number.POSITIVE_INFINITY;
+    for (const [key, cached] of platformRemoteRuntimeCache) {
+      if (cached.lastUsedAt < oldestLastUsedAt) {
+        oldestKey = key;
+        oldestLastUsedAt = cached.lastUsedAt;
+      }
+    }
+    if (!oldestKey) return;
+    const cached = platformRemoteRuntimeCache.get(oldestKey);
+    if (cached) {
+      cleanupCachedRemoteRuntime(cached);
+      platformRemoteRuntimeCache.delete(oldestKey);
+    }
+  }
+}
+
+function getCachedPlatformRemoteRuntime(
+  platformId: PlatformId,
+  state: PlatformPackageState,
+): CachedPlatformRemoteRuntime {
+  const key = buildRemoteRuntimeCacheKey(platformId, state);
+  const existing = platformRemoteRuntimeCache.get(key);
+  if (existing) {
+    existing.lastUsedAt = Date.now();
+    return existing;
+  }
+
+  const cached: CachedPlatformRemoteRuntime = {
+    key,
+    platformId,
+    entryPromise: getPlatformPackageUiEntry(platformId),
+    remotePromise: undefined as unknown as Promise<PlatformRemoteModule>,
+    moduleUrl: null,
+    styleElement: null,
+    lastUsedAt: Date.now(),
+  };
+  cached.remotePromise = cached.entryPromise
+    .then(async (entry) => {
+      if (entry.protocol !== 'react-remote-esm-v1') {
+        throw new Error(`Unsupported platform UI protocol: ${entry.protocol}`);
+      }
+      if (!entry.exports.includes('mount')) {
+        throw new Error('Platform remote UI is missing mount export');
+      }
+      cached.moduleUrl = buildRemoteModuleUrl(entry.source);
+      const remote = await import(/* @vite-ignore */ cached.moduleUrl) as PlatformRemoteModule;
+      if (typeof remote.mount !== 'function') {
+        throw new Error('Platform remote UI mount export is not a function');
+      }
+      return remote;
+    })
+    .catch((error) => {
+      cleanupCachedRemoteRuntime(cached);
+      platformRemoteRuntimeCache.delete(key);
+      throw error;
+    });
+
+  platformRemoteRuntimeCache.set(key, cached);
+  evictStaleRemoteRuntimeCache();
+  return cached;
 }
 
 function getPlatformRootClass(platformId: PlatformId): string {
   return `${platformId}-platform-ui-root`;
 }
 
+function getTabsSlotRootId(tabsSlotId: string, platformId: PlatformId): string {
+  return `${tabsSlotId}__${platformId.replace(/[^a-zA-Z0-9_-]/g, '-')}-remote-root`;
+}
+
 function installRemoteStyle(
-  platformId: PlatformId,
+  cached: CachedPlatformRemoteRuntime,
   version: string,
   style: string | null | undefined,
 ): HTMLStyleElement | null {
+  const { platformId } = cached;
   document.head.querySelectorAll('style[data-platform-remote-style]').forEach((element) => {
-    if ((element as HTMLStyleElement).dataset.platformRemoteStyle === platformId) {
+    const styleElement = element as HTMLStyleElement;
+    if (
+      styleElement.dataset.platformRemoteStyle === platformId
+      && styleElement.dataset.platformRemoteCacheKey !== cached.key
+    ) {
       element.remove();
     }
   });
 
   if (!style) return null;
-  const element = document.createElement('style');
+  const element = cached.styleElement ?? document.createElement('style');
   element.dataset.platformRemoteStyle = platformId;
   element.dataset.platformRemoteVersion = version;
-  element.textContent = style;
-  document.head.appendChild(element);
+  element.dataset.platformRemoteCacheKey = cached.key;
+  if (!cached.styleElement || element.textContent !== style) {
+    element.textContent = style;
+  }
+  if (!element.isConnected) {
+    document.head.appendChild(element);
+  }
+  cached.styleElement = element;
   return element;
+}
+
+function detachRemoteStyle(cached: CachedPlatformRemoteRuntime | null): void {
+  cached?.styleElement?.remove();
 }
 
 function resolveCleanup(
@@ -83,6 +200,19 @@ function resolveCleanup(
   };
 }
 
+function stableStringify(value: unknown): string {
+  if (value === undefined) return '';
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stableStringify(item)).join(',')}]`;
+  }
+  const objectValue = value as Record<string, unknown>;
+  return `{${Object.keys(objectValue)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${stableStringify(objectValue[key])}`)
+    .join(',')}}`;
+}
+
 export function PlatformRuntimePageHost({
   platformId,
   state,
@@ -93,32 +223,42 @@ export function PlatformRuntimePageHost({
   const { t, i18n } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
+  const stateRef = useRef(state);
+  const runtimeParamsRef = useRef(runtimeParams);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const locale = i18n.language || 'zh-cn';
+  const runtimeCacheKey = buildRemoteRuntimeCacheKey(platformId, state);
+  const runtimeParamsKey = stableStringify(runtimeParams);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  useEffect(() => {
+    runtimeParamsRef.current = runtimeParams;
+  }, [runtimeParams]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let cancelled = false;
-    let moduleUrl: string | null = null;
-    let styleElement: HTMLStyleElement | null = null;
+    let cachedRuntime: CachedPlatformRemoteRuntime | null = null;
     let tabsSlotElement: HTMLElement | null = null;
+    let tabsSlotRootElement: HTMLElement | null = null;
     const platformRootClass = getPlatformRootClass(platformId);
 
     const cleanupInjectedAssets = () => {
-      styleElement?.remove();
-      styleElement = null;
-      if (moduleUrl) {
-        URL.revokeObjectURL(moduleUrl);
-        moduleUrl = null;
-      }
+      detachRemoteStyle(cachedRuntime);
     };
 
     const cleanupTabsSlot = () => {
-      tabsSlotElement?.classList.remove(platformRootClass);
+      if (tabsSlotRootElement?.parentElement) {
+        tabsSlotRootElement.remove();
+      }
       tabsSlotElement = null;
+      tabsSlotRootElement = null;
     };
 
     const cleanupMounted = () => {
@@ -137,25 +277,30 @@ export function PlatformRuntimePageHost({
     cleanupMounted();
     container.replaceChildren();
     tabsSlotElement = tabsSlotId ? document.getElementById(tabsSlotId) : null;
-    tabsSlotElement?.classList.add(platformRootClass);
+    if (tabsSlotElement) {
+      tabsSlotElement.replaceChildren();
+      tabsSlotRootElement = document.createElement('span');
+      tabsSlotRootElement.id = getTabsSlotRootId(tabsSlotId!, platformId);
+      tabsSlotRootElement.className = `platform-remote-tabs-root ${platformRootClass}`;
+      tabsSlotRootElement.dataset.platformRemoteTabsRoot = platformId;
+      tabsSlotElement.appendChild(tabsSlotRootElement);
+    }
 
-    void getPlatformPackageUiEntry(platformId)
-      .then(async (entry: PlatformPackageUiEntry) => {
+    cachedRuntime = getCachedPlatformRemoteRuntime(platformId, stateRef.current);
+    cachedRuntime.lastUsedAt = Date.now();
+
+    void Promise.all([cachedRuntime.entryPromise, cachedRuntime.remotePromise])
+      .then(async ([entry, remote]: [PlatformPackageUiEntry, PlatformRemoteModule]) => {
         if (cancelled) return;
-        if (entry.protocol !== 'react-remote-esm-v1') {
-          throw new Error(`Unsupported platform UI protocol: ${entry.protocol}`);
-        }
-        if (!entry.exports.includes('mount')) {
-          throw new Error('Platform remote UI is missing mount export');
-        }
 
-        styleElement = installRemoteStyle(platformId, entry.version, entry.style);
-        moduleUrl = buildRemoteModuleUrl(entry.source);
-        const remote = await import(/* @vite-ignore */ moduleUrl) as PlatformRemoteModule;
+        installRemoteStyle(cachedRuntime, entry.version, entry.style);
         if (cancelled) {
+          cleanupInjectedAssets();
           return;
         }
-        if (typeof remote.mount !== 'function') {
+
+        const mount = remote.mount;
+        if (typeof mount !== 'function') {
           throw new Error('Platform remote UI mount export is not a function');
         }
 
@@ -164,11 +309,11 @@ export function PlatformRuntimePageHost({
           packageVersion: entry.version,
           locale,
           theme: document.documentElement.dataset.theme || 'light',
-          state,
-          tabsSlotId,
-          runtimeParams,
+          state: stateRef.current,
+          tabsSlotId: tabsSlotRootElement?.id ?? tabsSlotId,
+          runtimeParams: runtimeParamsRef.current,
         };
-        const mounted = await remote.mount(container, hostApi);
+        const mounted = await mount(container, hostApi);
         if (cancelled) {
           resolveCleanup(remote, container, mounted)();
           return;
@@ -199,12 +344,9 @@ export function PlatformRuntimePageHost({
   }, [
     locale,
     platformId,
-    state,
-    state.installStatus,
-    state.installedVersion,
-    state.runtimeReady,
+    runtimeCacheKey,
     tabsSlotId,
-    runtimeParams,
+    runtimeParamsKey,
   ]);
 
   return (

@@ -6,6 +6,7 @@ import type { PlatformPackageState } from '../types/platformPackage';
 import { useGlobalModal } from '../hooks/useGlobalModal';
 import {
   formatPlatformPackageSize,
+  getPlatformPackageFromPackages,
   usePlatformPackageStore,
 } from '../stores/usePlatformPackageStore';
 import { getPlatformLabel, renderPlatformIcon } from '../utils/platformMeta';
@@ -26,6 +27,7 @@ export function PlatformPackageUnavailablePage({
   const { t } = useTranslation();
   const { showModal } = useGlobalModal();
   const installPackage = usePlatformPackageStore((store) => store.installPackage);
+  const refreshPackages = usePlatformPackageStore((store) => store.refresh);
   const loading = usePlatformPackageStore((store) => store.loading);
   const [actionKey, setActionKey] = useState<string | null>(null);
   const [operationError, setOperationError] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export function PlatformPackageUnavailablePage({
     setActionKey('install');
     setOperationError(null);
     try {
-      const nextState = await installPackage(platformId);
+      let nextState = await installPackage(platformId);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
           new CustomEvent('agtools:platform-package-changed', {
@@ -69,7 +71,27 @@ export function PlatformPackageUnavailablePage({
         );
       }
       if (!nextState.runtimeReady) {
-        throw new Error(t('platformLayout.packageInstallNotReady', '平台包已处理，但运行组件尚未就绪'));
+        try {
+          const refreshedPackages = await refreshPackages();
+          const refreshedState = getPlatformPackageFromPackages(refreshedPackages, platformId);
+          if (refreshedState) {
+            nextState = refreshedState;
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(
+                new CustomEvent('agtools:platform-package-changed', {
+                  detail: nextState,
+                }),
+              );
+            }
+          }
+        } catch {
+          // Keep the original action result; the operation error below will surface it.
+        }
+      }
+      if (!nextState.runtimeReady) {
+        throw new Error(
+          nextState.errorMessage || t('platformLayout.packageInstallNotReady', '平台包已处理，但运行组件尚未就绪'),
+        );
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -78,7 +100,7 @@ export function PlatformPackageUnavailablePage({
     } finally {
       setActionKey(null);
     }
-  }, [installPackage, platformId, t]);
+  }, [installPackage, platformId, refreshPackages, t]);
 
   const confirmInstall = useCallback(() => {
     if (!state || !canInstall || operating) {

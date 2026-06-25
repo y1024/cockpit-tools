@@ -5121,6 +5121,10 @@ func (s *relayServer) writeExecutorError(c *gin.Context, err error) {
 			return
 		}
 	}
+	if body, ok := upstreamHTTPErrorBody(err); ok {
+		c.Data(status, "application/json", body)
+		return
+	}
 	writeAPIError(c, status, errorMessage(err), code)
 }
 
@@ -5165,6 +5169,139 @@ func errorMessage(err error) string {
 		return "upstream error"
 	}
 	return message
+}
+
+type upstreamErrorDetail struct {
+	Message   string
+	Type      string
+	Code      any
+	CodeSet   bool
+	Param     any
+	ParamSet  bool
+	RawBody   []byte
+	RawDetail map[string]any
+}
+
+func upstreamHTTPErrorBody(err error) ([]byte, bool) {
+	detail, ok := parseUpstreamErrorDetail(errorMessage(err))
+	if !ok {
+		return nil, false
+	}
+	var payload map[string]any
+	if err := json.Unmarshal(detail.RawBody, &payload); err == nil {
+		if _, hasError := payload["error"].(map[string]any); hasError {
+			return detail.RawBody, true
+		}
+	}
+	errorObject := map[string]any{}
+	if detail.Message != "" {
+		errorObject["message"] = detail.Message
+	}
+	if detail.Type != "" {
+		errorObject["type"] = detail.Type
+	}
+	if detail.CodeSet {
+		errorObject["code"] = detail.Code
+	}
+	if detail.ParamSet {
+		errorObject["param"] = detail.Param
+	}
+	if len(errorObject) == 0 {
+		return nil, false
+	}
+	body, err := json.Marshal(map[string]any{"error": errorObject})
+	if err != nil {
+		return nil, false
+	}
+	return body, true
+}
+
+func parseUpstreamErrorDetail(errText string) (upstreamErrorDetail, bool) {
+	trimmed := strings.TrimSpace(errText)
+	if trimmed == "" || !json.Valid([]byte(trimmed)) {
+		return upstreamErrorDetail{}, false
+	}
+	var payload map[string]any
+	if err := json.Unmarshal([]byte(trimmed), &payload); err != nil {
+		return upstreamErrorDetail{}, false
+	}
+	detailMap, _ := payload["error"].(map[string]any)
+	topLevel := false
+	if detailMap == nil {
+		if !looksLikeTopLevelErrorPayload(payload) {
+			return upstreamErrorDetail{}, false
+		}
+		topLevel = true
+		detailMap = payload
+	}
+	detail := upstreamErrorDetail{
+		Message:   stringValue(detailMap["message"]),
+		Type:      stringValue(detailMap["type"]),
+		RawBody:   []byte(trimmed),
+		RawDetail: detailMap,
+	}
+	if topLevel && strings.EqualFold(detail.Type, "error") {
+		detail.Type = firstNonEmptyString(stringValue(detailMap["error_type"]), stringValue(detailMap["errorType"]))
+	}
+	if code, ok := detailMap["code"]; ok {
+		detail.Code = code
+		detail.CodeSet = true
+	}
+	if param, ok := detailMap["param"]; ok {
+		detail.Param = param
+		detail.ParamSet = true
+	}
+	if detail.Message == "" {
+		if detail.CodeSet {
+			detail.Message = stringValue(detail.Code)
+		}
+		if detail.Message == "" {
+			detail.Message = detail.Type
+		}
+	}
+	if detail.Message == "" && detail.Type == "" && !detail.CodeSet && !detail.ParamSet {
+		return upstreamErrorDetail{}, false
+	}
+	return detail, true
+}
+
+func looksLikeTopLevelErrorPayload(payload map[string]any) bool {
+	if len(payload) == 0 {
+		return false
+	}
+	if strings.EqualFold(stringValue(payload["type"]), "error") {
+		return true
+	}
+	for _, key := range []string{"message", "code", "error_type", "errorType", "param"} {
+		if _, ok := payload[key]; ok {
+			return true
+		}
+	}
+	return false
+}
+
+func stringValue(value any) string {
+	switch v := value.(type) {
+	case string:
+		return strings.TrimSpace(v)
+	case json.Number:
+		return strings.TrimSpace(v.String())
+	case fmt.Stringer:
+		return strings.TrimSpace(v.String())
+	case nil:
+		return ""
+	default:
+		return strings.TrimSpace(fmt.Sprint(v))
+	}
+}
+
+func firstNonEmptyString(values ...string) string {
+	for _, value := range values {
+		if strings.TrimSpace(value) != "" {
+			return strings.TrimSpace(value)
+		}
+	}
+	return ""
 }
 
 func setEventStreamHeaders(headers http.Header) {
@@ -5254,6 +5391,11 @@ func streamKeepAliveInterval(cfg *config.Config) time.Duration {
 
 func writeStreamTerminalError(c *gin.Context, err error) {
 	status := statusCodeFromError(err)
+	if strings.HasPrefix(strings.Split(requestPath(c.Request), "?")[0], "/v1/responses") {
+		payload := buildResponsesStreamErrorPayload(status, errorMessage(err))
+		_, _ = fmt.Fprintf(c.Writer, "event: error\ndata: %s\n\n", string(payload))
+		return
+	}
 	payload, marshalErr := json.Marshal(gin.H{
 		"error": gin.H{
 			"message": errorMessage(err),
@@ -5265,6 +5407,76 @@ func writeStreamTerminalError(c *gin.Context, err error) {
 		return
 	}
 	_, _ = fmt.Fprintf(c.Writer, "data: %s\n\n", string(payload))
+}
+
+func buildResponsesStreamErrorPayload(status int, errText string) []byte {
+	if status <= 0 {
+		status = http.StatusInternalServerError
+	}
+	message := strings.TrimSpace(errText)
+	if message == "" {
+		message = http.StatusText(status)
+	}
+	payload := map[string]any{
+		"type":            "error",
+		"code":            responsesStreamFallbackErrorCode(status),
+		"message":         message,
+		"sequence_number": 0,
+	}
+	if detail, ok := parseUpstreamErrorDetail(errText); ok {
+		if detail.Message != "" {
+			payload["message"] = detail.Message
+		}
+		if detail.CodeSet {
+			if codeValue := stringValue(detail.Code); codeValue != "" {
+				payload["code"] = codeValue
+			} else {
+				payload["code"] = detail.Code
+			}
+		}
+		if detail.ParamSet {
+			payload["param"] = detail.Param
+		}
+		if detail.Type != "" {
+			payload["error_type"] = detail.Type
+		}
+		if len(detail.RawDetail) > 0 {
+			payload["error"] = detail.RawDetail
+		}
+	}
+	data, marshalErr := json.Marshal(payload)
+	if marshalErr != nil {
+		data, _ = json.Marshal(map[string]any{
+			"type":            "error",
+			"code":            "internal_server_error",
+			"message":         message,
+			"sequence_number": 0,
+		})
+	}
+	return data
+}
+
+func responsesStreamFallbackErrorCode(status int) string {
+	switch status {
+	case http.StatusUnauthorized:
+		return "invalid_api_key"
+	case http.StatusForbidden:
+		return "insufficient_quota"
+	case http.StatusTooManyRequests:
+		return "rate_limit_exceeded"
+	case http.StatusNotFound:
+		return "model_not_found"
+	case http.StatusRequestTimeout, http.StatusGatewayTimeout:
+		return "request_timeout"
+	default:
+		if status >= http.StatusInternalServerError {
+			return "internal_server_error"
+		}
+		if status >= http.StatusBadRequest {
+			return "invalid_request_error"
+		}
+		return "unknown_error"
+	}
 }
 
 type relayStreamFrameMode int

@@ -701,6 +701,8 @@ fn handle_http_request(
 }
 
 fn main() {
+    cockpit_core::modules::logger::init_logger();
+
     let runtime = Runtime::new().expect("create tokio runtime");
     let server = Server::http("127.0.0.1:0").expect("bind qoder adapter server");
     let address = server.server_addr().to_string();

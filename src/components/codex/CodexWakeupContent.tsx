@@ -1065,8 +1065,8 @@ export function CodexWakeupContent({
   );
 
   useEffect(() => {
-    void loadAll();
-  }, [loadAll]);
+    void loadAll(t('codex.wakeup.loadTimeout', '加载 Codex 唤醒任务超时，请重试。'));
+  }, [loadAll, t]);
 
   useEffect(() => {
     const syncPrivacyMode = () => {
@@ -1450,7 +1450,7 @@ export function CodexWakeupContent({
       const payload = fromRawWakeupProgressPayload(event.payload as never);
       applyProgressPayload(payload);
       if (payload.phase === 'batch_completed') {
-        void loadAll();
+        void loadAll(t('codex.wakeup.loadTimeout', '加载 Codex 唤醒任务超时，请重试。'));
       }
     }).then((fn) => {
       unlisten = fn;
@@ -1461,7 +1461,7 @@ export function CodexWakeupContent({
         unlisten();
       }
     };
-  }, [applyProgressPayload, loadAll]);
+  }, [applyProgressPayload, loadAll, t]);
 
   const previewRuns = useMemo(() => calculatePreviewRuns(taskDraft), [taskDraft]);
   const executionCounts = useMemo(() => {
@@ -1832,11 +1832,10 @@ export function CodexWakeupContent({
   }, [setPresetModalError]);
 
   const closePresetModal = useCallback(() => {
-    if (saving) return;
     setShowPresetModal(false);
     setPresetDraft(createEmptyPresetDraft());
     setPresetModalError(null);
-  }, [saving, setPresetModalError]);
+  }, [setPresetModalError]);
 
   const handleSelectTaskPreset = useCallback(
     (presetId: string) => {
@@ -1983,11 +1982,10 @@ export function CodexWakeupContent({
   }, [resolvedModelSelection]);
 
   const closeTaskModal = useCallback(() => {
-    if (saving) return;
     setShowTaskModal(false);
     setTaskModalError(null);
     setTaskDraft(createEmptyTaskDraftWithRememberedModel());
-  }, [createEmptyTaskDraftWithRememberedModel, saving]);
+  }, [createEmptyTaskDraftWithRememberedModel]);
 
   const cancelRunningTest = useCallback(() => {
     const scopeId = activeTestScopeIdRef.current;
@@ -2619,7 +2617,7 @@ export function CodexWakeupContent({
                 <ChevronLeft size={14} />
               </button>
               <h2>{runtimeGuideTitle}</h2>
-              <button className="modal-close" onClick={closeRuntimeGuideModal} disabled={runtimeGuideRefreshing}>
+              <button className="modal-close" onClick={closeRuntimeGuideModal}>
                 <X />
               </button>
             </div>
@@ -2696,7 +2694,7 @@ export function CodexWakeupContent({
               )}
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeRuntimeGuideModal} disabled={runtimeGuideRefreshing}>
+              <button className="btn btn-secondary" onClick={closeRuntimeGuideModal}>
                 {t('common.close')}
               </button>
               <button className="btn btn-primary" onClick={() => void handleRefreshRuntimeGuide()} disabled={runtimeGuideRefreshing}>
@@ -2718,13 +2716,12 @@ export function CodexWakeupContent({
                   onClick={closePresetModal}
                   title={t('common.back', '返回')}
                   aria-label={t('common.back', '返回')}
-                  disabled={saving}
                 >
                   <ChevronLeft size={14} />
                 </button>
               )}
               <h2>{t('codex.wakeup.presetManagerTitle')}</h2>
-              <button className="modal-close" onClick={closePresetModal} disabled={saving}>
+              <button className="modal-close" onClick={closePresetModal}>
                 <X />
               </button>
             </div>
@@ -2854,7 +2851,7 @@ export function CodexWakeupContent({
                   {t('common.delete')}
                 </button>
               )}
-              <button className="btn btn-secondary" onClick={closePresetModal} disabled={saving}>
+              <button className="btn btn-secondary" onClick={closePresetModal}>
                 {t('common.close')}
               </button>
               <button className="btn btn-primary" onClick={() => void handleSavePreset()} disabled={saving}>
@@ -3277,7 +3274,7 @@ export function CodexWakeupContent({
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeTaskModal} disabled={saving}>
+              <button className="btn btn-secondary" onClick={closeTaskModal}>
                 {t('common.cancel')}
               </button>
               <button className="btn btn-primary" onClick={() => void handleSaveTask()} disabled={saving}>
@@ -3405,7 +3402,7 @@ export function CodexWakeupContent({
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeTestModal} disabled={testing}>
+              <button className="btn btn-secondary" onClick={closeTestModal}>
                 {t('common.cancel')}
               </button>
               <button className="btn btn-primary" onClick={() => void handleRunTest()} disabled={testing || !runtime?.available}>

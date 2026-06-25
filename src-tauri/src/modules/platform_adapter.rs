@@ -6,11 +6,11 @@ use std::io::{BufRead, BufReader, Read};
 use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use std::sync::Mutex;
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 use tauri::Emitter;
 use tiny_http::{Header, Method, Response, Server, StatusCode};
 
-use crate::modules::{logger, platform_package};
+use crate::modules::{app_data, logger, platform_package};
 
 const ZED_PLATFORM_ID: &str = "zed";
 const KIRO_PLATFORM_ID: &str = "kiro";
@@ -25,11 +25,15 @@ const CODEBUDDY_CN_PLATFORM_ID: &str = "codebuddy_cn";
 const WORKBUDDY_PLATFORM_ID: &str = "workbuddy";
 const CLAUDE_MANAGER_PLATFORM_ID: &str = "claude_manager";
 const CODEX_PLATFORM_ID: &str = "codex";
+const ANTIGRAVITY_PLATFORM_ID: &str = "antigravity";
+const ANTIGRAVITY_IDE_PLATFORM_ID: &str = "antigravity_ide";
 const ADAPTER_BOOT_TIMEOUT: Duration = Duration::from_secs(10);
 const ADAPTER_CALL_TIMEOUT: Duration = Duration::from_secs(180);
 const ADAPTER_STOP_TIMEOUT: Duration = Duration::from_secs(3);
 const HOST_EVENT_PATH: &str = "/platform-adapter-events";
 const HOST_EVENT_BODY_LIMIT_BYTES: u64 = 1024 * 1024;
+const DATA_DIR_ENV: &str = "COCKPIT_TOOLS_DATA_DIR";
+const PROFILE_ENV: &str = "COCKPIT_TOOLS_PROFILE";
 
 static PLATFORM_ADAPTERS: std::sync::LazyLock<Mutex<HashMap<String, AdapterProcess>>> =
     std::sync::LazyLock::new(|| Mutex::new(HashMap::new()));
@@ -62,6 +66,8 @@ struct HostEventResponse {
 struct AdapterProcess {
     package_dir: PathBuf,
     executable_path: PathBuf,
+    executable_len: Option<u64>,
+    executable_modified: Option<SystemTime>,
     child: Child,
     endpoint: AdapterEndpoint,
 }
@@ -124,7 +130,7 @@ fn hidden_command(path: &PathBuf) -> Command {
     command
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
-        .stderr(Stdio::null());
+        .stderr(Stdio::piped());
 
     #[cfg(target_os = "windows")]
     {
@@ -307,6 +313,48 @@ fn stop_child(child: &mut Child) {
     let _ = child.wait();
 }
 
+fn drain_adapter_reader<R>(platform_id: String, stream_name: &'static str, reader: BufReader<R>)
+where
+    R: Read + Send + 'static,
+{
+    for line in reader.lines() {
+        match line {
+            Ok(line) => {
+                let line = line.trim();
+                if line.is_empty() {
+                    continue;
+                }
+                let message = format!(
+                    "[PlatformAdapter][{}][{}] {}",
+                    platform_id, stream_name, line
+                );
+                if stream_name == "stderr" {
+                    logger::log_warn(&message);
+                } else {
+                    logger::log_info(&message);
+                }
+            }
+            Err(error) => {
+                logger::log_warn(&format!(
+                    "[PlatformAdapter] 读取 adapter {} 失败: platform={}, error={}",
+                    stream_name, platform_id, error
+                ));
+                break;
+            }
+        }
+    }
+}
+
+fn start_adapter_stderr_drain(platform_id: &str, child: &mut Child) {
+    let Some(stderr) = child.stderr.take() else {
+        return;
+    };
+    let platform_label = platform_id.to_string();
+    std::thread::spawn(move || {
+        drain_adapter_reader(platform_label, "stderr", BufReader::new(stderr));
+    });
+}
+
 fn read_bootstrap_line(platform_id: &str, child: &mut Child) -> Result<String, String> {
     let stdout = child
         .stdout
@@ -316,25 +364,46 @@ fn read_bootstrap_line(platform_id: &str, child: &mut Child) -> Result<String, S
     let platform_id_for_thread = platform_label.clone();
     let (sender, receiver) = std::sync::mpsc::channel();
     std::thread::spawn(move || {
+        let mut reader = BufReader::new(stdout);
         let mut line = String::new();
-        let result = BufReader::new(stdout)
-            .read_line(&mut line)
-            .map(|_| line)
-            .map_err(|error| {
-                format!(
-                    "读取平台 adapter 启动信息失败: platform={}, error={}",
-                    platform_id_for_thread, error
-                )
-            });
-        let _ = sender.send(result);
+        let result = reader.read_line(&mut line).map(|_| line).map_err(|error| {
+            format!(
+                "读取平台 adapter 启动信息失败: platform={}, error={}",
+                platform_id_for_thread, error
+            )
+        });
+        if sender.send(result).is_ok() {
+            drain_adapter_reader(platform_id_for_thread, "stdout", reader);
+        }
     });
     receiver
         .recv_timeout(ADAPTER_BOOT_TIMEOUT)
         .map_err(|_| format!("平台 adapter 启动超时: {}", platform_label))?
 }
 
-fn spawn_adapter(platform_id: &str) -> Result<AdapterProcess, String> {
-    let installed = platform_package::installed_platform_adapter(platform_id)?;
+fn platform_adapter_log_file_prefix(platform_id: &str) -> String {
+    logger::platform_log_file_prefix(platform_id)
+}
+
+fn adapter_profile_env_value() -> String {
+    std::env::var(PROFILE_ENV)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(app_data::profile_name)
+}
+
+fn log_adapter_start_failure(platform_id: &str, error: &str) {
+    logger::log_warn(&format!(
+        "[PlatformAdapter] adapter 启动失败: platform={}, error={}",
+        platform_id, error
+    ));
+}
+
+fn spawn_adapter(
+    platform_id: &str,
+    installed: platform_package::InstalledPlatformAdapter,
+) -> Result<AdapterProcess, String> {
     if installed.adapter.protocol != "http-json-v1" {
         return Err(format!(
             "平台 adapter 协议不支持: {}",
@@ -343,11 +412,19 @@ fn spawn_adapter(platform_id: &str) -> Result<AdapterProcess, String> {
     }
 
     let host_event_bridge = ensure_host_event_bridge()?;
+    let data_dir = app_data::resolve_data_dir()?;
+    let profile = adapter_profile_env_value();
     let mut command = hidden_command(&installed.executable_path);
     command
         .current_dir(&installed.current_dir)
+        .env(DATA_DIR_ENV, &data_dir)
+        .env(PROFILE_ENV, &profile)
         .env("COCKPIT_PLATFORM_ID", platform_id)
         .env("COCKPIT_PLATFORM_PACKAGE_DIR", &installed.current_dir)
+        .env(
+            "COCKPIT_PLATFORM_LOG_FILE_PREFIX",
+            platform_adapter_log_file_prefix(platform_id),
+        )
         .env("COCKPIT_HOST_EVENT_URL", &host_event_bridge.url)
         .env("COCKPIT_HOST_EVENT_TOKEN", &host_event_bridge.token);
 
@@ -360,9 +437,12 @@ fn spawn_adapter(platform_id: &str) -> Result<AdapterProcess, String> {
         )
     })?;
 
+    start_adapter_stderr_drain(platform_id, &mut child);
+
     let bootstrap_line = match read_bootstrap_line(platform_id, &mut child) {
         Ok(line) => line,
         Err(error) => {
+            log_adapter_start_failure(platform_id, &error);
             stop_child(&mut child);
             return Err(error);
         }
@@ -394,42 +474,124 @@ fn spawn_adapter(platform_id: &str) -> Result<AdapterProcess, String> {
 
     Ok(AdapterProcess {
         package_dir: installed.current_dir,
+        executable_len: adapter_executable_len(&installed.executable_path),
+        executable_modified: adapter_executable_modified(&installed.executable_path),
         executable_path: installed.executable_path,
         child,
         endpoint,
     })
 }
 
+fn adapter_executable_len(path: &PathBuf) -> Option<u64> {
+    std::fs::metadata(path).ok().map(|metadata| metadata.len())
+}
+
+fn adapter_executable_modified(path: &PathBuf) -> Option<SystemTime> {
+    std::fs::metadata(path)
+        .ok()
+        .and_then(|metadata| metadata.modified().ok())
+}
+
+fn adapter_process_matches(
+    process: &AdapterProcess,
+    installed: &platform_package::InstalledPlatformAdapter,
+    executable_len: Option<u64>,
+    executable_modified: Option<SystemTime>,
+) -> bool {
+    process.package_dir == installed.current_dir
+        && process.executable_path == installed.executable_path
+        && process.executable_len == executable_len
+        && process.executable_modified == executable_modified
+}
+
 fn adapter_endpoint(platform_id: &str) -> Result<AdapterEndpoint, String> {
-    let installed = platform_package::installed_platform_adapter(platform_id)?;
+    let installed = installed_platform_adapter_with_repair(platform_id)?;
+    let executable_len = adapter_executable_len(&installed.executable_path);
+    let executable_modified = adapter_executable_modified(&installed.executable_path);
+
+    let old_process = {
+        let mut adapters = PLATFORM_ADAPTERS
+            .lock()
+            .map_err(|_| "获取平台 adapter 锁失败".to_string())?;
+
+        if let Some(process) = adapters.get_mut(platform_id) {
+            if adapter_process_matches(process, &installed, executable_len, executable_modified)
+                && child_is_running(&mut process.child)
+            {
+                return Ok(process.endpoint.clone());
+            }
+        }
+
+        adapters.remove(platform_id)
+    };
+
+    if let Some(mut old) = old_process {
+        stop_child(&mut old.child);
+    }
+
+    let mut new_process = spawn_adapter(platform_id, installed.clone())?;
+    let new_endpoint = new_process.endpoint.clone();
     let mut adapters = PLATFORM_ADAPTERS
         .lock()
         .map_err(|_| "获取平台 adapter 锁失败".to_string())?;
 
-    let should_restart = match adapters.get_mut(platform_id) {
-        Some(process) => {
-            process.package_dir != installed.current_dir
-                || process.executable_path != installed.executable_path
-                || !child_is_running(&mut process.child)
+    if let Some(process) = adapters.get_mut(platform_id) {
+        if adapter_process_matches(process, &installed, executable_len, executable_modified)
+            && child_is_running(&mut process.child)
+        {
+            stop_child(&mut new_process.child);
+            return Ok(process.endpoint.clone());
         }
-        None => true,
-    };
-
-    if should_restart {
         if let Some(mut old) = adapters.remove(platform_id) {
             stop_child(&mut old.child);
         }
-        let process = spawn_adapter(platform_id)?;
-        adapters.insert(platform_id.to_string(), process);
     }
 
-    adapters
-        .get(platform_id)
-        .map(|process| process.endpoint.clone())
-        .ok_or_else(|| format!("平台 adapter 未启动: {}", platform_id))
+    adapters.insert(platform_id.to_string(), new_process);
+    Ok(new_endpoint)
 }
 
-fn post_adapter_request(
+fn should_repair_installed_adapter(error: &str) -> bool {
+    error.contains("平台包缺少 adapter 声明")
+        || error.contains("平台包 adapter entry 不存在")
+        || error.contains("平台包 manifest 与 runtime adapter 声明不一致")
+}
+
+fn installed_platform_adapter_with_repair(
+    platform_id: &str,
+) -> Result<platform_package::InstalledPlatformAdapter, String> {
+    match platform_package::installed_platform_adapter(platform_id) {
+        Ok(installed) => Ok(installed),
+        Err(error) => {
+            if !should_repair_installed_adapter(&error) {
+                return Err(error);
+            }
+            let Some(app) = crate::get_app_handle() else {
+                return Err(error);
+            };
+            logger::log_warn(&format!(
+                "[PlatformAdapter] 已安装平台包 adapter 声明异常，尝试重新安装修复: platform={}, error={}",
+                platform_id, error
+            ));
+            platform_package::install_platform_package(app, platform_id).map_err(
+                |repair_error| {
+                    format!(
+                        "{}；自动修复平台包失败，请在平台管理中手动修复或重新安装: {}",
+                        error, repair_error
+                    )
+                },
+            )?;
+            platform_package::installed_platform_adapter(platform_id).map_err(|retry_error| {
+                format!(
+                    "{}；自动修复平台包后仍无法加载 adapter: {}",
+                    error, retry_error
+                )
+            })
+        }
+    }
+}
+
+fn post_adapter_request_on_blocking_thread(
     endpoint: &AdapterEndpoint,
     method: &str,
     payload: Value,
@@ -470,6 +632,24 @@ fn post_adapter_request(
             .map(|error| error.message)
             .unwrap_or_else(|| "平台 adapter 调用失败".to_string()),
     ))
+}
+
+fn post_adapter_request(
+    endpoint: &AdapterEndpoint,
+    method: &str,
+    payload: Value,
+    timeout: Duration,
+) -> Result<Value, AdapterRequestError> {
+    let endpoint = endpoint.clone();
+    let method = method.to_string();
+    let (sender, receiver) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        let result = post_adapter_request_on_blocking_thread(&endpoint, &method, payload, timeout);
+        let _ = sender.send(result);
+    });
+    receiver
+        .recv_timeout(timeout.saturating_add(Duration::from_secs(1)))
+        .map_err(|_| AdapterRequestError::Transport("调用平台 adapter 超时".to_string()))?
 }
 
 fn call_platform_adapter_value(
@@ -565,6 +745,41 @@ pub fn call_claude_manager_value(method: &str, payload: Value) -> Result<Value, 
 
 pub fn call_codex_value(method: &str, payload: Value) -> Result<Value, String> {
     call_platform_adapter_value(CODEX_PLATFORM_ID, method, payload)
+}
+
+pub fn call_antigravity_value(method: &str, payload: Value) -> Result<Value, String> {
+    call_platform_adapter_value(ANTIGRAVITY_PLATFORM_ID, method, payload)
+}
+
+pub fn call_antigravity_ide_value(method: &str, payload: Value) -> Result<Value, String> {
+    call_platform_adapter_value(ANTIGRAVITY_IDE_PLATFORM_ID, method, payload)
+}
+
+fn default_antigravity_series_platform_id() -> &'static str {
+    if platform_package::is_platform_package_installed(ANTIGRAVITY_IDE_PLATFORM_ID) {
+        ANTIGRAVITY_IDE_PLATFORM_ID
+    } else if platform_package::is_platform_package_installed(ANTIGRAVITY_PLATFORM_ID) {
+        ANTIGRAVITY_PLATFORM_ID
+    } else {
+        ANTIGRAVITY_IDE_PLATFORM_ID
+    }
+}
+
+pub fn call_antigravity_series_value(method: &str, payload: Value) -> Result<Value, String> {
+    call_platform_adapter_value(default_antigravity_series_platform_id(), method, payload)
+}
+
+pub fn call_antigravity_series_value_with_timeout(
+    method: &str,
+    payload: Value,
+    timeout: Duration,
+) -> Result<Value, String> {
+    call_platform_adapter_value_with_timeout(
+        default_antigravity_series_platform_id(),
+        method,
+        payload,
+        timeout,
+    )
 }
 
 pub fn call_zed_with_timeout<T: DeserializeOwned>(
@@ -790,6 +1005,70 @@ pub fn call_codex<T: DeserializeOwned>(method: &str, payload: Value) -> Result<T
     serde_json::from_value(value).map_err(|error| format!("解析 Codex adapter 数据失败: {}", error))
 }
 
+pub fn call_antigravity_with_timeout<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+    timeout: Duration,
+) -> Result<T, String> {
+    let value = call_platform_adapter_value_with_timeout(
+        ANTIGRAVITY_PLATFORM_ID,
+        method,
+        payload,
+        timeout,
+    )?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity adapter 数据失败: {}", error))
+}
+
+pub fn call_antigravity<T: DeserializeOwned>(method: &str, payload: Value) -> Result<T, String> {
+    let value = call_antigravity_value(method, payload)?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity adapter 数据失败: {}", error))
+}
+
+pub fn call_antigravity_ide_with_timeout<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+    timeout: Duration,
+) -> Result<T, String> {
+    let value = call_platform_adapter_value_with_timeout(
+        ANTIGRAVITY_IDE_PLATFORM_ID,
+        method,
+        payload,
+        timeout,
+    )?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity IDE adapter 数据失败: {}", error))
+}
+
+pub fn call_antigravity_ide<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+) -> Result<T, String> {
+    let value = call_antigravity_ide_value(method, payload)?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity IDE adapter 数据失败: {}", error))
+}
+
+pub fn call_antigravity_series<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+) -> Result<T, String> {
+    let value = call_antigravity_series_value(method, payload)?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity 系列 adapter 数据失败: {}", error))
+}
+
+pub fn call_antigravity_series_with_timeout<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+    timeout: Duration,
+) -> Result<T, String> {
+    let value = call_antigravity_series_value_with_timeout(method, payload, timeout)?;
+    serde_json::from_value(value)
+        .map_err(|error| format!("解析 Antigravity 系列 adapter 数据失败: {}", error))
+}
+
 pub fn restore_codex_runtime() {
     if !platform_package::is_platform_package_installed(CODEX_PLATFORM_ID) {
         return;
@@ -940,27 +1219,44 @@ pub fn restore_workbuddy_runtime() {
     }
 }
 
+pub fn restore_antigravity_runtime() {
+    if !platform_package::is_platform_package_installed(ANTIGRAVITY_PLATFORM_ID) {
+        return;
+    }
+    if let Err(error) = call_antigravity_value("runtime.restore", json!({})) {
+        logger::log_warn(&format!(
+            "[PlatformAdapter] 恢复 Antigravity adapter runtime 失败: {}",
+            error
+        ));
+    }
+}
+
+pub fn restore_antigravity_ide_runtime() {
+    if !platform_package::is_platform_package_installed(ANTIGRAVITY_IDE_PLATFORM_ID) {
+        return;
+    }
+    if let Err(error) = call_antigravity_ide_value("runtime.restore", json!({})) {
+        logger::log_warn(&format!(
+            "[PlatformAdapter] 恢复 Antigravity IDE adapter runtime 失败: {}",
+            error
+        ));
+    }
+}
+
 pub fn stop_platform_adapter(platform_id: &str) {
-    let mut adapters = match PLATFORM_ADAPTERS.lock() {
-        Ok(guard) => guard,
-        Err(_) => return,
-    };
-    let Some(mut process) = adapters.remove(platform_id) else {
+    let Some(mut process) = (match PLATFORM_ADAPTERS.lock() {
+        Ok(mut adapters) => adapters.remove(platform_id),
+        Err(_) => None,
+    }) else {
         return;
     };
-    let _ = reqwest::blocking::Client::builder()
-        .timeout(Duration::from_secs(2))
-        .build()
-        .and_then(|client| {
-            client
-                .post(&process.endpoint.url)
-                .bearer_auth(&process.endpoint.token)
-                .json(&AdapterRequest {
-                    method: "adapter.shutdown".to_string(),
-                    payload: json!({}),
-                })
-                .send()
-        });
+
+    let _ = post_adapter_request(
+        &process.endpoint,
+        "adapter.shutdown",
+        json!({}),
+        Duration::from_secs(2),
+    );
     stop_child(&mut process.child);
     logger::log_info(&format!(
         "[PlatformAdapter] adapter 已停止: platform={}",
@@ -1274,4 +1570,66 @@ pub fn stop_workbuddy_runtime_before_uninstall() {
         }
     }
     stop_platform_adapter(WORKBUDDY_PLATFORM_ID);
+}
+
+pub fn stop_claude_manager_runtime_before_uninstall() {
+    if let Some(endpoint) = existing_adapter_endpoint(CLAUDE_MANAGER_PLATFORM_ID) {
+        if let Err(error) = post_adapter_request(
+            &endpoint,
+            "runtime.shutdownForAppExit",
+            json!({}),
+            ADAPTER_STOP_TIMEOUT,
+        ) {
+            logger::log_warn(&format!(
+                "[PlatformAdapter] 卸载 Claude 前清理运行态失败，继续卸载: {}",
+                error
+            ));
+        }
+    }
+    stop_platform_adapter(CLAUDE_MANAGER_PLATFORM_ID);
+}
+
+pub fn stop_codex_runtime_before_uninstall() {
+    if let Some(endpoint) = existing_adapter_endpoint(CODEX_PLATFORM_ID) {
+        if let Err(error) = post_adapter_request(
+            &endpoint,
+            "runtime.shutdownForAppExit",
+            json!({}),
+            ADAPTER_STOP_TIMEOUT,
+        ) {
+            logger::log_warn(&format!(
+                "[PlatformAdapter] 卸载 Codex 前清理运行态失败，继续卸载: {}",
+                error
+            ));
+        }
+    }
+    stop_platform_adapter(CODEX_PLATFORM_ID);
+}
+
+fn stop_antigravity_series_runtime_before_uninstall(platform_id: &str, label: &str) {
+    if let Some(endpoint) = existing_adapter_endpoint(platform_id) {
+        if let Err(error) = post_adapter_request(
+            &endpoint,
+            "runtime.stopDefault",
+            json!({}),
+            ADAPTER_STOP_TIMEOUT,
+        ) {
+            logger::log_warn(&format!(
+                "[PlatformAdapter] 卸载 {} 前停止运行态失败，继续卸载: {}",
+                label, error
+            ));
+        }
+    }
+    stop_platform_adapter(platform_id);
+}
+
+pub fn stop_antigravity_runtime_before_uninstall() {
+    stop_antigravity_series_runtime_before_uninstall(ANTIGRAVITY_PLATFORM_ID, "Antigravity");
+}
+
+pub fn stop_antigravity_ide_runtime_before_uninstall() {
+    stop_antigravity_series_runtime_before_uninstall(
+        ANTIGRAVITY_IDE_PLATFORM_ID,
+        "Antigravity IDE",
+    );
 }

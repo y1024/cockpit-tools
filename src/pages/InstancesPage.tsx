@@ -23,9 +23,10 @@ import {
 
 interface InstancesPageProps {
   onNavigate?: (page: Page) => void;
+  hideHeader?: boolean;
 }
 
-export function InstancesPage({ onNavigate }: InstancesPageProps) {
+export function InstancesPage({ onNavigate, hideHeader = false }: InstancesPageProps) {
   const { t } = useTranslation();
   const runtimeTarget = useAntigravityRuntimeTarget();
   const legacyInstanceStore = useAntigravityLegacyInstanceStore();
@@ -92,11 +93,13 @@ export function InstancesPage({ onNavigate }: InstancesPageProps) {
 
   return (
     <div className="instances-page">
-      <OverviewTabsHeader
-        active="instances"
-        onNavigate={onNavigate}
-        subtitle={t('instances.subtitle', '多实例独立配置，多账号并行运行。')}
-      />
+      {!hideHeader && (
+        <OverviewTabsHeader
+          active="instances"
+          onNavigate={onNavigate}
+          subtitle={t('instances.subtitle', '多实例独立配置，多账号并行运行。')}
+        />
+      )}
       <InstancesManager
         instanceStore={instanceStore}
         accounts={sortedAccountsForSelect}

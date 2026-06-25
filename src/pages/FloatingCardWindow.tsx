@@ -166,9 +166,13 @@ function resolveAppliedTheme(theme: string): 'light' | 'dark' {
 function resolveInstanceStoreApi(platformId: PlatformId): FloatingCardInstanceStoreApi | null {
   switch (platformId) {
     case 'antigravity':
-      return useAntigravityLegacyInstanceStore.getState();
+      return usePlatformPackageStore.getState().canOpenPlatform('antigravity')
+        ? useAntigravityLegacyInstanceStore.getState()
+        : null;
     case 'antigravity_ide':
-      return useInstanceStore.getState();
+      return usePlatformPackageStore.getState().canOpenPlatform('antigravity_ide')
+        ? useInstanceStore.getState()
+        : null;
     case 'codex':
       return usePlatformPackageStore.getState().canOpenPlatform('codex')
         ? useCodexInstanceStore.getState()

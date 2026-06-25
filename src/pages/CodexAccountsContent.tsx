@@ -309,6 +309,7 @@ const DEFAULT_CODEX_API_BASE_URL = OPENAI_OFFICIAL_BASE_URL;
 const CODEX_LOCAL_ACCESS_FALLBACK_PORT = 54140;
 const CODEX_LOCAL_ACCESS_FALLBACK_BASE_URL = `http://127.0.0.1:${CODEX_LOCAL_ACCESS_FALLBACK_PORT}/v1`;
 const CODEX_LOCAL_ACCESS_FALLBACK_API_KEY_MASK = "agt_codex_••••••••••••";
+const CODEX_LOCAL_ACCESS_SAVE_TIMEOUT_MS = 25_000;
 const CODEX_FILTER_PERSISTENCE_SCOPE = normalizeAccountsOverviewScope("Codex");
 const FILTER_TYPES_FIELD = "filter_types";
 const EXPIRY_FILTER_FIELD = "expiry_filter";
@@ -610,6 +611,24 @@ type CodexApiSwitchNoticeContext = {
 
 const CODEX_SESSION_VISIBILITY_REPAIR_PROGRESS_EVENT =
   "codex:session_visibility_repair_progress";
+
+function withUiTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  createError: () => Error,
+): Promise<T> {
+  let timer: number | null = null;
+  return new Promise<T>((resolve, reject) => {
+    timer = window.setTimeout(() => {
+      reject(createError());
+    }, timeoutMs);
+    promise.then(resolve, reject).finally(() => {
+      if (timer !== null) {
+        window.clearTimeout(timer);
+      }
+    });
+  });
+}
 
 function getCodexLaunchCredentialKind(
   account: CodexAccount,
@@ -1088,6 +1107,7 @@ export function CodexAccountsContent() {
   const [localAccessStarting, setLocalAccessStarting] = useState(false);
   const [localAccessRefreshing, setLocalAccessRefreshing] = useState(false);
   const [localAccessPortKilling, setLocalAccessPortKilling] = useState(false);
+  const localAccessSaveRunRef = useRef(0);
   const [showLocalAccessHideConfirm, setShowLocalAccessHideConfirm] =
     useState(false);
   const [localAccessHideSubmitting, setLocalAccessHideSubmitting] =
@@ -1693,6 +1713,8 @@ export function CodexAccountsContent() {
 
   useEffect(() => {
     if (!localAccessEntryVisible) {
+      localAccessSaveRunRef.current += 1;
+      setLocalAccessSaving(false);
       setShowLocalAccessModal(false);
     }
   }, [localAccessEntryVisible]);
@@ -3610,10 +3632,17 @@ export function CodexAccountsContent() {
       setManagedProviders(items);
     } catch (err) {
       console.error("[CodexModelProviders] 加载失败", err);
+      setMessage({
+        text: t("codex.modelProviders.loadFailed", {
+          defaultValue: "加载模型供应商失败：{{error}}",
+          error: String(err).replace(/^Error:\s*/, ""),
+        }),
+        tone: "error",
+      });
     } finally {
       setManagedProvidersLoading(false);
     }
-  }, []);
+  }, [setMessage, t]);
 
   const buildApiProviderPayload = useCallback(
     (
@@ -7164,10 +7193,7 @@ export function CodexAccountsContent() {
       ? t("codex.localAccess.accessScopeLanShort", "本机+局域网")
       : t("codex.localAccess.accessScopeLocalhostShort", "仅本机");
   const localAccessBusy =
-    localAccessSaving ||
-    localAccessStarting ||
-    localAccessRefreshing ||
-    localAccessPortKilling;
+    localAccessSaving || localAccessStarting || localAccessPortKilling;
   const selectedLocalAccessAddressKind: CodexLocalAccessAddressKind =
     localAccessAddressKind === "lan" && localAccessState?.lanBaseUrl
       ? "lan"
@@ -7236,19 +7262,25 @@ export function CodexAccountsContent() {
     [setMessage, t],
   );
 
+  const closeLocalAccessModal = useCallback(() => {
+    localAccessSaveRunRef.current += 1;
+    setLocalAccessSaving(false);
+    setShowLocalAccessModal(false);
+  }, []);
+
   const openLocalAccessPanel = useCallback(() => {
     setLocalAccessModalMode("panel");
     setShowLocalAccessModal(true);
   }, []);
 
   const openCodexApiServicePage = useCallback(() => {
-    setShowLocalAccessModal(false);
+    closeLocalAccessModal();
     window.dispatchEvent(
       new CustomEvent("app-request-navigate", {
         detail: "codex-api-service",
       }),
     );
-  }, []);
+  }, [closeLocalAccessModal]);
 
   const openLocalAccessMemberPicker = useCallback(() => {
     setLocalAccessModalMode("members");
@@ -7306,6 +7338,7 @@ export function CodexAccountsContent() {
       accountIds: string[],
       options?: { restrictFreeAccounts?: boolean },
     ) => {
+      const runId = (localAccessSaveRunRef.current += 1);
       setLocalAccessSaving(true);
       try {
         const restrictFreeAccounts = options?.restrictFreeAccounts ?? true;
@@ -7325,21 +7358,36 @@ export function CodexAccountsContent() {
             ),
           );
         }
-        const nextState =
-          await codexLocalAccessService.saveCodexLocalAccessAccounts(
+        const nextState = await withUiTimeout(
+          codexLocalAccessService.saveCodexLocalAccessAccounts(
             filteredAccountIds,
             restrictFreeAccounts,
-          );
-        setLocalAccessState(nextState);
-        setMessage({
-          text: t("codex.localAccess.saveSuccess", "API 服务集合已更新"),
-        });
+          ),
+          CODEX_LOCAL_ACCESS_SAVE_TIMEOUT_MS,
+          () =>
+            new Error(
+              t(
+                "codex.localAccess.saveTimeout",
+                "保存 API 服务集合超时，请稍后重试。",
+              ),
+            ),
+        );
+        if (localAccessSaveRunRef.current === runId) {
+          setLocalAccessState(nextState);
+          setMessage({
+            text: t("codex.localAccess.saveSuccess", "API 服务集合已更新"),
+          });
+        }
         return nextState;
       } catch (error) {
-        console.error("Failed to save local access accounts:", error);
+        if (localAccessSaveRunRef.current === runId) {
+          console.error("Failed to save local access accounts:", error);
+        }
         throw error;
       } finally {
-        setLocalAccessSaving(false);
+        if (localAccessSaveRunRef.current === runId) {
+          setLocalAccessSaving(false);
+        }
       }
     },
     [accounts, setMessage, t],
@@ -10002,7 +10050,11 @@ export function CodexAccountsContent() {
                     className="card-action-btn"
                     onClick={() => void handleQuickRefreshLocalAccessQuota()}
                     title={t("common.shared.refreshQuota", "刷新配额")}
-                    disabled={localAccessBusy || !localAccessCollection}
+                    disabled={
+                      localAccessBusy ||
+                      localAccessRefreshing ||
+                      !localAccessCollection
+                    }
                   >
                     <RotateCw
                       size={14}
@@ -15376,7 +15428,7 @@ export function CodexAccountsContent() {
             accountGroups={codexGroups}
             initialSelectedIds={localAccessModalSelectedIds}
             maskAccountText={maskAccountText}
-            onClose={() => setShowLocalAccessModal(false)}
+            onClose={closeLocalAccessModal}
             onOpenFullPage={openCodexApiServicePage}
             onSaveAccounts={({ accountIds, restrictFreeAccounts }) =>
               handleSaveLocalAccessAccounts(accountIds, {

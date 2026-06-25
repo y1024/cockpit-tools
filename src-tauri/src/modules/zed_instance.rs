@@ -27,7 +27,7 @@ fn now_ts() -> i64 {
 }
 
 fn runtime_path() -> Result<PathBuf, String> {
-    Ok(account::get_data_dir()?.join(ZED_RUNTIME_FILE))
+    Ok(crate::modules::app_data::get_data_dir()?.join(ZED_RUNTIME_FILE))
 }
 
 fn load_runtime_state() -> ZedRuntimeState {

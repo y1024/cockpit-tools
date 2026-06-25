@@ -6,7 +6,7 @@ const postcss = require('postcss');
 const selectorParser = require('postcss-selector-parser');
 
 const ROOT = path.resolve(__dirname, '..');
-const SUPPORTED_PLATFORMS = new Set(['zed', 'kiro', 'github-copilot', 'windsurf', 'cursor', 'gemini', 'trae', 'qoder', 'codebuddy', 'codebuddy_cn', 'workbuddy', 'claude_manager', 'codex']);
+const SUPPORTED_PLATFORMS = new Set(['antigravity', 'antigravity_ide', 'zed', 'kiro', 'github-copilot', 'windsurf', 'cursor', 'gemini', 'trae', 'qoder', 'codebuddy', 'codebuddy_cn', 'workbuddy', 'claude_manager', 'codex']);
 
 function fail(message) {
   console.error(message);
@@ -30,6 +30,10 @@ function assertBrowserRuntimeSource(source) {
   if (/\bprocess\s*\.\s*env\b/.test(source)) {
     fail('Platform remote UI contains process.env reference; browser runtime has no Node process global');
   }
+}
+
+function stripTrailingWhitespace(source) {
+  return source.replace(/[ \t]+$/gm, '');
 }
 
 function platformRootClassName(platformId) {
@@ -220,16 +224,18 @@ async function main() {
     if (!fs.existsSync(remoteEntry)) {
       fail(`Failed to locate remoteEntry.js for ${platformId}`);
     }
-    const remoteSource = fs.readFileSync(remoteEntry, 'utf8');
+    const remoteSource = stripTrailingWhitespace(fs.readFileSync(remoteEntry, 'utf8'));
     assertRemoteExport(remoteSource, 'mount');
     assertRemoteExport(remoteSource, 'unmount');
     assertBrowserRuntimeSource(remoteSource);
 
     fs.rmSync(targetDir, { recursive: true, force: true });
     fs.mkdirSync(targetDir, { recursive: true });
-    fs.copyFileSync(remoteEntry, path.join(targetDir, 'remoteEntry.js'));
+    fs.writeFileSync(path.join(targetDir, 'remoteEntry.js'), remoteSource);
     if (fs.existsSync(style)) {
-      const scopedStyle = scopeRemoteStyle(platformId, fs.readFileSync(style, 'utf8'));
+      const scopedStyle = stripTrailingWhitespace(
+        scopeRemoteStyle(platformId, fs.readFileSync(style, 'utf8')),
+      );
       fs.writeFileSync(path.join(targetDir, 'style.css'), scopedStyle);
     } else {
       fs.writeFileSync(path.join(targetDir, 'style.css'), '');

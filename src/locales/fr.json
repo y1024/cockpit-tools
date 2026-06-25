@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "Le paquet {{platform}} n’est pas installé",
     "packagePageInstallDesc": "Vous pouvez installer directement depuis cette page, ou utiliser les actions du paquet en haut à droite pour installer ou réparer avant de gérer les comptes. Les comptes, OAuth, le changement de compte et l’actualisation en arrière-plan ne seront pas chargés avant l’installation.",
     "packageDashboardStateDesc": "Ouvrez la page {{platform}} pour installer directement, ou utilisez les actions en haut à droite pour mettre à jour, réparer ou voir le journal des changements.",
-    "packageOpenPlatformPage": "Ouvrir la page plateforme"
+    "packageOpenPlatformPage": "Ouvrir la page plateforme",
+    "packageBundledShort": "Intégré",
+    "packageBundledStatus": "Fourni par l’application principale",
+    "packageBundledDesc": "Cette plateforme est incluse avec l’application principale. L’installation et les mises à jour suivent la version de l’application principale."
   },
   "privacy": {
     "hideSensitive": "Masquer les e-mails",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Toutes les instances sont déjà en cours d'exécution",
       "noneRunning": "Aucune instance en cours d'exécution trouvée",
       "syncThreadsNeedTwo": "Au moins deux instances sont nécessaires pour synchroniser les threads",
+      "loadTimeout": "Le chargement des instances a expiré. Réessayez.",
       "launchPrepared": "La commande de lancement est prête",
       "speedUpdated": "Vitesse mise à jour"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Aucun compte dans la collection",
       "footerHint": "Portée d’accès : {{scope}}",
       "manageAccounts": "Gérer les comptes",
+      "saveTimeout": "L’enregistrement des membres du service API a expiré. Réessayez plus tard.",
       "rotateKey": "Renouveler la clé",
       "rotateConfirmMessage": "Après la réinitialisation, la clé du service API actuelle cessera immédiatement de fonctionner et les requêtes en cours pourront devenir indisponibles. Continuer ?",
       "disableService": "Désactiver le service",
@@ -2188,6 +2193,7 @@
       "subtitle": "Planifiez des tâches de réveil Codex, testez le chemin du CLI et consultez l’historique des exécutions.",
       "heroTitle": "Tâches de réveil Codex",
       "heroSubtitle": "Créez des tâches de réveil planifiées pour les comptes OAuth Codex, lancez des tests ponctuels et suivez tous les déclenchements au même endroit.",
+      "loadTimeout": "Le chargement des tâches de réveil Codex a expiré. Réessayez.",
       "runtimeReady": "Codex CLI prêt",
       "runtimeMissing": "Codex CLI requis",
       "runtimeCardTitle": "CLI Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Gérez les fournisseurs de modèles et plusieurs clés API au même endroit, puis réutilisez-les directement lors de l'ajout de comptes Codex à clé API.",
       "add": "Ajouter un fournisseur",
       "loadFailed": "Échec du chargement des fournisseurs de modèles : {{error}}",
+      "loadTimeout": "Le chargement des fournisseurs de modèles a expiré. Réessayez.",
       "emptyTitle": "Aucun fournisseur de modèles pour le moment",
       "emptyDesc": "Cliquez sur « Ajouter un fournisseur » en haut à droite pour commencer.",
       "baseUrl": "URL de base",
@@ -3872,20 +3879,20 @@
         "4": "paramètres",
         "5": "dépannage",
         "6": "journaux",
-        "7": "données"
+        "7": "journal app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Comprendre ce que Import/Export, confidentialité et dépannage vous apporte.",
         "1": "Utiliser le flux recommandé dans Import/Export, confidentialité et dépannage pour limiter les erreurs.",
         "2": "Valider une exécution réussie dans Import/Export, confidentialité et dépannage avant de passer au lot.",
-        "3": "En cas de problème dans Import/Export, confidentialité et dépannage, vérifier d’abord les logs et les preuves."
+        "3": "Repérez rapidement les problèmes d’exécution dans logs avec app-YYYY-MM-DD.log et platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Ouvrez la page de Import/Export, confidentialité et dépannage.",
         "1": "Terminez la configuration de base et les liaisons nécessaires dans Import/Export, confidentialité et dépannage.",
         "2": "Exécutez une action manuelle dans Import/Export, confidentialité et dépannage pour vérifier le résultat.",
         "3": "Pour le dépannage: Paramètres -> Dossier de données -> Ouvrir, puis logs.",
-        "4": "Consultez d’abord le dernier app.log ou app.log.*.",
+        "4": "Consultez d’abord le dernier app-YYYY-MM-DD.log ; pour un problème de plateforme, choisissez le platform-<platform>-YYYY-MM-DD.log correspondant.",
         "5": "Lors du signalement, joignez heure, plateforme, étapes et logs anonymisés."
       },
       "summary": "Cette section explique comment utiliser Import/Export, confidentialité et dépannage dans le flux quotidien.",

@@ -997,16 +997,17 @@ pub fn sync_global_proxy_env(config: &UserConfig) {
 
 /// 获取数据目录路径
 pub fn get_data_dir() -> Result<PathBuf, String> {
-    let home = dirs::home_dir().ok_or("无法获取 Home 目录")?;
-    Ok(home.join(DATA_DIR))
+    crate::modules::account::resolve_data_dir()
 }
 
 /// 获取共享目录路径（供其他模块使用）
 /// 与 get_data_dir 相同，但不返回 Result
 pub fn get_shared_dir() -> PathBuf {
-    dirs::home_dir()
-        .map(|h| h.join(DATA_DIR))
-        .unwrap_or_else(|| PathBuf::from(DATA_DIR))
+    get_data_dir().unwrap_or_else(|_| {
+        dirs::home_dir()
+            .map(|h| h.join(DATA_DIR))
+            .unwrap_or_else(|| PathBuf::from(DATA_DIR))
+    })
 }
 
 /// 获取服务状态文件路径

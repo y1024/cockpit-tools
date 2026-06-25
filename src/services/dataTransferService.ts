@@ -93,11 +93,21 @@ type InstancePlatform = (typeof INSTANCE_PLATFORMS)[number];
 async function listAvailableInstancePlatforms(): Promise<InstancePlatform[]> {
   const entries = await Promise.all(
     INSTANCE_PLATFORMS.map(async (platform) => {
-      if (platform === 'antigravity') return platform;
+      if (platform === 'antigravity') {
+        return (await canUseAntigravitySeriesTransfer()) ? platform : null;
+      }
       return (await canUseAccountTransferPlatform(platform)) ? platform : null;
     }),
   );
   return entries.filter((platform): platform is InstancePlatform => platform != null);
+}
+
+async function canUseAntigravitySeriesTransfer(): Promise<boolean> {
+  const [legacyReady, ideReady] = await Promise.all([
+    canUseAccountTransferPlatform('antigravity'),
+    canUseAccountTransferPlatform('antigravity_ide'),
+  ]);
+  return legacyReady || ideReady;
 }
 
 const EMPTY_CODEX_WAKEUP_STATE: CodexWakeupState = {
@@ -1015,6 +1025,7 @@ function importCodexWakeupState(
 
 async function exportConfigBundle(registry: AccountRegistry): Promise<DataTransferConfigBundle> {
   const codexRuntimeReady = await canUseAccountTransferPlatform('codex');
+  const antigravityRuntimeReady = await canUseAntigravitySeriesTransfer();
   const instancePlatforms = await listAvailableInstancePlatforms();
   const [
     rawUserConfig,
@@ -1050,7 +1061,13 @@ async function exportConfigBundle(registry: AccountRegistry): Promise<DataTransf
     instance_stores: Object.fromEntries(instanceStoreEntries) as Partial<
       Record<InstancePlatform, ExportedInstanceStore>
     >,
-    antigravity_wakeup: exportAntigravityWakeupState(registry),
+    antigravity_wakeup: antigravityRuntimeReady
+      ? exportAntigravityWakeupState(registry)
+      : {
+          enabled: false,
+          official_ls_version_mode: DEFAULT_WAKEUP_OFFICIAL_LS_VERSION_MODE,
+          tasks: [],
+        },
     codex_wakeup: exportCodexWakeupState(
       codexWakeupState,
       registry,
@@ -1082,6 +1099,7 @@ async function exportConfigBundle(registry: AccountRegistry): Promise<DataTransf
 
 async function importConfigBundle(bundle: DataTransferConfigBundle): Promise<DataTransferConfigImportResult> {
   const codexRuntimeReady = await canUseAccountTransferPlatform('codex');
+  const antigravityRuntimeReady = await canUseAntigravitySeriesTransfer();
   const availableInstancePlatforms = new Set(await listAvailableInstancePlatforms());
   const registry = await loadAccountRegistry();
   let unresolvedAccountRefs = 0;
@@ -1133,22 +1151,24 @@ async function importConfigBundle(bundle: DataTransferConfigBundle): Promise<Dat
     });
   }
 
-  const antigravityWakeupImport = importAntigravityWakeupState(bundle.antigravity_wakeup, registry);
-  unresolvedAccountRefs += antigravityWakeupImport.unresolved;
-  disabledTaskCount += antigravityWakeupImport.disabledTasks;
-  localStorage.setItem(WAKEUP_ENABLED_KEY, antigravityWakeupImport.state.enabled ? 'true' : 'false');
-  localStorage.setItem(WAKEUP_TASKS_KEY, JSON.stringify(antigravityWakeupImport.state.tasks));
-  localStorage.setItem(
-    WAKEUP_OFFICIAL_LS_VERSION_STORAGE_KEY,
-    antigravityWakeupImport.state.official_ls_version_mode,
-  );
-  saveWakeupOfficialLsVersionMode(antigravityWakeupImport.state.official_ls_version_mode);
-  await invoke('wakeup_sync_state', {
-    enabled: antigravityWakeupImport.state.enabled,
-    tasks: antigravityWakeupImport.state.tasks,
-    officialLsVersionMode: antigravityWakeupImport.state.official_ls_version_mode,
-    runStartupTasks: false,
-  });
+  if (antigravityRuntimeReady) {
+    const antigravityWakeupImport = importAntigravityWakeupState(bundle.antigravity_wakeup, registry);
+    unresolvedAccountRefs += antigravityWakeupImport.unresolved;
+    disabledTaskCount += antigravityWakeupImport.disabledTasks;
+    localStorage.setItem(WAKEUP_ENABLED_KEY, antigravityWakeupImport.state.enabled ? 'true' : 'false');
+    localStorage.setItem(WAKEUP_TASKS_KEY, JSON.stringify(antigravityWakeupImport.state.tasks));
+    localStorage.setItem(
+      WAKEUP_OFFICIAL_LS_VERSION_STORAGE_KEY,
+      antigravityWakeupImport.state.official_ls_version_mode,
+    );
+    saveWakeupOfficialLsVersionMode(antigravityWakeupImport.state.official_ls_version_mode);
+    await invoke('wakeup_sync_state', {
+      enabled: antigravityWakeupImport.state.enabled,
+      tasks: antigravityWakeupImport.state.tasks,
+      officialLsVersionMode: antigravityWakeupImport.state.official_ls_version_mode,
+      runStartupTasks: false,
+    });
+  }
 
   if (codexRuntimeReady) {
     const codexWakeupImport = importCodexWakeupState(bundle.codex_wakeup, registry);

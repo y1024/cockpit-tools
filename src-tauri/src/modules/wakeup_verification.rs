@@ -116,7 +116,7 @@ fn default_state_file_version() -> u8 {
 }
 
 fn state_file_path() -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     Ok(data_dir.join(WAKEUP_VERIFICATION_STATE_FILE))
 }
 

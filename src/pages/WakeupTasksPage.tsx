@@ -83,6 +83,7 @@ type NoticeTone = 'error' | 'warning' | 'success';
 
 interface WakeupPageProps {
   onNavigate?: (page: Page) => void;
+  hideHeader?: boolean;
 }
 
 type AvailableModel = AntigravityModelOption;
@@ -659,7 +660,7 @@ const getTriggerMode = (task: WakeupTask): TriggerMode => {
   return 'scheduled';
 };
 
-export function WakeupTasksPage({ onNavigate }: WakeupPageProps) {
+export function WakeupTasksPage({ onNavigate, hideHeader = false }: WakeupPageProps) {
   const { t, i18n } = useTranslation();
   const { accounts, currentAccount, fetchAccounts, fetchCurrentAccount } = useAccountStore();
   const locale = i18n.language || 'zh-CN';
@@ -2234,11 +2235,13 @@ export function WakeupTasksPage({ onNavigate }: WakeupPageProps) {
 
   return (
     <main className="main-content wakeup-page accounts-page">
-      <OverviewTabsHeader
-        active="wakeup"
-        onNavigate={onNavigate}
-        subtitle={t('wakeup.subtitle')}
-      />
+      {!hideHeader && (
+        <OverviewTabsHeader
+          active="wakeup"
+          onNavigate={onNavigate}
+          subtitle={t('wakeup.subtitle')}
+        />
+      )}
       <div className="toolbar wakeup-toolbar">
         <div className="toolbar-left">
           <div className={`wakeup-global-toggle ${wakeupEnabled ? 'is-on' : 'is-off'}`}>

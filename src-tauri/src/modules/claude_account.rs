@@ -357,7 +357,7 @@ fn clamp_percentage(value: Option<f64>) -> i32 {
 }
 
 fn get_data_dir() -> Result<PathBuf, String> {
-    account::get_data_dir()
+    crate::modules::app_data::get_data_dir()
 }
 
 fn get_accounts_dir() -> Result<PathBuf, String> {
@@ -378,8 +378,8 @@ fn account_file_path(account_id: &str) -> Result<PathBuf, String> {
     Ok(get_accounts_dir()?.join(format!("{}.json", account_id)))
 }
 
-fn ensure_account_store_migrated() -> Result<(), String> {
-    crate::modules::account_store::ensure_platform_migrated_from_json(
+fn ensure_platform_account_store_migrated() -> Result<(), String> {
+    crate::modules::platform_account_store::ensure_platform_migrated_from_json(
         ACCOUNT_STORE_PLATFORM,
         &get_accounts_index_path()?,
         &get_accounts_dir()?,
@@ -387,9 +387,9 @@ fn ensure_account_store_migrated() -> Result<(), String> {
 }
 
 fn account_index_from_store() -> Result<ClaudeAccountIndex, String> {
-    ensure_account_store_migrated()?;
+    ensure_platform_account_store_migrated()?;
     let accounts =
-        crate::modules::account_store::list_accounts::<ClaudeAccount>(ACCOUNT_STORE_PLATFORM)?;
+        crate::modules::platform_account_store::list_accounts::<ClaudeAccount>(ACCOUNT_STORE_PLATFORM)?;
     let mut index = ClaudeAccountIndex::new();
     index.accounts = accounts.iter().map(|account| account.summary()).collect();
     Ok(index)
@@ -423,7 +423,7 @@ fn save_index(index: &ClaudeAccountIndex) -> Result<(), String> {
         .iter()
         .map(|summary| summary.id.clone())
         .collect::<Vec<_>>();
-    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
+    crate::modules::platform_account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
     let path = get_accounts_index_path()?;
     let content = serde_json::to_string_pretty(index)
         .map_err(|e| format!("序列化 Claude 账号索引失败: {}", e))?;
@@ -431,8 +431,8 @@ fn save_index(index: &ClaudeAccountIndex) -> Result<(), String> {
 }
 
 fn write_account_file(account: &ClaudeAccount) -> Result<(), String> {
-    ensure_account_store_migrated()?;
-    crate::modules::account_store::save_account(
+    ensure_platform_account_store_migrated()?;
+    crate::modules::platform_account_store::save_account(
         ACCOUNT_STORE_PLATFORM,
         account.id.as_str(),
         account,
@@ -444,12 +444,12 @@ fn write_account_file(account: &ClaudeAccount) -> Result<(), String> {
 }
 
 fn load_account_file(account_id: &str) -> Option<ClaudeAccount> {
-    if let Err(err) = ensure_account_store_migrated() {
+    if let Err(err) = ensure_platform_account_store_migrated() {
         logger::log_warn(&format!(
             "[Claude Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
             account_id, err
         ));
-    } else if let Ok(Some(account)) = crate::modules::account_store::load_account::<ClaudeAccount>(
+    } else if let Ok(Some(account)) = crate::modules::platform_account_store::load_account::<ClaudeAccount>(
         ACCOUNT_STORE_PLATFORM,
         account_id,
     ) {
@@ -648,7 +648,7 @@ fn remove_desktop_snapshot_if_unused(snapshot: Option<&str>, keep_snapshot: Opti
 
 fn delete_account_file_silent(account_id: &str) {
     if let Err(error) =
-        crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)
+        crate::modules::platform_account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)
     {
         logger::log_warn(&format!(
             "[Claude] 删除重复账号数据库记录失败: account_id={}, error={}",
@@ -8072,7 +8072,7 @@ pub fn remove_accounts(account_ids: &[String]) -> Result<(), String> {
                 format!("删除 Claude 账号失败: path={}, error={}", path.display(), e)
             })?;
         }
-        crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
+        crate::modules::platform_account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     }
     index
         .accounts

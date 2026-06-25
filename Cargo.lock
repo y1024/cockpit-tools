@@ -725,6 +725,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "cockpit-antigravity-adapter"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "cockpit-core",
+ "reqwest 0.12.28",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tiny_http",
+ "tokio",
+ "url",
+ "uuid",
+]
+
+[[package]]
+name = "cockpit-antigravity-ide-adapter"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "cockpit-core",
+ "reqwest 0.12.28",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tiny_http",
+ "tokio",
+ "url",
+ "uuid",
+]
+
+[[package]]
 name = "cockpit-claude-adapter"
 version = "0.1.0"
 dependencies = [
@@ -907,7 +939,7 @@ dependencies = [
 
 [[package]]
 name = "cockpit-tools"
-version = "0.26.6"
+version = "1.0.0"
 dependencies = [
  "aes",
  "aes-gcm",

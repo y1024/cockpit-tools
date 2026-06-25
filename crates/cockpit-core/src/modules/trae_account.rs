@@ -18,6 +18,7 @@ use crate::modules::{account, logger};
 
 const ACCOUNTS_INDEX_FILE: &str = "trae_accounts.json";
 const ACCOUNTS_DIR: &str = "trae_accounts";
+const ACCOUNT_STORE_PLATFORM: &str = "trae";
 const TRAE_DEFAULT_AUTH_PROVIDER_ID: &str = "icube.cloudide";
 const TRAE_STORAGE_AUTH_KEY_PREFIX: &str = "iCubeAuthInfo://";
 const TRAE_STORAGE_SERVER_KEY_PREFIX: &str = "iCubeServerData://";
@@ -270,6 +271,23 @@ fn get_accounts_index_path() -> Result<PathBuf, String> {
     Ok(get_data_dir()?.join(ACCOUNTS_INDEX_FILE))
 }
 
+fn ensure_account_store_migrated() -> Result<(), String> {
+    crate::modules::account_store::ensure_platform_migrated_from_json(
+        ACCOUNT_STORE_PLATFORM,
+        &get_accounts_index_path()?,
+        &get_accounts_dir()?,
+    )
+}
+
+fn account_index_from_store() -> Result<TraeAccountIndex, String> {
+    ensure_account_store_migrated()?;
+    let accounts =
+        crate::modules::account_store::list_accounts::<TraeAccount>(ACCOUNT_STORE_PLATFORM)?;
+    let mut index = TraeAccountIndex::new();
+    index.accounts = accounts.iter().map(|account| account.summary()).collect();
+    Ok(index)
+}
+
 pub fn accounts_index_path_string() -> Result<String, String> {
     Ok(get_accounts_index_path()?.to_string_lossy().to_string())
 }
@@ -300,6 +318,18 @@ fn resolve_account_file_path(account_id: &str) -> Result<PathBuf, String> {
 }
 
 pub fn load_account(account_id: &str) -> Option<TraeAccount> {
+    if let Err(err) = ensure_account_store_migrated() {
+        logger::log_warn(&format!(
+            "[Trae Account][Store] 账号数据库迁移检查失败，回退文件读取: account_id={}, error={}",
+            account_id, err
+        ));
+    } else if let Ok(Some(account)) = crate::modules::account_store::load_account::<TraeAccount>(
+        ACCOUNT_STORE_PLATFORM,
+        account_id,
+    ) {
+        return Some(account);
+    }
+
     let account_path = resolve_account_file_path(account_id).ok()?;
     if !account_path.exists() {
         return None;
@@ -309,6 +339,12 @@ pub fn load_account(account_id: &str) -> Option<TraeAccount> {
 }
 
 fn save_account_file(account: &TraeAccount) -> Result<(), String> {
+    ensure_account_store_migrated()?;
+    crate::modules::account_store::save_account(
+        ACCOUNT_STORE_PLATFORM,
+        account.id.as_str(),
+        account,
+    )?;
     let path = resolve_account_file_path(account.id.as_str())?;
     let content = serde_json::to_string_pretty(account)
         .map_err(|e| format!("序列化 Trae 账号失败: {}", e))?;
@@ -317,6 +353,7 @@ fn save_account_file(account: &TraeAccount) -> Result<(), String> {
 }
 
 fn delete_account_file(account_id: &str) -> Result<(), String> {
+    crate::modules::account_store::delete_account(ACCOUNT_STORE_PLATFORM, account_id)?;
     let path = resolve_account_file_path(account_id)?;
     if path.exists() {
         fs::remove_file(path).map_err(|e| format!("删除 Trae 账号文件失败: {}", e))?;
@@ -325,6 +362,14 @@ fn delete_account_file(account_id: &str) -> Result<(), String> {
 }
 
 fn load_account_index() -> TraeAccountIndex {
+    match account_index_from_store() {
+        Ok(index) => return index,
+        Err(error) => logger::log_warn(&format!(
+            "[Trae Account][Store] 从 SQLite 读取账号索引失败，回退 JSON: {}",
+            error
+        )),
+    }
+
     let path = match get_accounts_index_path() {
         Ok(path) => path,
         Err(_) => return TraeAccountIndex::new(),
@@ -361,6 +406,14 @@ fn load_account_index() -> TraeAccountIndex {
 }
 
 fn load_account_index_checked() -> Result<TraeAccountIndex, String> {
+    match account_index_from_store() {
+        Ok(index) => return Ok(index),
+        Err(error) => logger::log_warn(&format!(
+            "[Trae Account][Store] 从 SQLite 读取账号索引失败，继续检查 JSON: {}",
+            error
+        )),
+    }
+
     let path = get_accounts_index_path()?;
     if !path.exists() {
         if let Some(index) = repair_account_index_from_details("索引文件不存在") {
@@ -410,6 +463,12 @@ fn load_account_index_checked() -> Result<TraeAccountIndex, String> {
 }
 
 fn save_account_index(index: &TraeAccountIndex) -> Result<(), String> {
+    let ordered_ids = index
+        .accounts
+        .iter()
+        .map(|summary| summary.id.clone())
+        .collect::<Vec<_>>();
+    crate::modules::account_store::save_account_order(ACCOUNT_STORE_PLATFORM, &ordered_ids)?;
     let path = get_accounts_index_path()?;
     let content = serde_json::to_string_pretty(index)
         .map_err(|e| format!("序列化 Trae 账号索引失败: {}", e))?;

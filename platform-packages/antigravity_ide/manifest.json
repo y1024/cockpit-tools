@@ -1,0 +1,148 @@
+{
+  "id": "antigravity_ide",
+  "platformId": "antigravity_ide",
+  "version": "0.26.7",
+  "apiVersion": 1,
+  "minCoreVersion": "0.26.5",
+  "displayName": "Antigravity IDE",
+  "entry": "runtime/index.json",
+  "packageMode": "hotUpdate",
+  "installKind": "sidecarAdapter",
+  "adapter": {
+    "protocol": "http-json-v1",
+    "entry": "adapter/macos/cockpit-antigravity-ide-adapter",
+    "macosEntry": "adapter/macos/cockpit-antigravity-ide-adapter",
+    "windowsEntry": "adapter/windows/cockpit-antigravity-ide-adapter.exe",
+    "linuxEntry": "adapter/linux/cockpit-antigravity-ide-adapter",
+    "methods": [
+      "health.check",
+      "accounts.list",
+      "accounts.current",
+      "accounts.currentId",
+      "accounts.saveSnapshot",
+      "accounts.addRefreshToken",
+      "accounts.setCurrent",
+      "accounts.delete",
+      "accounts.deleteMany",
+      "accounts.reorder",
+      "accounts.importOldTools",
+      "accounts.importLocal",
+      "accounts.syncFromExtension",
+      "accounts.importJson",
+      "accounts.importFiles",
+      "accounts.export",
+      "accounts.refresh",
+      "accounts.refreshAll",
+      "accounts.updateTags",
+      "accounts.updateNotes",
+      "accounts.groups.load",
+      "accounts.groups.save",
+      "accounts.syncCurrentFromClient",
+      "accounts.refreshCurrent",
+      "quota.alertPayload",
+      "switch.inject",
+      "switch.history.load",
+      "switch.history.clear",
+      "instances.store.get",
+      "instances.store.replace",
+      "instance.getDefaults",
+      "instance.list",
+      "instance.create",
+      "instance.update",
+      "instance.delete",
+      "instance.start",
+      "instance.stop",
+      "instance.closeAll",
+      "instance.openWindow",
+      "runtime.detectLaunchPath",
+      "runtime.status",
+      "runtime.startDefault",
+      "runtime.stopDefault",
+      "runtime.restartDefault",
+      "runtime.focusDefault",
+      "runtime.restore",
+      "oauth.prepareUrl",
+      "oauth.complete",
+      "oauth.cancel",
+      "oauth.submitCallbackUrl",
+      "wakeup.fetchAvailableModels",
+      "wakeup.trigger",
+      "wakeup.scheduler.syncState",
+      "wakeup.scheduler.runEnabledTasks",
+      "wakeup.scheduler.confirmTask",
+      "wakeup.scheduler.cancelTask",
+      "wakeup.scheduler.checkTimeouts",
+      "wakeup.runtime.ensureReady",
+      "wakeup.crontab.validate",
+      "wakeup.sharedHistory.load",
+      "wakeup.sharedHistory.add",
+      "wakeup.sharedHistory.clear",
+      "wakeup.sharedScope.cancel",
+      "wakeup.sharedScope.release",
+      "wakeup.setOfficialLsVersionMode",
+      "wakeup.verification.loadState",
+      "wakeup.verification.loadHistory",
+      "wakeup.verification.deleteHistory",
+      "wakeup.verification.runBatch"
+    ]
+  },
+  "ui": {
+    "protocol": "react-remote-esm-v1",
+    "entry": "ui/remoteEntry.js",
+    "style": "ui/style.css",
+    "exports": [
+      "mount",
+      "unmount"
+    ]
+  },
+  "capabilities": [
+    "accounts",
+    "oauth",
+    "switch",
+    "quota",
+    "runtime",
+    "instances",
+    "wakeup",
+    "verification"
+  ],
+  "changelog": [
+    {
+      "version": "0.26.7",
+      "date": "2026-06-24",
+      "notes": [
+        "Antigravity IDE page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
+        "Antigravity IDE account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
+      ]
+    }
+  ],
+  "contributions": {
+    "platforms": [
+      {
+        "id": "antigravity_ide",
+        "label": "Antigravity IDE",
+        "labelKey": "nav.overview",
+        "iconKey": "antigravity_ide",
+        "page": "overview"
+      }
+    ],
+    "dataPaths": [
+      "accounts.json",
+      "accounts",
+      "groups.json",
+      "display_groups.json",
+      "instances.json",
+      "wakeup_history.json",
+      "wakeup_verification_state.json",
+      "wakeup_verification_history.json"
+    ],
+    "localStorageKeys": [
+      "agtools.antigravity.runtime_target.v1",
+      "agtools.wakeup.enabled",
+      "agtools.wakeup.tasks",
+      "agtools.wakeup.schedule",
+      "agtools.wakeup.official_ls_version_mode",
+      "agtools.accountsOverview.antigravity.*"
+    ],
+    "nativeBoundaries": []
+  }
+}

@@ -44,7 +44,10 @@ import {
   type FileCorruptedError,
 } from "./FileCorruptedModal";
 import { useEscClose } from "../hooks/useEscClose";
-import type { InstanceStoreState } from "../stores/createInstanceStore";
+import {
+  INSTANCE_LIST_TIMEOUT_ERROR,
+  type InstanceStoreState,
+} from "../stores/createInstanceStore";
 import { showInstanceFloatingCardWindow } from "../services/floatingCardService";
 import {
   isPrivacyModeEnabledByDefault,
@@ -575,10 +578,15 @@ export function InstancesManager<TAccount extends AccountLike>({
     const corrupted = parseFileCorruptedError(error);
     if (corrupted) {
       setFileCorruptedError(corrupted);
+    } else if (error === INSTANCE_LIST_TIMEOUT_ERROR) {
+      setMessage({
+        text: t("instances.messages.loadTimeout", "加载实例超时，请重试。"),
+        tone: "error",
+      });
     } else {
       setMessage({ text: String(error), tone: "error" });
     }
-  }, [error]);
+  }, [error, t]);
 
   useEffect(() => {
     if (stoppingInstanceIds.length === 0) return;

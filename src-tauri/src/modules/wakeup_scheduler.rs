@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::fs;
+use std::future::Future;
 use std::path::Path;
 use std::sync::{Mutex, OnceLock};
 use std::time::Duration;
@@ -162,6 +163,33 @@ fn lock_or_recover<'a, T>(mutex: &'a Mutex<T>, label: &str) -> std::sync::MutexG
     }
 }
 
+fn spawn_scheduler_future<F>(use_tauri_runtime: bool, future: F)
+where
+    F: Future<Output = ()> + Send + 'static,
+{
+    if use_tauri_runtime {
+        tauri::async_runtime::spawn(future);
+        return;
+    }
+
+    std::thread::spawn(move || {
+        let runtime = match tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
+            .build()
+        {
+            Ok(runtime) => runtime,
+            Err(error) => {
+                modules::logger::log_warn(&format!(
+                    "[WakeupTasks] 创建 sidecar 调度 runtime 失败: {}",
+                    error
+                ));
+                return;
+            }
+        };
+        runtime.block_on(future);
+    });
+}
+
 fn emit_scheduler_event<T>(
     app: Option<&AppHandle>,
     event_emitter: Option<&WakeupSchedulerEventEmitter>,
@@ -190,7 +218,7 @@ fn emit_scheduler_event<T>(
 }
 
 fn tasks_state_path() -> Result<std::path::PathBuf, String> {
-    Ok(modules::account::get_data_dir()?.join(WAKEUP_TASKS_FILE))
+    Ok(modules::app_data::get_data_dir()?.join(WAKEUP_TASKS_FILE))
 }
 
 fn quarantine_corrupted_tasks_file(path: &Path, error: &impl std::fmt::Display) {
@@ -384,7 +412,8 @@ pub fn trigger_startup_tasks_if_needed_with_event_emitter(
         return;
     }
 
-    tauri::async_runtime::spawn(async move {
+    let use_tauri_runtime = app.is_some();
+    spawn_scheduler_future(use_tauri_runtime, async move {
         let started = run_enabled_tasks_now_with_event_emitter(
             app.as_ref(),
             event_emitter.as_ref(),
@@ -414,7 +443,8 @@ pub fn ensure_started_with_event_emitter(
     }
     *started = true;
 
-    tauri::async_runtime::spawn(async move {
+    let use_tauri_runtime = app.is_some();
+    spawn_scheduler_future(use_tauri_runtime, async move {
         loop {
             run_scheduler_once_with_event_emitter(app.as_ref(), event_emitter.as_ref()).await;
             // 检查确认超时，避免因前端未调用导致确认任务堆积
@@ -473,7 +503,8 @@ pub async fn run_enabled_tasks_now_with_event_emitter(
             let event_emitter = event_emitter.cloned();
             let task_id = task_id.clone();
             let delay_seconds = (*delay_minutes as u64) * 60;
-            tauri::async_runtime::spawn(async move {
+            let use_tauri_runtime = app_handle.is_some();
+            spawn_scheduler_future(use_tauri_runtime, async move {
                 if delay_seconds > 0 {
                     sleep(Duration::from_secs(delay_seconds)).await;
                 }
@@ -1013,7 +1044,8 @@ async fn run_scheduler_once_with_event_emitter(
                 let event_emitter = event_emitter.cloned();
                 let task_clone = task.clone();
                 let trigger_source = trigger_source.to_string();
-                tauri::async_runtime::spawn(async move {
+                let use_tauri_runtime = app_handle.is_some();
+                spawn_scheduler_future(use_tauri_runtime, async move {
                     run_task(
                         app_handle.as_ref(),
                         event_emitter.as_ref(),
@@ -1103,7 +1135,8 @@ fn handle_quota_reset_task(
         let event_emitter = event_emitter.cloned();
         let task_clone = task.clone();
         let models = models_to_trigger.into_iter().collect::<Vec<_>>();
-        tauri::async_runtime::spawn(async move {
+        let use_tauri_runtime = app_handle.is_some();
+        spawn_scheduler_future(use_tauri_runtime, async move {
             run_task_with_models(
                 app_handle.as_ref(),
                 event_emitter.as_ref(),

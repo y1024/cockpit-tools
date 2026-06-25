@@ -390,6 +390,19 @@ func (e testExecutorStatusError) StatusCode() int {
 	return e.status
 }
 
+type testExecutorMessageStatusError struct {
+	status  int
+	message string
+}
+
+func (e testExecutorMessageStatusError) Error() string {
+	return e.message
+}
+
+func (e testExecutorMessageStatusError) StatusCode() int {
+	return e.status
+}
+
 func TestWriteExecutorErrorThrottlesRetryableDownstreamError(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	recorder := httptest.NewRecorder()
@@ -416,6 +429,94 @@ func TestWriteExecutorErrorThrottlesRetryableDownstreamError(t *testing.T) {
 	if recorder.Code != http.StatusServiceUnavailable {
 		t.Fatalf("unexpected status: %d", recorder.Code)
 	}
+}
+
+func TestWriteExecutorErrorPreservesUpstreamErrorBody(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", nil)
+	server := &relayServer{}
+	upstreamError := `{"error":{"type":"service_unavailable_error","code":"server_is_overloaded","message":"Our servers are currently overloaded. Please try again later.","param":null}}`
+
+	server.writeExecutorError(c, testExecutorMessageStatusError{status: http.StatusServiceUnavailable, message: upstreamError})
+
+	if recorder.Code != http.StatusServiceUnavailable {
+		t.Fatalf("unexpected status: %d body=%s", recorder.Code, recorder.Body.String())
+	}
+	var payload map[string]any
+	if err := json.Unmarshal(recorder.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("unmarshal response body: %v body=%s", err, recorder.Body.String())
+	}
+	errorObject, ok := payload["error"].(map[string]any)
+	if !ok {
+		t.Fatalf("missing error object: %#v", payload)
+	}
+	if errorObject["type"] != "service_unavailable_error" {
+		t.Fatalf("error.type = %v", errorObject["type"])
+	}
+	if errorObject["code"] != "server_is_overloaded" {
+		t.Fatalf("error.code = %v", errorObject["code"])
+	}
+	if errorObject["message"] != "Our servers are currently overloaded. Please try again later." {
+		t.Fatalf("error.message = %v", errorObject["message"])
+	}
+	if _, ok := errorObject["param"]; !ok {
+		t.Fatalf("error.param should be preserved even when null: %#v", errorObject)
+	}
+}
+
+func TestWriteStreamTerminalErrorResponsesUsesVisibleUpstreamError(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", nil)
+	upstreamError := `{"error":{"type":"service_unavailable_error","code":"server_is_overloaded","message":"Our servers are currently overloaded. Please try again later.","param":null}}`
+
+	writeStreamTerminalError(c, testExecutorMessageStatusError{status: http.StatusServiceUnavailable, message: upstreamError})
+
+	body := recorder.Body.String()
+	if !strings.Contains(body, "event: error") {
+		t.Fatalf("responses stream terminal error should use event: error, got %q", body)
+	}
+	payload := firstSSEDataPayload(t, body)
+	if payload["type"] != "error" {
+		t.Fatalf("type = %v", payload["type"])
+	}
+	if payload["code"] != "server_is_overloaded" {
+		t.Fatalf("code = %v", payload["code"])
+	}
+	if payload["message"] != "Our servers are currently overloaded. Please try again later." {
+		t.Fatalf("message = %v", payload["message"])
+	}
+	if payload["error_type"] != "service_unavailable_error" {
+		t.Fatalf("error_type = %v", payload["error_type"])
+	}
+	if _, ok := payload["param"]; !ok {
+		t.Fatalf("param should be preserved even when null: %#v", payload)
+	}
+	errorObject, ok := payload["error"].(map[string]any)
+	if !ok || errorObject["type"] != "service_unavailable_error" {
+		t.Fatalf("nested upstream error should be preserved: %#v", payload["error"])
+	}
+}
+
+func firstSSEDataPayload(t *testing.T, body string) map[string]any {
+	t.Helper()
+	for _, line := range strings.Split(body, "\n") {
+		line = strings.TrimSpace(line)
+		if !strings.HasPrefix(line, "data:") {
+			continue
+		}
+		raw := strings.TrimSpace(strings.TrimPrefix(line, "data:"))
+		var payload map[string]any
+		if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+			t.Fatalf("unmarshal SSE payload: %v raw=%s body=%s", err, raw, body)
+		}
+		return payload
+	}
+	t.Fatalf("missing data line in SSE body: %q", body)
+	return nil
 }
 
 func TestRequestUsageTrackerFinalizesWithLastSuccessfulAttempt(t *testing.T) {

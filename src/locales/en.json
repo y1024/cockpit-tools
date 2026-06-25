@@ -524,6 +524,9 @@
     "packageUpdate": "Update",
     "packageUninstall": "Uninstall",
     "packageInstallRequired": "Not installed",
+    "packageBundledShort": "Built in",
+    "packageBundledStatus": "Provided by the main app",
+    "packageBundledDesc": "This platform is included with the main app. Installation and updates follow the main app version.",
     "packageInstallAndOpen": "Install and open",
     "packageRepairAndOpen": "Repair and open",
     "packageUpdateAndOpen": "Update and open",
@@ -737,6 +740,7 @@
       "allAlreadyRunning": "All instances are already running",
       "noneRunning": "No running instances found",
       "syncThreadsNeedTwo": "At least two instances are required to sync threads",
+      "loadTimeout": "Loading instances timed out. Try again.",
       "speedUpdated": "Speed updated"
     },
     "runningDialog": {
@@ -2056,6 +2060,7 @@
       "footerHint": "Access scope: {{scope}}",
       "memberOnlyLocal": "Local/LAN",
       "manageAccounts": "Manage Accounts",
+      "saveTimeout": "Saving API service members timed out. Try again later.",
       "rotateKey": "Reset Key",
       "rotateConfirmMessage": "The current API service key will stop working immediately after reset, and in-flight requests may become unavailable. Continue?",
       "apiKeysTitle": "Client Keys",
@@ -2444,6 +2449,7 @@
       "add": "Add Provider",
       "managePresets": "Model Presets",
       "loadFailed": "Failed to load model providers: {{error}}",
+      "loadTimeout": "Loading model providers timed out. Try again.",
       "emptyTitle": "No model providers yet",
       "emptyDesc": "Click \"Add Provider\" in the top right to start.",
       "baseUrl": "Base URL",
@@ -2897,6 +2903,7 @@
       "subtitle": "Schedule Codex wakeup jobs, test official chat, and review execution history.",
       "heroTitle": "Codex Wakeup Tasks",
       "heroSubtitle": "Create time-based wakeup jobs for OAuth Codex accounts, run ad-hoc tests, and inspect every trigger in one place.",
+      "loadTimeout": "Loading Codex wakeup tasks timed out. Try again.",
       "runtimeReady": "Official direct ready",
       "runtimeMissing": "Official direct unavailable",
       "runtimeCardTitle": "Execution method",
@@ -4263,20 +4270,20 @@
         "4": "troubleshooting",
         "5": "logs",
         "6": "log directory",
-        "7": "app.log"
+        "7": "app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Import accounts in bulk for fast environment migration.",
         "1": "Export JSON for backup or cross-device migration.",
         "2": "Locate issues via error hints and file repair guidance.",
-        "3": "Quickly locate runtime issues through app.log* in Data Directory/logs."
+        "3": "Quickly locate runtime issues through app-YYYY-MM-DD.log and platform-<platform>-YYYY-MM-DD.log in Data Directory/logs."
       },
       "steps": {
         "0": "Before bulk operations, export current data once as a snapshot.",
         "1": "On list pages, switch privacy view via \"Show/Hide Email\".",
         "2": "When file corruption prompts appear, follow the dialog and open the directory to repair.",
         "3": "For troubleshooting, go to \"Settings -> Data Directory -> Open\", then enter logs folder.",
-        "4": "Check the latest app.log or app.log.* first (date-rotated log files).",
+        "4": "Check the latest app-YYYY-MM-DD.log first; for platform issues, select the matching platform-<platform>-YYYY-MM-DD.log.",
         "5": "When submitting feedback, include: occurrence time, platform, reproduction steps, key error logs (20 lines before/after)."
       },
       "summary": "Covers daily maintenance: JSON import/export, masked email display, exception handling and recovery flow.",

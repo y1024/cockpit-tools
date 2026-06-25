@@ -25,6 +25,7 @@ const SESSION_VISIBILITY_REPAIR_BACKUP_PREFIX: &str = "backup-";
 const SESSION_VISIBILITY_REPAIR_BACKUP_SUFFIX: &str = "-session-visibility-repair";
 const MAX_SESSION_VISIBILITY_REPAIR_BACKUPS: usize = 1;
 const SESSION_INDEX_ACTIVITY_DRIFT_MS: i128 = 3_600_000;
+const MAX_ROLLOUT_PROVIDER_DISCOVERY_LINES: usize = 200;
 pub const SESSION_VISIBILITY_REPAIR_PROGRESS_EVENT: &str =
     "codex:session_visibility_repair_progress";
 
@@ -820,7 +821,7 @@ pub fn list_session_visibility_repair_providers(
             )),
         }
 
-        for db_path in sqlite_candidate_paths(&instance.data_dir) {
+        for db_path in official_state_db_candidate_paths(&instance.data_dir) {
             match sqlite_provider_ids(&db_path) {
                 Ok(provider_ids) => {
                     for provider_id in provider_ids {
@@ -1352,39 +1353,52 @@ fn collect_rollout_provider_ids(data_dir: &Path) -> Result<Vec<String>, String> 
             continue;
         }
         for rollout_path in list_rollout_files(&root_dir)? {
-            let content = fs::read_to_string(&rollout_path).map_err(|error| {
-                format!(
-                    "读取 rollout 文件失败 ({}): {}",
-                    rollout_path.display(),
-                    error
-                )
-            })?;
-            for line in content.lines() {
-                let Ok(record) = serde_json::from_str::<JsonValue>(line.trim()) else {
-                    continue;
-                };
-                if record.get("type").and_then(JsonValue::as_str) != Some("session_meta") {
-                    continue;
-                }
-                let Some(provider_id) = record
-                    .get("payload")
-                    .and_then(JsonValue::as_object)
-                    .and_then(|payload| payload.get("model_provider"))
-                    .and_then(JsonValue::as_str)
-                    .map(str::trim)
-                    .filter(|value| !value.is_empty())
-                else {
-                    continue;
-                };
-                if is_valid_provider_id_for_discovery(provider_id) {
-                    ids.insert(provider_id.to_string());
-                }
+            if let Some(provider_id) = rollout_provider_id_for_discovery(&rollout_path)? {
+                ids.insert(provider_id);
             }
         }
     }
     let mut ids = ids.into_iter().collect::<Vec<_>>();
     ids.sort();
     Ok(ids)
+}
+
+fn rollout_provider_id_for_discovery(rollout_path: &Path) -> Result<Option<String>, String> {
+    let file = fs::File::open(rollout_path).map_err(|error| {
+        format!(
+            "读取 rollout 文件失败 ({}): {}",
+            rollout_path.display(),
+            error
+        )
+    })?;
+    let reader = BufReader::new(file);
+    for line in reader.lines().take(MAX_ROLLOUT_PROVIDER_DISCOVERY_LINES) {
+        let line = line.map_err(|error| {
+            format!(
+                "读取 rollout 文件失败 ({}): {}",
+                rollout_path.display(),
+                error
+            )
+        })?;
+        let Ok(record) = serde_json::from_str::<JsonValue>(line.trim()) else {
+            continue;
+        };
+        if record.get("type").and_then(JsonValue::as_str) != Some("session_meta") {
+            continue;
+        }
+        let Some(provider_id) = record
+            .get("payload")
+            .and_then(JsonValue::as_object)
+            .and_then(|payload| payload.get("model_provider"))
+            .and_then(JsonValue::as_str)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        else {
+            return Ok(None);
+        };
+        return Ok(is_valid_provider_id_for_discovery(provider_id).then(|| provider_id.to_string()));
+    }
+    Ok(None)
 }
 
 fn sqlite_provider_ids(db_path: &Path) -> Result<Vec<String>, String> {
@@ -3690,6 +3704,36 @@ mod tests {
         mode: CodexSessionVisibilityRepairMode,
     ) -> CodexSessionVisibilityRepairOptions {
         CodexSessionVisibilityRepairOptions::for_mode(mode)
+    }
+
+    #[test]
+    fn rollout_provider_discovery_uses_bounded_session_meta_scan() {
+        let data_dir = make_temp_dir("codex-session-provider-discovery-test");
+        let rollout_dir = data_dir.join("sessions").join("2026").join("06").join("25");
+        fs::create_dir_all(&rollout_dir).expect("create rollout dir");
+        let first_meta_rollout = rollout_dir.join("rollout-first-meta.jsonl");
+        fs::write(
+            &first_meta_rollout,
+            format!(
+                "{}\n{}\n",
+                r#"{"type":"session_meta","payload":{"model_provider":"relay"}}"#,
+                "x".repeat(1024 * 1024)
+            ),
+        )
+        .expect("write first meta rollout");
+
+        let late_meta_rollout = rollout_dir.join("rollout-late-meta.jsonl");
+        let mut late_content = "{}\n".repeat(MAX_ROLLOUT_PROVIDER_DISCOVERY_LINES);
+        late_content.push_str(
+            r#"{"type":"session_meta","payload":{"model_provider":"late-provider"}}"#,
+        );
+        late_content.push('\n');
+        fs::write(&late_meta_rollout, late_content).expect("write late meta rollout");
+
+        let providers = collect_rollout_provider_ids(&data_dir).expect("collect providers");
+        assert_eq!(providers, vec!["relay".to_string()]);
+
+        fs::remove_dir_all(&data_dir).expect("cleanup temp dir");
     }
 
     #[test]

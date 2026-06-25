@@ -143,6 +143,7 @@ import { useAntigravityRuntimeTarget } from '../hooks/useAntigravityRuntimeTarge
 
 interface AccountsPageProps {
   onNavigate?: (page: Page) => void
+  hideHeader?: boolean
 }
 
 type AntigravitySwitchHistoryItem = accountService.AntigravitySwitchHistoryItem
@@ -217,7 +218,7 @@ const ANTIGRAVITY_FILTER_FIELD_TAG_FILTER = 'tag_filter'
 const ANTIGRAVITY_FILTER_FIELD_GROUP_BY_TAG = 'group_by_tag'
 const ANTIGRAVITY_FILTER_FIELD_ACTIVE_GROUP_ID = 'active_group_id'
 
-export function AccountsPage({ onNavigate }: AccountsPageProps) {
+export function AccountsPage({ onNavigate, hideHeader = false }: AccountsPageProps) {
   const { t, i18n } = useTranslation()
   const antigravityRuntimeTarget = useAntigravityRuntimeTarget()
   const locale = i18n.language || 'zh-CN'
@@ -3300,12 +3301,14 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
   return (
     <>
       <main className="main-content accounts-page">
-        <OverviewTabsHeader
-          active="overview"
-          onNavigate={onNavigate}
-          onOpenManual={() => onNavigate?.('manual')}
-          subtitle={t('overview.subtitle')}
-        />
+        {!hideHeader && (
+          <OverviewTabsHeader
+            active="overview"
+            onNavigate={onNavigate}
+            onOpenManual={() => onNavigate?.('manual')}
+            subtitle={t('overview.subtitle')}
+          />
+        )}
 
         {/* 面包屑：进入分组后显示 */}
         {activeGroup && (

@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "Balíček {{platform}} není nainstalován",
     "packagePageInstallDesc": "Instalaci lze spustit přímo na této stránce, případně použít akce balíčku vpravo nahoře pro instalaci nebo opravu před správou účtů. Účty, OAuth, přepínání ani obnovování na pozadí se před instalací nenačtou.",
     "packageDashboardStateDesc": "Otevřete stránku {{platform}} pro přímou instalaci, případně použijte akce vpravo nahoře pro aktualizaci, opravu nebo zobrazení změn.",
-    "packageOpenPlatformPage": "Otevřít stránku platformy"
+    "packageOpenPlatformPage": "Otevřít stránku platformy",
+    "packageBundledShort": "Vestavěno",
+    "packageBundledStatus": "Součást hlavní aplikace",
+    "packageBundledDesc": "Tato platforma je součástí hlavní aplikace. Instalace a aktualizace se řídí verzí hlavní aplikace."
   },
   "privacy": {
     "hideSensitive": "Skrýt e-maily",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Všechny instance již běží",
       "noneRunning": "Nebyly nalezeny žádné běžící instance",
       "syncThreadsNeedTwo": "Pro synchronizaci vláken jsou potřeba alespoň dvě instance",
+      "loadTimeout": "Načítání instancí vypršelo. Zkuste to znovu.",
       "launchPrepared": "Příkaz ke spuštění je připraven",
       "speedUpdated": "Rychlost aktualizována"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Ve skupině zatím nejsou žádné účty",
       "footerHint": "Rozsah přístupu: {{scope}}",
       "manageAccounts": "Spravovat účty",
+      "saveTimeout": "Ukládání členů služby API vypršelo. Zkuste to později.",
       "rotateKey": "Obnovit klíč",
       "rotateConfirmMessage": "Po resetu přestane aktuální klíč API služby okamžitě fungovat a probíhající požadavky mohou být nedostupné. Pokračovat?",
       "disableService": "Vypnout službu",
@@ -2188,6 +2193,7 @@
       "subtitle": "Plánujte úlohy probuzení Codexu, testujte cestu ke CLI a kontrolujte historii spuštění.",
       "heroTitle": "Úlohy probuzení Codexu",
       "heroSubtitle": "Vytvářejte časované úlohy probuzení pro OAuth účty Codex, spouštějte jednorázové testy a sledujte všechna spuštění na jednom místě.",
+      "loadTimeout": "Načítání úloh probuzení Codex vypršelo. Zkuste to znovu.",
       "runtimeReady": "Codex CLI je připraveno",
       "runtimeMissing": "Codex CLI je vyžadováno",
       "runtimeCardTitle": "CLI Codexu",
@@ -2606,6 +2612,7 @@
       "desc": "Spravujte poskytovatele modelů a více API klíčů na jednom místě a pak je přímo znovu používejte při přidávání účtů Codex s API klíčem.",
       "add": "Přidat poskytovatele",
       "loadFailed": "Nepodařilo se načíst poskytovatele modelů: {{error}}",
+      "loadTimeout": "Načítání poskytovatelů modelů vypršelo. Zkuste to znovu.",
       "emptyTitle": "Zatím žádní poskytovatelé modelů",
       "emptyDesc": "Začněte kliknutím na „Přidat poskytovatele“ vpravo nahoře.",
       "baseUrl": "Základní URL",
@@ -3872,20 +3879,20 @@
         "4": "nastavení",
         "5": "řešení problémů",
         "6": "logy",
-        "7": "data"
+        "7": "záznam app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Pochopte, co vám Import/Export, soukromí a řešení problémů přináší.",
         "1": "Použijte doporučený postup v Import/Export, soukromí a řešení problémů a snižte chyby.",
         "2": "Než půjdete do hromadných akcí, ověřte jeden úspěšný běh v Import/Export, soukromí a řešení problémů.",
-        "3": "Při problému v Import/Export, soukromí a řešení problémů nejdříve zkontrolujte logy a důkazy."
+        "3": "Rychle vyhledejte provozní problémy ve složce logs přes app-YYYY-MM-DD.log a platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Otevřete stránku Import/Export, soukromí a řešení problémů.",
         "1": "Dokončete základní nastavení a potřebné vazby pro Import/Export, soukromí a řešení problémů.",
         "2": "Proveďte jednu ruční operaci v Import/Export, soukromí a řešení problémů a ověřte výsledek.",
         "3": "Pro troubleshooting: Nastavení -> Datový adresář -> Otevřít, pak logs.",
-        "4": "Nejprve zkontrolujte nejnovější app.log nebo app.log.*.",
+        "4": "Nejprve zkontrolujte nejnovější app-YYYY-MM-DD.log; u problémů platformy vyberte odpovídající platform-<platform>-YYYY-MM-DD.log.",
         "5": "Při hlášení přiložte čas, platformu, kroky reprodukce a anonymizované logy."
       },
       "summary": "Tato sekce vysvětluje, jak používat Import/Export, soukromí a řešení problémů v běžném workflow.",

@@ -1,0 +1,5 @@
+{
+  "platformId": "antigravity_ide",
+  "name": "Antigravity IDE platform package",
+  "description": "Runtime contribution, Remote React UI, and sidecar adapter declaration for the Cockpit Tools Antigravity IDE integration. OAuth, wakeup, and verification remain declared native boundaries during migration."
+}

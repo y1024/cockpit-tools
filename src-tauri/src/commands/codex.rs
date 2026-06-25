@@ -12,15 +12,29 @@ use crate::models::codex_local_access::{
     CodexLocalAccessUsageEventPage,
 };
 use crate::modules::{logger, platform_adapter, process};
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use tauri::AppHandle;
 use tauri::Emitter;
 use tauri_plugin_opener::OpenerExt;
 
 static CODEX_POST_REFRESH_CHECK_IN_PROGRESS: AtomicBool = AtomicBool::new(false);
+const CODEX_LOCAL_ACCESS_FAST_MUTATION_TIMEOUT: Duration = Duration::from_secs(20);
+const CODEX_FAST_READ_TIMEOUT: Duration = Duration::from_secs(15);
+
+fn call_codex_local_access_fast<T: DeserializeOwned>(
+    method: &str,
+    payload: Value,
+) -> Result<T, String> {
+    platform_adapter::call_codex_with_timeout(
+        method,
+        payload,
+        CODEX_LOCAL_ACCESS_FAST_MUTATION_TIMEOUT,
+    )
+}
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -279,11 +293,11 @@ async fn run_codex_post_refresh_checks(app: &AppHandle) {
     }
 
     if !switched {
-        match platform_adapter::call_codex::<Option<crate::modules::account::QuotaAlertPayload>>(
+        match platform_adapter::call_codex::<Option<crate::modules::quota_alert::QuotaAlertPayload>>(
             "quota.alertPayload",
             json!({}),
         ) {
-            Ok(Some(payload)) => crate::modules::account::dispatch_quota_alert(&payload),
+            Ok(Some(payload)) => crate::modules::quota_alert::dispatch_quota_alert(&payload),
             Ok(None) => {}
             Err(e) => logger::log_warn(&format!("[QuotaAlert][Codex] 预警检查失败: {}", e)),
         }
@@ -718,12 +732,16 @@ pub fn codex_wakeup_update_runtime_config(
 
 #[tauri::command]
 pub fn codex_wakeup_get_overview() -> Result<Value, String> {
-    platform_adapter::call_codex("wakeup.getOverview", json!({}))
+    platform_adapter::call_codex_with_timeout(
+        "wakeup.getOverview",
+        json!({}),
+        CODEX_FAST_READ_TIMEOUT,
+    )
 }
 
 #[tauri::command]
 pub fn codex_wakeup_get_state() -> Result<Value, String> {
-    platform_adapter::call_codex("wakeup.getState", json!({}))
+    platform_adapter::call_codex_with_timeout("wakeup.getState", json!({}), CODEX_FAST_READ_TIMEOUT)
 }
 
 #[tauri::command]
@@ -835,12 +853,20 @@ pub async fn save_codex_account_groups(data: String) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn load_codex_model_providers() -> Result<String, String> {
-    platform_adapter::call_codex("modelProviders.load", json!({}))
+    platform_adapter::call_codex_with_timeout(
+        "modelProviders.load",
+        json!({}),
+        CODEX_FAST_READ_TIMEOUT,
+    )
 }
 
 #[tauri::command]
 pub async fn save_codex_model_providers(data: String) -> Result<(), String> {
-    platform_adapter::call_codex("modelProviders.save", json!({ "data": data }))
+    platform_adapter::call_codex_with_timeout(
+        "modelProviders.save",
+        json!({ "data": data }),
+        CODEX_LOCAL_ACCESS_FAST_MUTATION_TIMEOUT,
+    )
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1005,7 +1031,7 @@ pub async fn codex_local_access_save_accounts(
     account_ids: Vec<String>,
     restrict_free_accounts: Option<bool>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.saveAccounts",
         json!({
             "accountIds": account_ids,
@@ -1018,7 +1044,7 @@ pub async fn codex_local_access_save_accounts(
 pub async fn codex_local_access_remove_account(
     account_id: String,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.removeAccount",
         json!({ "accountId": account_id }),
     )
@@ -1026,7 +1052,7 @@ pub async fn codex_local_access_remove_account(
 
 #[tauri::command]
 pub async fn codex_local_access_rotate_api_key() -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.rotateApiKey", json!({}))
+    call_codex_local_access_fast("localAccess.rotateApiKey", json!({}))
 }
 
 #[tauri::command]
@@ -1034,7 +1060,7 @@ pub async fn codex_local_access_update_bound_oauth_account(
     bound_oauth_account_id: Option<String>,
     bound_oauth_use_local_gateway: Option<bool>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateBoundOAuthAccount",
         json!({
             "boundOauthAccountId": bound_oauth_account_id,
@@ -1045,7 +1071,7 @@ pub async fn codex_local_access_update_bound_oauth_account(
 
 #[tauri::command]
 pub async fn codex_local_access_clear_stats() -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.clearStats", json!({}))
+    call_codex_local_access_fast("localAccess.clearStats", json!({}))
 }
 
 #[tauri::command]
@@ -1080,24 +1106,24 @@ pub async fn codex_local_access_query_request_logs(
 
 #[tauri::command]
 pub async fn codex_local_access_prepare_restart() -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.prepareRestart", json!({}))
+    call_codex_local_access_fast("localAccess.prepareRestart", json!({}))
 }
 
 #[tauri::command]
 pub async fn codex_local_access_kill_port() -> Result<CodexLocalAccessPortCleanupResult, String> {
-    platform_adapter::call_codex("localAccess.killPort", json!({}))
+    call_codex_local_access_fast("localAccess.killPort", json!({}))
 }
 
 #[tauri::command]
 pub async fn codex_local_access_update_port(port: u16) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.updatePort", json!({ "port": port }))
+    call_codex_local_access_fast("localAccess.updatePort", json!({ "port": port }))
 }
 
 #[tauri::command]
 pub async fn codex_local_access_update_routing_strategy(
     strategy: CodexLocalAccessRoutingStrategy,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateRoutingStrategy",
         json!({ "strategy": strategy }),
     )
@@ -1107,14 +1133,14 @@ pub async fn codex_local_access_update_routing_strategy(
 pub async fn codex_local_access_update_custom_routing(
     rules: Vec<CodexLocalAccessCustomRoutingRule>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.updateCustomRouting", json!({ "rules": rules }))
+    call_codex_local_access_fast("localAccess.updateCustomRouting", json!({ "rules": rules }))
 }
 
 #[tauri::command]
 pub async fn codex_local_access_update_account_model_rules(
     rules: Vec<CodexLocalAccessAccountModelRule>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateAccountModelRules",
         json!({ "rules": rules }),
     )
@@ -1125,7 +1151,7 @@ pub async fn codex_local_access_update_model_rules(
     model_aliases: Vec<CodexLocalAccessModelAlias>,
     excluded_models: Vec<String>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateModelRules",
         json!({
             "modelAliases": model_aliases,
@@ -1138,7 +1164,7 @@ pub async fn codex_local_access_update_model_rules(
 pub async fn codex_local_access_update_model_pricings(
     model_pricings: Vec<CodexLocalAccessModelPricing>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateModelPricings",
         json!({ "modelPricings": model_pricings }),
     )
@@ -1152,7 +1178,7 @@ pub async fn codex_local_access_update_routing_options(
     max_retry_interval_ms: u64,
     disable_cooling: bool,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateRoutingOptions",
         json!({
             "sessionAffinity": session_affinity,
@@ -1169,7 +1195,7 @@ pub async fn codex_local_access_update_timeouts(
     timeouts: CodexLocalAccessTimeouts,
     active_timeout_preset_id: Option<String>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateTimeouts",
         json!({
             "timeouts": timeouts,
@@ -1183,7 +1209,7 @@ pub async fn codex_local_access_update_timeout_presets(
     timeout_presets: Vec<CodexLocalAccessTimeoutPreset>,
     active_timeout_preset_id: Option<String>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateTimeoutPresets",
         json!({
             "timeoutPresets": timeout_presets,
@@ -1196,7 +1222,7 @@ pub async fn codex_local_access_update_timeout_presets(
 pub async fn codex_local_access_update_upstream_proxy_config(
     upstream_proxy_url: Option<String>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateUpstreamProxyConfig",
         json!({ "upstreamProxyUrl": upstream_proxy_url }),
     )
@@ -1206,7 +1232,7 @@ pub async fn codex_local_access_update_upstream_proxy_config(
 pub async fn codex_local_access_update_gateway_mode(
     gateway_mode: CodexLocalAccessGatewayMode,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateGatewayMode",
         json!({ "gatewayMode": gateway_mode }),
     )
@@ -1216,7 +1242,7 @@ pub async fn codex_local_access_update_gateway_mode(
 pub async fn codex_local_access_update_debug_logs(
     debug_logs: bool,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateDebugLogs",
         json!({ "debugLogs": debug_logs }),
     )
@@ -1226,7 +1252,7 @@ pub async fn codex_local_access_update_debug_logs(
 pub async fn codex_local_access_update_access_scope(
     access_scope: CodexLocalAccessScope,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateAccessScope",
         json!({ "accessScope": access_scope }),
     )
@@ -1236,7 +1262,7 @@ pub async fn codex_local_access_update_access_scope(
 pub async fn codex_local_access_update_client_base_url_host(
     client_base_url_host: CodexLocalAccessClientBaseUrlHost,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateClientBaseUrlHost",
         json!({ "clientBaseUrlHost": client_base_url_host }),
     )
@@ -1246,7 +1272,7 @@ pub async fn codex_local_access_update_client_base_url_host(
 pub async fn codex_local_access_update_image_generation_mode(
     image_generation_mode: crate::models::codex_local_access::CodexLocalAccessImageGenerationMode,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateImageGenerationMode",
         json!({ "imageGenerationMode": image_generation_mode }),
     )
@@ -1256,7 +1282,7 @@ pub async fn codex_local_access_update_image_generation_mode(
 pub async fn codex_local_access_create_api_key(
     label: Option<String>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.createApiKey", json!({ "label": label }))
+    call_codex_local_access_fast("localAccess.createApiKey", json!({ "label": label }))
 }
 
 #[tauri::command]
@@ -1268,7 +1294,7 @@ pub async fn codex_local_access_update_api_key(
     allowed_models: Option<Vec<String>>,
     excluded_models: Option<Vec<String>>,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.updateApiKey",
         json!({
             "apiKeyId": api_key_id,
@@ -1285,7 +1311,7 @@ pub async fn codex_local_access_update_api_key(
 pub async fn codex_local_access_rotate_named_api_key(
     api_key_id: String,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.rotateNamedApiKey",
         json!({ "apiKeyId": api_key_id }),
     )
@@ -1295,7 +1321,7 @@ pub async fn codex_local_access_rotate_named_api_key(
 pub async fn codex_local_access_delete_api_key(
     api_key_id: String,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex(
+    call_codex_local_access_fast(
         "localAccess.deleteApiKey",
         json!({ "apiKeyId": api_key_id }),
     )
@@ -1305,7 +1331,7 @@ pub async fn codex_local_access_delete_api_key(
 pub async fn codex_local_access_set_enabled(
     enabled: bool,
 ) -> Result<CodexLocalAccessState, String> {
-    platform_adapter::call_codex("localAccess.setEnabled", json!({ "enabled": enabled }))
+    call_codex_local_access_fast("localAccess.setEnabled", json!({ "enabled": enabled }))
 }
 
 #[derive(Debug, Deserialize)]

@@ -27,7 +27,7 @@ static CURSOR_INSTANCE_STORE_LOCK: std::sync::LazyLock<Mutex<()>> =
 const CURSOR_INSTANCES_FILE: &str = "cursor_instances.json";
 
 fn instances_path() -> Result<PathBuf, String> {
-    let data_dir = modules::account::get_data_dir()?;
+    let data_dir = modules::app_data::get_data_dir()?;
     Ok(data_dir.join(CURSOR_INSTANCES_FILE))
 }
 
@@ -81,27 +81,7 @@ pub fn get_default_cursor_user_data_dir() -> Result<PathBuf, String> {
 }
 
 pub fn get_default_instances_root_dir() -> Result<PathBuf, String> {
-    #[cfg(target_os = "macos")]
-    {
-        let home = dirs::home_dir().ok_or("无法获取用户主目录")?;
-        return Ok(home.join(".antigravity_cockpit/instances/cursor"));
-    }
-
-    #[cfg(target_os = "windows")]
-    {
-        let appdata =
-            std::env::var("APPDATA").map_err(|_| "无法获取 APPDATA 环境变量".to_string())?;
-        return Ok(PathBuf::from(appdata).join(".antigravity_cockpit\\instances\\cursor"));
-    }
-
-    #[cfg(target_os = "linux")]
-    {
-        let home = dirs::home_dir().ok_or("无法获取用户主目录")?;
-        return Ok(home.join(".antigravity_cockpit/instances/cursor"));
-    }
-
-    #[allow(unreachable_code)]
-    Err("Cursor 多开实例仅支持 macOS、Windows 和 Linux".to_string())
+    crate::modules::app_data::resolve_instances_dir("cursor")
 }
 
 pub fn get_instance_defaults() -> Result<InstanceDefaults, String> {

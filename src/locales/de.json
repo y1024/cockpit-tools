@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "{{platform}}-Paket ist nicht installiert",
     "packagePageInstallDesc": "Sie können direkt auf dieser Seite installieren oder die Paketaktionen oben rechts zum Installieren oder Reparieren nutzen, bevor Sie Konten verwalten. Konten, OAuth, Wechsel und Hintergrundaktualisierung werden vor der Installation nicht geladen.",
     "packageDashboardStateDesc": "Öffnen Sie die {{platform}}-Seite, um direkt zu installieren, oder nutzen Sie oben rechts Aktionen zum Aktualisieren, Reparieren oder Anzeigen der Änderungen.",
-    "packageOpenPlatformPage": "Plattformseite öffnen"
+    "packageOpenPlatformPage": "Plattformseite öffnen",
+    "packageBundledShort": "Integriert",
+    "packageBundledStatus": "Von der Haupt-App bereitgestellt",
+    "packageBundledDesc": "Diese Plattform ist in der Haupt-App enthalten. Installation und Updates folgen der Version der Haupt-App."
   },
   "privacy": {
     "hideSensitive": "E-Mails ausblenden",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Alle Instanzen laufen bereits",
       "noneRunning": "Keine laufenden Instanzen gefunden",
       "syncThreadsNeedTwo": "Mindestens zwei Instanzen sind erforderlich, um Threads zu synchronisieren",
+      "loadTimeout": "Zeitüberschreitung beim Laden der Instanzen. Bitte erneut versuchen.",
       "launchPrepared": "Startbefehl ist bereit",
       "speedUpdated": "Tempo aktualisiert"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Diese Sammlung enthält noch keine Konten",
       "footerHint": "Zugriff: {{scope}}",
       "manageAccounts": "Konten verwalten",
+      "saveTimeout": "Speichern der API-Dienstmitglieder hat zu lange gedauert. Später erneut versuchen.",
       "rotateKey": "Schlüssel erneuern",
       "rotateConfirmMessage": "Nach dem Zurücksetzen wird der aktuelle API-Service-Schlüssel sofort ungültig. Laufende Anfragen könnten dadurch nicht mehr verfügbar sein. Fortfahren?",
       "disableService": "Dienst deaktivieren",
@@ -2188,6 +2193,7 @@
       "subtitle": "Plane Codex-Wakeup-Aufgaben, teste den CLI-Pfad und prüfe den Ausführungsverlauf.",
       "heroTitle": "Codex-Wakeup-Aufgaben",
       "heroSubtitle": "Erstelle zeitgesteuerte Wakeup-Aufgaben für OAuth-Codex-Konten, führe Ad-hoc-Tests aus und prüfe alle Auslösungen an einem Ort.",
+      "loadTimeout": "Zeitüberschreitung beim Laden der Codex-Weckaufgaben. Bitte erneut versuchen.",
       "runtimeReady": "Codex CLI bereit",
       "runtimeMissing": "Codex CLI erforderlich",
       "runtimeCardTitle": "Codex-CLI",
@@ -2606,6 +2612,7 @@
       "desc": "Verwalten Sie Modellanbieter und mehrere API-Keys an einem Ort und verwenden Sie sie beim Hinzufügen von Codex-Konten mit API-Key direkt wieder.",
       "add": "Anbieter hinzufügen",
       "loadFailed": "Modellanbieter konnten nicht geladen werden: {{error}}",
+      "loadTimeout": "Zeitüberschreitung beim Laden der Modellanbieter. Bitte erneut versuchen.",
       "emptyTitle": "Noch keine Modellanbieter",
       "emptyDesc": "Klicken Sie oben rechts auf „Anbieter hinzufügen“, um loszulegen.",
       "baseUrl": "Basis-URL",
@@ -3872,20 +3879,20 @@
         "4": "Einstellungen",
         "5": "Fehleranalyse",
         "6": "Logs",
-        "7": "Daten"
+        "7": "Protokoll app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Verstehe, was dir Import/Export, Datenschutz und Troubleshooting bringt.",
         "1": "Nutze den empfohlenen Ablauf in Import/Export, Datenschutz und Troubleshooting, um Fehler zu vermeiden.",
         "2": "Bestätige erst einen erfolgreichen Lauf in Import/Export, Datenschutz und Troubleshooting, bevor du skalierst.",
-        "3": "Bei Problemen in Import/Export, Datenschutz und Troubleshooting zuerst Logs prüfen und Belege sammeln."
+        "3": "Laufzeitprobleme im logs-Ordner schnell über app-YYYY-MM-DD.log und platform-<platform>-YYYY-MM-DD.log eingrenzen."
       },
       "steps": {
         "0": "Öffne die Seite für Import/Export, Datenschutz und Troubleshooting.",
         "1": "Schließe Grundkonfiguration und erforderliche Bindungen für Import/Export, Datenschutz und Troubleshooting ab.",
         "2": "Führe eine manuelle Aktion in Import/Export, Datenschutz und Troubleshooting aus und prüfe das Ergebnis.",
         "3": "Für Troubleshooting: Einstellungen -> Datenverzeichnis -> Öffnen, dann logs.",
-        "4": "Prüfe zuerst die neueste app.log oder app.log.*.",
+        "4": "Prüfe zuerst die neueste app-YYYY-MM-DD.log; bei Plattformproblemen wähle die passende platform-<platform>-YYYY-MM-DD.log.",
         "5": "Beim Melden bitte Zeit, Plattform, Reproduktionsschritte und bereinigte Logs angeben."
       },
       "summary": "Dieser Abschnitt erklärt die Nutzung von Import/Export, Datenschutz und Troubleshooting im täglichen Workflow.",

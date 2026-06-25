@@ -6,7 +6,7 @@ use std::path::PathBuf;
 const OAUTH_PENDING_DIR: &str = "oauth_pending";
 
 fn pending_dir_path() -> Result<PathBuf, String> {
-    let data_dir = crate::modules::account::get_data_dir()?;
+    let data_dir = crate::modules::app_data::get_data_dir()?;
     let dir = data_dir.join(OAUTH_PENDING_DIR);
     if !dir.exists() {
         fs::create_dir_all(&dir).map_err(|e| format!("创建 OAuth pending 目录失败: {}", e))?;

@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "O pacote do {{platform}} não está instalado",
     "packagePageInstallDesc": "Você pode instalar diretamente nesta página ou usar as ações do pacote no canto superior direito para instalar ou reparar antes de gerenciar contas. Contas, OAuth, troca e atualização em segundo plano não serão carregados antes da instalação.",
     "packageDashboardStateDesc": "Abra a página {{platform}} para instalar diretamente, ou use as ações no canto superior direito para atualizar, reparar ou ver o changelog.",
-    "packageOpenPlatformPage": "Abrir página da plataforma"
+    "packageOpenPlatformPage": "Abrir página da plataforma",
+    "packageBundledShort": "Integrado",
+    "packageBundledStatus": "Fornecido pelo app principal",
+    "packageBundledDesc": "Esta plataforma está incluída no app principal. A instalação e as atualizações seguem a versão do app principal."
   },
   "privacy": {
     "hideSensitive": "Ocultar e-mails",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "Todas as instâncias já estão em execução",
       "noneRunning": "Nenhuma instância em execução encontrada",
       "syncThreadsNeedTwo": "Pelo menos duas instâncias são necessárias para sincronizar threads",
+      "loadTimeout": "O carregamento das instâncias expirou. Tente novamente.",
       "launchPrepared": "O comando de inicialização está pronto",
       "speedUpdated": "Velocidade atualizada"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "Não há contas na coleção",
       "footerHint": "Escopo de acesso: {{scope}}",
       "manageAccounts": "Gerenciar contas",
+      "saveTimeout": "Tempo esgotado ao salvar membros do serviço API. Tente novamente mais tarde.",
       "rotateKey": "Girar chave",
       "rotateConfirmMessage": "Após a redefinição, a chave atual do serviço de API deixará de funcionar imediatamente, e as solicitações em andamento podem ficar indisponíveis. Continuar?",
       "disableService": "Desativar serviço",
@@ -2188,6 +2193,7 @@
       "subtitle": "Agende tarefas de ativação do Codex, teste o caminho do CLI e revise o histórico de execução.",
       "heroTitle": "Tarefas de ativação do Codex",
       "heroSubtitle": "Crie tarefas de ativação por horário para contas OAuth do Codex, execute testes rápidos e acompanhe cada acionamento em um só lugar.",
+      "loadTimeout": "O carregamento das tarefas de ativação do Codex expirou. Tente novamente.",
       "runtimeReady": "Codex CLI pronto",
       "runtimeMissing": "Codex CLI necessário",
       "runtimeCardTitle": "CLI do Codex",
@@ -2606,6 +2612,7 @@
       "desc": "Gerencie provedores de modelo e várias chaves API em um só lugar e reutilize-os diretamente ao adicionar contas Codex com chave API.",
       "add": "Adicionar provedor",
       "loadFailed": "Falha ao carregar os provedores de modelo: {{error}}",
+      "loadTimeout": "O carregamento dos provedores de modelo expirou. Tente novamente.",
       "emptyTitle": "Ainda não há provedores de modelo",
       "emptyDesc": "Clique em “Adicionar provedor” no canto superior direito para começar.",
       "baseUrl": "URL base",
@@ -3872,20 +3879,20 @@
         "4": "configurações",
         "5": "diagnóstico",
         "6": "registros",
-        "7": "dados"
+        "7": "registro app-YYYY-MM-DD.log"
       },
       "outcomes": {
         "0": "Entenda o que Importar/Exportar, privacidade e troubleshooting ajuda a resolver.",
         "1": "Use o fluxo recomendado em Importar/Exportar, privacidade e troubleshooting para reduzir erros.",
         "2": "Valide uma execução bem-sucedida em Importar/Exportar, privacidade e troubleshooting antes de escalar.",
-        "3": "Se houver problema em Importar/Exportar, privacidade e troubleshooting, verifique logs e reúna evidências primeiro."
+        "3": "Localize rapidamente problemas de runtime na pasta logs com app-YYYY-MM-DD.log e platform-<platform>-YYYY-MM-DD.log."
       },
       "steps": {
         "0": "Abra a página de Importar/Exportar, privacidade e troubleshooting.",
         "1": "Conclua configuração básica e vínculos necessários em Importar/Exportar, privacidade e troubleshooting.",
         "2": "Execute uma operação manual em Importar/Exportar, privacidade e troubleshooting para verificar o resultado.",
         "3": "Para troubleshooting: Configurações -> Diretório de dados -> Abrir, depois logs.",
-        "4": "Verifique primeiro o app.log mais recente ou app.log.*.",
+        "4": "Verifique primeiro o app-YYYY-MM-DD.log mais recente; para problemas de plataforma, selecione o platform-<platform>-YYYY-MM-DD.log correspondente.",
         "5": "Ao reportar, inclua horário, plataforma, passos e logs com dados sensíveis removidos."
       },
       "summary": "Esta seção explica como usar Importar/Exportar, privacidade e troubleshooting no fluxo diário.",

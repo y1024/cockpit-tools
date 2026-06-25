@@ -12,6 +12,10 @@
   display: none;
 }
 
+.platform-remote-tabs-root {
+  display: contents;
+}
+
 .platform-runtime-placeholder {
   min-height: 360px;
   display: flex;

@@ -57,7 +57,7 @@ fn codex_remote_debugging_arg(codex_home: &str) -> String {
 
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 fn get_default_codex_instances_root_dir() -> Result<PathBuf, String> {
-    Ok(crate::modules::account::get_data_dir()?
+    Ok(crate::modules::app_data::get_data_dir()?
         .join("instances")
         .join("codex"))
 }
@@ -4674,9 +4674,19 @@ fn get_default_antigravity_user_data_dir() -> Option<String> {
 }
 
 fn get_default_antigravity_legacy_user_data_dir() -> Option<String> {
-    crate::modules::antigravity_legacy_instance::get_default_user_data_dir()
+    #[cfg(target_os = "macos")]
+    let path = dirs::home_dir().map(|home| home.join("Library/Application Support/Antigravity"));
+
+    #[cfg(target_os = "windows")]
+    let path = std::env::var("APPDATA")
         .ok()
-        .map(|value| normalize_path_for_compare(&value.to_string_lossy()))
+        .filter(|value| !value.trim().is_empty())
+        .map(|value| PathBuf::from(value).join("Antigravity"));
+
+    #[cfg(target_os = "linux")]
+    let path = dirs::home_dir().map(|home| home.join(".config/Antigravity"));
+
+    path.map(|value| normalize_path_for_compare(&value.to_string_lossy()))
         .filter(|value| !value.is_empty())
 }
 

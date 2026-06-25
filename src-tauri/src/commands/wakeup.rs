@@ -5,7 +5,7 @@ use tauri::AppHandle;
 pub fn wakeup_ensure_runtime_ready(
     official_ls_version_mode: Option<String>,
 ) -> Result<Option<String>, String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.runtime.ensureReady",
         serde_json::json!({ "officialLsVersionMode": official_ls_version_mode }),
     )
@@ -20,7 +20,7 @@ pub async fn trigger_wakeup(
     cancel_scope_id: Option<String>,
     official_ls_version_mode: Option<String>,
 ) -> Result<modules::wakeup::WakeupResponse, String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.trigger",
         serde_json::json!({
             "accountId": account_id,
@@ -35,12 +35,12 @@ pub async fn trigger_wakeup(
 
 #[tauri::command]
 pub async fn fetch_available_models() -> Result<Vec<modules::wakeup::AvailableModel>, String> {
-    platform_adapter::call_codex("wakeup.fetchAvailableModels", serde_json::json!({}))
+    platform_adapter::call_antigravity_series("wakeup.fetchAvailableModels", serde_json::json!({}))
 }
 
 #[tauri::command]
 pub fn wakeup_validate_crontab(expr: String) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.crontab.validate",
         serde_json::json!({ "expr": expr }),
     )
@@ -54,7 +54,7 @@ pub async fn wakeup_sync_state(
     official_ls_version_mode: Option<String>,
     run_startup_tasks: Option<bool>,
 ) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.scheduler.syncState",
         serde_json::json!({
             "enabled": enabled,
@@ -71,7 +71,7 @@ pub async fn wakeup_run_enabled_tasks(
     trigger_source: Option<String>,
     official_ls_version_mode: Option<String>,
 ) -> Result<u32, String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.scheduler.runEnabledTasks",
         serde_json::json!({
             "triggerSource": trigger_source,
@@ -82,14 +82,14 @@ pub async fn wakeup_run_enabled_tasks(
 
 #[tauri::command]
 pub fn wakeup_load_history() -> Result<Vec<modules::wakeup_history::WakeupHistoryItem>, String> {
-    platform_adapter::call_codex("wakeup.sharedHistory.load", serde_json::json!({}))
+    platform_adapter::call_antigravity_series("wakeup.sharedHistory.load", serde_json::json!({}))
 }
 
 #[tauri::command]
 pub fn wakeup_add_history(
     items: Vec<modules::wakeup_history::WakeupHistoryItem>,
 ) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.sharedHistory.add",
         serde_json::json!({ "items": items }),
     )
@@ -97,12 +97,12 @@ pub fn wakeup_add_history(
 
 #[tauri::command]
 pub fn wakeup_clear_history() -> Result<(), String> {
-    platform_adapter::call_codex("wakeup.sharedHistory.clear", serde_json::json!({}))
+    platform_adapter::call_antigravity_series("wakeup.sharedHistory.clear", serde_json::json!({}))
 }
 
 #[tauri::command]
 pub fn wakeup_cancel_scope(cancel_scope_id: String) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.sharedScope.cancel",
         serde_json::json!({ "cancelScopeId": cancel_scope_id }),
     )
@@ -110,7 +110,7 @@ pub fn wakeup_cancel_scope(cancel_scope_id: String) -> Result<(), String> {
 
 #[tauri::command]
 pub fn wakeup_release_scope(cancel_scope_id: String) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.sharedScope.release",
         serde_json::json!({ "cancelScopeId": cancel_scope_id }),
     )
@@ -119,18 +119,24 @@ pub fn wakeup_release_scope(cancel_scope_id: String) -> Result<(), String> {
 #[tauri::command]
 pub fn wakeup_verification_load_state(
 ) -> Result<Vec<modules::wakeup_verification::WakeupVerificationStateItem>, String> {
-    platform_adapter::call_codex("wakeup.verification.loadState", serde_json::json!({}))
+    platform_adapter::call_antigravity_series(
+        "wakeup.verification.loadState",
+        serde_json::json!({}),
+    )
 }
 
 #[tauri::command]
 pub fn wakeup_verification_load_history(
 ) -> Result<Vec<modules::wakeup_verification::WakeupVerificationBatchHistoryItem>, String> {
-    platform_adapter::call_codex("wakeup.verification.loadHistory", serde_json::json!({}))
+    platform_adapter::call_antigravity_series(
+        "wakeup.verification.loadHistory",
+        serde_json::json!({}),
+    )
 }
 
 #[tauri::command]
 pub fn wakeup_verification_delete_history(batch_ids: Vec<String>) -> Result<usize, String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.verification.deleteHistory",
         serde_json::json!({ "batchIds": batch_ids }),
     )
@@ -145,7 +151,7 @@ pub async fn wakeup_verification_run_batch(
     max_output_tokens: Option<u32>,
     official_ls_version_mode: Option<String>,
 ) -> Result<modules::wakeup_verification::WakeupVerificationBatchResult, String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.verification.runBatch",
         serde_json::json!({
             "accountIds": account_ids,
@@ -159,7 +165,7 @@ pub async fn wakeup_verification_run_batch(
 
 #[tauri::command]
 pub fn wakeup_set_official_ls_version_mode(mode: Option<String>) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.setOfficialLsVersionMode",
         serde_json::json!({ "officialLsVersionMode": mode }),
     )
@@ -167,7 +173,7 @@ pub fn wakeup_set_official_ls_version_mode(mode: Option<String>) -> Result<(), S
 
 #[tauri::command]
 pub async fn confirm_wakeup_task(_app: AppHandle, task_id: String) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.scheduler.confirmTask",
         serde_json::json!({ "taskId": task_id }),
     )
@@ -175,7 +181,7 @@ pub async fn confirm_wakeup_task(_app: AppHandle, task_id: String) -> Result<(),
 
 #[tauri::command]
 pub async fn cancel_wakeup_task(task_id: String) -> Result<(), String> {
-    platform_adapter::call_codex(
+    platform_adapter::call_antigravity_series(
         "wakeup.scheduler.cancelTask",
         serde_json::json!({ "taskId": task_id }),
     )
@@ -183,5 +189,8 @@ pub async fn cancel_wakeup_task(task_id: String) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn check_wakeup_timeouts(_app: AppHandle) -> Result<(), String> {
-    platform_adapter::call_codex("wakeup.scheduler.checkTimeouts", serde_json::json!({}))
+    platform_adapter::call_antigravity_series(
+        "wakeup.scheduler.checkTimeouts",
+        serde_json::json!({}),
+    )
 }

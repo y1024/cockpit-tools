@@ -356,7 +356,10 @@
     "packagePageInstallTitle": "{{platform}} 平台包未安裝",
     "packagePageInstallDesc": "可直接在此頁面安裝，也可使用右上角的平台包操作安裝或修復後再管理帳號。安裝前不會載入帳號、OAuth、切號或背景重新整理邏輯。",
     "packageDashboardStateDesc": "開啟 {{platform}} 頁面後，可直接安裝，也可在右上角更新、修復或查看更新日誌。",
-    "packageOpenPlatformPage": "開啟平台頁面"
+    "packageOpenPlatformPage": "開啟平台頁面",
+    "packageBundledShort": "內建",
+    "packageBundledStatus": "隨主應用提供",
+    "packageBundledDesc": "此平台隨主應用提供，安裝與更新會跟隨主應用版本。"
   },
   "privacy": {
     "hideSensitive": "隱藏電子郵件",
@@ -526,6 +529,7 @@
       "allAlreadyRunning": "所有實例均已在運行中",
       "noneRunning": "未找到正在運行的實例",
       "syncThreadsNeedTwo": "至少需要兩個實例才能同步執行緒",
+      "loadTimeout": "載入實例逾時，請重試。",
       "launchPrepared": "啟動指令已準備",
       "speedUpdated": "速度已更新"
     },
@@ -1813,6 +1817,7 @@
       "emptyMembers": "目前集合沒有帳號",
       "footerHint": "監聽範圍：{{scope}}",
       "manageAccounts": "管理帳號",
+      "saveTimeout": "儲存 API 服務集合逾時，請稍後再試。",
       "rotateKey": "重設金鑰",
       "rotateConfirmMessage": "重設後目前的 API 服務金鑰會立即失效，進行中的請求可能無法使用。確認繼續嗎？",
       "disableService": "停用服務",
@@ -2305,6 +2310,7 @@
       "subtitle": "安排 Codex 喚醒任務、測試 CLI 路徑並查看執行歷史。",
       "heroTitle": "Codex 喚醒任務",
       "heroSubtitle": "為 OAuth Codex 帳號建立定時喚醒任務、執行即時測試，並在同一頁集中查看每次觸發。",
+      "loadTimeout": "載入 Codex 喚醒任務逾時，請重試。",
       "runtimeReady": "Codex CLI 已就緒",
       "runtimeMissing": "需要安裝 Codex CLI",
       "runtimeCardTitle": "Codex CLI 環境",
@@ -2606,6 +2612,7 @@
       "desc": "集中管理模型供應商與多個 API Key，新增 Codex API Key 帳號時可直接重複使用。",
       "add": "新增供應商",
       "loadFailed": "載入模型供應商失敗：{{error}}",
+      "loadTimeout": "載入模型供應商逾時，請重試。",
       "emptyTitle": "尚無模型供應商",
       "emptyDesc": "點擊右上角「新增供應商」開始設定。",
       "baseUrl": "基礎 URL",
@@ -3872,20 +3879,20 @@
         "4": "故障",
         "5": "日誌",
         "6": "日誌目錄",
-        "7": "app.log 日誌"
+        "7": "app-YYYY-MM-DD.log 日誌"
       },
       "outcomes": {
         "0": "批量匯入帳號，快速遷移環境。",
         "1": "匯出 JSON 做備份或跨設備遷移。",
         "2": "透過錯誤提示和檔案修復指引定位問題。",
-        "3": "可透過資料目錄下 logs 的 app.log* 快速定位運行異常。"
+        "3": "可透過資料目錄下 logs 的 app-YYYY-MM-DD.log 與 platform-<platform>-YYYY-MM-DD.log 快速定位執行異常。"
       },
       "steps": {
         "0": "批量操作前先匯出一次當前資料作為快照。",
         "1": "在列表頁透過「顯示/隱藏郵箱」切換隱私視圖。",
         "2": "遇到檔案損壞提示時，按彈窗指引打開目錄修復。",
         "3": "排障時先進入「設定 -> 資料目錄 -> 打開」，進入 logs 資料夾。",
-        "4": "優先查看最新的 app.log 或 app.log.*（按日期滾動的日誌檔）。",
+        "4": "優先查看最新的 app-YYYY-MM-DD.log；平台問題請選擇對應的 platform-<platform>-YYYY-MM-DD.log。",
         "5": "提交回饋時建議附上：發生時間、平台、重現步驟、關鍵報錯日誌（前後 20 行）。"
       },
       "summary": "覆蓋日常維護能力：JSON 匯入匯出、郵箱脫敏顯示、異常處理與恢復流程。",

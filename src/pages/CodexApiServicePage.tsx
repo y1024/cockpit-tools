@@ -4894,7 +4894,6 @@ export function CodexApiServicePage() {
               <button
                 className="modal-close codex-local-access-test-dialog-close"
                 onClick={handleCloseTestDialog}
-                disabled={testDialogRunning}
                 aria-label={t("common.close")}
               >
                 <X size={18} />
@@ -5032,7 +5031,6 @@ export function CodexApiServicePage() {
               <button
                 className="btn btn-secondary"
                 onClick={handleCloseTestDialog}
-                disabled={testDialogRunning}
               >
                 {t("common.close")}
               </button>
