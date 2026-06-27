@@ -61,7 +61,7 @@ const SUPPORTED_PLATFORM_IDS: &[&str] = &[
 const PLATFORM_PACKAGE_INDEX_URL: &str =
     "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/index.json";
 const PLATFORM_PACKAGE_TEST_INDEX_URL: &str =
-    "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/platform-test/platform-packages/test/index.json";
+    "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/platform-test/platform-packages/index.test.json";
 const PLATFORM_PACKAGE_INDEX_CACHE_TTL_MS: i64 = 30 * 60 * 1000;
 const MAX_PLATFORM_PACKAGE_DOWNLOAD_BYTES: u64 = 80 * 1024 * 1024;
 const PLATFORM_PACKAGE_PROGRESS_EVENT: &str = "platform-package://progress";

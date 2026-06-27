@@ -22,7 +22,7 @@ on:
         default: ""
         type: string
       publish_test_branch:
-        description: "Commit platform-packages/test artifacts to test_branch"
+        description: "Commit unified platform package artifacts and index.test.json to test_branch"
         required: false
         default: false
         type: boolean
@@ -331,7 +331,7 @@ jobs:
           if [ "${CHANNEL}" = "test" ]; then
             base_url="${DOWNLOAD_BASE_URL}"
             if [ -z "${base_url}" ]; then
-              base_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${TEST_BRANCH}/platform-packages/test/dist"
+              base_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${TEST_BRANCH}/platform-packages/dist"
             fi
             args+=(--download-base-url "${base_url}")
           fi
@@ -363,14 +363,13 @@ jobs:
             git switch -C "${TEST_BRANCH}"
           fi
 
-          mkdir -p platform-packages/test/dist
-          rm -f platform-packages/test/dist/*.zip
-          cp "${tmp_dir}"/*.zip platform-packages/test/dist/
-          cp "${tmp_dir}/index.json" platform-packages/test/index.json
-          echo "Publishing $(find platform-packages/test/dist -maxdepth 1 -type f -name '*.zip' | wc -l | tr -d ' ') test platform package zip files."
+          mkdir -p platform-packages/dist
+          cp "${tmp_dir}"/*.zip platform-packages/dist/
+          cp "${tmp_dir}/index.json" platform-packages/index.test.json
+          echo "Publishing $(find "${tmp_dir}" -maxdepth 1 -type f -name '*.zip' | wc -l | tr -d ' ') test platform package zip files to unified dist."
 
-          git add platform-packages/test/index.json
-          git add -f platform-packages/test/dist/*.zip
+          git add platform-packages/index.test.json
+          git add -f platform-packages/dist/*.zip
           if git diff --cached --quiet; then
             echo "No test platform package changes to publish."
             exit 0

@@ -12,7 +12,7 @@ on:
           - "production"
           - "test"
       test_branch:
-        description: "Branch containing platform-packages/test/index.json"
+        description: "Branch containing platform-packages/index.test.json"
         required: false
         default: "platform-test"
         type: string
@@ -91,7 +91,7 @@ jobs:
       TEST_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.test_version || '' }}
       COCKPIT_TOOLS_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && 'test' || '' }}
       VITE_COCKPIT_TOOLS_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && 'test' || '' }}
-      COCKPIT_PLATFORM_PACKAGE_INDEX_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && format('https://raw.githubusercontent.com/{0}/{1}/platform-packages/test/index.json', github.repository, inputs.test_branch) || '' }}
+      COCKPIT_PLATFORM_PACKAGE_INDEX_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && format('https://raw.githubusercontent.com/{0}/{1}/platform-packages/index.test.json', github.repository, inputs.test_branch) || '' }}
     strategy:
       fail-fast: false
       matrix:
