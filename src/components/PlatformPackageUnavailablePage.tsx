@@ -31,7 +31,6 @@ export function PlatformPackageUnavailablePage({
   const { showModal } = useGlobalModal();
   const installPackage = usePlatformPackageStore((store) => store.installPackage);
   const refreshPackages = usePlatformPackageStore((store) => store.refresh);
-  const loading = usePlatformPackageStore((store) => store.loading);
   const [actionKey, setActionKey] = useState<string | null>(null);
   const [operationError, setOperationError] = useState<string | null>(null);
   const platformName = getPlatformLabel(platformId, t);
@@ -49,7 +48,7 @@ export function PlatformPackageUnavailablePage({
   const stateOperating = state?.installStatus === 'installing'
     || state?.installStatus === 'updating'
     || state?.installStatus === 'uninstalling';
-  const operating = loading || actionKey === 'install' || stateOperating;
+  const operating = actionKey === 'install' || stateOperating;
   const canInstall = Boolean(
     state
     && state.packageMode === 'hotUpdate'

@@ -27,7 +27,7 @@ on:
         default: false
         type: boolean
       bundle_platform_packages:
-        description: "Bundle current-target platform packages into test-channel app resources"
+        description: "Opt-in full/bootstrap test build. Leave false for the default slim test app."
         required: false
         default: false
         type: boolean
@@ -73,6 +73,28 @@ jobs:
 
       - name: Sync versions
         run: npm run sync-version
+
+      - name: Summarize build profile
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          BUNDLE_PLATFORM_PACKAGES: ${{ inputs.bundle_platform_packages }}
+        run: |
+          set -euo pipefail
+          package_profile="slim"
+          if [ "${CHANNEL}" = "test" ] && [ "${BUNDLE_PLATFORM_PACKAGES}" = "true" ]; then
+            package_profile="full/bootstrap"
+          fi
+
+          {
+            echo "## Build profile"
+            echo
+            echo "- channel: ${CHANNEL}"
+            echo "- package profile: ${package_profile}"
+            if [ "${CHANNEL}" = "test" ] && [ "${BUNDLE_PLATFORM_PACKAGES}" != "true" ]; then
+              echo "- platform packages: remote download from test platform index"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Check locales
         run: node scripts/check_locales.cjs
@@ -167,7 +189,7 @@ jobs:
       - name: Sync versions
         run: npm run sync-version
 
-      - name: Prepare bundled platform packages (test full)
+      - name: Prepare bundled platform packages (explicit full/bootstrap)
         if: github.event_name == 'workflow_dispatch' && inputs.channel == 'test' && inputs.bundle_platform_packages == true
         shell: bash
         env:
@@ -323,6 +345,7 @@ jobs:
     env:
       TEST_VERSION: ${{ inputs.test_version }}
       TEST_RELEASE_TAG: "test-latest"
+      BUNDLE_PLATFORM_PACKAGES: ${{ inputs.bundle_platform_packages }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
@@ -341,6 +364,10 @@ jobs:
           version="${TEST_VERSION}"
           if [ -z "${version}" ]; then
             version="$(node -p "require('./package.json').version")"
+          fi
+          package_profile="slim"
+          if [ "${BUNDLE_PLATFORM_PACKAGES}" = "true" ]; then
+            package_profile="full/bootstrap"
           fi
 
           rm -rf test-release-flat
@@ -411,6 +438,8 @@ jobs:
 
           cat > test-release-notes.md <<EOF
           Cockpit Tools test channel build ${version}.
+
+          Package profile: ${package_profile}.
 
           This prerelease is only used by test-channel builds.
           EOF

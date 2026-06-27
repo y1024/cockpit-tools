@@ -272,7 +272,7 @@ npm run package:platform-index -- --metadata-dir platform-packages/dist-ci --ver
 5. 平台包 zip 统一发布到 `platform-packages/dist`，不按正式/测试拆目录；测试索引必须发布到 `platform-packages/index.test.json`，正式 `platform-packages/index.json` 不得被测试包更新。
 6. `.github/workflows/platform-packages.yml` 的 `workflow_dispatch channel=test` 是平台包测试构建入口；需要真实远端下载时，勾选 `publish_test_branch`，把 zip 发布到 `platform-packages/dist`，把测试 index 发布到 `platform-packages/index.test.json`。
 7. `.github/workflows/build-matrix.yml` 的 `workflow_dispatch channel=test` 是测试桌面端构建入口；需要真实 Tauri updater 验证时，勾选 `publish_test_release`，把 signed updater artifacts 和 `latest-test.json` 发布到 `test-latest` prerelease。
-8. 需要测试“安装后平台已就绪”的 Full 包时，只能在 `.github/workflows/build-matrix.yml` 的 test channel 输入 `bundle_platform_packages=true`。CI 会从测试平台包索引下载当前构建目标匹配的 zip，生成 `platform-packages/bootstrap/index.json` 与 `platform-packages/bootstrap/dist`，再临时加入 Tauri resources；默认测试包与正式包仍保持 Slim。
+8. 测试桌面包默认必须是 Slim：即使勾选 `publish_test_release` 上传测试更新资产，也不得自动内置平台包，平台安装仍通过测试平台包索引远端下载。需要测试“安装后平台已就绪”的 Full/Bootstrap 包时，只能在 `.github/workflows/build-matrix.yml` 的 test channel 显式输入 `bundle_platform_packages=true`。CI 会从测试平台包索引下载当前构建目标匹配的 zip，生成 `platform-packages/bootstrap/index.json` 与 `platform-packages/bootstrap/dist`，再临时加入 Tauri resources；正式包与默认测试包都保持 Slim。
 9. 需要连续测试多个桌面端版本时，使用 `test_version` 输入临时覆盖测试构建版本；为兼容 Windows MSI，测试版本的 prerelease 标识必须是纯数字且单段不超过 `65535`，例如 `1.0.1-1001`、`1.0.1-1002`。该覆盖只允许用于测试通道，不得写入正式版本号或正式更新日志。
 10. Tauri updater 真机更新依赖签名产物；测试 release 必须使用与 `tauri.test.conf.json` 中 `pubkey` 匹配的签名密钥生成 artifacts。
 11. GitHub Actions artifacts 可用于手动下载 Windows/macOS/Linux 测试包；真实 updater 验证必须使用 `test-latest` prerelease 上的 `latest-test.json` 与对应签名资产。
