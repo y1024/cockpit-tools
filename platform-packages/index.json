@@ -75,41 +75,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 7052016,
-          "sha256": "5648305a22154939096e57f3ad0567d30979365666a8ea3b17e7a60cbb18520e"
+          "downloadSizeBytes": 7052021,
+          "sha256": "5414e72eaa6b7d1d9cf0f98efd4af619b04f1e258a7ed49975903c16090fd179"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 7344535,
-          "sha256": "5b907c799db494243775fbb56a695182bd400b3f77efe54a03099211c96417d1"
+          "downloadSizeBytes": 7344774,
+          "sha256": "6f260a60513fd58a57f65cb693b96bf51fae289089fe5a0910254fd81d96fbde"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 7901856,
-          "sha256": "eefcca80f21a038cfe034e0ee4ac3907c1f7c244c44b3f97cb778ec69a38a380"
+          "downloadSizeBytes": 7901844,
+          "sha256": "8103dcec3064923560f82f2eb7dfbedd53df3de78b81eee36942106ce59da4a1"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 7686440,
-          "sha256": "4ccb83e39338aaaccee07101069cb4f61109f723b108052124884b68cbd41125"
+          "downloadSizeBytes": 7686313,
+          "sha256": "cdf2b9886ea271c98e53dd9508b4501418cd34f0e57e4b8754ba7fa677d2a1d9"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 7134551,
-          "sha256": "e9f10832696a2ee4aa952788b4590e7a65575420e55705a4970f0e61ecc37a2c"
+          "downloadSizeBytes": 7134577,
+          "sha256": "6cbba61a77b5ed97ef0615f68acd5518a9c2de6a276da255220766172249c99a"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 7052016,
-      "sha256": "5648305a22154939096e57f3ad0567d30979365666a8ea3b17e7a60cbb18520e",
+      "downloadSizeBytes": 7052021,
+      "sha256": "5414e72eaa6b7d1d9cf0f98efd4af619b04f1e258a7ed49975903c16090fd179",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-antigravity-adapter",
@@ -263,41 +263,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 7051646,
-          "sha256": "a1e677143dbae20abc430559730c318daed20dbd6ebfd3cdd033b5a01dd31a34"
+          "downloadSizeBytes": 7051712,
+          "sha256": "9803fc1159b0646240f69c32197385918bbae4e71279f7e6e21702bae8d79e46"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 7343778,
-          "sha256": "a5344d9c6dadefe2727be18ab02affcddc6837a1d3f4307dc24e0b70c91fda45"
+          "downloadSizeBytes": 7344166,
+          "sha256": "39e5d2bdd7f7943320aeb0062fbd235c3e2139d1697da251a262ad84fc95ebeb"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-linux-x86_64.zip",
           "downloadSizeBytes": 7902919,
-          "sha256": "277786b60dbb4b9de67a76afb5b251fc6f00272e8c441ec90d2a0d2a6326058e"
+          "sha256": "fdbc2bd714a7f6a08e55d5c1707352a1314a8b4437bf2a1d542f0ca5e1baca54"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 7686616,
-          "sha256": "199dffd6b5a28cac227df5353fcf40eb5251d67f1391e116bc5449f42323cadd"
+          "downloadSizeBytes": 7686553,
+          "sha256": "94406b26ed15fa534f42e4efbbea608035559c21f682b30f167a18de8a78e461"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 7134739,
-          "sha256": "b7455427c80cb67cc952c1b8a17e6e59faf2b3ecf24208bbaf58b66cac763955"
+          "downloadSizeBytes": 7134801,
+          "sha256": "b5567b631329945fb8d9ff5390fe2c2de0b371b042da74abd7f52be12578b0d3"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/antigravity_ide-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 7051646,
-      "sha256": "a1e677143dbae20abc430559730c318daed20dbd6ebfd3cdd033b5a01dd31a34",
+      "downloadSizeBytes": 7051712,
+      "sha256": "9803fc1159b0646240f69c32197385918bbae4e71279f7e6e21702bae8d79e46",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-antigravity-ide-adapter",
@@ -511,41 +511,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 4858470,
-          "sha256": "3a23d2a3f88ba0c961eee396f4f1c30cde94f51cc5c93d2776c318662fb12e35"
+          "downloadSizeBytes": 4860791,
+          "sha256": "9da6fcf0705309aee5d95173d1fe3a5fad204f5a3e8c3713f26ac3147b0fadc4"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 4993904,
-          "sha256": "fa9289adfeea6bd2db1ea939d945fbda443250b7432bd90e73dd44dcb5428f0a"
+          "downloadSizeBytes": 4997361,
+          "sha256": "5e2ececc9e4afecaab9cde636faa7c663e472445b1f33a7ab335e526de0714f5"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 5158909,
-          "sha256": "22da5705748aa146203d296e7d4b494f2333ded363578ae929f6f5b824555dd0"
+          "downloadSizeBytes": 5161447,
+          "sha256": "492308073b70a12f979b68f6f441fbdecf99de71540b0082b3620ef103a5ab9a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 5105791,
-          "sha256": "8d3fe021e1b3494a27cc068a05c1dc9b7dea6a7e7b98972469bbc7e697ca61d3"
+          "downloadSizeBytes": 5108450,
+          "sha256": "affdf918701ebe7eaa7ba40520f6f1ae47b16c1c5427f48ef495f1a2c6176385"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 4968423,
-          "sha256": "8efbec175923fc6e5854b621d2bdcc8e659a84c29bcb26c93dbad008241920f9"
+          "downloadSizeBytes": 4970096,
+          "sha256": "75ec5ad259ef95cd8e3d01107c3236dc7e90fea3576524f0dd242873315bd9e5"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/claude_manager-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 4858470,
-      "sha256": "3a23d2a3f88ba0c961eee396f4f1c30cde94f51cc5c93d2776c318662fb12e35"
+      "downloadSizeBytes": 4860791,
+      "sha256": "9da6fcf0705309aee5d95173d1fe3a5fad204f5a3e8c3713f26ac3147b0fadc4"
     },
     {
       "id": "zed",
@@ -605,40 +605,40 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3865349,
-          "sha256": "53b465d49e9f0bda40c0d4de4b214f1b53e9dd0836534d5c5fd95d12431b28d1"
+          "downloadSizeBytes": 3868877,
+          "sha256": "d92bea0e229d4bcb4664bc51edad9fead6340dc10ae95e02ae9b4a6482c95716"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3966912,
-          "sha256": "3447cde96c72488cafbfa3045be419c0da9105837345fccffa1d4c9c28f78138"
+          "downloadSizeBytes": 3968087,
+          "sha256": "201b6bff8adf7f826868a4dae29b27d99f82af35d382a0679f9900eefba1a062"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4167607,
-          "sha256": "819596cabbd1d3177c6404fad701d75dcdca7694df43c37c5639f3fe39d27538"
+          "downloadSizeBytes": 4169717,
+          "sha256": "9e28347fc2fd0424386710dcefd954f4833aa7c5078aba1725d89bd32f27fa86"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4128715,
-          "sha256": "0fce66de7888c7af5a8d1eccf94a2f09ed7b5bb46fadbe903d6252f516b92364"
+          "downloadSizeBytes": 4131059,
+          "sha256": "ebc3179826a3f2ccfa3b18e3ec0f09abc69b43e65a00d5962e241fd891ae1409"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3959867,
-          "sha256": "b1c108ecd516dfd9789d7b875800c78f1dca0829b72cd193596e2939b0667c7f"
+          "downloadSizeBytes": 3962365,
+          "sha256": "15d3430c19150e8e97a0e6e9e24b9e80d2facb4195fab411a3537554a7199f18"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/zed-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3865349,
+      "downloadSizeBytes": 3868877,
       "capabilities": [
         "accounts",
         "oauth",
@@ -685,7 +685,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "53b465d49e9f0bda40c0d4de4b214f1b53e9dd0836534d5c5fd95d12431b28d1"
+      "sha256": "d92bea0e229d4bcb4664bc51edad9fead6340dc10ae95e02ae9b4a6482c95716"
     },
     {
       "id": "kiro",
@@ -758,40 +758,40 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3766836,
-          "sha256": "acc1d0c0d0e94e8a660284311e5ed2a61734fe6d31c3f0bc3ce8810c7fdaab6b"
+          "downloadSizeBytes": 3768268,
+          "sha256": "8b8893b181b345bb8429cae5980e0261b5b2d8166a3cd366d47bab77bc8a465b"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3877544,
-          "sha256": "02378609ed486dd94b6bb911fe9833c951fe02d39877037ca04a07afcf705214"
+          "downloadSizeBytes": 3880116,
+          "sha256": "7f3eccca8087e5c3e7335c0a9a54de7820a96879708b20f61b8e8b2db7e767b5"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4094014,
-          "sha256": "9f02833538163c1c2a17819dd459d09a794fbfe71346a72bd19dd2bcb75425f3"
+          "downloadSizeBytes": 4096492,
+          "sha256": "b8fb6b6c385fa728210408f608bc223a3074999ba12887ed89c148d76ce48142"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4042855,
-          "sha256": "b9738d819e5c78e5bbede248c677131f65422ecc78998bd43d6e85ab5f90ae95"
+          "downloadSizeBytes": 4045741,
+          "sha256": "8c04767d1fb40666128ee952e76b2f77695860f031b619f5687e5bae45de0546"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3873907,
-          "sha256": "3c64950bf3db8da4940815838ccf654cb8dabd2f7b8ba1527ff798d840a57c81"
+          "downloadSizeBytes": 3877377,
+          "sha256": "e6660899b95255c5a0dcaa9e8c38c8c1fc105981b576fd0a7333005810f17af9"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/kiro-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3766836,
+      "downloadSizeBytes": 3768268,
       "capabilities": [
         "accounts",
         "oauth",
@@ -833,7 +833,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "acc1d0c0d0e94e8a660284311e5ed2a61734fe6d31c3f0bc3ce8810c7fdaab6b"
+      "sha256": "8b8893b181b345bb8429cae5980e0261b5b2d8166a3cd366d47bab77bc8a465b"
     },
     {
       "id": "github-copilot",
@@ -903,40 +903,40 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3753031,
-          "sha256": "03e8cbeb73a54e047dd146c8845873ca129aa91d59a04f60561733d61c663d18"
+          "downloadSizeBytes": 3754615,
+          "sha256": "9cca91143ca48e4b5be98e3456b958c50fad746c26b7ee944a1934002cecb25b"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3865784,
-          "sha256": "5b60e63b4351b3075f27943551eae5dfea210ac748e817da9069933bbade0bbb"
+          "downloadSizeBytes": 3868320,
+          "sha256": "421d592354778fa12528b5713704846d47e431b47cc94d44890aa1da960e52a9"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4079503,
-          "sha256": "37982023694d4f2b2c12d7d64ef61703f0f02d539ecd9c431b3c71258ec4a417"
+          "downloadSizeBytes": 4082311,
+          "sha256": "ffee50527ee01041ef90886888ff1d110dcc1c84978b4b2b3415566dbdeaa99c"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4027803,
-          "sha256": "88103db692585455168eb5a75020899382667305c8aea321618b576288b6d665"
+          "downloadSizeBytes": 4030252,
+          "sha256": "2334c3179c4ad316610e1e3afd8faac9477acf8346a78141e67ef356badd07ca"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3863459,
-          "sha256": "12f96b751a9e5ac647b297108e128a28f5159ccdf9fce963338034d9cee74072"
+          "downloadSizeBytes": 3865564,
+          "sha256": "c066ce4465236c6cc81f3c270a930381bb06e22e0207f13db139454a85a7a4fc"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/github-copilot-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3753031,
+      "downloadSizeBytes": 3754615,
       "capabilities": [
         "accounts",
         "oauth",
@@ -978,7 +978,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "03e8cbeb73a54e047dd146c8845873ca129aa91d59a04f60561733d61c663d18"
+      "sha256": "9cca91143ca48e4b5be98e3456b958c50fad746c26b7ee944a1934002cecb25b"
     },
     {
       "id": "windsurf",
@@ -1053,40 +1053,40 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3778262,
-          "sha256": "d34327aeb5a98f882eb093081373f1342ee879afa3848af6c096783263f8aa8f"
+          "downloadSizeBytes": 3777619,
+          "sha256": "2e15611932ebded5b4e7af1ba4981404ef3cf87ec938de5896d1e81945d7389b"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3889104,
-          "sha256": "f9aea280581f380442ddce64e807b29111757054ae163664df44c750ac88a3de"
+          "downloadSizeBytes": 3891936,
+          "sha256": "d94ed9819a6f4b6d1ed432976a4736753c5b5cf2336ee58ac3466666d812541f"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4102782,
-          "sha256": "f46bdbad1fd868ce8c5733c30bc9753f8df655c33a422c009c638455e98f8093"
+          "downloadSizeBytes": 4104771,
+          "sha256": "d8cd36900d271b0165fe7ef38d376957f60c6f33bb691422bc3a3c7b96173096"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4052656,
-          "sha256": "718ddc2978838218668bd9e0be3785434fdebd7cea77b805d8c4c5a035ff5750"
+          "downloadSizeBytes": 4055657,
+          "sha256": "e30cd5b9f81f44643fe7d93234751be220bc52e02c141370c9926c7af82dc515"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3888305,
-          "sha256": "197cf5ac478ba5f795a28877d9a92eda3cc5a9c21f86dbb5aeb93a713a58c2d2"
+          "downloadSizeBytes": 3891426,
+          "sha256": "6daec2d4b6916110c4240106a34494268d5a56d083b61f0120efb20ffa6d189b"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/windsurf-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3778262,
+      "downloadSizeBytes": 3777619,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1129,7 +1129,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "d34327aeb5a98f882eb093081373f1342ee879afa3848af6c096783263f8aa8f"
+      "sha256": "2e15611932ebded5b4e7af1ba4981404ef3cf87ec938de5896d1e81945d7389b"
     },
     {
       "id": "cursor",
@@ -1241,41 +1241,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3895838,
-          "sha256": "fa5ac0ac9d2f874668990800080ad4c0b81128b9cfacfe1a7e1caced3ded71bb"
+          "downloadSizeBytes": 3897943,
+          "sha256": "5cfce4f09188f7bac7dc3008559b59b45d999ca15f70f0841f5fcaaee12db7a9"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 4005810,
-          "sha256": "f5b75a8dade771da6ae29da7e8742bc0c3f85df79d846efa30ce690c58205d0b"
+          "downloadSizeBytes": 4006021,
+          "sha256": "61678659a7fc9b4ca5faf4fa9065ecf39c5a72c4c9d152b73bfded1893164727"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4213017,
-          "sha256": "4f51460267fa0c0823f0e2016194d6578ef4da3d5c9443eac1e8d6cf1b29f17e"
+          "downloadSizeBytes": 4215123,
+          "sha256": "7b9fa8e826bb355d201b3c493c89377035c1807abb83b39c9e4c9c717e5a256a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4169248,
-          "sha256": "bbce44f663bd5b30064f0391b14ab85311e2940edd3826d0b39ef9e5793c49a4"
+          "downloadSizeBytes": 4171602,
+          "sha256": "6e1959fdeed3945a4a66c5f636874ff6cff72ad317c07683f85c98737f72b400"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 4001281,
-          "sha256": "38d84a9bd6610a002e36c12302ab319d6c37bbe34730388f21218c9900efe700"
+          "downloadSizeBytes": 4003849,
+          "sha256": "38d8bdff5970196f8ab7209735af61f8b814611f685da239f15ef7b2de609343"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/cursor-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3895838,
-      "sha256": "fa5ac0ac9d2f874668990800080ad4c0b81128b9cfacfe1a7e1caced3ded71bb"
+      "downloadSizeBytes": 3897943,
+      "sha256": "5cfce4f09188f7bac7dc3008559b59b45d999ca15f70f0841f5fcaaee12db7a9"
     },
     {
       "id": "gemini",
@@ -1391,41 +1391,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3736295,
-          "sha256": "6e31b1b6cd50a5120fafbdaa1cec935e8d6cc9bc48b4ebe0a316fe3e1a87a8e8"
+          "downloadSizeBytes": 3740140,
+          "sha256": "53e7d018409b1d8ec7971f702b76adbb44558e09c67184c48ba463f5bfe37d58"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3846860,
-          "sha256": "2869c7a37ad42e82248ae63d7b2b6a712d8976753a8d181108447756ce7075c7"
+          "downloadSizeBytes": 3847958,
+          "sha256": "554f66655514a773a97d567945443514ec95f2892aa62f1a5b03e8c29b09539a"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4013277,
-          "sha256": "c22fd9eacbc316f951907dce53de2209ab339e567ceba5fd8c459809d43a749f"
+          "downloadSizeBytes": 4014731,
+          "sha256": "d5791fece7b791e760c4dc9c3be091a8f15d66647b2ad44d2b1615e1742bdfea"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3970602,
-          "sha256": "0f45338ccf769df9a41f6e85634c3f72db578cc30394dd221d40d103e67a2a0b"
+          "downloadSizeBytes": 3971334,
+          "sha256": "0648030a8016903b5fb7d6751266485d0653a659b394c0e54e21a9721b81c447"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3804869,
-          "sha256": "e9c0cacef541f8cd589c1523919b02649ecc569df53c0d04b5347158403507cf"
+          "downloadSizeBytes": 3807074,
+          "sha256": "9ada4faf4f920a78b64c3251a4cde1d861b2c3e1425455b49a96aeb231c34ba6"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/gemini-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3736295,
-      "sha256": "6e31b1b6cd50a5120fafbdaa1cec935e8d6cc9bc48b4ebe0a316fe3e1a87a8e8"
+      "downloadSizeBytes": 3740140,
+      "sha256": "53e7d018409b1d8ec7971f702b76adbb44558e09c67184c48ba463f5bfe37d58"
     },
     {
       "id": "trae",
@@ -1541,41 +1541,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3944716,
-          "sha256": "e21c0aa8c59fbbb87ab92a7dada727dd6b7ceb8aa7cbf3e8dd5eae269cf9f1e6"
+          "downloadSizeBytes": 3945807,
+          "sha256": "52dcaf51008f4e53f91bbc1a3f65225c48b811032a91c657bf28c92b0525555c"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 4066695,
-          "sha256": "d326234781e59fc3246da02f020fa6bcbd46f5e1fd64566c41a9e3f4c971aa59"
+          "downloadSizeBytes": 4070599,
+          "sha256": "de237163519f9fd7fbc1015cf6cba0b87c0d3f8501d090979531190ead885ad9"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4282513,
-          "sha256": "285c3c7bbf6d2fa401e356e4010fe85c8c323053fcff0c0e00c1ffbb6aefc1b9"
+          "downloadSizeBytes": 4284801,
+          "sha256": "0754d14ef436fa29205f415774c30f948a3808d44e982a6b9ab0798c9f2b2d9f"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4219811,
-          "sha256": "d0ca5089aa876fde46a215321582970403415156b77dcc92dee731b41924ce94"
+          "downloadSizeBytes": 4222674,
+          "sha256": "9d226884e38ae378805e70e167507d61068661f611ca8e39b117304de7eb0dc0"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 4055506,
-          "sha256": "4422ec6b78d23d17ccc66f3afc4187ebde6d8cf194ae235a1b428cfc380185fe"
+          "downloadSizeBytes": 4058072,
+          "sha256": "22c17f57fa1118c0f724cdebb82bb374f83a32135a0c4e5a1c64d4f04f353280"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/trae-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3944716,
-      "sha256": "e21c0aa8c59fbbb87ab92a7dada727dd6b7ceb8aa7cbf3e8dd5eae269cf9f1e6"
+      "downloadSizeBytes": 3945807,
+      "sha256": "52dcaf51008f4e53f91bbc1a3f65225c48b811032a91c657bf28c92b0525555c"
     },
     {
       "id": "qoder",
@@ -1646,40 +1646,40 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3720741,
-          "sha256": "63a4a593b92fb8e72b1048cab6fbf12b3b5853691917af762b24a29f5da8c35b"
+          "downloadSizeBytes": 3722502,
+          "sha256": "09f83384fcc579d00f8dfa18a1d91f838b7fd6ebf549d32eb3e3a47d0cbb6467"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3826533,
-          "sha256": "936ea94e27bc41cddff05ef38fa48621a2b747c7805549df13ba6d050b320195"
+          "downloadSizeBytes": 3828912,
+          "sha256": "d9383db2eb813a88f2f74fff86579eba1fa0c49f078678061846859bd11a60fb"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4032154,
-          "sha256": "cd45f2ac14603e16b6229d9ce26115c5bdbca320485c276b6286bfbae6789db0"
+          "downloadSizeBytes": 4034076,
+          "sha256": "69f0542b15868f1b0f354ba9ab9a1b8a554ff70f84571571c93d1d725d92d719"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3987395,
-          "sha256": "9602203a7afaea9dff88194e7f640966d0163f601f9e2a41375612105cc9ccd8"
+          "downloadSizeBytes": 3990546,
+          "sha256": "ef5563938d573b0bc3921e4fb842818ed8b18f793bebb2cb28e74cd92cd73035"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3815959,
-          "sha256": "105dbfd7ac433d1670da3bf7ea1bc6a2eb5b1bd8e14650842d451231e6ece90a"
+          "downloadSizeBytes": 3817480,
+          "sha256": "acacd1ee3d69f524917819b6b4e9285a2b0104bf24afe9dc574e2912a3c26e7e"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/qoder-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3720741,
+      "downloadSizeBytes": 3722502,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1721,7 +1721,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "63a4a593b92fb8e72b1048cab6fbf12b3b5853691917af762b24a29f5da8c35b"
+      "sha256": "09f83384fcc579d00f8dfa18a1d91f838b7fd6ebf549d32eb3e3a47d0cbb6467"
     },
     {
       "id": "codebuddy",
@@ -1835,41 +1835,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3601700,
-          "sha256": "13027b855d3065577e15cc5e2e79df4773163a870165b2d61550d19dcd7d0954"
+          "downloadSizeBytes": 3602356,
+          "sha256": "aa56a0baeea02e6c28997aefcda33c24024459d3b561482a7cd3d173b6df518a"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3715169,
-          "sha256": "6c25e03391616645781cf2d6060f2d5b95c85dd65ea2114bee57c61ec1e96faa"
+          "downloadSizeBytes": 3717562,
+          "sha256": "a7a225218265ba108716a3f9b2866f834c22696a8511b9432ef0c73f68227b5d"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 3923006,
-          "sha256": "22a3c15239a1dfc9155915bfbd88081aa647fc80a1977c53a5a754aaa2bb1a80"
+          "downloadSizeBytes": 3925698,
+          "sha256": "744968be099a01d5c7723b5d68315345bd161168ec67514840e48b99d5acffe3"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3873347,
-          "sha256": "15b32833e879c2379b1217f77b70bf3699f0ae610a324d70f25c26a5a383e1be"
+          "downloadSizeBytes": 3877910,
+          "sha256": "9897e33910b4d17c8b0d6a5387b6fb773eb29f567dd5f4022cd6e8c37738e561"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3714085,
-          "sha256": "715db93cb4236e6df843e9a81001f8189698cf1e4501028e140810ceb3a3b55f"
+          "downloadSizeBytes": 3716763,
+          "sha256": "f2ee97cdbc212fee968134da48978ebd9fee13f15426bdac2ddedf362335f91d"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3601700,
-      "sha256": "13027b855d3065577e15cc5e2e79df4773163a870165b2d61550d19dcd7d0954"
+      "downloadSizeBytes": 3602356,
+      "sha256": "aa56a0baeea02e6c28997aefcda33c24024459d3b561482a7cd3d173b6df518a"
     },
     {
       "id": "codebuddy_cn",
@@ -1985,41 +1985,41 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3626803,
-          "sha256": "a6a81b00f680418b1c909846354685cd158b5ac1550604c89f70ea5383c7782c"
+          "downloadSizeBytes": 3627368,
+          "sha256": "56b6b3e9bf25a16c9b55f324fcd6f3c787782a4cc0c0cafdbfc3c6c97e802cdf"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3746037,
-          "sha256": "b05c9123a70d92c9dc813e2e83414aa005b03e3483bd127927722812b626cd8c"
+          "downloadSizeBytes": 3748120,
+          "sha256": "a87f917504c7b90f87ef37f688f74d95b65dda3144337287ea3a49b3a3f0008d"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 3954769,
-          "sha256": "c5c95591c593adf5f03417c9b4ee5a33dc8d8a90530fd7f56b9d681f297d386e"
+          "downloadSizeBytes": 3956943,
+          "sha256": "0c5b239f98944799240266262bdad2a9cc2e65f7425301015ea4b4e0fd723516"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3904277,
-          "sha256": "a81962827a5ed6e87fa4491505e4044db77a698c8779448c9b8a3125b7adbaea"
+          "downloadSizeBytes": 3907372,
+          "sha256": "c49a9123e8a0e177ad35b26e45091bd7a5603dd4a57b16a93a31459869bed2ca"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3744382,
-          "sha256": "1eba867fec1d23684fab0c223125addfbf374a1db2bc892ec01501de4a14c0b5"
+          "downloadSizeBytes": 3747217,
+          "sha256": "566c8e17c39a5a200d090d691e6db6025422c1d9aeeb681669697c14b0040b1f"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codebuddy_cn-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3626803,
-      "sha256": "a6a81b00f680418b1c909846354685cd158b5ac1550604c89f70ea5383c7782c"
+      "downloadSizeBytes": 3627368,
+      "sha256": "56b6b3e9bf25a16c9b55f324fcd6f3c787782a4cc0c0cafdbfc3c6c97e802cdf"
     },
     {
       "id": "workbuddy",
@@ -2138,46 +2138,46 @@
           "os": "macos",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3620749,
-          "sha256": "5da6c334d5d2f91a49ad6d44d83d1dcf55367addde6879be560ba51556f363f9"
+          "downloadSizeBytes": 3622759,
+          "sha256": "1a42a30aae1ceb7e0fdbb8b1a34d144341b4c6764a372969231654884ea529c1"
         },
         {
           "os": "macos",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3734260,
-          "sha256": "76cd6eae7d89245fcb6e5247bc819fa8d896a824e01977f65d2a16ba22a0fab4"
+          "downloadSizeBytes": 3737591,
+          "sha256": "e5e0f77c7d7b048252125cbfbdecee45f08f69f56ee24de74f266b60e7c741a5"
         },
         {
           "os": "linux",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 3941070,
-          "sha256": "c145c5fb4f06a631f2087f8beca77fa57aef16c81cbb6c14abc5e39de9d6349f"
+          "downloadSizeBytes": 3943387,
+          "sha256": "bc890cd9a5708b1e9946ace4a0f503ff344d6d3b7d274ed638e14929673178a2"
         },
         {
           "os": "linux",
           "arch": "aarch64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3895551,
-          "sha256": "3d9b38379e6aa4472dec9b9f0ebcfdaa5199c6ec1d6f7058e3f34f571beaabbb"
+          "downloadSizeBytes": 3897256,
+          "sha256": "e5bdf539fced48085537497fbbcd7ee86d45174c0a07388c979b8e0c60b94732"
         },
         {
           "os": "windows",
           "arch": "x86_64",
           "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3734041,
-          "sha256": "863b5a85409dd8d0395f9215ae32d44d347e10c69fc884b4f845f291f3ecc677"
+          "downloadSizeBytes": 3735205,
+          "sha256": "2ad5872a6fd71194ef4a22a22d715a255c8e97f75a665e409e9d51b2858fcebf"
         }
       ],
       "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/workbuddy-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3620749,
-      "sha256": "5da6c334d5d2f91a49ad6d44d83d1dcf55367addde6879be560ba51556f363f9"
+      "downloadSizeBytes": 3622759,
+      "sha256": "1a42a30aae1ceb7e0fdbb8b1a34d144341b4c6764a372969231654884ea529c1"
     },
     {
       "id": "codex",
       "platformId": "codex",
-      "version": "0.26.8",
+      "version": "0.26.9",
       "apiVersion": 1,
       "minCoreVersion": "0.26.5",
       "displayName": "Codex",
@@ -2208,6 +2208,28 @@
         "cli"
       ],
       "changelog": [
+        {
+          "version": "0.26.9",
+          "date": "2026-06-29",
+          "notes": [
+            "Repairs Codex account migration after upgrading from legacy JSON storage to the platform account database.",
+            "When old JSON account files contain accounts missing from SQLite, the adapter now restores the missing records without overwriting existing database records."
+          ],
+          "locales": {
+            "zh-CN": {
+              "notes": [
+                "修复从旧版 JSON 账号存储升级到平台账号数据库后，Codex 账号数量可能变少的问题。",
+                "当旧账号文件中存在 SQLite 缺失的账号时，adapter 会自动补齐缺失记录，同时不会覆盖数据库中已有账号。"
+              ]
+            },
+            "zh-TW": {
+              "notes": [
+                "修復從舊版 JSON 帳號儲存升級到平台帳號資料庫後，Codex 帳號數量可能變少的問題。",
+                "當舊帳號檔案中存在 SQLite 缺少的帳號時，adapter 會自動補齊缺少記錄，同時不會覆蓋資料庫中既有帳號。"
+              ]
+            }
+          }
+        },
         {
           "version": "0.26.8",
           "date": "2026-06-27",
@@ -2292,42 +2314,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 14815676,
-          "sha256": "db5549cb4771378edb19e7b975834b03b124578b67cbcc56258f5605fff56921"
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-macos-aarch64.zip",
+          "downloadSizeBytes": 14817917,
+          "sha256": "38ff1fcc6bd9d51b3d17ffaa8d080bacee2fa4e64b730793d7491df93f4979dd"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 15796163,
-          "sha256": "3987776104beb8f4fc610118fe078f388a92b328e1f8bf6a46c07cbba055c614"
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-macos-x86_64.zip",
+          "downloadSizeBytes": 15800807,
+          "sha256": "b09d83a3ffbb2e791b8f3773e65df77d01a985fd7967ed3ed311db387f74a53d"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 16311444,
-          "sha256": "4fb8f793bb90892f3f49caeb7ab582a45dfa8921495bf6bf730c7407493e1cce"
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-linux-x86_64.zip",
+          "downloadSizeBytes": 16314867,
+          "sha256": "338b268d88fc2415d0be770e17922e2525e5d9ab612613ada01271ea5bc253bd"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 15308271,
-          "sha256": "eb5d8589bbf324c23e216b3f3c19cdf18a1939210e0ddbb4b2f3fc4db3e57dbe"
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-linux-aarch64.zip",
+          "downloadSizeBytes": 15313426,
+          "sha256": "ed7671d59606552168d3ffd63b781228640561f4d77d95440806ec7a67fe1b61"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 15581529,
-          "sha256": "908e643668a7e5eece14e89c69a915395c0470c7e6fe7a9413ef8b3e45fed3e5"
+          "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-windows-x86_64.zip",
+          "downloadSizeBytes": 15584329,
+          "sha256": "12585fb64dd879a793cc1c6dfd844e045e033f7202fb6b034da4b7dc159715d8"
         }
       ],
-      "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 14815676,
-      "sha256": "db5549cb4771378edb19e7b975834b03b124578b67cbcc56258f5605fff56921",
+      "downloadUrl": "https://raw.githubusercontent.com/jlcodes99/cockpit-tools/main/platform-packages/dist/codex-0.26.9-macos-aarch64.zip",
+      "downloadSizeBytes": 14817917,
+      "sha256": "38ff1fcc6bd9d51b3d17ffaa8d080bacee2fa4e64b730793d7491df93f4979dd",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-codex-adapter",
