@@ -77,7 +77,7 @@ const LOCAL_ACCESS_MEMBER_PAGE_SIZE_OPTIONS = [50, 100, 200] as const;
 
 interface CodexLocalAccessModalProps {
   isOpen: boolean;
-  mode: "panel" | "members";
+  mode: "panel" | "members" | "customRouting";
   state: CodexLocalAccessState | null;
   addressKind: CodexLocalAccessAddressKind;
   addressOptions: Array<{ value: string; label: string }>;
@@ -322,7 +322,9 @@ export function CodexLocalAccessModal({
   const [statsRange, setStatsRange] = useState<StatsRangeKey>(() =>
     readStoredStatsRange(),
   );
-  const [customRoutingOpen, setCustomRoutingOpen] = useState(false);
+  const [customRoutingOpen, setCustomRoutingOpen] = useState(
+    mode === "customRouting",
+  );
   const [customRoutingQuery, setCustomRoutingQuery] = useState("");
   const [customRoutingFilterTypes, setCustomRoutingFilterTypes] = useState<
     string[]
@@ -571,7 +573,7 @@ export function CodexLocalAccessModal({
     setCopiedField(null);
     setPortInput(collection?.port ? String(collection.port) : "");
     setUpstreamProxyDraftUrl(collection?.upstreamProxyUrl ?? "");
-    setCustomRoutingOpen(false);
+    setCustomRoutingOpen(mode === "customRouting");
     setCustomRoutingQuery("");
     setCustomRoutingFilterTypes([]);
     setCustomRoutingTagFilter([]);
@@ -1436,6 +1438,9 @@ export function CodexLocalAccessModal({
     setCustomRoutingOpen(false);
     setCustomRoutingError("");
     setCustomRoutingSelected(new Set());
+    if (mode === "customRouting") {
+      onClose();
+    }
   };
 
   const toggleCustomRoutingSelect = (accountId: string) => {
@@ -1540,6 +1545,9 @@ export function CodexLocalAccessModal({
         };
       });
       await onUpdateCustomRouting(rules);
+      if (routingStrategy !== "custom") {
+        await onUpdateRoutingStrategy("custom");
+      }
       setNotice(
         t(
           "codex.localAccess.customRoutingSaveSuccess",
@@ -1548,6 +1556,9 @@ export function CodexLocalAccessModal({
       );
       setCustomRoutingOpen(false);
       setCustomRoutingSelected(new Set());
+      if (mode === "customRouting") {
+        onClose();
+      }
     } catch (err) {
       setCustomRoutingError(err instanceof Error ? err.message : String(err));
     }
@@ -1826,14 +1837,16 @@ export function CodexLocalAccessModal({
 
   if (!isOpen) return null;
   const isMembersMode = mode === "members";
+  const isCustomRoutingMode = mode === "customRouting";
 
   return (
     <>
-      <div
-        className={`modal-overlay codex-local-access-modal-overlay${
-          isMembersMode ? "" : " codex-local-access-modal-overlay-panel"
-        }`}
-      >
+      {!isCustomRoutingMode && (
+        <div
+          className={`modal-overlay codex-local-access-modal-overlay${
+            isMembersMode ? "" : " codex-local-access-modal-overlay-panel"
+          }`}
+        >
         <div
           className={`modal codex-local-access-modal${
             isMembersMode
@@ -2860,7 +2873,8 @@ export function CodexLocalAccessModal({
             )}
           </div>
         </div>
-      </div>
+        </div>
+      )}
 
       {customRoutingOpen && collection && (
         <div

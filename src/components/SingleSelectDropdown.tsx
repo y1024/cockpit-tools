@@ -22,6 +22,19 @@ interface SingleSelectDropdownProps {
   menuMaxHeight?: number;
 }
 
+function findPlatformUiRoot(element: HTMLElement | null): HTMLElement | null {
+  let current = element;
+  while (current) {
+    for (const className of Array.from(current.classList)) {
+      if (className.endsWith("-platform-ui-root")) {
+        return current;
+      }
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
 export function SingleSelectDropdown({
   value,
   options,
@@ -46,6 +59,7 @@ export function SingleSelectDropdown({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const portalContainerRef = useRef<HTMLElement | null>(null);
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value) ?? null,
@@ -58,6 +72,8 @@ export function SingleSelectDropdown({
     const updateMenuPosition = () => {
       const rect = triggerRef.current?.getBoundingClientRect();
       if (!rect) return;
+      portalContainerRef.current =
+        findPlatformUiRoot(rootRef.current) ?? document.body;
       const width = menuWidth ? Math.max(rect.width, menuWidth) : rect.width;
       const left = Math.min(
         rect.left,
@@ -191,7 +207,7 @@ export function SingleSelectDropdown({
                 );
               })}
             </div>,
-            document.body,
+            portalContainerRef.current ?? document.body,
           )
         : null}
     </div>
